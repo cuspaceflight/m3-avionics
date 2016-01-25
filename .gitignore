@@ -1,0 +1,10 @@
+# KiCAD related ignores
+*-bak
+*.bck
+_autosave*
+
+# Firmware related ignores
+*.elf
+*.bin
+*.o
+build/
