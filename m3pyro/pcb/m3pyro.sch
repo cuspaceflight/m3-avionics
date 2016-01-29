@@ -198,7 +198,7 @@ F 3 "" H 6450 1700 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5400 1900 5400 2250
+	5400 1900 5400 2800
 Wire Wire Line
 	5400 2250 5650 2250
 Wire Wire Line
@@ -396,4 +396,7 @@ Wire Wire Line
 Wire Wire Line
 	5050 1800 5050 1900
 Connection ~ 5050 1900
+Wire Wire Line
+	5400 2800 5050 2800
+Connection ~ 5400 2250
 $EndSCHEMATC
