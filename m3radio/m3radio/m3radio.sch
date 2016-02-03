@@ -44,7 +44,7 @@ $EndSheet
 Text Notes 8600 1150 0    59   ~ 0
 Ublox Max-Q7 or MaxQ8 (GPS)
 Text Notes 1900 1100 0    59   ~ 0
-STM32F072 QFN
+STM32F405 rgt6
 $Comp
 L MAX-7Q IC?
 U 1 1 56B20C81
