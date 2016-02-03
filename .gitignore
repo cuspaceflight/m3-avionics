@@ -1,5 +1,6 @@
 # KiCAD related ignores
 *-bak
+*.bak
 *.bck
 _autosave*
 
