@@ -15,31 +15,26 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Wire Notes Line
-	4330 540  4330 7780
-Wire Notes Line
-	4330 5330 500  5330
 Text Notes 1720 5600 0    118  ~ 0
 Connectors
 Text Notes 1660 720  0    118  ~ 0
 Microcontroller
 Wire Notes Line
-	7310 610  7310 3360
-Wire Notes Line
-	7310 3360 11140 3360
-Wire Notes Line
-	7310 3350 7310 6300
-Wire Notes Line
 	7310 6300 11160 6300
-Text Notes 9050 3610 0    118  ~ 0
+Text Notes 9043 3872 0    118  ~ 0
 Radio
 Text Notes 9090 710  0    118  ~ 0
 GPS
 $Sheet
-S 8970 3880 1890 2100
+S 8700 4050 1201 1851
 U 56B202F6
 F0 "Radio" 118
 F1 "radio_schematics.sch" 118
+F2 "Radio_SCLK" I L 8700 4350 60 
+F3 "Radio_SDI" I L 8700 4550 60 
+F4 "Radio_SDO" I L 8700 4850 60 
+F5 "Radio_nIRQ" I L 8700 4700 60 
+F6 "Radio_nSEL" I L 8700 5050 60 
 $EndSheet
 Text Notes 8600 1150 0    59   ~ 0
 Ublox Max-Q7 or MaxQ8 (GPS)
@@ -164,4 +159,32 @@ F 3 "" H 8550 1700 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Connection ~ 8750 1800
+Wire Wire Line
+	8700 4350 8550 4350
+Wire Wire Line
+	8700 4550 8550 4550
+Wire Wire Line
+	8700 4850 8550 4850
+Wire Wire Line
+	8700 4700 8550 4700
+Wire Wire Line
+	8700 5050 8550 5050
+Text Label 8550 4350 2    60   ~ 0
+Radio_SCLK
+Text Label 8550 4550 2    60   ~ 0
+Radio_SDI
+Text Label 8550 4700 2    60   ~ 0
+Radio_nIRQ
+Text Label 8550 4850 2    60   ~ 0
+Radio_SDO
+Text Label 8550 5050 2    60   ~ 0
+Radio_nSEL
+Wire Notes Line
+	7300 500  7300 6300
+Wire Notes Line
+	7300 2900 11150 2900
+Wire Notes Line
+	4300 550  4300 7800
+Wire Notes Line
+	500  5200 4300 5200
 $EndSCHEMATC
