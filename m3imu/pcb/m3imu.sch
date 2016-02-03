@@ -1,1 +1,66 @@
 EESchema Schematic File Version 2
+LIBS:agg-kicad
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L MPU-9250 IC?
+U 1 1 56B22201
+P 9000 2100
+F 0 "IC?" H 8400 3000 50  0000 L CNN
+F 1 "MPU-9250" H 8400 1200 50  0000 L CNN
+F 2 "QFN-24-EP-MPU9250" H 8400 1100 50  0001 L CNN
+F 3 "http://43zrtwysvxb2gf29r5o0athu.wpengine.netdna-cdn.com/wp-content/uploads/2015/02/MPU-9250-Datasheet.pdf" H 8400 1000 50  0001 L CNN
+F 4 "883-7942" H 8400 900 50  0001 L CNN "RS"
+F 5 "1428-1019-1-ND" H 8400 800 50  0001 L CNN "DigiKey"
+	1    9000 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L MS5611-01BA03 IC?
+U 1 1 56B22236
+P 8600 3600
+F 0 "IC?" H 8400 3800 50  0000 L CNN
+F 1 "MS5611-01BA03" H 8400 3300 50  0000 L CNN
+F 2 "agg:MS5611" H 8400 3200 50  0001 L CNN
+F 3 "" H 8650 3600 50  0001 C CNN
+F 4 "2362662" H 8400 3100 50  0001 L CNN "Farnell"
+	1    8600 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L MCP2562 IC?
+U 1 1 56B22296
+P 6850 5000
+F 0 "IC?" H 6550 5300 50  0000 L CNN
+F 1 "MCP2562" H 6550 4700 50  0000 L CNN
+F 2 "agg:DFN-8-EP-MICROCHIP" H 6550 4600 50  0001 L CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20005167C.pdf" H 6550 4500 50  0001 L CNN
+F 4 "" H 6550 4400 50  0001 L CNN "Farnell"
+F 5 "824-3135" H 6550 4300 50  0001 L CNN "RS"
+	1    6850 5000
+	1    0    0    -1  
+$EndComp
+$Comp
+L SWD_TC P?
+U 1 1 56B222E9
+P 6850 5650
+F 0 "P?" H 6550 5850 50  0000 L CNN
+F 1 "SWD_TC" H 6550 5450 50  0000 L CNN
+F 2 "agg:TC2030-NL" H 6550 5350 50  0001 L CNN
+F 3 "" H 6450 5750 50  0001 C CNN
+	1    6850 5650
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
