@@ -1,4 +1,4 @@
-update=Mon 25 Jan 2016 02:56:25 GMT
+update=Thu 04 Feb 2016 04:39:34 GMT
 version=1
 last_client=kicad
 [pcbnew]
@@ -30,3 +30,14 @@ version=1
 LibDir=
 [eeschema/libraries]
 LibName1=/home/adam/Projects/m3-avionics/agg-kicad/agg-kicad
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=/home/adam/m3fc.pdf
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=Pcbnew
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
+ERC_TestSimilarLabels=1
