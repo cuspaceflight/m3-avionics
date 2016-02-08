@@ -1,13 +1,13 @@
 EESchema Schematic File Version 2
 LIBS:agg-kicad
 LIBS:m3radio-cache
-EELAYER 25 0
+EELAYER 27 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 2 2
 Title ""
-Date ""
+Date "8 feb 2016"
 Rev ""
 Comp ""
 Comment1 ""
