@@ -1,4 +1,4 @@
-update=02/07/16 15:42:21
+update=02/08/16 16:53:19
 version=1
 last_client=kicad
 [pcbnew]
@@ -60,3 +60,4 @@ LibName28=contrib
 LibName29=valves
 LibName30=ic/microcontroller/stm32f4xxvxtx
 LibName31=ic/microcontroller/stm32f405rxtx
+LibName32=D:/GitHub/agg-kicad/lib/ic/power/max17435
