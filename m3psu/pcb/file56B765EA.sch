@@ -1,41 +1,11 @@
 EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:stm32f4xxvxtx
-LIBS:stm32f405rxtx
+LIBS:agg-kicad
 LIBS:m3psu-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 5
+Sheet 2 5
 Title ""
 Date ""
 Rev ""
@@ -45,4 +15,390 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
+Text Label 4900 5400 2    60   ~ 0
+JTDI
+Text Label 6100 2200 0    60   ~ 0
+JTDO
+Text Notes 6050 2300 0    60   ~ 0
+PB4 is JTRST, DO NOT CONNECT (Errata 2.1.4)
+Text Label 4900 3300 2    60   ~ 0
+~RST
+$Comp
+L GND #PWR?
+U 1 1 56B9229A
+P 4950 3400
+F 0 "#PWR?" H 4820 3440 50  0001 L CNN
+F 1 "GND" H 4950 3300 50  0000 C CNN
+F 2 "" H 4950 3400 60  0000 C CNN
+F 3 "" H 4950 3400 60  0000 C CNN
+	1    4950 3400
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 56B922A1
+P 4900 3000
+F 0 "C?" H 4950 3070 50  0000 C CNN
+F 1 "2µ2" H 4950 2930 50  0000 C CNN
+F 2 "agg:0402" H 4900 3000 50  0001 C CNN
+F 3 "" H 4900 3000 50  0001 C CNN
+F 4 "2362088" H 4900 3000 60  0001 C CNN "Farnell"
+	1    4900 3000
+	-1   0    0    1   
+$EndComp
+$Comp
+L C C?
+U 1 1 56B922A9
+P 4750 3100
+F 0 "C?" H 4800 3170 50  0000 C CNN
+F 1 "2µ2" H 4800 3030 50  0000 C CNN
+F 2 "agg:0402" H 4750 3100 50  0001 C CNN
+F 3 "" H 4750 3100 50  0001 C CNN
+F 4 "2362088" H 4750 3100 60  0001 C CNN "Farnell"
+	1    4750 3100
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56B922B0
+P 4600 3000
+F 0 "#PWR?" H 4470 3040 50  0001 L CNN
+F 1 "GND" H 4600 2900 50  0000 C CNN
+F 2 "" H 4600 3000 60  0000 C CNN
+F 3 "" H 4600 3000 60  0000 C CNN
+	1    4600 3000
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56B922B6
+P 4600 3100
+F 0 "#PWR?" H 4470 3140 50  0001 L CNN
+F 1 "GND" H 4600 3000 50  0000 C CNN
+F 2 "" H 4600 3100 60  0000 C CNN
+F 3 "" H 4600 3100 60  0000 C CNN
+	1    4600 3100
+	0    1    1    0   
+$EndComp
+$Comp
+L SMD_XTAL Y?
+U 1 1 56B922BD
+P 4650 3550
+F 0 "Y?" H 4700 3620 50  0000 C CNN
+F 1 "26M" H 4700 3400 50  0000 C CNN
+F 2 "agg:XTAL-20x16" H 4700 3330 50  0001 C CNN
+F 3 "" H 4650 3550 50  0001 C CNN
+F 4 "2506952" H 4650 3550 60  0001 C CNN "Farnell"
+	1    4650 3550
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 56B922C5
+P 4450 3800
+F 0 "C?" H 4500 3870 50  0000 C CNN
+F 1 "10p" H 4500 3730 50  0000 C CNN
+F 2 "agg:0402" H 4450 3800 50  0001 C CNN
+F 3 "" H 4450 3800 50  0001 C CNN
+F 4 "2496790" H 4450 3800 60  0001 C CNN "Farnell"
+	1    4450 3800
+	-1   0    0    1   
+$EndComp
+$Comp
+L C C?
+U 1 1 56B922CD
+P 4350 3400
+F 0 "C?" H 4400 3470 50  0000 C CNN
+F 1 "10p" H 4400 3330 50  0000 C CNN
+F 2 "agg:0402" H 4350 3400 50  0001 C CNN
+F 3 "" H 4350 3400 50  0001 C CNN
+F 4 "2496790" H 4350 3400 60  0001 C CNN "Farnell"
+	1    4350 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56B922D4
+P 4200 3600
+F 0 "#PWR?" H 4070 3640 50  0001 L CNN
+F 1 "GND" H 4200 3500 50  0000 C CNN
+F 2 "" H 4200 3600 60  0000 C CNN
+F 3 "" H 4200 3600 60  0000 C CNN
+	1    4200 3600
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5000 5200 4900 5200
+Wire Wire Line
+	4900 5300 5000 5300
+Wire Wire Line
+	5000 5400 4900 5400
+Wire Wire Line
+	6000 2200 6100 2200
+Wire Wire Line
+	4900 3300 5000 3300
+Wire Wire Line
+	4950 3400 5000 3400
+Wire Wire Line
+	4600 3100 4650 3100
+Wire Wire Line
+	4600 3000 4800 3000
+Wire Wire Line
+	4900 3000 5000 3000
+Wire Wire Line
+	5000 3100 4750 3100
+Wire Wire Line
+	4250 3400 4250 3800
+Wire Wire Line
+	4250 3600 4200 3600
+Connection ~ 4250 3600
+Wire Wire Line
+	4350 3400 4250 3400
+Connection ~ 4250 3500
+Wire Wire Line
+	4250 3800 4350 3800
+Connection ~ 4250 3700
+Wire Wire Line
+	4550 3550 4550 3500
+Wire Wire Line
+	4550 3500 4250 3500
+Wire Wire Line
+	4550 3650 4550 3700
+Wire Wire Line
+	4550 3700 4250 3700
+Wire Wire Line
+	4450 3800 4800 3800
+Wire Wire Line
+	4450 3400 4800 3400
+Wire Wire Line
+	4650 3550 4650 3400
+Connection ~ 4650 3400
+Wire Wire Line
+	4650 3650 4650 3800
+Connection ~ 4650 3800
+$Comp
+L C C?
+U 1 1 56B922F6
+P 4700 2000
+F 0 "C?" H 4750 2070 50  0000 C CNN
+F 1 "100n" H 4750 1930 50  0000 C CNN
+F 2 "agg:0402" H 4700 2000 50  0001 C CNN
+F 3 "" H 4700 2000 50  0001 C CNN
+F 4 "2496771" H 4700 2000 60  0001 C CNN "Farnell"
+	1    4700 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56B922FE
+P 4500 2500
+F 0 "C?" H 4550 2570 50  0000 C CNN
+F 1 "1µ" H 4550 2430 50  0000 C CNN
+F 2 "agg:0402" H 4500 2500 50  0001 C CNN
+F 3 "" H 4500 2500 50  0001 C CNN
+F 4 "2496814" H 4500 2500 60  0001 C CNN "Farnell"
+	1    4500 2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56B92306
+P 4500 1900
+F 0 "C?" H 4550 1970 50  0000 C CNN
+F 1 "4µ7" H 4550 1830 50  0000 C CNN
+F 2 "agg:0402" H 4500 1900 50  0001 C CNN
+F 3 "" H 4500 1900 50  0001 C CNN
+F 4 "2426952" H 4500 1900 60  0001 C CNN "Farnell"
+	1    4500 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56B9230E
+P 4500 2100
+F 0 "C?" H 4550 2170 50  0000 C CNN
+F 1 "100n" H 4550 2030 50  0000 C CNN
+F 2 "agg:0402" H 4500 2100 50  0001 C CNN
+F 3 "" H 4500 2100 50  0001 C CNN
+F 4 "2496771" H 4500 2100 60  0001 C CNN "Farnell"
+	1    4500 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56B92316
+P 4700 2200
+F 0 "C?" H 4750 2270 50  0000 C CNN
+F 1 "100n" H 4750 2130 50  0000 C CNN
+F 2 "agg:0402" H 4700 2200 50  0001 C CNN
+F 3 "" H 4700 2200 50  0001 C CNN
+F 4 "2496771" H 4700 2200 60  0001 C CNN "Farnell"
+	1    4700 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56B9231E
+P 4500 2300
+F 0 "C?" H 4550 2370 50  0000 C CNN
+F 1 "100n" H 4550 2230 50  0000 C CNN
+F 2 "agg:0402" H 4500 2300 50  0001 C CNN
+F 3 "" H 4500 2300 50  0001 C CNN
+F 4 "2496771" H 4500 2300 60  0001 C CNN "Farnell"
+	1    4500 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56B92326
+P 4700 2400
+F 0 "C?" H 4750 2470 50  0000 C CNN
+F 1 "100n" H 4750 2330 50  0000 C CNN
+F 2 "agg:0402" H 4700 2400 50  0001 C CNN
+F 3 "" H 4700 2400 50  0001 C CNN
+F 4 "2496771" H 4700 2400 60  0001 C CNN "Farnell"
+	1    4700 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4800 2400 5000 2400
+Wire Wire Line
+	4600 2500 4850 2500
+Wire Wire Line
+	4850 2500 4850 2400
+Connection ~ 4850 2400
+Wire Wire Line
+	4600 2300 5000 2300
+Wire Wire Line
+	4800 2200 5000 2200
+Wire Wire Line
+	4600 2100 5000 2100
+Wire Wire Line
+	4800 2000 5000 2000
+Wire Wire Line
+	4600 1900 4850 1900
+Wire Wire Line
+	4850 1900 4850 2000
+Connection ~ 4850 2000
+$Comp
+L GND #PWR?
+U 1 1 56B92338
+P 4450 2550
+F 0 "#PWR?" H 4320 2590 50  0001 L CNN
+F 1 "GND" H 4450 2450 50  0000 C CNN
+F 2 "" H 4450 2550 60  0000 C CNN
+F 3 "" H 4450 2550 60  0000 C CNN
+	1    4450 2550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4500 1900 4450 1900
+Wire Wire Line
+	4450 1900 4450 2550
+Wire Wire Line
+	4500 2500 4450 2500
+Connection ~ 4450 2500
+Wire Wire Line
+	4700 2400 4450 2400
+Connection ~ 4450 2400
+Wire Wire Line
+	4500 2300 4450 2300
+Connection ~ 4450 2300
+Wire Wire Line
+	4700 2200 4450 2200
+Connection ~ 4450 2200
+Wire Wire Line
+	4500 2100 4450 2100
+Connection ~ 4450 2100
+Wire Wire Line
+	4700 2000 4450 2000
+Connection ~ 4450 2000
+$Comp
+L 3v3 #PWR?
+U 1 1 56B9234C
+P 4950 1850
+F 0 "#PWR?" H 4950 1960 50  0001 L CNN
+F 1 "3v3" H 4950 1940 50  0000 C CNN
+F 2 "" H 4950 1850 60  0000 C CNN
+F 3 "" H 4950 1850 60  0000 C CNN
+	1    4950 1850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4950 1850 4950 2400
+Wire Wire Line
+	4950 1900 5000 1900
+Connection ~ 4950 2000
+Connection ~ 4950 1900
+Connection ~ 4950 2100
+Connection ~ 4950 2200
+Connection ~ 4950 2300
+Connection ~ 4950 2400
+$Comp
+L GND #PWR?
+U 1 1 56B9235A
+P 4850 2800
+F 0 "#PWR?" H 4720 2840 50  0001 L CNN
+F 1 "GND" H 4850 2700 50  0000 C CNN
+F 2 "" H 4850 2800 60  0000 C CNN
+F 3 "" H 4850 2800 60  0000 C CNN
+	1    4850 2800
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4850 2800 5000 2800
+Wire Wire Line
+	5000 2700 4950 2700
+Wire Wire Line
+	4950 2600 4950 2800
+Connection ~ 4950 2800
+Wire Wire Line
+	5000 2600 4950 2600
+Connection ~ 4950 2700
+$Comp
+L R R?
+U 1 1 56B92367
+P 4850 3700
+F 0 "R?" H 4900 3750 50  0000 C CNN
+F 1 "100" H 4900 3650 50  0000 C CNN
+F 2 "agg:0402" H 4850 3700 50  0001 C CNN
+F 3 "" H 4850 3700 50  0001 C CNN
+F 4 "9239111" H 4850 3700 60  0001 C CNN "Farnell"
+	1    4850 3700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5000 3700 4950 3700
+Text Label 6100 2800 0    60   ~ 0
+CAN_TXD
+Text Label 6100 2700 0    60   ~ 0
+CAN_RXD
+Wire Wire Line
+	6100 2800 6000 2800
+Wire Wire Line
+	6000 2700 6100 2700
+Wire Wire Line
+	4850 3700 4800 3700
+Wire Wire Line
+	4800 3700 4800 3800
+Wire Wire Line
+	4800 3400 4800 3600
+Wire Wire Line
+	4800 3600 5000 3600
+Text Label 4900 5300 2    60   ~ 0
+JTCK
+Text Label 4900 5200 2    60   ~ 0
+JTMS
+$Comp
+L STM32F405RxTx IC?
+U 1 1 56B9228C
+P 5500 3700
+F 0 "IC?" H 5100 5600 50  0000 L CNN
+F 1 "STM32F405RxTx" H 5100 1800 50  0000 L CNN
+F 2 "agg:LQFP-64" H 5100 1700 50  0001 L CNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00037051.pdf" H 5100 1600 50  0001 L CNN
+F 4 "2064363" H 5100 1500 50  0001 L CNN "Farnell"
+	1    5500 3700
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
