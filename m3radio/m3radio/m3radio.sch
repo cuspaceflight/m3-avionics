@@ -19,6 +19,11 @@ Text Notes 1720 5600 0    118  ~ 0
 Connectors
 Text Notes 1660 720  0    118  ~ 0
 Microcontroller
+<<<<<<< HEAD
+=======
+Wire Notes Line
+	7310 6300 11160 6300
+>>>>>>> d9a79b3f8a93c19041f83594e4756057ce00093e
 Text Notes 9043 3872 0    118  ~ 0
 Radio
 Text Notes 9090 710  0    118  ~ 0
@@ -36,6 +41,11 @@ F6 "Radio_nSEL" I L 8700 5050 60
 $EndSheet
 Text Notes 8600 1150 0    59   ~ 0
 Ublox Max-Q7 or MaxQ8 (GPS)
+<<<<<<< HEAD
+=======
+Text Notes 1900 1100 0    59   ~ 0
+STM32F405 rgt6
+>>>>>>> d9a79b3f8a93c19041f83594e4756057ce00093e
 $Comp
 L MAX-7Q IC?
 U 1 1 56B20C81
@@ -357,6 +367,19 @@ Wire Wire Line
 	8700 4700 8550 4700
 Wire Wire Line
 	8700 5050 8550 5050
+<<<<<<< HEAD
+=======
+Text Label 8550 4350 2    60   ~ 0
+Radio_SCLK
+Text Label 8550 4550 2    60   ~ 0
+Radio_SDI
+Text Label 8550 4700 2    60   ~ 0
+Radio_nIRQ
+Text Label 8550 4850 2    60   ~ 0
+Radio_SDO
+Text Label 8550 5050 2    60   ~ 0
+Radio_nSEL
+>>>>>>> d9a79b3f8a93c19041f83594e4756057ce00093e
 Wire Notes Line
 	7300 500  7300 6300
 Wire Notes Line
@@ -365,6 +388,7 @@ Wire Notes Line
 	4300 550  4300 7800
 Wire Notes Line
 	500  5200 4300 5200
+<<<<<<< HEAD
 Wire Wire Line
 	1550 3300 1800 3300
 Wire Wire Line
@@ -464,4 +488,6 @@ Wire Wire Line
 	1100 2600 1600 2600
 Wire Wire Line
 	1600 2700 1800 2700
+=======
+>>>>>>> d9a79b3f8a93c19041f83594e4756057ce00093e
 $EndSCHEMATC
