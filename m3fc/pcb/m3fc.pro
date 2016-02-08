@@ -1,4 +1,4 @@
-update=Thu 04 Feb 2016 04:39:34 GMT
+update=Mon 08 Feb 2016 02:18:19 GMT
 version=1
 last_client=kicad
 [pcbnew]
@@ -33,7 +33,7 @@ LibName1=/home/adam/Projects/m3-avionics/agg-kicad/agg-kicad
 [schematic_editor]
 version=1
 PageLayoutDescrFile=
-PlotDirectoryName=/home/adam/m3fc.pdf
+PlotDirectoryName=
 SubpartIdSeparator=0
 SubpartFirstId=65
 NetFmtName=Pcbnew

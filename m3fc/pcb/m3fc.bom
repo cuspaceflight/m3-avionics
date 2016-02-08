@@ -1,0 +1,77 @@
+Bill Of Materials
+=================
+
+Source file: m3fc.xml
+Date: 2016-02-08T03:53:44.210976
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+Q1     NFET            agg:SOT-23
+P1     SWD_TC          agg:TC2030-NL
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    SFML-110-02-L-D-LC: 
+      J4     EAST BOT        agg:SFML-110-02-L-D-LC
+      J2     WEST BOT        agg:SFML-110-02-L-D-LC
+    TFML-110-02-L-D: 
+      J3     EAST TOP        agg:TFML-110-02-L-D
+      J1     WEST TOP        agg:TFML-110-02-L-D
+
+Vendor Specific BOMs
+--------------------
+  Samtec
+  ~~~~~~
+SFML-110-02-L-D-LC,2,2x J4 J2 SFML-110-02-L-D-LC
+TFML-110-02-L-D,2,2x J3 J1 TFML-110-02-L-D
+
+
+  Farnell
+  ~~~~~~~
+2064363,1,1x STM32F405RxTx LQFP-64
+2426952,1,1x 4µ7 0402
+2496814,1,1x 1µ 0402
+2362662,1,1x MS5611-01BA03 MS5611
+9239111,5,5x 100 0402
+2506952,1,1x 26M XTAL-20x16
+2456110,1,1x 10µ 0603
+2452032,1,1x D 0402
+2362088,2,2x 2µ2 0402
+2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
+1853935,1,1x ADXL345 ADXL3x5
+2496790,2,2x 10p 0402
+2496771,9,9x 100n 0402
+2215089,1,1x SOUNDER KSSG13J12-N
+2314404,1,1x RED 0603-LED
+2335804,1,1x YLW 0603-LED
+2290363,1,1x GRN 0603-LED
+
+
+Assembly BOM
+------------
+SFML-110-02-L-D-LC   2   WEST BOT,EAST BOT SFML-110-02-L-D-LC J2 J4
+TFML-110-02-L-D      2   EAST TOP,WEST TOP TFML-110-02-L-D J1 J3
+2064363              1   STM32F405RxTx   LQFP-64         IC1
+2426952              1   4µ7             0402            C2
+2496814              1   1µ              0402            C5
+2362662              1   MS5611-01BA03   MS5611          IC2
+9239111              5   100             0402            R1 R2 R3 R4 R5
+2506952              1   26M             XTAL-20x16      Y1
+2456110              1   10µ             0603            C13
+2452032              1   D               0402            D4
+2362088              2   2µ2             0402            C10 C11
+2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC3
+1853935              1   ADXL345         ADXL3x5         IC4
+2496790              2   10p             0402            C1 C6
+2496771              9   100n            0402            C14 C15 C16 C17 C3 C4 C7 C8 C9
+2215089              1   SOUNDER         KSSG13J12-N     LS1
+2314404              1   RED             0603-LED        D1
+2335804              1   YLW             0603-LED        D2
+2290363              1   GRN             0603-LED        D3
+
