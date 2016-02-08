@@ -1,4 +1,4 @@
-update=Wed 03 Feb 2016 16:15:01 GMT
+update=02/07/16 15:42:21
 version=1
 last_client=kicad
 [pcbnew]
@@ -59,3 +59,4 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=ic/microcontroller/stm32f4xxvxtx
+LibName31=ic/microcontroller/stm32f405rxtx
