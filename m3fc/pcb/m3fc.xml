@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>/home/adam/Projects/m3-avionics/m3fc/pcb/m3fc.sch</source>
-    <date>Mon 08 Feb 2016 03:57:19 GMT</date>
+    <date>Tue 09 Feb 2016 22:06:48 GMT</date>
     <tool>Eeschema 0.201601071449+6428~40~ubuntu14.04.1-stable</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -73,6 +73,9 @@
     <comp ref="Q1">
       <value>NFET</value>
       <footprint>agg:SOT-23</footprint>
+      <fields>
+        <field name="Farnell">2069541</field>
+      </fields>
       <libsource lib="agg-kicad" part="NFET"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56B176B0</tstamp>
@@ -377,9 +380,9 @@
     </comp>
     <comp ref="D4">
       <value>D</value>
-      <footprint>agg:0402</footprint>
+      <footprint>agg:SOD-323</footprint>
       <fields>
-        <field name="Farnell">2452032</field>
+        <field name="Farnell">1459033</field>
       </fields>
       <libsource lib="agg-kicad" part="D"/>
       <sheetpath names="/" tstamps="/"/>
