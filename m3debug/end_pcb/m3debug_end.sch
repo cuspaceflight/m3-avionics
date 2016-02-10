@@ -1,0 +1,596 @@
+EESchema Schematic File Version 2
+LIBS:agg-kicad
+LIBS:m3debug_end-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "M3 Debug End Board"
+Date "2016-02-10"
+Rev "1"
+Comp "CU Spaceflight"
+Comment1 "Drawn By: Adam Greig"
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L CONN_02x10 J?
+U 1 1 56BABE9D
+P 5900 2650
+F 0 "J?" H 5800 2750 50  0000 L CNN
+F 1 "EAST TOP" H 5850 1650 50  0000 C CNN
+F 2 "agg:TFML-110-02-L-D" H 5900 2650 50  0001 C CNN
+F 3 "" H 5900 2650 50  0001 C CNN
+F 4 "TFML-110-02-L-D" H 5900 2650 60  0001 C CNN "Samtec"
+	1    5900 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABEA4
+P 4650 3600
+F 0 "#PWR?" H 4520 3640 50  0001 L CNN
+F 1 "GND" H 4650 3500 50  0000 C CNN
+F 2 "" H 4650 3600 60  0000 C CNN
+F 3 "" H 4650 3600 60  0000 C CNN
+	1    4650 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABEAA
+P 4250 3600
+F 0 "#PWR?" H 4120 3640 50  0001 L CNN
+F 1 "GND" H 4250 3500 50  0000 C CNN
+F 2 "" H 4250 3600 60  0000 C CNN
+F 3 "" H 4250 3600 60  0000 C CNN
+	1    4250 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABEB0
+P 4250 2600
+F 0 "#PWR?" H 4120 2640 50  0001 L CNN
+F 1 "GND" H 4250 2500 50  0000 C CNN
+F 2 "" H 4250 2600 60  0000 C CNN
+F 3 "" H 4250 2600 60  0000 C CNN
+	1    4250 2600
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABEB6
+P 4650 2600
+F 0 "#PWR?" H 4520 2640 50  0001 L CNN
+F 1 "GND" H 4650 2500 50  0000 C CNN
+F 2 "" H 4650 2600 60  0000 C CNN
+F 3 "" H 4650 2600 60  0000 C CNN
+	1    4650 2600
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABEBC
+P 5650 3600
+F 0 "#PWR?" H 5520 3640 50  0001 L CNN
+F 1 "GND" H 5650 3500 50  0000 C CNN
+F 2 "" H 5650 3600 60  0000 C CNN
+F 3 "" H 5650 3600 60  0000 C CNN
+	1    5650 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABEC2
+P 6050 3600
+F 0 "#PWR?" H 5920 3640 50  0001 L CNN
+F 1 "GND" H 6050 3500 50  0000 C CNN
+F 2 "" H 6050 3600 60  0000 C CNN
+F 3 "" H 6050 3600 60  0000 C CNN
+	1    6050 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABEC8
+P 5650 2600
+F 0 "#PWR?" H 5520 2640 50  0001 L CNN
+F 1 "GND" H 5650 2500 50  0000 C CNN
+F 2 "" H 5650 2600 60  0000 C CNN
+F 3 "" H 5650 2600 60  0000 C CNN
+	1    5650 2600
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABECE
+P 6050 2600
+F 0 "#PWR?" H 5920 2640 50  0001 L CNN
+F 1 "GND" H 6050 2500 50  0000 C CNN
+F 2 "" H 6050 2600 60  0000 C CNN
+F 3 "" H 6050 2600 60  0000 C CNN
+	1    6050 2600
+	-1   0    0    1   
+$EndComp
+Text Label 4700 2750 0    60   ~ 0
+JTMS
+Text Label 4700 2850 0    60   ~ 0
+JTCK
+Text Label 4200 2750 2    60   ~ 0
+3v3_IMU
+Text Label 4200 2850 2    60   ~ 0
+3v3_RADIO
+Text Label 4200 2950 2    60   ~ 0
+3v3_FC
+Text Label 4200 3050 2    60   ~ 0
+3v3_PYRO
+Text Label 4200 3150 2    60   ~ 0
+3v3_DL
+Text Label 4700 3250 0    60   ~ 0
+5v_CAN
+Text Label 4700 3350 0    60   ~ 0
+CAN-
+Text Label 4700 3450 0    60   ~ 0
+CAN+
+Text Label 5600 2750 2    60   ~ 0
+PYRO_SO
+Text Label 6100 2750 0    60   ~ 0
+PYRO_SO
+Text Label 5600 2850 2    60   ~ 0
+PYRO_SI
+Text Label 6100 2850 0    60   ~ 0
+PYRO_SI
+Text Label 5600 2950 2    60   ~ 0
+5v_RADIO
+Text Label 5600 3050 2    60   ~ 0
+5v_IMU
+Text Label 5600 3150 2    60   ~ 0
+5v_AUX1
+Text Label 5600 3250 2    60   ~ 0
+5v_AUX2
+Text Label 5600 3350 2    60   ~ 0
+5v_CAM
+Text Label 5600 3450 2    60   ~ 0
+CHARGE
+Text Label 6100 3450 0    60   ~ 0
+CHARGE
+Text Label 6100 3350 0    60   ~ 0
+PWR
+Text Label 6100 3250 0    60   ~ 0
+PYRO4
+Text Label 6100 3150 0    60   ~ 0
+PYRO3
+Text Label 6100 3050 0    60   ~ 0
+PYRO2
+Text Label 6100 2950 0    60   ~ 0
+PYRO1
+$Comp
+L CONN_02x10 J?
+U 1 1 56BABEF1
+P 4500 2650
+F 0 "J?" H 4400 2750 50  0000 L CNN
+F 1 "WEST TOP" H 4450 1650 50  0000 C CNN
+F 2 "agg:TFML-110-02-L-D" H 4500 2650 50  0001 C CNN
+F 3 "" H 4500 2650 50  0001 C CNN
+F 4 "TFML-110-02-L-D" H 4500 2650 60  0001 C CNN "Samtec"
+	1    4500 2650
+	1    0    0    -1  
+$EndComp
+Text Label 4200 3250 2    60   ~ 0
+3v3_AUX1
+Text Label 4200 3350 2    60   ~ 0
+3v3_AUX2
+Text Label 4700 3150 0    60   ~ 0
+RSVD1
+Text Label 4200 3450 2    60   ~ 0
+RSVD2
+$Comp
+L GND #PWR?
+U 1 1 56BABF2D
+P 4650 5150
+F 0 "#PWR?" H 4520 5190 50  0001 L CNN
+F 1 "GND" H 4650 5050 50  0000 C CNN
+F 2 "" H 4650 5150 60  0000 C CNN
+F 3 "" H 4650 5150 60  0000 C CNN
+	1    4650 5150
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABF33
+P 4250 5150
+F 0 "#PWR?" H 4120 5190 50  0001 L CNN
+F 1 "GND" H 4250 5050 50  0000 C CNN
+F 2 "" H 4250 5150 60  0000 C CNN
+F 3 "" H 4250 5150 60  0000 C CNN
+	1    4250 5150
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABF39
+P 4250 4150
+F 0 "#PWR?" H 4120 4190 50  0001 L CNN
+F 1 "GND" H 4250 4050 50  0000 C CNN
+F 2 "" H 4250 4150 60  0000 C CNN
+F 3 "" H 4250 4150 60  0000 C CNN
+	1    4250 4150
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABF3F
+P 4650 4150
+F 0 "#PWR?" H 4520 4190 50  0001 L CNN
+F 1 "GND" H 4650 4050 50  0000 C CNN
+F 2 "" H 4650 4150 60  0000 C CNN
+F 3 "" H 4650 4150 60  0000 C CNN
+	1    4650 4150
+	-1   0    0    1   
+$EndComp
+Text Label 4700 4600 0    60   ~ 0
+JTDR
+Text Label 4700 4300 0    60   ~ 0
+JTMS
+Text Label 4700 4400 0    60   ~ 0
+JTCK
+Text Label 4200 4300 2    60   ~ 0
+3v3_IMU
+Text Label 4200 4400 2    60   ~ 0
+3v3_RADIO
+Text Label 4200 4500 2    60   ~ 0
+3v3_FC
+Text Label 4200 4600 2    60   ~ 0
+3v3_PYRO
+Text Label 4200 4700 2    60   ~ 0
+3v3_DL
+Text Label 4700 4800 0    60   ~ 0
+5v_CAN
+Text Label 4700 4900 0    60   ~ 0
+CAN-
+Text Label 4700 5000 0    60   ~ 0
+CAN+
+$Comp
+L CONN_02x10 J?
+U 1 1 56BABF51
+P 5900 4200
+F 0 "J?" H 5800 4300 50  0000 L CNN
+F 1 "EAST BOT" H 5850 3200 50  0000 C CNN
+F 2 "agg:SFML-110-02-L-D-LC" H 5900 4200 50  0001 C CNN
+F 3 "" H 5900 4200 50  0001 C CNN
+F 4 "SFML-110-02-L-D-LC" H 5900 4200 60  0001 C CNN "Samtec"
+	1    5900 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABF58
+P 5650 5150
+F 0 "#PWR?" H 5520 5190 50  0001 L CNN
+F 1 "GND" H 5650 5050 50  0000 C CNN
+F 2 "" H 5650 5150 60  0000 C CNN
+F 3 "" H 5650 5150 60  0000 C CNN
+	1    5650 5150
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABF5E
+P 6050 5150
+F 0 "#PWR?" H 5920 5190 50  0001 L CNN
+F 1 "GND" H 6050 5050 50  0000 C CNN
+F 2 "" H 6050 5150 60  0000 C CNN
+F 3 "" H 6050 5150 60  0000 C CNN
+	1    6050 5150
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABF64
+P 5650 4150
+F 0 "#PWR?" H 5520 4190 50  0001 L CNN
+F 1 "GND" H 5650 4050 50  0000 C CNN
+F 2 "" H 5650 4150 60  0000 C CNN
+F 3 "" H 5650 4150 60  0000 C CNN
+	1    5650 4150
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56BABF6A
+P 6050 4150
+F 0 "#PWR?" H 5920 4190 50  0001 L CNN
+F 1 "GND" H 6050 4050 50  0000 C CNN
+F 2 "" H 6050 4150 60  0000 C CNN
+F 3 "" H 6050 4150 60  0000 C CNN
+	1    6050 4150
+	-1   0    0    1   
+$EndComp
+Text Label 5600 4300 2    60   ~ 0
+PYRO_SO
+Text Label 6100 4300 0    60   ~ 0
+PYRO_SO
+Text Label 5600 4400 2    60   ~ 0
+PYRO_SI
+Text Label 6100 4400 0    60   ~ 0
+PYRO_SI
+Text Label 5600 4500 2    60   ~ 0
+5v_RADIO
+Text Label 5600 4600 2    60   ~ 0
+5v_IMU
+Text Label 5600 4700 2    60   ~ 0
+5v_AUX1
+Text Label 5600 4800 2    60   ~ 0
+5v_AUX2
+Text Label 5600 4900 2    60   ~ 0
+5v_CAM
+Text Label 5600 5000 2    60   ~ 0
+CHARGE
+Text Label 6100 5000 0    60   ~ 0
+CHARGE
+Text Label 6100 4900 0    60   ~ 0
+PWR
+Text Label 6100 4800 0    60   ~ 0
+PYRO4
+Text Label 6100 4700 0    60   ~ 0
+PYRO3
+Text Label 6100 4600 0    60   ~ 0
+PYRO2
+Text Label 6100 4500 0    60   ~ 0
+PYRO1
+$Comp
+L CONN_02x10 J?
+U 1 1 56BABF81
+P 4500 4200
+F 0 "J?" H 4400 4300 50  0000 L CNN
+F 1 "WEST BOT" H 4450 3200 50  0000 C CNN
+F 2 "agg:SFML-110-02-L-D-LC" H 4500 4200 50  0001 C CNN
+F 3 "" H 4500 4200 50  0001 C CNN
+F 4 "SFML-110-02-L-D-LC" H 4500 4200 60  0001 C CNN "Samtec"
+	1    4500 4200
+	1    0    0    -1  
+$EndComp
+Text Label 4200 4800 2    60   ~ 0
+3v3_AUX1
+Text Label 4200 4900 2    60   ~ 0
+3v3_AUX2
+Text Label 4700 4700 0    60   ~ 0
+RSVD1
+Text Label 4200 5000 2    60   ~ 0
+RSVD2
+Text Label 4700 2950 0    60   ~ 0
+JTDO
+Text Label 4700 4500 0    60   ~ 0
+JTDI
+Text Label 4700 3050 0    60   ~ 0
+JTDR
+Text Label 7300 3100 0    60   ~ 0
+JTDO
+Text Label 7300 3200 0    60   ~ 0
+JTDR
+Text Label 7300 3300 0    60   ~ 0
+JTDI
+Text Label 7500 2750 0    60   ~ 0
+CAN-
+Text Label 7200 2750 2    60   ~ 0
+CAN+
+$Comp
+L R R?
+U 1 1 56BAC2A4
+P 7300 2750
+F 0 "R?" H 7350 2800 50  0000 C CNN
+F 1 "120" H 7350 2700 50  0000 C CNN
+F 2 "" H 7300 2750 50  0001 C CNN
+F 3 "" H 7300 2750 50  0001 C CNN
+	1    7300 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4250 2600 4250 2650
+Wire Wire Line
+	4250 2650 4300 2650
+Wire Wire Line
+	4600 2650 4650 2650
+Wire Wire Line
+	4650 2650 4650 2600
+Wire Wire Line
+	4600 3550 4650 3550
+Wire Wire Line
+	4650 3550 4650 3600
+Wire Wire Line
+	4300 3550 4250 3550
+Wire Wire Line
+	4250 3550 4250 3600
+Wire Wire Line
+	6000 2650 6050 2650
+Wire Wire Line
+	6050 2650 6050 2600
+Wire Wire Line
+	5700 2650 5650 2650
+Wire Wire Line
+	5650 2650 5650 2600
+Wire Wire Line
+	5700 3550 5650 3550
+Wire Wire Line
+	5650 3550 5650 3600
+Wire Wire Line
+	6000 3550 6050 3550
+Wire Wire Line
+	6050 3550 6050 3600
+Wire Wire Line
+	4300 2750 4200 2750
+Wire Wire Line
+	4300 2850 4200 2850
+Wire Wire Line
+	4300 2950 4200 2950
+Wire Wire Line
+	4300 3050 4200 3050
+Wire Wire Line
+	4600 3450 4700 3450
+Wire Wire Line
+	4600 3350 4700 3350
+Wire Wire Line
+	4600 3250 4700 3250
+Wire Wire Line
+	4600 3050 4700 3050
+Wire Wire Line
+	4600 2950 4700 2950
+Wire Wire Line
+	4600 2850 4700 2850
+Wire Wire Line
+	4600 2750 4700 2750
+Wire Wire Line
+	5700 2750 5600 2750
+Wire Wire Line
+	5600 2850 5700 2850
+Wire Wire Line
+	5700 2950 5600 2950
+Wire Wire Line
+	5600 3050 5700 3050
+Wire Wire Line
+	5700 3150 5600 3150
+Wire Wire Line
+	5600 3250 5700 3250
+Wire Wire Line
+	5700 3350 5600 3350
+Wire Wire Line
+	5600 3450 5700 3450
+Wire Wire Line
+	6000 3450 6100 3450
+Wire Wire Line
+	6100 3350 6000 3350
+Wire Wire Line
+	6000 3250 6100 3250
+Wire Wire Line
+	6000 3150 6100 3150
+Wire Wire Line
+	6100 3050 6000 3050
+Wire Wire Line
+	6000 2950 6100 2950
+Wire Wire Line
+	6100 2850 6000 2850
+Wire Wire Line
+	6000 2750 6100 2750
+Wire Wire Line
+	4300 3150 4200 3150
+Wire Wire Line
+	4300 3250 4200 3250
+Wire Wire Line
+	4200 3350 4300 3350
+Wire Wire Line
+	4600 3150 4700 3150
+Wire Wire Line
+	4300 3450 4200 3450
+Wire Wire Line
+	4250 4150 4250 4200
+Wire Wire Line
+	4250 4200 4300 4200
+Wire Wire Line
+	4600 4200 4650 4200
+Wire Wire Line
+	4650 4200 4650 4150
+Wire Wire Line
+	4600 5100 4650 5100
+Wire Wire Line
+	4650 5100 4650 5150
+Wire Wire Line
+	4300 5100 4250 5100
+Wire Wire Line
+	4250 5100 4250 5150
+Wire Wire Line
+	4300 4300 4200 4300
+Wire Wire Line
+	4300 4400 4200 4400
+Wire Wire Line
+	4300 4500 4200 4500
+Wire Wire Line
+	4300 4600 4200 4600
+Wire Wire Line
+	4600 5000 4700 5000
+Wire Wire Line
+	4600 4900 4700 4900
+Wire Wire Line
+	4600 4800 4700 4800
+Wire Wire Line
+	4600 4600 4700 4600
+Wire Wire Line
+	4600 4500 4700 4500
+Wire Wire Line
+	4600 4400 4700 4400
+Wire Wire Line
+	4600 4300 4700 4300
+Wire Wire Line
+	6000 4200 6050 4200
+Wire Wire Line
+	6050 4200 6050 4150
+Wire Wire Line
+	5700 4200 5650 4200
+Wire Wire Line
+	5650 4200 5650 4150
+Wire Wire Line
+	5700 5100 5650 5100
+Wire Wire Line
+	5650 5100 5650 5150
+Wire Wire Line
+	6000 5100 6050 5100
+Wire Wire Line
+	6050 5100 6050 5150
+Wire Wire Line
+	5700 4300 5600 4300
+Wire Wire Line
+	5600 4400 5700 4400
+Wire Wire Line
+	5700 4500 5600 4500
+Wire Wire Line
+	5600 4600 5700 4600
+Wire Wire Line
+	5700 4700 5600 4700
+Wire Wire Line
+	5600 4800 5700 4800
+Wire Wire Line
+	5700 4900 5600 4900
+Wire Wire Line
+	5600 5000 5700 5000
+Wire Wire Line
+	6000 5000 6100 5000
+Wire Wire Line
+	6100 4900 6000 4900
+Wire Wire Line
+	6000 4800 6100 4800
+Wire Wire Line
+	6000 4700 6100 4700
+Wire Wire Line
+	6100 4600 6000 4600
+Wire Wire Line
+	6000 4500 6100 4500
+Wire Wire Line
+	6100 4400 6000 4400
+Wire Wire Line
+	6000 4300 6100 4300
+Wire Wire Line
+	4300 4700 4200 4700
+Wire Wire Line
+	4300 4800 4200 4800
+Wire Wire Line
+	4200 4900 4300 4900
+Wire Wire Line
+	4600 4700 4700 4700
+Wire Wire Line
+	4300 5000 4200 5000
+Wire Wire Line
+	7300 3100 7200 3100
+Wire Wire Line
+	7200 3100 7200 3300
+Wire Wire Line
+	7200 3300 7300 3300
+Wire Wire Line
+	7300 3200 7200 3200
+Connection ~ 7200 3200
+Wire Wire Line
+	7500 2750 7400 2750
+Wire Wire Line
+	7300 2750 7200 2750
+$EndSCHEMATC
