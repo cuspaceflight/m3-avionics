@@ -29,4 +29,4 @@ version=1
 version=1
 LibDir=
 [eeschema/libraries]
-LibName1=/home/adam/Projects/m3-avionics/agg-kicad/agg-kicad
+LibName1=../../agg-kicad/agg-kicad
