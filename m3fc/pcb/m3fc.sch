@@ -6,11 +6,11 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
+Title "M3 Flight Computer"
+Date "2016-02-10"
+Rev "1"
+Comp "CU Spaceflight"
+Comment1 "Drawn By: Adam Greig"
 Comment2 ""
 Comment3 ""
 Comment4 ""

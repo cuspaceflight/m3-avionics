@@ -1,4 +1,4 @@
-update=Mon 08 Feb 2016 02:18:19 GMT
+update=Wed 10 Feb 2016 04:16:45 GMT
 version=1
 last_client=kicad
 [pcbnew]
@@ -25,11 +25,6 @@ version=1
 NetIExt=net
 [general]
 version=1
-[eeschema]
-version=1
-LibDir=
-[eeschema/libraries]
-LibName1=/home/adam/Projects/m3-avionics/agg-kicad/agg-kicad
 [schematic_editor]
 version=1
 PageLayoutDescrFile=
@@ -41,3 +36,8 @@ SpiceForceRefPrefix=0
 SpiceUseNetNumbers=0
 LabSize=60
 ERC_TestSimilarLabels=1
+[eeschema]
+version=1
+LibDir=
+[eeschema/libraries]
+LibName1=../../agg-kicad/agg-kicad
