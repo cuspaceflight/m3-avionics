@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: m3debug.xml
-Date: 2016-02-11T04:39:05.967570
+Date: 2016-02-16T04:08:33.014441
 
 Parts Missing Footprints
 ------------------------
@@ -11,39 +11,37 @@ Parts Missing Footprints
 Parts Missing Order Codes
 -------------------------
 P1     SWD_TC          agg:TC2030-NL
-D3     RED             agg:0603-LED
 D4     RED             agg:0603-LED
 D5     RED             agg:0603-LED
 D6     RED             agg:0603-LED
-J6     CHARGING        agg:B02B-PASK
-D7     GRN             agg:0603-LED
-C17    2µ2             agg:0603
+D7     RED             agg:0603-LED
+D11    GRN             agg:0603-LED
 C15    2µ2             agg:0603
-D1     GRN             agg:0603-LED
-D2     GRN             agg:0603-LED
-R5     120             agg:0402
+C13    2µ2             agg:0603
+R6     120             agg:0402
+D12    GRN             agg:0603-LED
+D10    GRN             agg:0603-LED
+D2     YLW             agg:0603-LED
+D1     YLW             agg:0603-LED
+C14    1n              agg:0402
+C16    10µ             agg:0603
+C17    10µ             agg:0603
+D3     RED             agg:0603-LED
+R7     4k7             agg:0402
+R8     10k             agg:0402
+J13    CONN_02x01      agg:DIL-254P-02
+J7     CONN_02x01      agg:DIL-254P-02
+J6     CONN_02x04      agg:DIL-254P-08
+J8     CONN_01x02      agg:S02B-PASK-2
+J5     CONN_01x02      agg:S02B-PASK-2
+J10    CONN_02x05      agg:DIL-254P-10
+J12    CONN_02x07      agg:DIL-254P-14
+J11    CONN_02x01      agg:DIL-254P-02
+D8     RED             agg:0603-LED
 D9     GRN             agg:0603-LED
-D8     GRN             agg:0603-LED
-D11    YLW             agg:0603-LED
-D10    YLW             agg:0603-LED
-C16    1n              agg:0402
-C18    10µ             agg:0603
-C14    10µ             agg:0603
-D12    RED             agg:0603-LED
-R3     4k7             agg:0402
-R4     10k             agg:0402
-J7     PYRO1           agg:B02B-PASK
-D13    RED             agg:0603-LED
 
 Inconsistent Order Codes
 ------------------------
-  Farnell
-  ~~~~~~~
-    2292959: 
-      SW1    PYRO_ARMING     agg:A101SYCQ04
-      SW2    POWER_SWITCH    agg:A101SYCQ04
-      SW3    SUPPLY_5V       agg:A101SYCQ04
-      SW4    SUPPLY_3V3      agg:A101SYCQ04
   Samtec
   ~~~~~~
     TFML-110-02-L-D: 
@@ -55,44 +53,42 @@ Inconsistent Order Codes
 
 Vendor Specific BOMs
 --------------------
-  Farnell
-  ~~~~~~~
-2426952,1,1x 4µ7 0402
-9239111,1,1x 100 0402
-2292959,4,4x POWER_SWITCH PYRO_ARMING SU
-2067775,1,1x ADP3335 MSOP-8
-2496814,1,1x 1µ 0402
-9232761,14,14x 1k 0402
-2506952,1,1x 26M XTAL-20x16
-2362088,2,2x 2µ2 0402
-1568023,1,1x MICROUSB MICROUSB_MOLEX_475
-2064363,1,1x STM32F405RxTx LQFP-64
-2496790,2,2x 10p 0402
-2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
-2496771,6,6x 100n 0402
-
-
   Samtec
   ~~~~~~
 TFML-110-02-L-D,2,2x J3 J1 TFML-110-02-L-D
 SFML-110-02-L-D-LC,2,2x J4 J2 SFML-110-02-L-D-LC
 
 
+  Farnell
+  ~~~~~~~
+2496814,1,1x 1µ 0402
+2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
+9232761,13,13x 1k 0402
+9239111,1,1x 100 0402
+2496790,2,2x 10p 0402
+1568023,1,1x MICROUSB MICROUSB_MOLEX_475
+2496771,6,6x 100n 0402
+2067775,1,1x ADP3335 MSOP-8
+2362088,2,2x 2µ2 0402
+2426952,1,1x 4µ7 0402
+2064363,1,1x STM32F405RxTx LQFP-64
+2506952,1,1x 26M XTAL-20x16
+
+
 Assembly BOM
 ------------
-2426952              1   4µ7             0402            C3
-9239111              1   100             0402            R2
-2292959              4   POWER_SWITCH,PYRO_ARMING,SUPPLY_5V,SUPPLY_3V3 A101SYCQ04      SW1 SW2 SW3 SW4
-2067775              1   ADP3335         MSOP-8          IC3
-2496814              1   1µ              0402            C6
-9232761              14  1k              0402            R1 R10 R11 R12 R13 R14 R15 R16 R17 R18 R6 R7 R8 R9
-2506952              1   26M             XTAL-20x16      Y1
-2362088              2   2µ2             0402            C10 C11
-1568023              1   MICROUSB        MICROUSB_MOLEX_47589-0001 J5
-2064363              1   STM32F405RxTx   LQFP-64         IC1
-2496790              2   10p             0402            C1 C2
-2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC2
-2496771              6   100n            0402            C12 C4 C5 C7 C8 C9
-TFML-110-02-L-D      2   EAST TOP,WEST TOP TFML-110-02-L-D J1 J3
+TFML-110-02-L-D      2   WEST TOP,EAST TOP TFML-110-02-L-D J1 J3
 SFML-110-02-L-D-LC   2   EAST BOT,WEST BOT SFML-110-02-L-D-LC J2 J4
+2496814              1   1µ              0402            C6
+2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC2
+9232761              13  1k              0402            R1 R10 R11 R12 R13 R14 R15 R16 R17 R2 R3 R4 R9
+9239111              1   100             0402            R5
+2496790              2   10p             0402            C1 C2
+1568023              1   MICROUSB        MICROUSB_MOLEX_47589-0001 J9
+2496771              6   100n            0402            C12 C4 C5 C7 C8 C9
+2067775              1   ADP3335         MSOP-8          IC3
+2362088              2   2µ2             0402            C10 C11
+2426952              1   4µ7             0402            C3
+2064363              1   STM32F405RxTx   LQFP-64         IC1
+2506952              1   26M             XTAL-20x16      Y1
 
