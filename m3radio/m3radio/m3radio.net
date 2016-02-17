@@ -1,8 +1,8 @@
 (export (version D)
   (design
-    (source \\cued-fs\users\general\ere26\windows-home\Documents\GitHub\m3-avionics\m3radio\m3radio\m3radio.sch)
-    (date "17/02/2016 18:02:59")
-    (tool "Eeschema 4.0.1-stable")
+    (source /home/eivind/Documents/GitHub/m3-avionics/m3radio/m3radio/m3radio.sch)
+    (date "on. 17. feb. 2016 kl. 19.28 +0000")
+    (tool "Eeschema 4.0.2-4+6225~38~ubuntu14.04.1-stable")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
         (title)
@@ -28,7 +28,7 @@
   (components
     (comp (ref IC103)
       (value MAX-7Q)
-      (footprint agg-unchecked:MAX-7Q)
+      (footprint M3radio:MAX-7Q)
       (fields
         (field (name HabSupplies) MAX-7Q))
       (libsource (lib agg-kicad) (part MAX-7Q))
@@ -319,7 +319,7 @@
       (tstamp 56B24388))
     (comp (ref P201)
       (value COAX)
-      (footprint agg-unchecked:SMA-142-0701-801)
+      (footprint M3radio:SMA-142-0701-801)
       (fields
         (field (name Farnell) 1608592))
       (libsource (lib agg-kicad) (part COAX))
@@ -565,7 +565,7 @@
         (pin (num 4) (name VCC) (type power_in)))))
   (libraries
     (library (logical agg-kicad)
-      (uri \\cued-fs\users\general\ere26\windows-home\Documents\GitHub\m3-avionics\agg-kicad\agg-kicad.lib)))
+      (uri /home/eivind/Documents/GitHub/m3-avionics/agg-kicad/agg-kicad.lib)))
   (nets
     (net (code 1) (name /5v_IMU)
       (node (ref J103) (pin 9))
