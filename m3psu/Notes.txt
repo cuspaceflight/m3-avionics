@@ -1,0 +1,15 @@
+***DC/DC Converter***
+
+- Since external temp monitoring is not needed and shorted to GND, set the UT_FAULT_LIMIT to –275°C, IOUT_CAL_GAIN_TC set to zero and the UT_FAULT_RE-SPONSE to ignore.
+
+- Choose Schottky diode to carry 1A
+
+- Boost capacitors are 100x total input (gate) capacitance of topside MOSFETs
+
+- large capacitors need to have low ESR (particularly the 100uF one. Get this: 1735535(FAR))
+
+- Inductors need to carry above 4A of peak current, pref 5A
+
+- Rsense at 10mO are still a shot in the dark
+
+- Freq of operation will be 575kHz
