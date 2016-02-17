@@ -57,13 +57,13 @@ F 3 "" H 2800 9850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 1600 9950 0    60   ~ 0
-JTDO
-Text Label 1600 10050 0    60   ~ 0
-JTDR
-Text Label 1600 10150 0    60   ~ 0
 JTMS
-Text Label 1600 10250 0    60   ~ 0
+Text Label 1600 10050 0    60   ~ 0
 JTCK
+Text Label 1600 10150 0    60   ~ 0
+JTDO
+Text Label 1600 10250 0    60   ~ 0
+JTDR
 Text Label 1100 9950 2    60   ~ 0
 3v3_IMU
 Text Label 1100 10050 2    60   ~ 0
@@ -80,14 +80,6 @@ Text Label 1600 10550 0    60   ~ 0
 CAN-
 Text Label 1600 10650 0    60   ~ 0
 CAN+
-Text Label 4550 9950 0    60   ~ 0
-JTDI
-Text Label 4550 10050 0    60   ~ 0
-JTDR
-Text Label 4550 10150 0    60   ~ 0
-JTMS
-Text Label 4550 10250 0    60   ~ 0
-JTCK
 Text Label 4050 9950 2    60   ~ 0
 3v3_IMU
 Text Label 4050 10050 2    60   ~ 0
@@ -521,7 +513,7 @@ F 3 "" H 9100 9750 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 Text Label 9150 10250 0    60   ~ 0
-RSVD3
+TEMP_INT
 $Comp
 L GND #PWR60
 U 1 1 56B8A6F2
@@ -571,7 +563,7 @@ PRESSURE2
 Text Label 7450 10150 0    60   ~ 0
 PRESSURE3
 Text Label 7450 10250 0    60   ~ 0
-RSVD3
+TEMP_INT
 $Comp
 L R R1
 U 1 1 56B8B5BF
@@ -4030,4 +4022,12 @@ Connection ~ 11050 10900
 Connection ~ 11050 10700
 Connection ~ 11050 9850
 Connection ~ 11050 9650
+Text Label 4550 9950 0    60   ~ 0
+JTMS
+Text Label 4550 10050 0    60   ~ 0
+JTCK
+Text Label 4550 10150 0    60   ~ 0
+JTDI
+Text Label 4550 10250 0    60   ~ 0
+JTDR
 $EndSCHEMATC
