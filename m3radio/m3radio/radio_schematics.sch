@@ -1,7 +1,7 @@
 EESchema Schematic File Version 2
 LIBS:agg-kicad
 LIBS:m3radio-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -46,17 +46,6 @@ Text HLabel 2350 3250 2    60   Input ~ 0
 Radio_nIRQ
 Text HLabel 1350 3550 0    60   Input ~ 0
 Radio_nSEL
-$Comp
-L XTAL Y?
-U 1 1 56B22653
-P 1100 2850
-F 0 "Y?" H 1150 2920 50  0000 C CNN
-F 1 "XTAL 30MHz" H 1150 2780 50  0000 C CNN
-F 2 "" H 1100 2850 50  0001 C CNN
-F 3 "" H 1100 2850 50  0001 C CNN
-	1    1100 2850
-	0    1    1    0   
-$EndComp
 $Comp
 L GND #PWR?
 U 1 1 56B22850
@@ -343,10 +332,6 @@ Wire Wire Line
 	2250 3250 2350 3250
 Wire Wire Line
 	750  2350 1450 2350
-Wire Wire Line
-	1450 2850 1100 2850
-Wire Wire Line
-	1450 2950 1100 2950
 Wire Wire Line
 	1450 2650 1350 2650
 Wire Wire Line
@@ -777,6 +762,50 @@ F 1 "L" H 7700 1850 50  0000 C CNN
 F 2 "" H 7650 1900 50  0001 C CNN
 F 3 "" H 7650 1900 50  0001 C CNN
 	1    7650 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L TCXO Y?
+U 1 1 56C5879C
+P 950 2950
+F 0 "Y?" H 750 3050 50  0000 L CNN
+F 1 "TCXO" H 750 2750 50  0000 L CNN
+F 2 "" H 750 2950 50  0001 C CNN
+F 3 "" H 750 2950 50  0001 C CNN
+F 4 "2405785" H 750 2650 50  0001 L CNN "Farnell"
+	1    950  2950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1250 2950 1450 2950
+Wire Wire Line
+	650  2950 600  2950
+Wire Wire Line
+	600  2950 600  2900
+Wire Wire Line
+	650  3050 600  3050
+Wire Wire Line
+	600  3050 600  3100
+$Comp
+L 3v3 #PWR?
+U 1 1 56C60CB9
+P 600 2900
+F 0 "#PWR?" H 600 3010 50  0001 L CNN
+F 1 "3v3" H 600 2990 50  0000 C CNN
+F 2 "" H 600 2900 60  0000 C CNN
+F 3 "" H 600 2900 60  0000 C CNN
+	1    600  2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56C60D0D
+P 600 3100
+F 0 "#PWR?" H 470 3140 50  0001 L CNN
+F 1 "GND" H 600 3000 50  0000 C CNN
+F 2 "" H 600 3100 60  0000 C CNN
+F 3 "" H 600 3100 60  0000 C CNN
+	1    600  3100
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
