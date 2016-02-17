@@ -18,7 +18,7 @@ $EndDescr
 $Sheet
 S 1550 1300 1250 1200
 U 56B76640
-F0 "5V Regulator 1" 60
+F0 "Regulator 0" 60
 F1 "file56B7663F.sch" 60
 $EndSheet
 $EndSCHEMATC
