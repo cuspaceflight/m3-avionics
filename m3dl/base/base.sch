@@ -1765,4 +1765,6 @@ Wire Wire Line
 	8600 1850 8800 1850
 Text Label 8650 1750 0    60   ~ 0
 5v_CAM
+Text Label 1650 1700 0    60   ~ 0
+JTDO
 $EndSCHEMATC
