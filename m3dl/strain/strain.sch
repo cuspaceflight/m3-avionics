@@ -3578,25 +3578,25 @@ Text Label 9350 7050 2    60   ~ 0
 STRAIN6-
 Text Label 9350 7150 2    60   ~ 0
 STRAIN6+
-Text Label 14950 8150 2    60   ~ 0
-STRAIN6-
 Text Label 14950 8250 2    60   ~ 0
+STRAIN6-
+Text Label 14950 8150 2    60   ~ 0
 STRAIN6+
-Text Label 15000 5350 2    60   ~ 0
-STRAIN5-
 Text Label 15000 5450 2    60   ~ 0
+STRAIN5-
+Text Label 15000 5350 2    60   ~ 0
 STRAIN5+
-Text Label 14950 2550 2    60   ~ 0
-STRAIN4-
 Text Label 14950 2650 2    60   ~ 0
+STRAIN4-
+Text Label 14950 2550 2    60   ~ 0
 STRAIN4+
-Text Label 7050 8150 2    60   ~ 0
-STRAIN3-
 Text Label 7050 8250 2    60   ~ 0
+STRAIN3-
+Text Label 7050 8150 2    60   ~ 0
 STRAIN3+
-Text Label 7050 5350 2    60   ~ 0
-STRAIN2-
 Text Label 7050 5450 2    60   ~ 0
+STRAIN2-
+Text Label 7050 5350 2    60   ~ 0
 STRAIN2+
 Text Label 4550 9950 0    60   ~ 0
 JTMS
@@ -3917,9 +3917,9 @@ F 3 "" H 15000 8000 60  0000 C CNN
 	1    15000 8000
 	1    0    0    -1  
 $EndComp
-Text Label 7050 2650 2    60   ~ 0
-STRAIN1+
 Text Label 7050 2550 2    60   ~ 0
+STRAIN1+
+Text Label 7050 2650 2    60   ~ 0
 STRAIN1-
 Wire Wire Line
 	14950 8250 15050 8250
