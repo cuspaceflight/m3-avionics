@@ -30,62 +30,6 @@ F 5 "1428-1019-1-ND" H 8400 800 50  0001 L CNN "DigiKey"
 	1    0    0    -1  
 $EndComp
 $Comp
-L MS5611-01BA03 IC?
-U 1 1 56B22236
-P 8850 4750
-F 0 "IC?" H 8650 4950 50  0000 L CNN
-F 1 "MS5611-01BA03" H 8650 4450 50  0000 L CNN
-F 2 "agg:MS5611" H 8650 4350 50  0001 L CNN
-F 3 "" H 8900 4750 50  0001 C CNN
-F 4 "2362662" H 8650 4250 50  0001 L CNN "Farnell"
-	1    8850 4750
-	1    0    0    -1  
-$EndComp
-$Comp
-L 3v3 #PWR?
-U 1 1 56B22E40
-P 8400 4550
-F 0 "#PWR?" H 8400 4660 50  0001 L CNN
-F 1 "3v3" H 8400 4640 50  0000 C CNN
-F 2 "" H 8400 4550 60  0000 C CNN
-F 3 "" H 8400 4550 60  0000 C CNN
-	1    8400 4550
-	1    0    0    -1  
-$EndComp
-$Comp
-L GND #PWR?
-U 1 1 56B22F3E
-P 8400 5050
-F 0 "#PWR?" H 8270 5090 50  0001 L CNN
-F 1 "GND" H 8400 4950 50  0000 C CNN
-F 2 "" H 8400 5050 60  0000 C CNN
-F 3 "" H 8400 5050 60  0000 C CNN
-	1    8400 5050
-	1    0    0    -1  
-$EndComp
-$Comp
-L C C?
-U 1 1 56B22FB5
-P 8400 4750
-F 0 "C?" H 8450 4820 50  0000 C CNN
-F 1 "100n" H 8450 4680 50  0000 C CNN
-F 2 "" H 8400 4750 50  0001 C CNN
-F 3 "" H 8400 4750 50  0001 C CNN
-F 4 "Value" H 8400 4750 60  0001 C CNN "Digikey"
-F 5 "Value" H 8400 4750 60  0001 C CNN "Farnell"
-F 6 "Value" H 8400 4750 60  0001 C CNN "Fieldname"
-	1    8400 4750
-	0    1    1    0   
-$EndComp
-Text Label 9750 4650 2    60   ~ 0
-ALT_SCLK
-Text Label 9750 4750 2    60   ~ 0
-ALT_SDI
-Text Label 9750 4850 2    60   ~ 0
-ALT_SDO
-Text Label 9750 4950 2    60   ~ 0
-ALT_CSB
-$Comp
 L 3v3 #PWR?
 U 1 1 56B28423
 P 10450 5400
@@ -99,7 +43,7 @@ $EndComp
 Text Label 10950 5450 2    60   ~ 0
 3v3_IMU
 Text Notes 3750 5700 0    60   ~ 0
-To do:\n-Microcontroller pins\n-ADIS\n-Any test points left?\n-Reset button?\n-Missed anything from Spalax?\n-LEDs/buzzer? Are they on the flight computer?
+To do:\n-Check MCU connections\n-Any test points left?\n-Reset button?\n-Missed anything from Spalax?\n-LEDs/buzzer? Are they on the flight computer?
 $Comp
 L CONN_02x10 J?
 U 1 1 56C4D97D
@@ -450,7 +394,7 @@ F 3 "" H 2050 1850 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 2100 1900 0    60   ~ 0
-3v3_FC
+3v3_IMU
 $Comp
 L GND #PWR?
 U 1 1 56C4DA54
@@ -1001,9 +945,9 @@ Text Label 2600 4750 0    60   ~ 0
 CAN_TXD
 Text Label 2600 4650 0    60   ~ 0
 CAN_RXD
-Text Label 1400 6950 2    60   ~ 0
+Text Label 2600 4950 0    60   ~ 0
 MPU_IRQ
-Text Label 1400 7050 2    60   ~ 0
+Text Label 2600 5050 0    60   ~ 0
 ~MPU_SS
 Text Label 2600 5250 0    60   ~ 0
 MPU_MISO
@@ -1022,8 +966,6 @@ BEEPER
 NoConn ~ 1500 6650
 NoConn ~ 1500 6750
 NoConn ~ 1500 6850
-NoConn ~ 2500 5050
-NoConn ~ 2500 6150
 NoConn ~ 2500 7250
 NoConn ~ 2500 7050
 NoConn ~ 2500 6950
@@ -1034,13 +976,6 @@ NoConn ~ 2500 6550
 NoConn ~ 2500 6450
 NoConn ~ 2500 6350
 NoConn ~ 2500 6250
-NoConn ~ 2500 6050
-NoConn ~ 2500 5850
-NoConn ~ 2500 5750
-NoConn ~ 2500 5650
-NoConn ~ 2500 5550
-NoConn ~ 2500 4950
-NoConn ~ 2500 4850
 NoConn ~ 2500 4550
 NoConn ~ 2500 4450
 NoConn ~ 2500 4350
@@ -1168,7 +1103,7 @@ F 3 "" H 5150 2800 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Notes 5450 3100 0    60   ~ 0
-Needs a footprint\n
+Footprint needs fixing
 $Comp
 L 3v3 #PWR?
 U 1 1 56C71741
@@ -1186,10 +1121,10 @@ U 1 1 56C717DC
 P 8100 1300
 F 0 "C?" H 8050 1350 50  0000 C CNN
 F 1 "100n" H 8200 1350 50  0000 C CNN
-F 2 "" H 8100 1300 50  0001 C CNN
+F 2 "agg:0402" H 8100 1300 50  0001 C CNN
 F 3 "" H 8100 1300 50  0001 C CNN
 F 4 "Value" H 8100 1300 60  0001 C CNN "Digikey"
-F 5 "Value" H 8100 1300 60  0001 C CNN "Farnell"
+F 5 "2496771" H 8100 1300 60  0001 C CNN "Farnell"
 F 6 "Value" H 8100 1300 60  0001 C CNN "Fieldname"
 	1    8100 1300
 	1    0    0    -1  
@@ -1200,10 +1135,10 @@ U 1 1 56C71E9D
 P 8100 1450
 F 0 "C?" H 8100 1500 50  0000 C CNN
 F 1 "10n" H 8150 1380 50  0000 C CNN
-F 2 "" H 8100 1450 50  0001 C CNN
+F 2 "agg:0402" H 8100 1450 50  0001 C CNN
 F 3 "" H 8100 1450 50  0001 C CNN
 F 4 "Value" H 8100 1450 60  0001 C CNN "Digikey"
-F 5 "Value" H 8100 1450 60  0001 C CNN "Farnell"
+F 5 "1414575" H 8100 1450 60  0001 C CNN "Farnell"
 F 6 "Value" H 8100 1450 60  0001 C CNN "Fieldname"
 	1    8100 1450
 	1    0    0    -1  
@@ -1230,37 +1165,89 @@ F 3 "" H 8200 1750 60  0000 C CNN
 	1    8200 1750
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	8400 4550 8400 4750
-Wire Wire Line
-	8400 4850 8400 5050
-Wire Wire Line
-	8550 4850 8550 4750
-Wire Wire Line
-	8550 4850 8450 4850
-Wire Wire Line
-	8450 4850 8450 4900
-Wire Wire Line
-	8450 4900 8400 4900
-Connection ~ 8400 4900
-Wire Wire Line
-	8550 4650 8400 4650
-Connection ~ 8400 4650
-Wire Wire Line
-	8550 4950 8550 5150
-Wire Wire Line
-	8550 5150 9350 5150
-Wire Wire Line
-	9350 5150 9350 4950
-Wire Wire Line
-	9250 4950 9750 4950
-Wire Wire Line
-	9250 4650 9750 4650
-Wire Wire Line
-	9250 4750 9750 4750
-Wire Wire Line
-	9250 4850 9750 4850
-Connection ~ 9350 4950
+NoConn ~ 9700 2200
+NoConn ~ 9700 2300
+$Comp
+L C C?
+U 1 1 56C74325
+P 10450 1850
+F 0 "C?" H 10450 1900 50  0000 C CNN
+F 1 "100n" H 10500 1780 50  0000 C CNN
+F 2 "agg:0402" H 10450 1850 50  0001 C CNN
+F 3 "" H 10450 1850 50  0001 C CNN
+F 4 "Value" H 10450 1850 60  0001 C CNN "Digikey"
+F 5 "2496771" H 10450 1850 60  0001 C CNN "Farnell"
+F 6 "Value" H 10450 1850 60  0001 C CNN "Fieldname"
+	1    10450 1850
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56C746B4
+P 10450 2050
+F 0 "#PWR?" H 10320 2090 50  0001 L CNN
+F 1 "GND" H 10450 1950 50  0000 C CNN
+F 2 "" H 10450 2050 60  0000 C CNN
+F 3 "" H 10450 2050 60  0000 C CNN
+	1    10450 2050
+	1    0    0    -1  
+$EndComp
+Text Label 10250 1900 2    60   ~ 0
+MPU_IRQ
+Text Label 10350 1600 2    60   ~ 0
+MPU_MOSI
+Text Label 10350 1500 2    60   ~ 0
+MPU_SCLK
+Text Label 10350 1300 2    60   ~ 0
+~MPU_SS
+Text Label 10350 1400 2    60   ~ 0
+MPU_MISO
+Text Label 2600 5350 0    60   ~ 0
+MPU_MOSI
+NoConn ~ 5150 1400
+NoConn ~ 5150 1500
+NoConn ~ 5150 1600
+NoConn ~ 6450 1800
+$Comp
+L GND #PWR?
+U 1 1 56CB3E38
+P 6600 2350
+F 0 "#PWR?" H 6470 2390 50  0001 L CNN
+F 1 "GND" H 6600 2250 50  0000 C CNN
+F 2 "" H 6600 2350 60  0000 C CNN
+F 3 "" H 6600 2350 60  0000 C CNN
+	1    6600 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L 5v #PWR?
+U 1 1 56CB4283
+P 6700 2650
+F 0 "#PWR?" H 6700 2760 50  0001 L CNN
+F 1 "5v" H 6700 2740 50  0000 C CNN
+F 2 "" H 6700 2650 60  0000 C CNN
+F 3 "" H 6700 2650 60  0000 C CNN
+	1    6700 2650
+	1    0    0    -1  
+$EndComp
+Text Label 4500 1300 0    60   ~ 0
+ADIS_IRQ
+Text Label 4500 1800 0    60   ~ 0
+~ADIS_SS
+Text Label 4500 1900 0    60   ~ 0
+ADIS_MOSI
+Text Label 4500 2000 0    60   ~ 0
+ADIS_MISO
+Text Label 4500 2100 0    60   ~ 0
+ADIS_SCLK
+Text Label 4500 2300 0    60   ~ 0
+~ADIS_RESET
+Text Label 1400 5950 2    60   ~ 0
+LED_RED
+Text Label 1400 6050 2    60   ~ 0
+LED_YLW
+Text Label 1400 6150 2    60   ~ 0
+LED_GRN
 Wire Wire Line
 	10450 5400 10450 5450
 Wire Wire Line
@@ -1683,15 +1670,9 @@ Wire Wire Line
 Wire Wire Line
 	1400 6350 1500 6350
 Wire Wire Line
-	1400 7050 1500 7050
-Wire Wire Line
 	2500 5150 2600 5150
 Wire Wire Line
 	2600 5250 2500 5250
-Wire Wire Line
-	1400 6950 1500 6950
-Wire Wire Line
-	1400 5850 1500 5850
 Wire Wire Line
 	2050 1850 2050 1900
 Wire Wire Line
@@ -1742,37 +1723,8 @@ Wire Wire Line
 	8300 1700 8200 1700
 Wire Wire Line
 	8200 1700 8200 1750
-NoConn ~ 9700 2200
-NoConn ~ 9700 2300
-$Comp
-L C C?
-U 1 1 56C74325
-P 10450 1850
-F 0 "C?" H 10450 1900 50  0000 C CNN
-F 1 "100n" H 10500 1780 50  0000 C CNN
-F 2 "" H 10450 1850 50  0001 C CNN
-F 3 "" H 10450 1850 50  0001 C CNN
-F 4 "Value" H 10450 1850 60  0001 C CNN "Digikey"
-F 5 "Value" H 10450 1850 60  0001 C CNN "Farnell"
-F 6 "Value" H 10450 1850 60  0001 C CNN "Fieldname"
-	1    10450 1850
-	0    1    1    0   
-$EndComp
 Wire Wire Line
 	9700 1800 10450 1800
-$Comp
-L GND #PWR?
-U 1 1 56C746B4
-P 10450 2050
-F 0 "#PWR?" H 10320 2090 50  0001 L CNN
-F 1 "GND" H 10450 1950 50  0000 C CNN
-F 2 "" H 10450 2050 60  0000 C CNN
-F 3 "" H 10450 2050 60  0000 C CNN
-	1    10450 2050
-	1    0    0    -1  
-$EndComp
-Text Label 10250 1900 2    60   ~ 0
-MPU_IRQ
 Wire Wire Line
 	10450 1800 10450 1850
 Wire Wire Line
@@ -1782,16 +1734,6 @@ Wire Wire Line
 Connection ~ 10450 2000
 Wire Wire Line
 	10250 1900 9700 1900
-NoConn ~ 1500 6050
-NoConn ~ 1500 6150
-Text Label 10350 1600 2    60   ~ 0
-MPU_MOSI
-Text Label 10350 1500 2    60   ~ 0
-MPU_SCLK
-Text Label 10350 1300 2    60   ~ 0
-~MPU_SS
-Text Label 10350 1400 2    60   ~ 0
-MPU_MISO
 Wire Wire Line
 	9700 1300 10350 1300
 Wire Wire Line
@@ -1800,9 +1742,77 @@ Wire Wire Line
 	9700 1600 10350 1600
 Wire Wire Line
 	9700 1500 10350 1500
-NoConn ~ 1500 5950
-Text Label 2600 5350 0    60   ~ 0
-MPU_MOSI
 Wire Wire Line
 	2600 5350 2500 5350
+Wire Wire Line
+	6450 1900 6600 1900
+Wire Wire Line
+	6600 1900 6600 2350
+Wire Wire Line
+	6600 2300 6450 2300
+Wire Wire Line
+	6450 2100 6600 2100
+Connection ~ 6600 2100
+Wire Wire Line
+	6450 2200 6600 2200
+Connection ~ 6600 2200
+Connection ~ 6600 2300
+Wire Wire Line
+	6450 2500 6450 2700
+Wire Wire Line
+	6450 2700 6700 2700
+Connection ~ 6450 2600
+Wire Wire Line
+	6700 2700 6700 2650
+Wire Wire Line
+	5150 1300 4500 1300
+Wire Wire Line
+	4500 1800 5150 1800
+Wire Wire Line
+	5150 1900 4500 1900
+Wire Wire Line
+	4500 2000 5150 2000
+Wire Wire Line
+	4500 2100 5150 2100
+Wire Wire Line
+	4500 2300 5150 2300
+NoConn ~ 2500 5550
+Wire Wire Line
+	1400 6150 1500 6150
+Wire Wire Line
+	1400 6050 1500 6050
+Wire Wire Line
+	1400 5950 1500 5950
+Wire Wire Line
+	1400 5850 1500 5850
+Text Label 2600 6050 0    60   ~ 0
+ADIS_IRQ
+Text Label 2600 6150 0    60   ~ 0
+~ADIS_SS
+Text Label 2600 5850 0    60   ~ 0
+ADIS_MOSI
+Text Label 2600 5750 0    60   ~ 0
+ADIS_MISO
+Text Label 2600 4850 0    60   ~ 0
+ADIS_SCLK
+Text Label 2600 5650 0    60   ~ 0
+~ADIS_RESET
+NoConn ~ 1500 6950
+Wire Wire Line
+	2600 4850 2500 4850
+Wire Wire Line
+	2600 4950 2500 4950
+Wire Wire Line
+	2600 5050 2500 5050
+Wire Wire Line
+	2600 5650 2500 5650
+Wire Wire Line
+	2600 5750 2500 5750
+Wire Wire Line
+	2500 5850 2600 5850
+Wire Wire Line
+	2600 6050 2500 6050
+Wire Wire Line
+	2600 6150 2500 6150
+NoConn ~ 1500 7050
 $EndSCHEMATC
