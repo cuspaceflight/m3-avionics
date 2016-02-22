@@ -3426,7 +3426,7 @@ F 2 "agg:MSOP-8" H 6850 1250 50  0001 L CNN
 F 3 "" H 6850 1650 50  0001 C CNN
 F 4 "1858055" H 6850 1150 50  0001 L CNN "Farnell"
 	2    6850 1650
-	1    0    0    -1  
+	1    0    0    1   
 $EndComp
 $Comp
 L AD8656 IC8
