@@ -3611,7 +3611,7 @@ L CONN_02x10 J5
 U 1 1 56C94EDD
 P 7400 9850
 F 0 "J5" H 7300 9950 50  0000 L CNN
-F 1 "NORTH TOP" H 7350 8850 50  0000 C CNN
+F 1 "SOUTH TOP" H 7350 8850 50  0000 C CNN
 F 2 "agg:TFML-110-02-L-D" H 7400 9850 50  0001 C CNN
 F 3 "" H 7400 9850 50  0001 C CNN
 	1    7400 9850
@@ -3633,7 +3633,7 @@ L CONN_02x10 J6
 U 1 1 56C94EEA
 P 9100 9850
 F 0 "J6" H 9000 9950 50  0000 L CNN
-F 1 "NORTH BOT" H 9050 8850 50  0000 C CNN
+F 1 "SOUTH BOT" H 9050 8850 50  0000 C CNN
 F 2 "agg:SFML-110-02-L-D-LC" H 9100 9850 50  0001 C CNN
 F 3 "" H 9100 9850 50  0001 C CNN
 	1    9100 9850
@@ -4152,4 +4152,10 @@ Wire Wire Line
 	7150 2550 7050 2550
 Text Notes 13700 10450 0    60   ~ 0
 N.B. This is a global overview of 2x PCBs, each \none containing a complete set of all 6 \nInterconnects along with 3x Strain Gauges and\ntheir respective connectors. Consult \n./strain_single for the individual PCB layout.
+Text Label 3550 11000 0    60   ~ 0
+JTDO
+Text Label 3450 11000 2    60   ~ 0
+JTDI
+Wire Wire Line
+	3450 11000 3550 11000
 $EndSCHEMATC
