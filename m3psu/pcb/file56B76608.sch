@@ -5,7 +5,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 5
+Sheet 3 6
 Title ""
 Date ""
 Rev ""
@@ -987,7 +987,7 @@ Wire Wire Line
 	4200 4700 5050 4700
 Connection ~ 2800 4200
 Wire Wire Line
-	2800 4200 2800 4300
+	2800 4300 2800 4200
 Wire Wire Line
 	2950 4300 3000 4300
 Connection ~ 2450 4600
