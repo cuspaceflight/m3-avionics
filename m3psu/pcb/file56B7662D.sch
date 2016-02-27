@@ -86,13 +86,7 @@ Connection ~ 2250 3650
 Wire Wire Line
 	2250 3650 2200 3650
 Wire Wire Line
-	2250 3350 2250 3450
-Wire Wire Line
-	2250 3450 2250 3550
-Wire Wire Line
-	2250 3550 2250 3650
-Wire Wire Line
-	2250 3650 2250 3750
+	2250 3350 2250 3750
 Wire Wire Line
 	2200 3350 2250 3350
 Wire Wire Line
@@ -120,25 +114,13 @@ Connection ~ 950  2250
 Wire Wire Line
 	1000 2250 950  2250
 Wire Wire Line
-	950  2150 950  2250
+	950  2150 950  2850
 Wire Wire Line
-	950  2250 950  2350
-Wire Wire Line
-	950  2350 950  2450
-Wire Wire Line
-	950  2450 950  2550
-Wire Wire Line
-	950  2550 950  2650
-Wire Wire Line
-	950  2650 950  2850
-Wire Wire Line
-	950  2650 1000 2650
+	850  2650 1000 2650
 Wire Wire Line
 	800  3650 1000 3650
 Wire Wire Line
-	800  3400 800  3450
-Wire Wire Line
-	800  3450 800  3650
+	800  3400 800  3650
 Wire Wire Line
 	1000 3450 950  3450
 Wire Wire Line
@@ -147,19 +129,13 @@ Connection ~ 800  3450
 Wire Wire Line
 	800  3150 1000 3150
 Wire Wire Line
-	800  1600 800  1900
-Wire Wire Line
-	800  1900 800  3150
+	800  1600 800  3150
 Wire Wire Line
 	800  1600 900  1600
 Wire Wire Line
 	900  1700 750  1700
 Wire Wire Line
-	750  1700 750  1950
-Wire Wire Line
-	750  1950 750  2950
-Wire Wire Line
-	750  2950 750  3250
+	750  1700 750  3250
 Wire Wire Line
 	750  3250 1000 3250
 $Comp
@@ -264,4 +240,30 @@ Wire Notes Line
 	600  4150 600  800 
 Text Notes 600  750  0    120  ~ 0
 BOARD 1
+$Comp
+L C C?
+U 1 1 56D2710E
+P 850 2700
+F 0 "C?" H 900 2770 50  0000 C CNN
+F 1 "100n" H 900 2630 50  0000 C CNN
+F 2 "" H 850 2700 50  0001 C CNN
+F 3 "" H 850 2700 50  0001 C CNN
+	1    850  2700
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	850  2650 850  2700
+$Comp
+L GND #PWR?
+U 1 1 56D282FF
+P 850 2850
+F 0 "#PWR?" H 720 2890 50  0001 L CNN
+F 1 "GND" H 850 2750 50  0000 C CNN
+F 2 "" H 850 2850 60  0000 C CNN
+F 3 "" H 850 2850 60  0000 C CNN
+	1    850  2850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	850  2850 850  2800
 $EndSCHEMATC
