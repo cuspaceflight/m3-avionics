@@ -1,6 +1,6 @@
-update=02/08/16 22:41:57
+update=Sat 27 Feb 2016 17:14:54 GMT
 version=1
-last_client=eeschema
+last_client=kicad
 [pcbnew]
 version=1
 LastNetListRead=
@@ -29,4 +29,4 @@ version=1
 version=1
 LibDir=../../agg-kicad/lib
 [eeschema/libraries]
-LibName1=D:/GitHub/m3-avionics/agg-kicad/agg-kicad
+LibName1=../../agg-kicad/agg-kicad
