@@ -1628,11 +1628,11 @@ Wire Wire Line
 	7900 2300 7950 2300
 Wire Wire Line
 	7200 2300 7250 2300
-Text Label 7250 2300 0    60   ~ 0
+Text Label 7250 2400 0    60   ~ 0
 PYRO_SO
 Wire Wire Line
 	7200 2400 7250 2400
-Text Label 7250 2400 0    60   ~ 0
+Text Label 7250 2300 0    60   ~ 0
 PYRO_SI
 Text Label 7950 2300 0    60   ~ 0
 PWR
