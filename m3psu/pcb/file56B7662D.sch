@@ -84,17 +84,6 @@ F 3 "" H 1500 4150 50  0001 C CNN
 	1    1500 4150
 	1    0    0    -1  
 $EndComp
-$Comp
-L GND #PWR?
-U 1 1 56D291F9
-P 1150 3800
-F 0 "#PWR?" H 1020 3840 50  0001 L CNN
-F 1 "GND" H 1150 3700 50  0000 C CNN
-F 2 "" H 1150 3800 60  0000 C CNN
-F 3 "" H 1150 3800 60  0000 C CNN
-	1    1150 3800
-	1    0    0    -1  
-$EndComp
 NoConn ~ 2850 3850
 NoConn ~ 2850 3750
 NoConn ~ 2850 3650
@@ -163,13 +152,6 @@ Wire Wire Line
 	1400 2400 1400 3950
 Wire Wire Line
 	1400 3950 1650 3950
-Wire Wire Line
-	1650 3550 1150 3550
-Wire Wire Line
-	1150 3550 1150 3800
-Wire Wire Line
-	1650 3650 1150 3650
-Connection ~ 1150 3650
 $Comp
 L R R?
 U 1 1 56D2A504
