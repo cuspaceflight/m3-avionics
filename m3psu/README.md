@@ -3,7 +3,9 @@
 The Power Supply Unit is designed to have current monitoring and control over every single power line (5V, 3.3V, and VBatt), and all can be controlled via an MCU. It has on-board Li-ion battery charging and balancing capability, and can automatically switch between external power and internal power (or be commanded to do so).
 
 ## Work In Progress Notes
+
 ### DC/DC Converter
+
 - Choose Schottky diode to carry 1A (these are optional in the circuit, but increases efficiency) choose: NSR20F30NXT5G (2317558(FAR))
 - N Channel MOSFETs will be the TrenchFET® SiZ340DT (2422226(FAR))
 - Boost capacitors are 100x total input (gate) capacitance of topside MOSFETs
@@ -15,12 +17,16 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 - Addresses of Converters and expanders are:
     - 0x40 to 0x45 and 0x50, 0x52, 0x54
     - 0x40 & 0x41 together with bus expander 0x50, etc.
+
 #### Software Configurations
+
 - Since external temp monitoring is not needed and shorted to GND, set the `UT_FAULT_LIMIT` to –275°C, `IOUT_CAL_GAIN_TC` to zero and the `UT_FAULT_RE-SPONSE` to ignore.
 - Addresses of Converters and expanders are:
     - 0x40 to 0x45 and 0x50, 0x52, 0x54
     - 0x40 & 0x41 together with bus expander 0x50, etc.
+
 ### Lithium Battery Charger
+
 - Charging current limit is set to 2.7A using the potential divider, with assumption that cells are 2.6Ah
 - The pair of NFETs connected to each other are TrenchFET® SiZ340DT (2422226(FAR)), same as in the DC/DC Converter
 - Big inductor is needed for lower ripple current for more efficiency (choose: SRP5030T-4R7M 2309887(FAR) -> Iripple = 0.9A)
