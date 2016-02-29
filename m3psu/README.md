@@ -4,6 +4,14 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 ## Work In Progress Notes
 
+### General Notes
+
+- General max working voltage is 16V
+- 0402s are not available for capacitors >1µF and >=16V
+    - Large capacitors will have to use the smallest footprint possible (which varies accordingly)
+- All resistors are 0402s unless carrying large currents. Check power rating (in hidden field) if so.
+    - Be cautious about resistors with values <100Ω since they're likely carrying large enough currents to be concerned about power.
+
 ### DC/DC Converter
 
 - Choose Schottky diode to carry 1A (these are optional in the circuit, but increases efficiency) choose: NSR20F30NXT5G (2317558(FAR))
@@ -29,7 +37,15 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 - Charging current limit is set to 2.7A using the potential divider, with assumption that cells are 2.6Ah
 - The pair of NFETs connected to each other are TrenchFET® SiZ340DT (2422226(FAR)), same as in the DC/DC Converter
+- The P-FET (there's only one) needs to have *very low* Rds-on for efficiency (choose: SI7157DP-T1-GE3 2471947(FAR) it's big, but there's nothing smaller)
+- The two soft-start N-FETs on the input need to withstand 6A current draw (choose: STL15DN4F5 2098274(FAR) it's also big, but is a pair)
+- The reverse polarity NFET can be as small as possible since it carries very little current (choose: SIB452DK-T1-GE3 2364070(FAR))
 - Big inductor is needed for lower ripple current for more efficiency (choose: SRP5030T-4R7M 2309887(FAR) -> Iripple = 0.9A)
 - Large input and output capacitance to stabilise circuit (choose: GRM32ER61C476ME15L 1735538(FAR))
 - ACIN limit is set to 15V using the potential divider, with assumption that normal charging source is 12V
-- Unsure what input N-FETs do... along with their resistors 2M and 150k.
+
+### Lithium Battery Bleeders
+
+- The N-FETs carries only small amounts of current and so can be very small (choose: SIB452DK-T1-GE3 2364070(FAR))
+- The P-FET carries only a small amount of current and so can be very small (choose: SIB433EDK-T1-GE3 2335393(FAR))
+- The bleed resistors have to take around 0.5W if they are 47Ω (choose: ERJP06F47R0V 1750737(FAR))
