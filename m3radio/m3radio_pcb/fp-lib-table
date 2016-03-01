@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name M3radio)(type KiCad)(uri Z:\Documents\GitHub\m3-avionics\m3radio\m3radio\M3radio.pretty)(options "")(descr ""))
+  (lib (name agg)(type KiCad)(uri Z:\Documents\GitHub\m3-avionics\agg-kicad\agg.pretty)(options "")(descr ""))
+)
