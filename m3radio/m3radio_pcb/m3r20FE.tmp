@@ -1,4 +1,4 @@
-update=17/02/2016 17:32:06
+update=17/02/2016 16:41:37
 version=1
 last_client=eeschema
 [pcbnew]
@@ -29,4 +29,5 @@ version=1
 version=1
 LibDir=../../agg-kicad;../../agg-kicad/lib/ic/microcontroller
 [eeschema/libraries]
-LibName1=agg-kicad
+LibName1=m3radio-rescue
+LibName2=agg-kicad
