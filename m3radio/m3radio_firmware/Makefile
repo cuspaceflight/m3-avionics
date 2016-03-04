@@ -5,7 +5,13 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16
+  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16 \
+			-fsingle-precision-constant -std=gnu99
+endif
+
+# C specific options here (added to USE_OPT).
+ifeq ($(USE_COPT),)
+  USE_COPT =
 endif
 
 # C++ specific options here (added to USE_OPT).
@@ -18,14 +24,24 @@ ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
 endif
 
+# Linker extra options here.
+ifeq ($(USE_LDOPT),)
+  USE_LDOPT =
+endif
+
+# Enable this if you want link time optimizations (LTO)
+ifeq ($(USE_LTO),)
+  USE_LTO = no
+endif
+
 # If enabled, this option allows to compile the application in THUMB mode.
 ifeq ($(USE_THUMB),)
   USE_THUMB = yes
 endif
 
-# Enable register caching optimization (read documentation).
-ifeq ($(USE_CURRP_CACHING),)
-  USE_CURRP_CACHING = no
+# Enable this if you want to see the full log while compiling.
+ifeq ($(USE_VERBOSE_COMPILE),)
+  USE_VERBOSE_COMPILE = no
 endif
 
 #
@@ -36,9 +52,9 @@ endif
 # Architecture or project specific options
 #
 
-# Enable this if you really want to use the STM FWLib.
-ifeq ($(USE_FWLIB),)
-  USE_FWLIB = no
+# Enables the use of FPU on Cortex-M4 (no, softfp, hard).
+ifeq ($(USE_FPU),)
+  USE_FPU = hard
 endif
 
 #
@@ -50,19 +66,20 @@ endif
 #
 
 # Define project name here
-PROJECT = ch
+PROJECT = m2fc
+
+# Imported source files and paths
+CHIBIOS = ../../ChibiOS
+include board/board.mk
+include $(CHIBIOS)/os/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/hal.mk
+include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32F4xx/port.mk
+include $(CHIBIOS)/os/kernel/kernel.mk
+include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
+include $(CHIBIOS)/test/test.mk
 
 # Define linker script file here
-LDSCRIPT= ch.ld
-
-# Imported source files
-CHIBIOS = ./ChibiOS_2.2.3
-include board/board.mk
-include $(CHIBIOS)/os/hal/platforms/STM32/platform.mk
-include $(CHIBIOS)/os/hal/hal.mk
-include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32/port.mk
-include $(CHIBIOS)/os/kernel/kernel.mk
-include $(CHIBIOS)/test/test.mk
+LDSCRIPT= STM32F407xG_CCM.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -72,8 +89,12 @@ CSRC = $(PORTSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
-       $(CHIBIOS)/os/various/evtimer.c \
-       $(CHIBIOS)/os/various/syscalls.c \
+	   $(FATFSSRC) \
+       $(CHIBIOS)/os/various/chprintf.c \
+	   $(CHIBIOS)/os/various/evtimer.c \
+	   $(CHIBIOS)/os/various/shell.c \
+	   $(CHIBIOS)/os/various/syscalls.c \
+	   $(CHIBIOS)/os/various/memstreams.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -105,6 +126,7 @@ ASMSRC = $(PORTASM)
 
 INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) \
+		 $(FATFSINC) \
          $(CHIBIOS)/os/various
 
 #
@@ -115,7 +137,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 # Compiler settings
 #
 
-MCU  = cortex-m3
+MCU  = cortex-m4
 
 #TRGT = arm-elf-
 TRGT = arm-none-eabi-
@@ -129,6 +151,7 @@ LD   = $(TRGT)gcc
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
 OD   = $(TRGT)objdump
+SZ   = $(TRGT)size
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
 
@@ -139,7 +162,8 @@ AOPT =
 TOPT = -mthumb -DTHUMB
 
 # Define C warning options here
-CWARN = -Wall -Wextra -Wstrict-prototypes
+CWARN = -Wall -Wextra -Wshadow -Wimplicit-function-declaration               \
+		-Wstrict-prototypes -Wredundant-decls -Wundef -Wdouble-promotion
 
 # Define C++ warning options here
 CPPWARN = -Wall -Wextra
@@ -176,49 +200,49 @@ DLIBS =
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+GITVERSION := $(shell git describe --abbrev=8 --always)
+UDEFS = -DM2FC_FIRMWARE_VERSION=\"$(GITVERSION)\"
 
 # Define ASM defines here
 UADEFS =
 
 # List all user directories here
-UINCDIR =
+UINCDIR = ../../sbp/ ../../m2telem/ ../../m2status/ ../../m2serial/ ../../m2rl/
 
 # List the user directory to look for the libraries here
 ULIBDIR =
 
 # List all user libraries here
-ULIBS =
+ULIBS = -lm
+
 
 #
 # End of user defines
 ##############################################################################
 
-ifeq ($(USE_FWLIB),yes)
-  include $(CHIBIOS)/ext/stm32lib/stm32lib.mk
-  CSRC += $(STM32SRC)
-  INCDIR += $(STM32INC)
-  USE_OPT += -DUSE_STDPERIPH_DRIVER
-endif
-
-include $(CHIBIOS)/os/ports/GCC/ARMCMx/rules.mk
+RULESPATH = $(CHIBIOS)/os/ports/GCC/ARMCMx
+include $(RULESPATH)/rules.mk
 
 ##############################################################################
-# Python code loader
+# Black Magic Probe flashing via GDB
 #
+flash: build/$(PROJECT).dmp
+	arm-none-eabi-gdb --batch \
+		              -ex 'target extended-remote /dev/ttyACM0' \
+					  -ex 'monitor version' \
+					  -ex 'monitor swdp_scan' \
+					  -ex 'attach 1' \
+					  -ex 'load' build/$(PROJECT).elf
 
-# Serial port
-STM32LDR_PORT = /dev/ttyUSB0
-
-# Baud rate
-STM32LDR_BAUD = 115200
-
-# [Optional] Verify (-v) or not
-STM32LDR_VERIFY = -v
-
-.PHONY: upload
-upload: $(PROJECT).bin
-	python stm32loader.py -p $(STM32LDR_PORT) -b $(STM32LDR_BAUD) \
-	-e $(STM32LDR_VERIFY) -w $(PROJECT).bin
-
+debug: build/$(PROJECT).dmp
+	arm-none-eabi-gdb -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'monitor swdp_scan' \
+					  -ex 'attach 1' \
+					  -ex "file build/$(PROJECT).elf"
+#
+# End BMP flashing
 ##############################################################################
+
+size: build/$(PROJECT).elf
+	arm-none-eabi-size -A $<
+	arm-none-eabi-size -B $<
