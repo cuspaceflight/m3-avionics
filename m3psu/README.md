@@ -6,15 +6,19 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 ### General Notes
 
-- General max working voltage is 16V
+- General max working voltage is 16V, get components equal or higher.
 - 0402s are not available for capacitors >1µF and >=16V
     - Large capacitors will have to use the smallest footprint possible (which varies accordingly)
 - All resistors are 0402s unless carrying large currents. Check power rating (in hidden field) if so.
     - Be cautious about resistors with values <100Ω since they're likely carrying large enough currents to be concerned about power.
+- Use `PAGE` command to select channel 0/1/both for control over I2C.
+- Set `ON_OFF_CONFIG` to `On_off_config_use_pmbus`.
+- Send `OPERATION` command to turn channel on or off as needed.
+- RUNn pins should be high using pullups.
 
 ### DC/DC Converter
 
-- Choose Schottky diode to carry 1A (these are optional in the circuit, but increases efficiency) choose: NSR20F30NXT5G (2317558(FAR))
+- Choose Schottky diode to carry 1A (these are optional in the circuit, but increases efficiency)(choose: NSR20F30NXT5G (2317558(FAR))
 - Switching pair of totem pole N-MOSFETs (choose: SiZ340DT (2422226(FAR))
 - Boost capacitors are 100x total input (gate) capacitance of topside MOSFETs
 - Bigger inductors are better, but it's a compromise on space (choose: TYS5040100M-10 2292532(FAR) -> Iripple = 0.41A)
@@ -22,16 +26,12 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 - Rsense at 50mΩ because Vsense max is 75mV and expected current ~1A (choose: LRCS0603-0R05FT5 1506129(FAR))
 - Filter over Isense is 2\*Cp\*Rs ≤ ESL/R (equivalent series inductance of sense resistor est. ~0.5nH)
 - Frequency of operation will be 575kHz
-- Addresses of Converters and expanders are:
-    - 0x40 to 0x45 and 0x50, 0x52, 0x54
-    - 0x40 & 0x41 together with bus expander 0x50, etc.
+- Addresses of Converters are 0x40 to 0x45
 
 #### Software Configurations
 
 - Since external temp monitoring is not needed and shorted to GND, set the `UT_FAULT_LIMIT` to –275°C, `IOUT_CAL_GAIN_TC` to zero and the `UT_FAULT_RE-SPONSE` to ignore.
-- Addresses of Converters and expanders are:
-    - 0x40 to 0x45 and 0x50, 0x52, 0x54
-    - 0x40 & 0x41 together with bus expander 0x50, etc.
+- Addresses of Converters are 0x40 to 0x45
 
 ### Lithium Battery Charger
 
@@ -57,7 +57,7 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 ## List of Common Parts
 
-### Capacitors
+### Capacitors (25V)
 
 - 4µ7 - 2426959
 - 1µ - 2218855

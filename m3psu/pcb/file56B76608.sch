@@ -1153,4 +1153,6 @@ F 4 "2447120" H 4550 4500 60  0001 C CNN "Farnell"
 	1    4550 4500
 	1    0    0    -1  
 $EndComp
+Text Notes 2700 5900 0    120  ~ 0
+Address 0x12
 $EndSCHEMATC
