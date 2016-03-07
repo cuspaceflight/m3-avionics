@@ -6,15 +6,14 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 ### General Notes
 
-- General max working voltage is 16V, get components equal or higher
-- 0402s are not available for capacitors >1µF and >=16V
+- Everything is designed to assume shore power of 11.5V to 14.5V, i.e. a 12V lead-acid (car) battery.
+- Internal power supply is assumed to be 2 Li-ion cells, 3.5V-4.2V per cell giving 7V-8.4V internal supply.
+- All components are designed to function at max working voltage of 16V, or higher.
+- 0402s are not available for capacitors >1µF and ≥16V
     - Large capacitors will have to use the smallest footprint possible (which varies accordingly)
 - All resistors are 0402s unless carrying large currents. Check power rating (in hidden field) if so
     - Be cautious about resistors with values <100Ω since they're likely carrying large enough currents to be concerned about power
-- Use `PAGE` command to select channel 0/1/both for control over I2C
-- Set `ON_OFF_CONFIG` to `On_off_config_use_pmbus`
-- Send `OPERATION` command to turn channel on or off as needed
-- RUNn pins should be high using pullups
+- Assembled stack has to have charger board and controller board next to each other, followed by DC/DC converters as furthest.
 
 ### DC/DC Converter
 
@@ -32,24 +31,31 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 - Addresses are 0x40 to 0x45
 - Since external temp monitoring is not needed and shorted to GND, set the `UT_FAULT_LIMIT` to –275°C, `IOUT_CAL_GAIN_TC` to zero and the `UT_FAULT_RE-SPONSE` to ignore
 - The DC/DC converters start low, and must be configured with their voltages before turning them on.
+- Use `PAGE` command to select channel 0/1/both for control over I2C
+- Set `ON_OFF_CONFIG` to `On_off_config_use_pmbus`
+- Send `OPERATION` command to turn channel on or off as needed
 
 ### Lithium Battery Charger
 
 - Address is 0x12
 - Charging current limit is set to 2.7A using the potential divider, with assumption that cells are 2.6Ah
 - Switching pair of totem pole N-MOSFETs (choose: SiZ340DT (2422226(FAR)), same as in the DC/DC Converter
-- The P-FET (there's only one) needs to have *very low* Rds-on for efficiency (choose: SI7157DP-T1-GE3 2471947(FAR) it's big, but there's nothing smaller)
+- The P-FET (there's only one) needs to have *very low* Rds-on for efficiency (choose: Si7157DP-T1-GE3 2471947(FAR) it's big, but there's nothing smaller)
 - The two soft-start N-MOSFETs on the input need to withstand 3A current draw (choose: STL15DN4F5 2098274(FAR) it's also big, but is a pair)
-- The reverse polarity protection(?) N-MOSFET can be as small as possible since it carries very little current (choose: SIB452DK-T1-GE3 2364070(FAR))
+- The reverse polarity protection(?) N-MOSFET can be as small as possible since it carries very little current (choose: SiB452DK-T1-GE3 2364070(FAR))
 - Big inductor is needed for lower ripple current for more efficiency (choose: SRP5030T-4R7M 2309887(FAR) -> Iripple = 0.9A)
 - Large input and output capacitance to stabilise circuit (choose: GRM32ER61C476ME15L 1735538(FAR))
 - ACIN limit is set to 15V using the potential divider, with assumption that normal charging source is 12V
 
 ### Lithium Battery Bleeders
 
-- The N-MOSFETs carries only small amounts of current and so can be very small (choose: SIB452DK-T1-GE3 2364070(FAR))
-- The P-MOSFET carries only a small amount of current and so can be very small (choose: SIB433EDK-T1-GE3 2335393(FAR))
+- The N-MOSFETs carries only small amounts of current and so can be very small (choose: SiB452DK-T1-GE3 2364070(FAR))
+- The P-MOSFET carries only a small amount of current and so can be very small (choose: SiB433EDK-T1-GE3 2335393(FAR))
 - The bleed resistors have to take around 0.5W if they are 47Ω (choose: ERJP06F47R0V 1750737(FAR))
+
+### Lithium Battery Module
+
+- This will use one of the global reserve lines for the middle battery tap, but will not be linked to the external lines. Note that this will break the global interconnection.
 
 ### Active Power ORing
 
@@ -60,7 +66,7 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 - I2C Monitor used is the LTC4151 (2295457(FAR))
 - The P-MOSFETs that control the channel have to carry up to 2A each for short bursts (choose: CSD25310Q2 2501102(FAR))
-- The N-MOSFETs that control the P-MOSFETs only carry small amounts of current (choose: SIB452DK-T1-GE3 2364070(FAR)), same as the Li-ion bleeders
+- The N-MOSFETs that control the P-MOSFETs only carry small amounts of current (choose: SiB452DK-T1-GE3 2364070(FAR)), same as the Li-ion bleeders
 
 #### Software Configurations
 

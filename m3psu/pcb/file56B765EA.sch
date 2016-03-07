@@ -5,7 +5,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 12
+Sheet 2 13
 Title ""
 Date ""
 Rev ""
@@ -15,10 +15,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text Label 4900 5400 2    60   ~ 0
-JTDI
-Text Label 6100 2200 0    60   ~ 0
-JTDO
 Text Notes 6050 2300 0    60   ~ 0
 PB4 is JTRST, DO NOT CONNECT (Errata 2.1.4)
 Text Label 4900 3300 2    60   ~ 0
@@ -369,10 +365,6 @@ F 4 "9239111" H 4850 3700 60  0001 C CNN "Farnell"
 $EndComp
 Wire Wire Line
 	5000 3700 4950 3700
-Text Label 6100 2800 0    60   ~ 0
-CAN_TXD
-Text Label 6100 2700 0    60   ~ 0
-CAN_RXD
 Wire Wire Line
 	6100 2800 6000 2800
 Wire Wire Line
@@ -385,10 +377,6 @@ Wire Wire Line
 	4800 3400 4800 3600
 Wire Wire Line
 	4800 3600 5000 3600
-Text Label 4900 5300 2    60   ~ 0
-JTCK
-Text Label 4900 5200 2    60   ~ 0
-JTMS
 $Comp
 L STM32F405RxTx IC?
 U 1 1 56B9228C
@@ -399,6 +387,42 @@ F 2 "agg:LQFP-64" H 5100 1700 50  0001 L CNN
 F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00037051.pdf" H 5100 1600 50  0001 L CNN
 F 4 "2064363" H 5100 1500 50  0001 L CNN "Farnell"
 	1    5500 3700
+	1    0    0    -1  
+$EndComp
+Text HLabel 6100 2700 2    60   BiDi ~ 0
+CAN_RXD
+Text HLabel 6100 2800 2    60   BiDi ~ 0
+CAN_TXD
+Text HLabel 6100 2200 2    60   BiDi ~ 0
+JTDO
+Text HLabel 4900 5200 0    60   BiDi ~ 0
+JTMS
+Text HLabel 4900 5300 0    60   BiDi ~ 0
+JTCK
+Text HLabel 4900 5400 0    60   BiDi ~ 0
+JTDI
+$Comp
+L MCP2562 IC?
+U 1 1 56DF4FA9
+P 7600 2900
+F 0 "IC?" H 7300 3200 50  0000 L CNN
+F 1 "MCP2562" H 7300 2600 50  0000 L CNN
+F 2 "agg:DFN-8-EP-MICROCHIP" H 7300 2500 50  0001 L CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20005167C.pdf" H 7300 2400 50  0001 L CNN
+F 4 "" H 7300 2300 50  0001 L CNN "Farnell"
+F 5 "824-3135" H 7300 2200 50  0001 L CNN "RS"
+	1    7600 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L VCC #PWR?
+U 1 1 56DF5743
+P 3650 900
+F 0 "#PWR?" H 3650 1010 50  0001 L CNN
+F 1 "VCC" H 3650 990 50  0000 C CNN
+F 2 "" H 3650 900 60  0000 C CNN
+F 3 "" H 3650 900 60  0000 C CNN
+	1    3650 900 
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

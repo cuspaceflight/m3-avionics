@@ -5,7 +5,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 12 12
+Sheet 12 13
 Title ""
 Date ""
 Rev ""
@@ -61,8 +61,6 @@ F 3 "" H 5650 3600 60  0000 C CNN
 	1    5650 3600
 	1    0    0    -1  
 $EndComp
-Text HLabel 6050 3500 3    60   UnSpc ~ 0
-V_PYRO
 $Comp
 L R R?
 U 1 1 56DF5D41
@@ -75,7 +73,7 @@ F 4 "2447160" H 6400 2850 60  0001 C CNN "Farnell"
 	1    6400 2850
 	0    1    1    0   
 $EndComp
-Text HLabel 6700 3550 2    60   UnSpc ~ 0
+Text HLabel 6700 3550 2    60   Input ~ 0
 EN_PYRO
 $Comp
 L LTC4151 IC?
@@ -183,4 +181,6 @@ Connection ~ 4550 3350
 Wire Wire Line
 	4600 3150 4550 3150
 Connection ~ 4550 3150
+Text HLabel 6050 3500 3    60   UnSpc ~ 0
+V_PYRO
 $EndSCHEMATC
