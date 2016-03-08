@@ -5,7 +5,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 12 13
+Sheet 12 14
 Title ""
 Date ""
 Rev ""
@@ -34,7 +34,7 @@ F 0 "Q?" H 6150 3480 50  0000 L CNN
 F 1 "NFET" H 6150 3290 50  0000 L CNN
 F 2 "" H 6400 3450 50  0001 C CNN
 F 3 "" H 6400 3450 50  0001 C CNN
-F 4 "2364070" H 6400 3450 60  0001 C CNN "Farnell"
+F 4 "2490619" H 6400 3450 60  0001 C CNN "Farnell"
 	1    6400 3450
 	-1   0    0    -1  
 $EndComp
