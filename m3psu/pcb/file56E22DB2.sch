@@ -128,9 +128,7 @@ Connection ~ 5500 3300
 Wire Wire Line
 	5100 3300 5100 3450
 Wire Wire Line
-	5100 3550 5100 3700
-Wire Wire Line
-	5100 3700 5100 3750
+	5100 3550 5100 3750
 Wire Wire Line
 	5100 3700 5300 3700
 Wire Wire Line
@@ -145,9 +143,7 @@ Wire Wire Line
 Wire Wire Line
 	5500 4050 5500 4150
 Wire Wire Line
-	5100 3300 5500 3300
-Wire Wire Line
-	5500 3300 5700 3300
+	5100 3300 5700 3300
 Wire Wire Line
 	5500 4450 5500 4500
 Wire Wire Line

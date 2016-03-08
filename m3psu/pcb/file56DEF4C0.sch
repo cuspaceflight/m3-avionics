@@ -107,16 +107,12 @@ Text HLabel 4950 4150 0    60   Output ~ 0
 Text HLabel 4950 4250 0    60   Output ~ 0
 ~INT_PWR_ON
 Wire Wire Line
-	7450 4250 6850 4250
-Wire Wire Line
-	6850 4250 6500 4250
+	7450 4250 6500 4250
 Connection ~ 7450 3950
 Wire Wire Line
 	7450 3950 7550 3950
 Wire Wire Line
-	7450 3650 7450 3950
-Wire Wire Line
-	7450 3950 7450 4250
+	7450 3650 7450 4250
 Connection ~ 6850 3650
 Connection ~ 6850 4250
 Wire Wire Line
@@ -142,13 +138,9 @@ Connection ~ 4950 4550
 Wire Wire Line
 	5000 4550 4950 4550
 Wire Wire Line
-	4950 4450 4950 4550
+	4950 4450 4950 4600
 Wire Wire Line
-	4950 4550 4950 4600
-Wire Wire Line
-	4150 4450 4950 4450
-Wire Wire Line
-	4950 4450 5000 4450
+	4150 4450 5000 4450
 Wire Wire Line
 	5000 4250 4950 4250
 Wire Wire Line
@@ -158,9 +150,7 @@ Wire Wire Line
 Wire Wire Line
 	5000 3550 4950 3550
 Wire Wire Line
-	6200 3950 6500 3950
-Wire Wire Line
-	6500 3950 6850 3950
+	6200 3950 6850 3950
 Wire Wire Line
 	6200 3850 6300 3850
 Wire Wire Line
@@ -170,9 +160,7 @@ Wire Wire Line
 Wire Wire Line
 	6500 3450 6500 3350
 Wire Wire Line
-	6400 3350 6500 3350
-Wire Wire Line
-	6500 3350 6850 3350
+	6400 3350 6850 3350
 Connection ~ 6500 3350
 Connection ~ 6850 3350
 Connection ~ 6850 3950
@@ -182,9 +170,7 @@ Wire Wire Line
 	6500 3850 6500 3950
 Connection ~ 6500 3950
 Wire Wire Line
-	6200 3650 6850 3650
-Wire Wire Line
-	6850 3650 7450 3650
+	6200 3650 7450 3650
 Text HLabel 6850 3250 1    60   UnSpc ~ 0
 VSHORE
 $Comp

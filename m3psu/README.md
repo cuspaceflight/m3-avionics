@@ -45,7 +45,19 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 - The reverse polarity protection(?) N-MOSFET can be as small as possible since it carries very little current (choose: SiB452DK-T1-GE3 2364070(FAR))
 - Big inductor is needed for lower ripple current for more efficiency (choose: SRP5030T-4R7M 2309887(FAR) -> Iripple = 0.9A)
 - Large input and output capacitance to stabilise circuit (choose: GRM32ER61C476ME15L 1735538(FAR))
-- ACIN limit is set to 15V using the potential divider, with assumption that normal charging source is 12V
+- ACIN limits are 11.5-14.5V using the potential divider, with assumption of a nominal source charging of 12V (lead-acid battery)
+- ACIN is also connected to the microcontroller. See Software Considerations for more details.
+- EN and LDO for current monitoring during discharge phase is a positive feedback:
+    - LDO is high if EN is high
+    - EN is high if LDO is high
+    - However, this circuit is recommended as "typical application" by MAXIM
+    - It is likely to work because the capacitors should store some charge to hold EN high when shore power is removed, providing EN high to start the positive feedback
+    - In the event that this doesn't work as it should, find some way to tie EN high, but not more than 6V above ground
+
+#### Software Considerations
+
+- Under normal operations, keep the "!EN_VEXT" floating (high impedance), or the charger won't function normally.
+- Before switching over to internal power via the Power-OR circuit, cut the external power by pulling the "!EN_VEXT" input high. This will make the charger interpret as a voltage overload and shuts itself down. After *physically* removing the external power line, change this back to floating (high impedance), and reset the charger if needed (probably not needed).
 
 ### Lithium Battery Bleeders
 

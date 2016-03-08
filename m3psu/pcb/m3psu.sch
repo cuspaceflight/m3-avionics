@@ -549,11 +549,11 @@ Wire Wire Line
 Wire Wire Line
 	4850 2450 4950 2450
 Wire Notes Line
-	5400 800  2500 800 
+	5550 800  2500 800 
 Wire Notes Line
-	2500 4500 5400 4500
+	2500 4500 5550 4500
 Wire Notes Line
-	5400 4500 5400 800 
+	5550 4500 5550 800 
 Wire Notes Line
 	2500 800  2500 4500
 Wire Wire Line
@@ -662,8 +662,6 @@ Wire Wire Line
 	3450 3800 3550 3800
 Wire Wire Line
 	3450 3900 3550 3900
-Wire Wire Line
-	3450 4000 3550 4000
 Text Label 3050 3600 2    60   ~ 0
 V_MAIN
 $Sheet
@@ -676,4 +674,75 @@ F3 "BATT1" U R 1950 3250 60
 F4 "BATT2" U R 1950 3350 60 
 F5 "BLEED_BATT2" I L 850 3350 60 
 $EndSheet
+Text Label 3550 3600 0    60   ~ 0
+V_MAIN
+Text Label 3050 3900 2    60   ~ 0
+SDA
+Text Label 3050 4000 2    60   ~ 0
+SCL
+Text Label 3050 3700 2    60   ~ 0
+VBATT
+Text Label 3550 3800 0    60   ~ 0
+BATT1_MON
+Text Label 3550 3700 0    60   ~ 0
+VBATT
+Text Label 3050 3800 2    60   ~ 0
+~VEXT_OK
+Text Label 3550 3900 0    60   ~ 0
+CHARGER_OL
+Wire Wire Line
+	3450 4000 3550 4000
+Text Label 3550 4000 0    60   ~ 0
+~EN_VEXT
+$Comp
+L CONN_02x05 J?
+U 1 1 56E6948A
+P 4750 3600
+F 0 "J?" H 4650 3700 50  0000 L CNN
+F 1 "NORTH BOT" H 4700 3100 50  0000 C CNN
+F 2 "" H 4750 3600 50  0001 C CNN
+F 3 "" H 4750 3600 50  0001 C CNN
+	1    4750 3600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4550 3600 4450 3600
+Wire Wire Line
+	4550 3700 4450 3700
+Wire Wire Line
+	4550 3800 4450 3800
+Wire Wire Line
+	4550 3900 4450 3900
+Wire Wire Line
+	4550 4000 4450 4000
+Wire Wire Line
+	4850 3600 4950 3600
+Wire Wire Line
+	4850 3700 4950 3700
+Wire Wire Line
+	4850 3800 4950 3800
+Wire Wire Line
+	4850 3900 4950 3900
+Text Label 4450 3600 2    60   ~ 0
+V_MAIN
+Text Label 4950 3600 0    60   ~ 0
+V_MAIN
+Text Label 4450 3900 2    60   ~ 0
+SDA
+Text Label 4450 4000 2    60   ~ 0
+SCL
+Text Label 4450 3700 2    60   ~ 0
+VBATT
+Text Label 4950 3800 0    60   ~ 0
+BATT1_MON
+Text Label 4950 3700 0    60   ~ 0
+VBATT
+Text Label 4450 3800 2    60   ~ 0
+~VEXT_OK
+Text Label 4950 3900 0    60   ~ 0
+CHARGER_OL
+Wire Wire Line
+	4850 4000 4950 4000
+Text Label 4950 4000 0    60   ~ 0
+~EN_VEXT
 $EndSCHEMATC
