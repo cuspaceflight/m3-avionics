@@ -509,10 +509,6 @@ Text Label 4500 3500 2    60   ~ 0
 SDA
 Text Label 4500 3600 2    60   ~ 0
 SCL
-Wire Wire Line
-	4500 3500 4850 3500
-Wire Wire Line
-	4500 3600 4650 3600
 $Comp
 L R R?
 U 1 1 56E4F5E4
@@ -537,7 +533,7 @@ F 3 "" H 4750 3250 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4850 3500 4850 3450
+	4850 3600 4850 3450
 $Comp
 L R R?
 U 1 1 56E4F5F3
@@ -555,7 +551,7 @@ Wire Wire Line
 Wire Wire Line
 	4650 3300 4650 3350
 Wire Wire Line
-	4650 3600 4650 3450
+	4650 3500 4650 3450
 Wire Wire Line
 	4850 3300 4850 3350
 Wire Wire Line
@@ -567,8 +563,8 @@ U 1 1 56EA37EC
 P 10300 5550
 F 0 "Q?" H 10050 5580 50  0000 L CNN
 F 1 "NFET" H 10050 5390 50  0000 L CNN
-F 2 "" H 10300 5550 50  0001 C CNN
-F 3 "" H 10300 5550 50  0001 C CNN
+F 2 "agg:VML1006" H 10300 5550 50  0001 C CNN
+F 3 "http://rohmfs.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rv2c010unt2l-e.pdf" H 10300 5550 50  0001 C CNN
 F 4 "2490619" H 10300 5550 60  0001 C CNN "Farnell"
 	1    10300 5550
 	-1   0    0    -1  
@@ -579,8 +575,8 @@ U 1 1 56EA37F4
 P 9950 5250
 F 0 "Q?" H 9700 5280 50  0000 L CNN
 F 1 "PFET" H 9700 5090 50  0000 L CNN
-F 2 "" H 9950 5250 50  0001 C CNN
-F 3 "" H 9950 5250 50  0001 C CNN
+F 2 "SON2x2" H 9950 5250 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/csd25310q2.pdf" H 9950 5250 50  0001 C CNN
 F 4 "2501102" H 9950 5250 60  0001 C CNN "Farnell"
 	1    9950 5250
 	-1   0    0    -1  
@@ -727,8 +723,8 @@ U 1 1 56EA3FF4
 P 7250 3000
 F 0 "Q?" H 7000 3030 50  0000 L CNN
 F 1 "PFET" H 7000 2840 50  0000 L CNN
-F 2 "" H 7250 3000 50  0001 C CNN
-F 3 "" H 7250 3000 50  0001 C CNN
+F 2 "agg:PowerPAK-SC-75-6L-Single" H 7250 3000 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/65652/sib433ed.pdf" H 7250 3000 50  0001 C CNN
 F 4 "2335393" H 7250 3000 60  0001 C CNN "Farnell"
 	1    7250 3000
 	1    0    0    -1  
@@ -739,8 +735,8 @@ U 1 1 56EA3FFC
 P 7250 3650
 F 0 "Q?" H 7000 3680 50  0000 L CNN
 F 1 "NFET" H 7000 3490 50  0000 L CNN
-F 2 "" H 7250 3650 50  0001 C CNN
-F 3 "" H 7250 3650 50  0001 C CNN
+F 2 "agg:VML1006" H 7250 3650 50  0001 C CNN
+F 3 "http://rohmfs.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rv2c010unt2l-e.pdf" H 7250 3650 50  0001 C CNN
 F 4 "2490619" H 7250 3650 60  0001 C CNN "Farnell"
 	1    7250 3650
 	1    0    0    -1  
@@ -777,8 +773,8 @@ U 1 1 56EA4019
 P 6850 3250
 F 0 "Q?" H 6600 3280 50  0000 L CNN
 F 1 "NFET" H 6600 3090 50  0000 L CNN
-F 2 "" H 6850 3250 50  0001 C CNN
-F 3 "" H 6850 3250 50  0001 C CNN
+F 2 "agg:VML1006" H 6850 3250 50  0001 C CNN
+F 3 "http://rohmfs.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rv2c010unt2l-e.pdf" H 6850 3250 50  0001 C CNN
 F 4 "2490619" H 6850 3250 60  0001 C CNN "Farnell"
 	1    6850 3250
 	1    0    0    -1  
@@ -893,30 +889,6 @@ F 2 "" H 5200 2350 60  0000 C CNN
 F 3 "" H 5200 2350 60  0000 C CNN
 	1    5200 2350
 	1    0    0    -1  
-$EndComp
-$Comp
-L NFET Q?
-U 1 1 56EA4D65
-P 7100 1200
-F 0 "Q?" H 6850 1230 50  0000 L CNN
-F 1 "NFET" H 6850 1040 50  0000 L CNN
-F 2 "" H 7100 1200 50  0001 C CNN
-F 3 "" H 7100 1200 50  0001 C CNN
-F 4 "2098274" H 7100 1200 60  0001 C CNN "Farnell"
-	1    7100 1200
-	1    0    0    -1  
-$EndComp
-$Comp
-L NFET Q?
-U 1 1 56EA4D6D
-P 7100 1900
-F 0 "Q?" H 6850 1930 50  0000 L CNN
-F 1 "NFET" H 6850 1700 50  0000 L CNN
-F 2 "" H 7100 1900 50  0001 C CNN
-F 3 "" H 7100 1900 50  0001 C CNN
-F 4 "2098274" H 7100 1900 60  0001 C CNN "Farnell"
-	1    7100 1900
-	1    0    0    1   
 $EndComp
 Wire Wire Line
 	7700 2000 6750 2000
@@ -1637,13 +1609,13 @@ SDA
 Text Label 8700 3750 2    60   ~ 0
 SCL
 Text Label 8700 3450 2    60   ~ 0
-3v3_PSU
+VBATT
 Text Label 9200 3550 0    60   ~ 0
 BATT1
 Text Label 9200 3450 0    60   ~ 0
 VBATT
 Text Label 8700 3550 2    60   ~ 0
-RSVD
+3v3_PSU
 Text Label 9200 3650 0    60   ~ 0
 BATT2
 Wire Wire Line
@@ -1688,13 +1660,13 @@ SDA
 Text Label 10100 3750 2    60   ~ 0
 SCL
 Text Label 10100 3450 2    60   ~ 0
-3v3_PSU
+VBATT
 Text Label 10600 3550 0    60   ~ 0
 BATT1
 Text Label 10600 3450 0    60   ~ 0
 VBATT
 Text Label 10100 3550 2    60   ~ 0
-RSVD
+3v3_PSU
 Text Label 10600 3650 0    60   ~ 0
 BATT2
 Wire Wire Line
@@ -1780,4 +1752,32 @@ F 3 "" H 9750 4000 60  0000 C CNN
 $EndComp
 Wire Wire Line
 	9600 4000 9750 4000
+$Comp
+L NFET2 Q?
+U 1 1 56E00BC6
+P 7100 1200
+F 0 "Q?" H 6850 1230 50  0000 L CNN
+F 1 "NFET2" H 6800 1050 50  0000 L CNN
+F 2 "agg:PowerFLAT5x6" H 7100 1200 50  0001 C CNN
+F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 7100 1200 50  0001 C CNN
+F 4 "2098274" H 7100 1200 60  0001 C CNN "Farnell"
+	1    7100 1200
+	1    0    0    -1  
+$EndComp
+$Comp
+L NFET2 Q?
+U 2 1 56E00C63
+P 7100 1900
+F 0 "Q?" H 6850 1930 50  0000 L CNN
+F 1 "NFET2" H 6800 1750 50  0000 L CNN
+F 2 "agg:PowerFLAT5x6" H 7100 1900 50  0001 C CNN
+F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 7100 1900 50  0001 C CNN
+F 4 "2098274" H 7100 1900 60  0001 C CNN "Farnell"
+	2    7100 1900
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	4650 3500 4500 3500
+Wire Wire Line
+	4500 3600 4850 3600
 $EndSCHEMATC

@@ -264,54 +264,6 @@ F 4 "2309887" H 7200 3050 60  0001 C CNN "Farnell"
 	0    1    1    0   
 $EndComp
 $Comp
-L NFET Q?
-U 1 1 56C2BEBD
-P 7050 2700
-F 0 "Q?" H 6800 2730 50  0000 L CNN
-F 1 "NFET" H 6800 2540 50  0000 L CNN
-F 2 "" H 7050 2700 50  0001 C CNN
-F 3 "" H 7050 2700 50  0001 C CNN
-F 4 "2422226" H 7050 2700 60  0001 C CNN "Farnell"
-	1    7050 2700
-	1    0    0    -1  
-$EndComp
-$Comp
-L NFET Q?
-U 1 1 56C2C020
-P 7050 3000
-F 0 "Q?" H 6800 3030 50  0000 L CNN
-F 1 "NFET" H 6800 2840 50  0000 L CNN
-F 2 "" H 7050 3000 50  0001 C CNN
-F 3 "" H 7050 3000 50  0001 C CNN
-F 4 "2422226" H 7050 3000 60  0001 C CNN "Farnell"
-	1    7050 3000
-	1    0    0    -1  
-$EndComp
-$Comp
-L NFET Q?
-U 1 1 56C2C099
-P 6750 2300
-F 0 "Q?" H 6550 2350 50  0000 L CNN
-F 1 "NFET" H 6500 2140 50  0000 L CNN
-F 2 "" H 6750 2300 50  0001 C CNN
-F 3 "" H 6750 2300 50  0001 C CNN
-F 4 "2098274" H 6750 2300 60  0001 C CNN "Farnell"
-	1    6750 2300
-	1    0    0    -1  
-$EndComp
-$Comp
-L NFET Q?
-U 1 1 56C2C117
-P 6150 1500
-F 0 "Q?" H 5950 1550 50  0000 L CNN
-F 1 "NFET" H 6150 1350 50  0000 L CNN
-F 2 "" H 6150 1500 50  0001 C CNN
-F 3 "" H 6150 1500 50  0001 C CNN
-F 4 "2098274" H 6150 1500 60  0001 C CNN "Farnell"
-	1    6150 1500
-	1    0    0    1   
-$EndComp
-$Comp
 L GND #PWR017
 U 1 1 56C2F498
 P 7050 3250
@@ -368,8 +320,8 @@ U 1 1 56C62099
 P 5700 1550
 F 0 "Q?" V 5550 1500 50  0000 L CNN
 F 1 "NFET" H 5500 1350 50  0000 L CNN
-F 2 "" H 5700 1550 50  0001 C CNN
-F 3 "" H 5700 1550 50  0001 C CNN
+F 2 "agg:VML1006" H 5700 1550 50  0001 C CNN
+F 3 "http://rohmfs.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rv2c010unt2l-e.pdf" H 5700 1550 50  0001 C CNN
 F 4 "2490619" V 5700 1550 60  0001 C CNN "Farnell"
 	1    5700 1550
 	0    1    -1   0   
@@ -450,8 +402,8 @@ U 1 1 56C79D18
 P 6950 2150
 F 0 "Q?" V 6800 2150 50  0000 L CNN
 F 1 "PFET" H 6700 1990 50  0000 L CNN
-F 2 "" H 6950 2150 50  0001 C CNN
-F 3 "" H 6950 2150 50  0001 C CNN
+F 2 "agg:PowerPAK-SO-8" H 6950 2150 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/62860/si7157dp.pdf" H 6950 2150 50  0001 C CNN
 F 4 "2471947" V 6950 2150 60  0001 C CNN "Farnell"
 	1    6950 2150
 	0    -1   1    0   
@@ -710,8 +662,8 @@ U 1 1 56DFD606
 P 5450 1050
 F 0 "Q?" V 5300 1050 50  0000 L CNN
 F 1 "PFET" H 5200 890 50  0000 L CNN
-F 2 "" H 5450 1050 50  0001 C CNN
-F 3 "" H 5450 1050 50  0001 C CNN
+F 2 "PowerPAK-1212-8" H 5450 1050 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/63232/sqm50p04-09l_ps.pdf" H 5450 1050 50  0001 C CNN
 F 4 "2364059" V 5450 1050 60  0001 C CNN "Farnell"
 	1    5450 1050
 	1    0    0    -1  
@@ -724,8 +676,8 @@ U 1 1 56E0224F
 P 5150 1300
 F 0 "Q?" H 4900 1330 50  0000 L CNN
 F 1 "NFET" H 4900 1140 50  0000 L CNN
-F 2 "" H 5150 1300 50  0001 C CNN
-F 3 "" H 5150 1300 50  0001 C CNN
+F 2 "agg:VML1006" H 5150 1300 50  0001 C CNN
+F 3 "http://rohmfs.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rv2c010unt2l-e.pdf" H 5150 1300 50  0001 C CNN
 F 4 "2490619" H 5150 1300 60  0001 C CNN "Farnell"
 	1    5150 1300
 	1    0    0    -1  
@@ -1666,4 +1618,54 @@ F 3 "" H 9750 4050 60  0000 C CNN
 $EndComp
 Wire Wire Line
 	9600 4050 9750 4050
+Text Label 5000 4850 2    60   ~ 0
+~ALERT
+$Comp
+L SiZ340DT Q?
+U 1 1 56DFBBE5
+P 7050 2700
+F 0 "Q?" H 6800 2750 50  0000 L CNN
+F 1 "SiZ340DT" H 6600 2550 50  0000 L CNN
+F 2 "agg:PowerPair3x3" H 7050 2400 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/62877/siz340dt.pdf" H 6800 2750 50  0001 C CNN
+F 4 "2422226" H 7000 2900 50  0001 C CNN "Farnell"
+	1    7050 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L SiZ340DT Q?
+U 2 1 56DFBC9B
+P 7050 3000
+F 0 "Q?" H 6800 3050 50  0000 L CNN
+F 1 "SiZ340DT" H 6600 2850 50  0000 L CNN
+F 2 "agg:PowerPair3x3" H 7050 2700 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/62877/siz340dt.pdf" H 6800 3050 50  0001 C CNN
+F 4 "2422226" H 7000 3200 50  0001 C CNN "Farnell"
+	2    7050 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L NFET2 Q?
+U 1 1 56DF7CDF
+P 6150 1500
+F 0 "Q?" H 5900 1530 50  0000 L CNN
+F 1 "NFET2" H 6200 1350 50  0000 L CNN
+F 2 "agg:PowerFLAT5x6" H 6150 1500 50  0001 C CNN
+F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 6150 1500 50  0001 C CNN
+F 4 "2098274" H 6150 1500 60  0001 C CNN "Farnell"
+	1    6150 1500
+	1    0    0    1   
+$EndComp
+$Comp
+L NFET2 Q?
+U 2 1 56DF8488
+P 6750 2300
+F 0 "Q?" H 6500 2330 50  0000 L CNN
+F 1 "NFET2" H 6450 2150 50  0000 L CNN
+F 2 "agg:PowerFLAT5x6" H 6750 2300 50  0001 C CNN
+F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 6750 2300 50  0001 C CNN
+F 4 "2098274" H 6750 2300 60  0001 C CNN "Farnell"
+	2    6750 2300
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
