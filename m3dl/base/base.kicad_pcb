@@ -3,7 +3,7 @@
   (general
     (links 98)
     (no_connects 0)
-    (area 79.923999 86.924999 120.076001 120.076001)
+    (area 78.899999 79.899999 123.100001 120.100001)
     (thickness 1.6)
     (drawings 52)
     (tracks 259)
@@ -37,10 +37,10 @@
   )
 
   (setup
-    (last_trace_width 0.25)
+    (last_trace_width 0.2)
     (user_trace_width 0.25)
     (user_trace_width 0.74)
-    (trace_clearance 0.1)
+    (trace_clearance 0.15)
     (zone_clearance 0.2)
     (zone_45_only no)
     (trace_min 0.2)
@@ -63,7 +63,7 @@
     (mod_text_width 0.15)
     (pad_size 1.524 1.524)
     (pad_drill 0.762)
-    (pad_to_mask_clearance 0.2)
+    (pad_to_mask_clearance 0)
     (aux_axis_origin 0 0)
     (visible_elements FFFEFF7F)
     (pcbplotparams
@@ -179,7 +179,7 @@
   (net 83 "Net-(P1-Pad6)")
 
   (net_class Default "This is the default net class."
-    (clearance 0.1)
+    (clearance 0.15)
     (trace_width 0.2)
     (via_dia 0.6)
     (via_drill 0.3)
@@ -1779,7 +1779,7 @@
       (net 12 "Net-(IC1-Pad6)"))
   )
 
-  (gr_text SWD (at 112.2 102.6 360) (layer B.SilkS) (tstamp 56D2445F)
+  (gr_text SWD (at 112.2 102.6) (layer B.SilkS) (tstamp 56D2445F)
     (effects (font (size 1.3 1.3) (thickness 0.17)) (justify mirror))
   )
   (gr_line (start 107.1 100.5) (end 92.9 100.5) (layer B.SilkS) (width 0.2))
@@ -1798,7 +1798,7 @@
   (gr_text D- (at 91 87.6 270) (layer F.SilkS) (tstamp 56D23E64)
     (effects (font (size 0.6 0.6) (thickness 0.12)) (justify left))
   )
-  (gr_text +V (at 89 87.6 270) (layer F.SilkS) (tstamp 56D23E2B)
+  (gr_text 5V (at 89 87.6 270) (layer F.SilkS) (tstamp 56D23E2B)
     (effects (font (size 0.6 0.6) (thickness 0.12)) (justify left))
   )
   (gr_text "GND\nPWR" (at 101.6 91.8 270) (layer F.SilkS) (tstamp 56D23E0B)
