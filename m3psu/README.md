@@ -8,7 +8,7 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 - Everything is designed to assume shore power of 11.5V to 14.5V, i.e. a 12V lead-acid (car) battery.
 - Internal power supply is assumed to be 2 Li-ion cells, 3.5V-4.2V per cell giving 7V-8.4V internal supply.
-- All components are designed to function at max working voltage of 16V, or higher.
+- All components are designed to function at max working voltage of 16V, or higher (usually 25V where possible).
 - 0402s are not available for capacitors >1µF and ≥16V.
     - Large capacitors will have to use the smallest footprint possible (which varies accordingly).
 - All resistors are 0402s unless carrying large currents. Check power rating (in hidden field) if so.
@@ -18,14 +18,16 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 ### DC/DC Converter
 
+- Choose: LTC3887 2475658(FAR).
+- Max current provisioned: 1A @5V or @3.3V
+- Operating Frequency: 575kHz.
 - Choose Schottky diode to carry 1A (these are optional in the circuit, but increases efficiency)(choose: NSR20F30NXT5G (2317558(FAR)).
 - Switching pair of totem pole N-MOSFETs (choose: SiZ340DT (2422226(FAR)).
 - Boost capacitors are 100x total input (gate) capacitance of topside MOSFETs.
 - Bigger inductors are better, but it's a compromise on space (choose: TYS5040100M-10 2292532(FAR) -> Iripple = 0.41A).
-- Large filtering capacitors give low ripple voltage. (choose: GRM188R60J226MEA0D 2494232(FAR) -> Vripple = 1.2mV).
+- Large filtering capacitors give low ripple voltage. (choose: GRM21BR61E226ME44L 1907510(FAR) -> Vripple = 1.2mV).
 - Rsense at 50mΩ because Vsense max is 75mV and expected current ~1A (choose: LRCS0603-0R05FT5 1506129(FAR)).
 - Filter over Isense is 2\*Cp\*Rs ≤ ESL/R (equivalent series inductance of sense resistor est. ~0.5nH).
-- Frequency of operation will be 575kHz.
 
 #### Software Configurations
 
@@ -56,6 +58,7 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 ### Lithium Battery Charger
 
+- Choose: MAX17435 2516688(FAR).
 - Address is 0x09 (0b000 1001 X).
 - Charging current limit is set to 2.7A using the potential divider, with assumption that cells are 2.6Ah.
 - Switching pair of totem pole N-MOSFETs (choose: SiZ340DT (2422226(FAR)), same as in the DC/DC Converter.
@@ -77,8 +80,8 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 ##### Port Expander (for Lithium Charger)
 
-- Choose: PCAL9538A 2428172(FAR)
-- Address is 0x70 (0b111 0000 X)
+- Choose: PCAL9538A 2428172(FAR).
+- Address is 0x70 (0b111 0000 X).
 - Ports P4-P7 are grounded to prevent floating, but datasheet advises to change them to outputs after bootup.
 
 ### Lithium Battery Bleeders
@@ -93,12 +96,13 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 ### Active Power ORing
 
+- Choose: LTC4353 2115909(FAR).
 - N-MOSFETs need to withstand 3A current draw (choose: STL15DN4F5 2098274(FAR)), same as in Lithium Battery Charger.
 - Capacitors 10x the gate capacitance (Ciss) of the MOSFET that it is switching (choose: CGA2B3X7R1H223K050BB 2210825(FAR)).
 
 ### Pyro Channel Monitor and Control
 
-- I2C Monitor used is the LTC4151 (2295457(FAR)).
+- Choose: LTC4151 (2295457(FAR)).
 - The P-MOSFETs that control the channel have to carry up to 2A each for short bursts (choose: CSD25310Q2 2501102(FAR)).
 - The N-MOSFET that control the P-MOSFET only carries a small amount of current (choose: RV2C010UN 2490619(FAR)), same as the Li-ion bleeders.
 
@@ -107,6 +111,14 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 - Address of Current Monitor is 0x6F (0b110 1111 X).
 - The readout for the current is 0-81.92mV (20µV resolution) and must be converted to mA. With Rsense = 0.01Ω, range is 0-8A, with resolution of 2mA.
 - The readout of the voltage is also the readout of the main line voltage (after the power OR).
+
+### PSU for the PSU
+
+- Choose: TPS61252 2382918(FAR).
+- Max current provisioned: 0.2A @3.3V.
+- Operatiing frequency: 1.25MHz.
+- Choose smallest footprint inductor possible which meets requirements (choose: VLS201610HBX-3R3M-1 2455353(FAR)).
+- Input-Output Capacitors are large for low ripple (choose: GRM21BR61E226ME44L 1907510(FAR)).
 
 ## List of Common Parts
 

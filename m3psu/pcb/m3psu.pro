@@ -1,4 +1,4 @@
-update=Sat 27 Feb 2016 17:14:54 GMT
+update=03/09/16 23:40:44
 version=1
 last_client=kicad
 [pcbnew]
@@ -29,4 +29,5 @@ version=1
 version=1
 LibDir=../../agg-kicad/lib
 [eeschema/libraries]
-LibName1=../../agg-kicad/agg-kicad
+LibName1=m3psu-rescue
+LibName2=../../agg-kicad/agg-kicad

@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:m3psu-rescue
 LIBS:agg-kicad
 LIBS:m3psu-cache
 EELAYER 25 0
@@ -136,7 +137,13 @@ Wire Wire Line
 Wire Wire Line
 	1450 5200 1200 5200
 Wire Wire Line
-	700  5500 700  5900
+	700  5500 700  5600
+Wire Wire Line
+	700  5600 700  5700
+Wire Wire Line
+	700  5700 700  5800
+Wire Wire Line
+	700  5800 700  5900
 Wire Wire Line
 	700  5700 650  5700
 Connection ~ 700  5700
@@ -155,9 +162,13 @@ Wire Wire Line
 Wire Wire Line
 	1000 5800 700  5800
 Wire Wire Line
-	900  5900 1250 5900
+	900  5900 1100 5900
 Wire Wire Line
-	900  5500 1250 5500
+	1100 5900 1250 5900
+Wire Wire Line
+	900  5500 1100 5500
+Wire Wire Line
+	1100 5500 1250 5500
 Wire Wire Line
 	1100 5650 1100 5500
 Connection ~ 1100 5500
@@ -249,20 +260,34 @@ F 4 "2496771" H 1150 4500 60  0001 C CNN "Farnell"
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1250 4500 1450 4500
+	1250 4500 1300 4500
+Wire Wire Line
+	1300 4500 1400 4500
+Wire Wire Line
+	1400 4500 1450 4500
 Wire Wire Line
 	1050 4600 1300 4600
 Wire Wire Line
 	1300 4600 1300 4500
 Connection ~ 1300 4500
 Wire Wire Line
-	1050 4400 1450 4400
+	1050 4400 1400 4400
 Wire Wire Line
-	1250 4300 1450 4300
+	1400 4400 1450 4400
 Wire Wire Line
-	1050 4200 1450 4200
+	1250 4300 1400 4300
 Wire Wire Line
-	1250 4100 1450 4100
+	1400 4300 1450 4300
+Wire Wire Line
+	1050 4200 1400 4200
+Wire Wire Line
+	1400 4200 1450 4200
+Wire Wire Line
+	1250 4100 1300 4100
+Wire Wire Line
+	1300 4100 1400 4100
+Wire Wire Line
+	1400 4100 1450 4100
 Wire Wire Line
 	1050 4000 1300 4000
 Wire Wire Line
@@ -282,7 +307,19 @@ $EndComp
 Wire Wire Line
 	950  4000 900  4000
 Wire Wire Line
-	900  4000 900  4650
+	900  4000 900  4100
+Wire Wire Line
+	900  4100 900  4200
+Wire Wire Line
+	900  4200 900  4300
+Wire Wire Line
+	900  4300 900  4400
+Wire Wire Line
+	900  4400 900  4500
+Wire Wire Line
+	900  4500 900  4600
+Wire Wire Line
+	900  4600 900  4650
 Wire Wire Line
 	950  4600 900  4600
 Connection ~ 900  4600
@@ -313,7 +350,17 @@ F 3 "" H 1400 3950 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1400 3950 1400 4500
+	1400 3950 1400 4000
+Wire Wire Line
+	1400 4000 1400 4100
+Wire Wire Line
+	1400 4100 1400 4200
+Wire Wire Line
+	1400 4200 1400 4300
+Wire Wire Line
+	1400 4300 1400 4400
+Wire Wire Line
+	1400 4400 1400 4500
 Wire Wire Line
 	1400 4000 1450 4000
 Connection ~ 1400 4100
@@ -334,11 +381,15 @@ F 3 "" H 1300 4900 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	1300 4900 1450 4900
+	1300 4900 1400 4900
+Wire Wire Line
+	1400 4900 1450 4900
 Wire Wire Line
 	1450 4800 1400 4800
 Wire Wire Line
-	1400 4700 1400 4900
+	1400 4700 1400 4800
+Wire Wire Line
+	1400 4800 1400 4900
 Connection ~ 1400 4900
 Wire Wire Line
 	1450 4700 1400 4700
@@ -395,12 +446,12 @@ $EndComp
 $Comp
 L VCC #PWR?
 U 1 1 56DF5743
-P 1300 2700
-F 0 "#PWR?" H 1300 2810 50  0001 L CNN
-F 1 "VCC" H 1300 2790 50  0000 C CNN
-F 2 "" H 1300 2700 60  0000 C CNN
-F 3 "" H 1300 2700 60  0000 C CNN
-	1    1300 2700
+P 2100 1000
+F 0 "#PWR?" H 2100 1110 50  0001 L CNN
+F 1 "VCC" H 2100 1090 50  0000 C CNN
+F 2 "" H 2100 1000 60  0000 C CNN
+F 3 "" H 2100 1000 60  0000 C CNN
+	1    2100 1000
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -423,7 +474,9 @@ Wire Wire Line
 Wire Wire Line
 	5000 4600 5050 4600
 Wire Wire Line
-	4750 4700 5050 4700
+	4750 4700 4850 4700
+Wire Wire Line
+	4850 4700 5050 4700
 $Comp
 L C C?
 U 1 1 56E4016F
@@ -442,12 +495,18 @@ Connection ~ 4850 4700
 Wire Wire Line
 	5050 4800 5000 4800
 Wire Wire Line
-	5000 4800 5000 5050
+	5000 4800 5000 4900
+Wire Wire Line
+	5000 4900 5000 5000
+Wire Wire Line
+	5000 5000 5000 5050
 Wire Wire Line
 	5050 5000 5000 5000
 Connection ~ 5000 5000
 Wire Wire Line
-	4850 4900 5050 4900
+	4850 4900 5000 4900
+Wire Wire Line
+	5000 4900 5050 4900
 Connection ~ 5000 4900
 Wire Wire Line
 	4850 4900 4850 4850
@@ -547,7 +606,9 @@ F 4 "2447187" H 4650 3350 60  0001 C CNN "Farnell"
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	4650 3300 4850 3300
+	4650 3300 4750 3300
+Wire Wire Line
+	4750 3300 4850 3300
 Wire Wire Line
 	4650 3300 4650 3350
 Wire Wire Line
@@ -635,7 +696,13 @@ $EndComp
 Wire Wire Line
 	8450 5450 8500 5450
 Wire Wire Line
-	8450 5150 8450 5650
+	8450 5150 8450 5250
+Wire Wire Line
+	8450 5250 8450 5450
+Wire Wire Line
+	8450 5450 8450 5550
+Wire Wire Line
+	8450 5550 8450 5650
 Wire Wire Line
 	8500 5550 8450 5550
 Connection ~ 8450 5550
@@ -659,7 +726,11 @@ Wire Wire Line
 Wire Wire Line
 	9000 4700 9000 4750
 Wire Wire Line
-	8500 4750 10300 4750
+	8500 4750 9000 4750
+Wire Wire Line
+	9000 4750 9950 4750
+Wire Wire Line
+	9950 4750 10300 4750
 Wire Wire Line
 	8500 4750 8500 4950
 Wire Wire Line
@@ -672,7 +743,9 @@ Wire Wire Line
 Wire Wire Line
 	10150 5350 10300 5350
 Wire Wire Line
-	10300 5050 10300 5450
+	10300 5050 10300 5350
+Wire Wire Line
+	10300 5350 10300 5450
 Connection ~ 10300 5350
 Wire Wire Line
 	10300 4750 10300 4950
@@ -693,7 +766,13 @@ Wire Wire Line
 Wire Wire Line
 	10500 5650 10600 5650
 Wire Wire Line
-	9950 5450 9950 6350
+	9950 5450 9950 6050
+Wire Wire Line
+	9950 6050 9950 6150
+Wire Wire Line
+	9950 6150 9950 6250
+Wire Wire Line
+	9950 6250 9950 6350
 Wire Wire Line
 	9500 5250 9550 5250
 Wire Wire Line
@@ -811,7 +890,9 @@ Connection ~ 7250 2700
 Wire Wire Line
 	6850 2700 6850 2850
 Wire Wire Line
-	6850 2950 6850 3150
+	6850 2950 6850 3100
+Wire Wire Line
+	6850 3100 6850 3150
 Wire Wire Line
 	6850 3100 7050 3100
 Wire Wire Line
@@ -826,7 +907,9 @@ Wire Wire Line
 Wire Wire Line
 	7250 3450 7250 3550
 Wire Wire Line
-	6850 2700 7450 2700
+	6850 2700 7250 2700
+Wire Wire Line
+	7250 2700 7450 2700
 Wire Wire Line
 	7250 3850 7250 3900
 Wire Wire Line
@@ -861,7 +944,7 @@ U 1 1 56EA4D4F
 P 6550 1100
 F 0 "C?" H 6600 1170 50  0000 C CNN
 F 1 "22n" H 6600 1030 50  0000 C CNN
-F 2 "ag:0402" H 6550 1100 50  0001 C CNN
+F 2 "agg:0402" H 6550 1100 50  0001 C CNN
 F 3 "" H 6550 1100 50  0001 C CNN
 F 4 "2210825" H 6550 1100 60  0001 C CNN "Farnell"
 	1    6550 1100
@@ -891,12 +974,16 @@ F 3 "" H 5200 2350 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7700 2000 6750 2000
+	7700 2000 7100 2000
+Wire Wire Line
+	7100 2000 6750 2000
 Connection ~ 7700 1700
 Wire Wire Line
 	7700 1700 7800 1700
 Wire Wire Line
-	7700 1400 7700 2000
+	7700 1400 7700 1700
+Wire Wire Line
+	7700 1700 7700 2000
 Connection ~ 7100 1400
 Connection ~ 7100 2000
 Wire Wire Line
@@ -922,9 +1009,13 @@ Connection ~ 5200 2300
 Wire Wire Line
 	5250 2300 5200 2300
 Wire Wire Line
-	5200 2200 5200 2350
+	5200 2200 5200 2300
 Wire Wire Line
-	4400 2200 5250 2200
+	5200 2300 5200 2350
+Wire Wire Line
+	4400 2200 5200 2200
+Wire Wire Line
+	5200 2200 5250 2200
 Wire Wire Line
 	5250 2000 5200 2000
 Wire Wire Line
@@ -934,7 +1025,9 @@ Wire Wire Line
 Wire Wire Line
 	5250 1300 5200 1300
 Wire Wire Line
-	6450 1700 7100 1700
+	6450 1700 6750 1700
+Wire Wire Line
+	6750 1700 7100 1700
 Wire Wire Line
 	6450 1600 6550 1600
 Wire Wire Line
@@ -944,7 +1037,9 @@ Wire Wire Line
 Wire Wire Line
 	6750 1200 6750 1100
 Wire Wire Line
-	6650 1100 7100 1100
+	6650 1100 6750 1100
+Wire Wire Line
+	6750 1100 7100 1100
 Connection ~ 6750 1100
 Connection ~ 7100 1100
 Connection ~ 7100 1700
@@ -954,7 +1049,9 @@ Wire Wire Line
 	6750 1600 6750 1700
 Connection ~ 6750 1700
 Wire Wire Line
-	6450 1400 7700 1400
+	6450 1400 7100 1400
+Wire Wire Line
+	7100 1400 7700 1400
 Text Label 2550 4900 0    60   ~ 0
 CAN_TXD
 Wire Wire Line
@@ -1285,7 +1382,7 @@ Text Label 10600 2500 0    60   ~ 0
 PYRO2
 Text Label 10600 2400 0    60   ~ 0
 PYRO1
-Text Notes 8200 4200 0    100  ~ 0
+Text Notes 8200 4300 0    100  ~ 0
 INTERCONNECTS
 $Comp
 L GND #PWR?
@@ -1489,11 +1586,11 @@ Wire Wire Line
 Wire Notes Line
 	11150 550  8150 550 
 Wire Notes Line
-	8150 4250 11150 4250
+	8150 4350 11150 4350
 Wire Notes Line
-	11150 4250 11150 550 
+	11150 4350 11150 550 
 Wire Notes Line
-	8150 550  8150 4250
+	8150 550  8150 4350
 Wire Wire Line
 	8800 2600 8700 2600
 Wire Wire Line
@@ -1683,7 +1780,7 @@ Text Label 7100 1600 0    60   ~ 0
 VBATT
 Text Label 7800 1700 0    60   ~ 0
 V_MAIN
-Text Label 9600 4000 2    60   ~ 0
+Text Label 9250 4050 2    60   ~ 0
 V_MAIN
 Text Label 7450 2700 0    60   ~ 0
 BATT2
@@ -1742,16 +1839,16 @@ $EndComp
 $Comp
 L VCC #PWR?
 U 1 1 56EC3F95
-P 9750 4000
-F 0 "#PWR?" H 9750 4110 50  0001 L CNN
-F 1 "VCC" H 9750 4090 50  0000 C CNN
-F 2 "" H 9750 4000 60  0000 C CNN
-F 3 "" H 9750 4000 60  0000 C CNN
-	1    9750 4000
+P 9400 4050
+F 0 "#PWR?" H 9400 4160 50  0001 L CNN
+F 1 "VCC" V 9350 4150 50  0000 C CNN
+F 2 "" H 9400 4050 60  0000 C CNN
+F 3 "" H 9400 4050 60  0000 C CNN
+	1    9400 4050
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	9600 4000 9750 4000
+	9250 4050 9400 4050
 $Comp
 L NFET2 Q?
 U 1 1 56E00BC6
@@ -1780,4 +1877,234 @@ Wire Wire Line
 	4650 3500 4500 3500
 Wire Wire Line
 	4500 3600 4850 3600
+$Comp
+L TPS62152 IC?
+U 1 1 56E0EB4F
+P 2550 1700
+F 0 "IC?" H 2250 2400 50  0000 L CNN
+F 1 "TPS62152" H 2250 1000 50  0000 L CNN
+F 2 "agg:QFN-16-EP-TI" H 2250 900 50  0001 L CNN
+F 3 "http://www.ti.com/lit/ds/symlink/tps62152.pdf" H 2250 800 50  0001 L CNN
+F 4 "2382918" H 2250 700 50  0001 L CNN "Farnell"
+	1    2550 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56E11662
+P 2050 1650
+F 0 "C?" H 2100 1720 50  0000 C CNN
+F 1 "100n" H 2100 1580 50  0000 C CNN
+F 2 "agg:0402" H 2050 1650 50  0001 C CNN
+F 3 "" H 2050 1650 50  0001 C CNN
+F 4 "2496811" H 2050 1650 60  0001 C CNN "Farnell"
+	1    2050 1650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2150 1600 2050 1600
+Wire Wire Line
+	2050 1600 2050 1650
+Wire Wire Line
+	2150 1800 2050 1800
+Wire Wire Line
+	2050 1750 2050 1800
+Wire Wire Line
+	2050 1800 2050 1900
+Wire Wire Line
+	2050 1900 2050 2000
+Wire Wire Line
+	2050 2000 2050 2100
+Wire Wire Line
+	2050 2100 2050 2200
+Wire Wire Line
+	2050 2200 2050 2300
+Wire Wire Line
+	2050 2300 2050 2400
+Wire Wire Line
+	2150 1900 2050 1900
+Connection ~ 2050 1900
+Wire Wire Line
+	2150 2000 2050 2000
+Connection ~ 2050 2000
+Connection ~ 2050 1800
+Wire Wire Line
+	2150 2100 2050 2100
+Connection ~ 2050 2100
+Wire Wire Line
+	2150 2200 2050 2200
+Connection ~ 2050 2200
+Wire Wire Line
+	1800 2300 2050 2300
+Wire Wire Line
+	2050 2300 2150 2300
+Connection ~ 2050 2300
+$Comp
+L GND #PWR?
+U 1 1 56E12809
+P 2050 2400
+F 0 "#PWR?" H 1920 2440 50  0001 L CNN
+F 1 "GND" H 2050 2300 50  0000 C CNN
+F 2 "" H 2050 2400 60  0000 C CNN
+F 3 "" H 2050 2400 60  0000 C CNN
+	1    2050 2400
+	-1   0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56E12CEE
+P 3450 1600
+F 0 "#PWR?" H 3320 1640 50  0001 L CNN
+F 1 "GND" H 3450 1500 50  0000 C CNN
+F 2 "" H 3450 1600 60  0000 C CNN
+F 3 "" H 3450 1600 60  0000 C CNN
+	1    3450 1600
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3000 1500 2950 1500
+Wire Wire Line
+	3000 1100 3000 1200
+Wire Wire Line
+	3000 1200 3000 1300
+Wire Wire Line
+	3000 1300 3000 1500
+Wire Wire Line
+	3000 1100 2950 1100
+Wire Wire Line
+	2950 1200 3000 1200
+Wire Wire Line
+	3000 1200 3100 1200
+Connection ~ 3000 1200
+Wire Wire Line
+	2950 1300 3000 1300
+Connection ~ 3000 1300
+Wire Wire Line
+	2100 1400 2150 1400
+Wire Wire Line
+	2100 1000 2100 1100
+Wire Wire Line
+	2100 1100 2100 1200
+Wire Wire Line
+	2100 1200 2100 1300
+Wire Wire Line
+	2100 1300 2100 1400
+Wire Wire Line
+	2150 1100 2100 1100
+Connection ~ 2100 1100
+Wire Wire Line
+	1800 1200 2100 1200
+Wire Wire Line
+	2100 1200 2150 1200
+Connection ~ 2100 1200
+Wire Wire Line
+	2150 1300 2100 1300
+Connection ~ 2100 1300
+$Comp
+L L L?
+U 1 1 56E14EB2
+P 3100 1200
+F 0 "L?" H 3150 1250 50  0000 C CNN
+F 1 "3µ3" H 3150 1150 50  0000 C CNN
+F 2 "agg:VLS201610HBX-1" H 3100 1200 50  0001 C CNN
+F 3 "" H 3100 1200 50  0001 C CNN
+F 4 "2455353" H 3100 1200 60  0001 C CNN "Farnell"
+	1    3100 1200
+	1    0    0    -1  
+$EndComp
+NoConn ~ 2950 1700
+$Comp
+L C C?
+U 1 1 56E10AF0
+P 3450 1350
+F 0 "C?" H 3500 1420 50  0000 C CNN
+F 1 "22µ" H 3500 1280 50  0000 C CNN
+F 2 "agg:0805" H 3450 1350 50  0001 C CNN
+F 3 "" H 3450 1350 50  0001 C CNN
+F 4 "1907510" H 3450 1350 60  0001 C CNN "Farnell"
+	1    3450 1350
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 56E10C0E
+P 1800 1700
+F 0 "C?" H 1850 1770 50  0000 C CNN
+F 1 "22µ" H 1850 1630 50  0000 C CNN
+F 2 "agg:0805" H 1800 1700 50  0001 C CNN
+F 3 "" H 1800 1700 50  0001 C CNN
+F 4 "1907510" H 1800 1700 60  0001 C CNN "Farnell"
+	1    1800 1700
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1800 1200 1800 1700
+Wire Wire Line
+	1800 1800 1800 2300
+Wire Wire Line
+	3200 1200 3300 1200
+Wire Wire Line
+	3300 1200 3450 1200
+Wire Wire Line
+	3450 1200 3650 1200
+Wire Wire Line
+	3300 1200 3300 1600
+Wire Wire Line
+	3300 1600 2950 1600
+Wire Wire Line
+	3450 1200 3450 1350
+Connection ~ 3300 1200
+Wire Wire Line
+	3450 1450 3450 1600
+Connection ~ 3450 1200
+$Comp
+L 3v3 #PWR?
+U 1 1 56E12481
+P 3650 1200
+F 0 "#PWR?" H 3650 1310 50  0001 L CNN
+F 1 "3v3" V 3600 1300 50  0000 C CNN
+F 2 "" H 3650 1200 60  0000 C CNN
+F 3 "" H 3650 1200 60  0000 C CNN
+	1    3650 1200
+	0    1    1    0   
+$EndComp
+$Comp
+L 3v3 #PWR?
+U 1 1 56E13436
+P 10300 4050
+F 0 "#PWR?" H 10300 4160 50  0001 L CNN
+F 1 "3v3" V 10250 4150 50  0000 C CNN
+F 2 "" H 10300 4050 60  0000 C CNN
+F 3 "" H 10300 4050 60  0000 C CNN
+	1    10300 4050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	10300 4050 10100 4050
+Text Label 10100 4050 2    60   ~ 0
+3v3_PSU
+$Comp
+L PFET Q?
+U 1 1 56E18E5B
+P 1500 1300
+F 0 "Q?" H 1250 1330 50  0000 L CNN
+F 1 "PFET" H 1250 1140 50  0000 L CNN
+F 2 "agg:PowerPAK-SC-75-6L-Single" H 1500 1300 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/65652/sib433ed.pdf" H 1500 1300 50  0001 C CNN
+F 4 "2335393" H 1500 1300 60  0001 C CNN "Farnell"
+	1    1500 1300
+	1    0    0    -1  
+$EndComp
+$Comp
+L NFET Q?
+U 1 1 56E18F31
+P 1150 1550
+F 0 "Q?" H 900 1580 50  0000 L CNN
+F 1 "NFET" H 900 1390 50  0000 L CNN
+F 2 "agg:VML1006" H 1150 1550 50  0001 C CNN
+F 3 "http://rohmfs.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rv2c010unt2l-e.pdf" H 1150 1550 50  0001 C CNN
+F 4 "2490619" H 1150 1550 60  0001 C CNN "Farnell"
+	1    1150 1550
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
