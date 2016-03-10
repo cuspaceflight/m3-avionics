@@ -65,7 +65,7 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 - The P-FET from the battery needs to have *very low* Rds-on for efficiency (choose: Si7157DP 2471947(FAR) it's big, but there's nothing smaller).
 - P-FET from main power just needs to have low enough Rds-on to handle ~4A (choose: Si7101DN 2364059(FAR)). This is used to control whether the charger is actually charging.
 - The two soft-start N-MOSFETs on the input need to withstand 3A current draw (choose: STL15DN4F5 2098274(FAR) it's also big, but is a pair).
-- The reverse polarity protection(?) N-MOSFET can be as small as possible since it carries very little current (choose: RV2C010UN 2490619(FAR)).
+- The reverse polarity protection(?) N-MOSFET can be as small as possible since it carries very little current (choose: PMZB150UNE 2498598(FAR)).
 - Big inductor is needed for lower ripple current for more efficiency (choose: SRP5030T-4R7M 2309887(FAR) -> Iripple = 0.9A).
 - Large input and output capacitance to stabilise circuit (choose: GRM32ER61C476ME15L 1735538(FAR)).
 - ACIN limits are 11.5-14.5V using the potential divider, with assumption of a nominal source charging of 12V (lead-acid battery).
@@ -86,8 +86,8 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 ### Lithium Battery Bleeders
 
-- The N-MOSFETs carries only small amounts of current and so can be very small (choose: RV2C010UN 2490619(FAR)).
-- The P-MOSFET carries only a small amount of current and so can be very small (choose: SiB433EDK 2335393(FAR)).
+- The N-MOSFETs carries only small amounts of current and so can be very small (choose: PMZB150UNE 2498598(FAR)).
+- The P-MOSFET carries only a small amount of current and so can be very small (choose: PMZB320UPE 2498601(FAR)).
 - The bleed resistors have to take around 0.5W if they are 47Ω (choose: ERJP06F47R0V 1750737(FAR)).
 
 ### Lithium Battery Module
@@ -104,7 +104,7 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 
 - Choose: LTC4151 (2295457(FAR)).
 - The P-MOSFETs that control the channel have to carry up to 2A each for short bursts (choose: CSD25310Q2 2501102(FAR)).
-- The N-MOSFET that control the P-MOSFET only carries a small amount of current (choose: RV2C010UN 2490619(FAR)), same as the Li-ion bleeders.
+- The N-MOSFET that control the P-MOSFET only carries a small amount of current (choose: PMZB150UNE 2498598(FAR)), same as the Li-ion bleeders.
 
 #### Software Configurations
 

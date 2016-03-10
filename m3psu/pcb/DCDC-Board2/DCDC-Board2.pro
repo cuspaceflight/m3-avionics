@@ -1,4 +1,4 @@
-update=03/09/16 23:40:44
+update=03/10/16 18:37:54
 version=1
 last_client=kicad
 [pcbnew]
@@ -27,6 +27,6 @@ NetIExt=net
 version=1
 [eeschema]
 version=1
-LibDir=../../agg-kicad/lib
+LibDir=../../../agg-kicad/lib
 [eeschema/libraries]
-LibName1=../../agg-kicad/agg-kicad
+LibName1=../../../agg-kicad/agg-kicad

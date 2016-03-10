@@ -1,12 +1,11 @@
 EESchema Schematic File Version 2
-LIBS:m3psu-rescue
 LIBS:agg-kicad
 LIBS:m3psu-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 9 10
+Sheet 10 13
 Title ""
 Date ""
 Rev ""
@@ -932,6 +931,7 @@ U 1 1 56E09E56
 P 4300 2600
 AR Path="/56B7662E/56B76640/56E09E56" Ref="Q?"  Part="1" 
 AR Path="/56B7662E/56D569DB/56E09E56" Ref="Q?"  Part="1" 
+AR Path="/56B7662E/56E1EF6E/56E2065F/56E09E56" Ref="Q?"  Part="1" 
 F 0 "Q?" H 4050 2650 50  0000 L CNN
 F 1 "SiZ340DT" H 4350 2500 50  0000 L CNN
 F 2 "agg:PowerPair3x3" H 4300 2300 50  0001 C CNN
