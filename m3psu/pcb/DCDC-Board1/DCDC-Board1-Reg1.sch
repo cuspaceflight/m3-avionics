@@ -1,11 +1,11 @@
 EESchema Schematic File Version 2
 LIBS:agg-kicad
-LIBS:m3psu-cache
+LIBS:DCDC-Board1-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 6 13
+Sheet 3 3
 Title ""
 Date ""
 Rev ""
@@ -456,12 +456,12 @@ NoConn ~ 6600 4500
 $Comp
 L GND #PWR?
 U 1 1 56D53955
-P 6750 4500
-F 0 "#PWR?" H 6620 4540 50  0001 L CNN
-F 1 "GND" H 6750 4400 50  0000 C CNN
-F 2 "" H 6750 4500 60  0000 C CNN
-F 3 "" H 6750 4500 60  0000 C CNN
-	1    6750 4500
+P 6800 4450
+F 0 "#PWR?" H 6670 4490 50  0001 L CNN
+F 1 "GND" H 6800 4350 50  0000 C CNN
+F 2 "" H 6800 4450 60  0000 C CNN
+F 3 "" H 6800 4450 60  0000 C CNN
+	1    6800 4450
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -587,10 +587,6 @@ Wire Wire Line
 	5100 4300 5200 4300
 Wire Wire Line
 	5100 4200 5200 4200
-Wire Wire Line
-	6600 4400 6750 4400
-Wire Wire Line
-	6750 4400 6750 4500
 Wire Wire Line
 	5100 4900 5100 4950
 Connection ~ 4950 5300
@@ -919,4 +915,22 @@ F 4 "2422226" H 4500 3400 50  0001 C CNN "Farnell"
 	2    4550 3200
 	-1   0    0    -1  
 $EndComp
+$Comp
+L R R?
+U 1 1 56E1FCB4
+P 6650 4400
+F 0 "R?" H 6700 4450 50  0000 C CNN
+F 1 "0" H 6700 4350 50  0000 C CNN
+F 2 "agg:0402" H 6650 4400 50  0001 C CNN
+F 3 "" H 6650 4400 50  0001 C CNN
+F 4 "2502491" H 6650 4400 60  0001 C CNN "Farnell"
+	1    6650 4400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6600 4400 6650 4400
+Wire Wire Line
+	6750 4400 6800 4400
+Wire Wire Line
+	6800 4400 6800 4450
 $EndSCHEMATC

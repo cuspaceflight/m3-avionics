@@ -1,11 +1,11 @@
 EESchema Schematic File Version 2
 LIBS:agg-kicad
-LIBS:m3psu-cache
+LIBS:DCDC-Board1-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 11 13
+Sheet 1 3
 Title ""
 Date ""
 Rev ""
