@@ -2,7 +2,7 @@
 
 The Power Supply Unit is designed to have current monitoring and control over every single power line (5V, 3.3V, and VBatt), and all can be controlled via an MCU. It has on-board Li-ion battery charging and balancing capability, and can automatically switch between external power and internal power (or be commanded to do so).
 
-## Work In Progress Notes
+## Notes By Module
 
 ### General Notes
 
@@ -166,3 +166,17 @@ The Power Supply Unit is designed to have current monitoring and control over ev
 - 100 - 2447095
 
 - 50m - 1506129
+
+## Notes on Routing
+
+### Microcontroller Board
+
+- I2C pins on:
+    - 40,41,42 (SDA,SCL,SMBA) I2C(3)
+    - 57,58,59 (SMBA,SCL,SDA) I2C(1)
+    - 29,30,33 (SCL,SDA,SMBA) I2C(2)
+- The various GPIOs have not been connected in the schematic yet, and hence will not show up on the routing. Route them last, since any GPIO port works.
+- The bottom and left side of the microcontroller is mostly inaccessible using this layout.
+- Note that the DCDC converter (3v3) operates at 1.25MHz, so keep it away from signal channels, and keep the components as tight as possible together.
+- Shift the power OR a little more to the left (leave some room for the logic tracks). The top left dual MOSFET can go closer to the connector and northwards. The other dual MOSFET needs to be shifted down a little and left.
+- VSHORE from the dual MOSFET should not cut across the large empty space on the right. (makes other things difficult to fit)
