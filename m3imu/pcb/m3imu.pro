@@ -1,4 +1,4 @@
-update=22/03/2016 13:12:52
+update=23/03/2016 17:30:06
 version=1
 last_client=kicad
 [pcbnew]
@@ -30,5 +30,5 @@ version=1
 LibDir=
 [eeschema/libraries]
 LibName1=../../agg-kicad/agg-kicad
-LibName2=C:/Users/grego/Documents/CUSF/state-estimators/PCB/Library/ADIS16405
-LibName3=usblc6-2
+LibName2=usblc6-2
+LibName3=ADIS16405
