@@ -888,7 +888,6 @@ CAN_RXD
 NoConn ~ 5750 7150
 NoConn ~ 5750 6950
 NoConn ~ 5750 6850
-NoConn ~ 5750 5950
 NoConn ~ 5750 5750
 NoConn ~ 5750 5650
 NoConn ~ 5750 5550
@@ -984,10 +983,10 @@ F 3 "" H 1200 1450 60  0000 C CNN
 	1    1200 1450
 	1    0    0    -1  
 $EndComp
-Text Label 4650 5850 2    60   ~ 0
-PYRO_ON
+Text Label 4650 5950 2    60   ~ 0
+PYRO2_ON
 Text Label 1050 1250 2    60   ~ 0
-PYRO_ON
+PYRO1_ON
 NoConn ~ 5750 6350
 NoConn ~ 5750 6250
 NoConn ~ 5750 6150
@@ -996,10 +995,10 @@ NoConn ~ 4750 6850
 NoConn ~ 4750 6750
 NoConn ~ 4750 6650
 NoConn ~ 4750 6550
-Text Label 4650 5950 2    60   ~ 0
-PYRO_RESISTANCE
+Text Label 4650 5850 2    60   ~ 0
+PYRO1_RESISTANCE
 Text Label 2700 2150 0    60   ~ 0
-PYRO_RESISTANCE
+PYRO1_RESISTANCE
 $Comp
 L 3v3 #PWR038
 U 1 1 56CA727E
@@ -1022,20 +1021,14 @@ F 3 "" H 2400 2350 60  0000 C CNN
 	1    2400 2350
 	1    0    0    -1  
 $EndComp
-NoConn ~ 5750 5850
 NoConn ~ 5750 5250
 NoConn ~ 5750 5150
-NoConn ~ 4750 6450
-NoConn ~ 4750 6350
-NoConn ~ 4750 6250
-NoConn ~ 4750 6050
-NoConn ~ 4750 5750
 Connection ~ 1650 2000
 Wire Wire Line
 	1850 2000 2700 2000
 Connection ~ 2650 2000
 Wire Wire Line
-	1450 1150 1450 1250
+	1450 1250 1450 1150
 Wire Wire Line
 	2450 1350 2550 1350
 Wire Wire Line
@@ -1464,7 +1457,7 @@ Wire Wire Line
 	1850 1150 1450 1150
 Connection ~ 1450 1250
 Wire Wire Line
-	1450 1250 1050 1250
+	1050 1250 1450 1250
 Wire Wire Line
 	1200 1250 1200 1300
 Connection ~ 1200 1250
@@ -1732,7 +1725,7 @@ $EndComp
 Text Label 2700 3250 0    60   ~ 0
 FIRE2
 Text Label 1400 3700 2    60   ~ 0
-PYRO1
+PYRO2
 Text Label 1450 2850 2    60   ~ 0
 PYRO_SI
 $Comp
@@ -1747,9 +1740,9 @@ F 3 "" H 1200 3150 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 1050 2950 2    60   ~ 0
-PYRO_ON
+PYRO2_ON
 Text Label 2700 3850 0    60   ~ 0
-PYRO_RESISTANCE
+PYRO2_RESISTANCE
 $Comp
 L 3v3 #PWR047
 U 1 1 56CDF7AB
@@ -1777,7 +1770,7 @@ Wire Wire Line
 	1850 3700 2700 3700
 Connection ~ 2650 3700
 Wire Wire Line
-	1450 2850 1450 2950
+	1450 2950 1450 2850
 Wire Wire Line
 	2450 3050 2550 3050
 Wire Wire Line
@@ -1823,7 +1816,7 @@ Wire Wire Line
 	1850 2850 1450 2850
 Connection ~ 1450 2950
 Wire Wire Line
-	1450 2950 1050 2950
+	1050 2950 1450 2950
 Wire Wire Line
 	1200 2950 1200 3000
 Connection ~ 1200 2950
@@ -2091,7 +2084,7 @@ $EndComp
 Text Label 2700 4950 0    60   ~ 0
 FIRE3
 Text Label 1400 5400 2    60   ~ 0
-PYRO1
+PYRO3
 Text Label 1450 4550 2    60   ~ 0
 PYRO_SI
 $Comp
@@ -2106,9 +2099,9 @@ F 3 "" H 1200 4850 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 1050 4650 2    60   ~ 0
-PYRO_ON
+PYRO3_ON
 Text Label 2700 5550 0    60   ~ 0
-PYRO_RESISTANCE
+PYRO3_RESISTANCE
 $Comp
 L 3v3 #PWR056
 U 1 1 56CDFA88
@@ -2136,7 +2129,7 @@ Wire Wire Line
 	1850 5400 2700 5400
 Connection ~ 2650 5400
 Wire Wire Line
-	1450 4550 1450 4650
+	1450 4650 1450 4550
 Wire Wire Line
 	2450 4750 2550 4750
 Wire Wire Line
@@ -2182,7 +2175,7 @@ Wire Wire Line
 	1850 4550 1450 4550
 Connection ~ 1450 4650
 Wire Wire Line
-	1450 4650 1050 4650
+	1050 4650 1450 4650
 Wire Wire Line
 	1200 4650 1200 4700
 Connection ~ 1200 4650
@@ -2450,7 +2443,7 @@ $EndComp
 Text Label 2700 6650 0    60   ~ 0
 FIRE4
 Text Label 1400 7100 2    60   ~ 0
-PYRO1
+PYRO4
 Text Label 1450 6250 2    60   ~ 0
 PYRO_SI
 $Comp
@@ -2465,9 +2458,9 @@ F 3 "" H 1200 6550 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 1050 6350 2    60   ~ 0
-PYRO_ON
+PYRO4_ON
 Text Label 2700 7250 0    60   ~ 0
-PYRO_RESISTANCE
+PYRO4_RESISTANCE
 $Comp
 L 3v3 #PWR065
 U 1 1 56CE1126
@@ -2495,7 +2488,7 @@ Wire Wire Line
 	1850 7100 2700 7100
 Connection ~ 2650 7100
 Wire Wire Line
-	1450 6250 1450 6350
+	1450 6350 1450 6250
 Wire Wire Line
 	2450 6450 2550 6450
 Wire Wire Line
@@ -2541,7 +2534,7 @@ Wire Wire Line
 	1850 6250 1450 6250
 Connection ~ 1450 6350
 Wire Wire Line
-	1450 6350 1050 6350
+	1050 6350 1450 6350
 Wire Wire Line
 	1200 6350 1200 6400
 Connection ~ 1200 6350
@@ -2616,4 +2609,29 @@ F 3 "" H 1200 6400 50  0001 C CNN
 	1    1200 6400
 	0    1    1    0   
 $EndComp
+Text Label 4650 6250 2    60   ~ 0
+PYRO1_ON
+Wire Wire Line
+	4750 5750 4650 5750
+Text Label 4650 6050 2    60   ~ 0
+PYRO2_RESISTANCE
+Text Label 4650 5750 2    60   ~ 0
+PYRO3_ON
+Text Label 5850 5850 0    60   ~ 0
+PYRO4_ON
+Text Label 4650 6350 2    60   ~ 0
+PYRO3_RESISTANCE
+Text Label 5850 5950 0    60   ~ 0
+PYRO4_RESISTANCE
+Wire Wire Line
+	5750 5850 5850 5850
+Wire Wire Line
+	5750 5950 5850 5950
+Wire Wire Line
+	4750 6350 4650 6350
+Wire Wire Line
+	4650 6050 4750 6050
+Wire Wire Line
+	4750 6250 4650 6250
+NoConn ~ 4750 6450
 $EndSCHEMATC
