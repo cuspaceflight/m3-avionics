@@ -1,5 +1,6 @@
 EESchema Schematic File Version 2
 LIBS:agg-kicad
+LIBS:DCDC-Board2-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -15,9 +16,9 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 Text Notes 5100 2800 0    60   ~ 0
-AUX 1 (5V @ 1A)\nCAN transceivers (5V @ 0.1A)\nAddress 0x42
+AUX 1 (5V @ 1A)\nIMU ADIS (5V @ 0.3A)\nAddress 0x42
 Text Notes 5100 4050 0    60   ~ 0
-IMU ADIS (5V @ 0.3A)\nIMU Other (3.3V @ 0.3A)\nAddress 0x43
+CAN transceivers (5V @ 0.1A)\nIMU Other (3.3V @ 0.3A)\nAddress 0x43
 Text Notes 8200 6950 0    240  ~ 0
 BOARD 2
 $Sheet
@@ -48,7 +49,7 @@ Text Label 5000 3250 2    60   ~ 0
 SDA
 Text Label 6400 3000 0    60   ~ 0
 5v_AUX1
-Text Label 6400 3100 0    60   ~ 0
+Text Label 6400 4350 0    60   ~ 0
 5v_CAN
 Wire Wire Line
 	5000 3250 5100 3250
@@ -70,9 +71,9 @@ Wire Wire Line
 	5000 4500 5100 4500
 Wire Wire Line
 	5100 4600 5000 4600
-Text Label 6400 4350 0    60   ~ 0
-3v3_IMU
 Text Label 6400 4250 0    60   ~ 0
+3v3_IMU
+Text Label 6400 3100 0    60   ~ 0
 5v_IMU
 Wire Wire Line
 	5100 3000 5000 3000
@@ -666,7 +667,7 @@ U 1 1 56E23C48
 P 9000 3300
 F 0 "J3" H 8900 3400 50  0000 L CNN
 F 1 "NORTH TOP" H 8950 2800 50  0000 C CNN
-F 2 "agg:SFML-105-02-L-D" H 9000 3300 50  0001 C CNN
+F 2 "agg:TFML-105-02-L-D" H 9000 3300 50  0001 C CNN
 F 3 "" H 9000 3300 50  0001 C CNN
 	1    9000 3300
 	1    0    0    -1  
@@ -820,4 +821,10 @@ $EndComp
 Wire Wire Line
 	10400 4000 10400 4050
 Connection ~ 10400 4050
+Wire Wire Line
+	10300 4200 10450 4200
+Text Label 10450 4200 0    60   ~ 0
+JTDI
+Text Label 10300 4200 2    60   ~ 0
+JTDO
 $EndSCHEMATC
