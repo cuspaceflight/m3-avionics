@@ -1,5 +1,6 @@
 EESchema Schematic File Version 2
 LIBS:agg-kicad
+LIBS:PSU-MC-Board-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -2257,12 +2258,16 @@ Text Label 1300 6200 2    60   ~ 0
 EN_PYRO
 Wire Wire Line
 	1300 6200 1450 6200
-Text Label 2550 6200 0    60   ~ 0
-BLEED_BATT1
 Text Label 2550 6100 0    60   ~ 0
+BLEED_BATT1
+Text Label 1350 6700 2    60   ~ 0
 BLEED_BATT2
 Wire Wire Line
 	2550 6100 2450 6100
 Wire Wire Line
 	2450 6200 2550 6200
+Text Label 2550 6200 0    60   ~ 0
+~SHUTDOWN
+Wire Wire Line
+	1350 6700 1450 6700
 $EndSCHEMATC

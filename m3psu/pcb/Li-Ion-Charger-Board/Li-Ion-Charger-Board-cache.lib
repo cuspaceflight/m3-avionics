@@ -200,9 +200,9 @@ P 2 0 1 0  -40 10  -40 -20 N
 P 3 0 1 0  -40 -45  0 -45  0 -150 N
 P 3 0 1 0  -40 -5  0 -5  0 50 N
 P 4 0 1 0  -40 -45  -15 -30  -15 -60  -40 -45 F
-X G 1 -200 -100 50 R 50 50 1 1 P
-X S 2 0 -200 50 U 50 50 1 1 P
-X D 3 0 100 50 D 50 50 1 1 P
+X D D 0 100 50 D 50 50 1 1 P
+X G G -200 -100 50 R 50 50 1 1 P
+X S S 0 -200 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
@@ -282,9 +282,9 @@ P 2 0 1 0  0 -85  0 -150 N
 P 3 0 1 0  -40 -45  0 -45  0 -5 N
 P 3 0 1 0  -40 -5  0 -5  0 50 N
 P 4 0 1 0  -5 -45  -30 -30  -30 -60  -5 -45 F
-X G 1 -200 -100 50 R 50 50 1 1 P
-X S 2 0 100 50 D 50 50 1 1 P
-X D 3 0 -200 50 U 50 50 1 1 P
+X D D 0 -200 50 U 50 50 1 1 P
+X G G -200 -100 50 R 50 50 1 1 P
+X S S 0 100 50 D 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
@@ -320,7 +320,7 @@ ENDDEF
 DEF SiZ340DT Q 0 1 Y N 2 L N
 F0 "Q" -250 50 50 H V L CNN
 F1 "SiZ340DT" 50 -100 50 H V L CNN
-F2 "agg:PowerPair3x3" 0 -300 50 H I C CNN
+F2 "agg:PowerPair-3x3" 0 -300 50 H I C CNN
 F3 "http://www.vishay.com/docs/62877/siz340dt.pdf" -250 50 50 H I C CNN
 F4 "2422226" -50 200 50 H I C CNN "Farnell"
 DRAW
