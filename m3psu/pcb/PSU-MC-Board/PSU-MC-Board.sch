@@ -2270,4 +2270,12 @@ Text Label 2550 6200 0    60   ~ 0
 ~SHUTDOWN
 Wire Wire Line
 	1350 6700 1450 6700
+Text Label 1350 6600 2    60   ~ 0
+BATT1
+Wire Wire Line
+	1350 6600 1450 6600
+Text Label 1350 6500 2    60   ~ 0
+BATT2
+Wire Wire Line
+	1350 6500 1450 6500
 $EndSCHEMATC
