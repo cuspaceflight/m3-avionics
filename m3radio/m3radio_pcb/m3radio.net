@@ -1,8 +1,8 @@
 (export (version D)
   (design
-    (source //cued-fs/users/general/ere26/windows-home/Documents/GitHub/m3-avionics/m3radio/m3radio/m3radio.sch)
-    (date "29/02/2016 15:42:55")
-    (tool "Eeschema 4.0.1-stable")
+    (source /home/eivind/Documents/GitHub/m3-avionics/m3radio/m3radio_pcb/m3radio.sch)
+    (date "sø. 08. mai 2016 kl. 16.28 +0100")
+    (tool "Eeschema 4.0.2-4+6225~38~ubuntu14.04.1-stable")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
         (title)
@@ -35,7 +35,7 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 56B20C81))
     (comp (ref C113)
-      (value C)
+      (value 100nF)
       (footprint agg:0402)
       (libsource (lib agg-kicad) (part C))
       (sheetpath (names /) (tstamps /))
@@ -232,9 +232,11 @@
       (tstamp 56C564CF))
     (comp (ref P101)
       (value COAX)
+      (footprint M3radio:mmcxv-p-p-xx-st-th1-mkt)
+      (datasheet http://suddendocs.samtec.com/prints/mmcxv-p-p-xx-st-th1-mkt.pdf)
       (fields
         (field (name Fieldname) Value)
-        (field (name Farnell) 1608592))
+        (field (name Farnell) 0))
       (libsource (lib agg-kicad) (part COAX))
       (sheetpath (names /) (tstamps /))
       (tstamp 56C710D6))
@@ -295,7 +297,7 @@
       (sheetpath (names /Radio/) (tstamps /56B202F6/))
       (tstamp 56B23C5B))
     (comp (ref L202)
-      (value LR1)
+      (value 18nH)
       (footprint agg:0603-L)
       (libsource (lib agg-kicad) (part L))
       (sheetpath (names /Radio/) (tstamps /56B202F6/))
@@ -353,6 +355,7 @@
       (tstamp 56B24388))
     (comp (ref P201)
       (value COAX)
+      (footprint M3radio:mmcxv-p-p-xx-st-th1-mkt)
       (fields
         (field (name Fieldname) Value)
         (field (name Farnell) 1608592))
@@ -594,7 +597,7 @@
         (pin (num 4) (name VCC) (type power_in)))))
   (libraries
     (library (logical agg-kicad)
-      (uri \\cued-fs\users\general\ere26\windows-home\Documents\GitHub\m3-avionics\agg-kicad\agg-kicad.lib)))
+      (uri /home/eivind/Documents/GitHub/m3-avionics/agg-kicad/agg-kicad.lib)))
   (nets
     (net (code 1) (name /PYRO4)
       (node (ref J104) (pin 14))
