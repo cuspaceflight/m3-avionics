@@ -1,0 +1,349 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:agg-kicad
+LIBS:Battery-Riser-West-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L GND #PWR01
+U 1 1 572F694E
+P 5400 3050
+F 0 "#PWR01" H 5270 3090 50  0001 L CNN
+F 1 "GND" H 5400 2950 50  0000 C CNN
+F 2 "" H 5400 3050 60  0000 C CNN
+F 3 "" H 5400 3050 60  0000 C CNN
+	1    5400 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR02
+U 1 1 572F6954
+P 5000 3050
+F 0 "#PWR02" H 4870 3090 50  0001 L CNN
+F 1 "GND" H 5000 2950 50  0000 C CNN
+F 2 "" H 5000 3050 60  0000 C CNN
+F 3 "" H 5000 3050 60  0000 C CNN
+	1    5000 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR03
+U 1 1 572F695A
+P 5000 2050
+F 0 "#PWR03" H 4870 2090 50  0001 L CNN
+F 1 "GND" H 5000 1950 50  0000 C CNN
+F 2 "" H 5000 2050 60  0000 C CNN
+F 3 "" H 5000 2050 60  0000 C CNN
+	1    5000 2050
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR04
+U 1 1 572F6960
+P 5400 2050
+F 0 "#PWR04" H 5270 2090 50  0001 L CNN
+F 1 "GND" H 5400 1950 50  0000 C CNN
+F 2 "" H 5400 2050 60  0000 C CNN
+F 3 "" H 5400 2050 60  0000 C CNN
+	1    5400 2050
+	-1   0    0    1   
+$EndComp
+Text Label 5450 2400 0    60   ~ 0
+JTDO
+Text Label 5450 2500 0    60   ~ 0
+JTDR
+Text Label 5450 2200 0    60   ~ 0
+JTMS
+Text Label 5450 2300 0    60   ~ 0
+JTCK
+Text Label 4950 2200 2    60   ~ 0
+3v3_IMU
+Text Label 4950 2300 2    60   ~ 0
+3v3_RADIO
+Text Label 4950 2400 2    60   ~ 0
+3v3_FC
+Text Label 4950 2500 2    60   ~ 0
+3v3_PYRO
+Text Label 4950 2600 2    60   ~ 0
+3v3_DL
+Text Label 5450 2700 0    60   ~ 0
+5v_CAN
+Text Label 5450 2800 0    60   ~ 0
+CAN-
+Text Label 5450 2900 0    60   ~ 0
+CAN+
+$Comp
+L GND #PWR09
+U 1 1 572F698A
+P 5400 4350
+F 0 "#PWR09" H 5270 4390 50  0001 L CNN
+F 1 "GND" H 5400 4250 50  0000 C CNN
+F 2 "" H 5400 4350 60  0000 C CNN
+F 3 "" H 5400 4350 60  0000 C CNN
+	1    5400 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR010
+U 1 1 572F6990
+P 5000 4350
+F 0 "#PWR010" H 4870 4390 50  0001 L CNN
+F 1 "GND" H 5000 4250 50  0000 C CNN
+F 2 "" H 5000 4350 60  0000 C CNN
+F 3 "" H 5000 4350 60  0000 C CNN
+	1    5000 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR011
+U 1 1 572F6996
+P 5000 3350
+F 0 "#PWR011" H 4870 3390 50  0001 L CNN
+F 1 "GND" H 5000 3250 50  0000 C CNN
+F 2 "" H 5000 3350 60  0000 C CNN
+F 3 "" H 5000 3350 60  0000 C CNN
+	1    5000 3350
+	-1   0    0    1   
+$EndComp
+$Comp
+L GND #PWR012
+U 1 1 572F699C
+P 5400 3350
+F 0 "#PWR012" H 5270 3390 50  0001 L CNN
+F 1 "GND" H 5400 3250 50  0000 C CNN
+F 2 "" H 5400 3350 60  0000 C CNN
+F 3 "" H 5400 3350 60  0000 C CNN
+	1    5400 3350
+	-1   0    0    1   
+$EndComp
+Text Label 5450 3700 0    60   ~ 0
+JTDI
+Text Label 5450 3800 0    60   ~ 0
+JTDR
+Text Label 5450 3500 0    60   ~ 0
+JTMS
+Text Label 5450 3600 0    60   ~ 0
+JTCK
+Text Label 4950 3500 2    60   ~ 0
+3v3_IMU
+Text Label 4950 3600 2    60   ~ 0
+3v3_RADIO
+Text Label 4950 3700 2    60   ~ 0
+3v3_FC
+Text Label 4950 3800 2    60   ~ 0
+3v3_PYRO
+Text Label 4950 3900 2    60   ~ 0
+3v3_DL
+Text Label 5450 4000 0    60   ~ 0
+5v_CAN
+Text Label 5450 4100 0    60   ~ 0
+CAN-
+Text Label 5450 4200 0    60   ~ 0
+CAN+
+Text Label 4950 2700 2    60   ~ 0
+3v3_AUX1
+Text Label 4950 2800 2    60   ~ 0
+RSVD3
+Text Label 4950 4000 2    60   ~ 0
+3v3_AUX1
+Text Label 4950 4100 2    60   ~ 0
+RSVD3
+Text Label 5450 2600 0    60   ~ 0
+RSVD1
+Text Label 5450 3900 0    60   ~ 0
+RSVD1
+Text Label 4950 4200 2    60   ~ 0
+RSVD2
+Text Label 4950 2900 2    60   ~ 0
+RSVD2
+$Comp
+L CONN_02x10 J1
+U 1 1 572F69EF
+P 5250 2100
+F 0 "J1" H 5150 2200 50  0000 L CNN
+F 1 "WEST TOP" H 5200 1100 50  0000 C CNN
+F 2 "agg:TFML-110-02-L-D" H 5250 2100 50  0001 C CNN
+F 3 "" H 5250 2100 50  0001 C CNN
+F 4 "TFML-110-02-L-D" H 5250 2100 60  0001 C CNN "Samtec"
+	1    5250 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_02x10 J2
+U 1 1 572F69FF
+P 5250 3400
+F 0 "J2" H 5150 3500 50  0000 L CNN
+F 1 "WEST BOT" H 5200 2400 50  0000 C CNN
+F 2 "agg:SFML-110-02-L-D-LC" H 5250 3400 50  0001 C CNN
+F 3 "" H 5250 3400 50  0001 C CNN
+F 4 "SFML-110-02-L-D-LC" H 5250 3400 60  0001 C CNN "Samtec"
+	1    5250 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5000 2050 5000 2100
+Wire Wire Line
+	5000 2100 5050 2100
+Wire Wire Line
+	5350 2100 5400 2100
+Wire Wire Line
+	5400 2100 5400 2050
+Wire Wire Line
+	5350 3000 5400 3000
+Wire Wire Line
+	5400 3000 5400 3050
+Wire Wire Line
+	5050 3000 5000 3000
+Wire Wire Line
+	5000 3000 5000 3050
+Wire Wire Line
+	5050 2200 4950 2200
+Wire Wire Line
+	5050 2300 4950 2300
+Wire Wire Line
+	5050 2400 4950 2400
+Wire Wire Line
+	5050 2500 4950 2500
+Wire Wire Line
+	5350 2900 5450 2900
+Wire Wire Line
+	5350 2800 5450 2800
+Wire Wire Line
+	5350 2700 5450 2700
+Wire Wire Line
+	5350 2500 5450 2500
+Wire Wire Line
+	5350 2400 5450 2400
+Wire Wire Line
+	5350 2300 5450 2300
+Wire Wire Line
+	5350 2200 5450 2200
+Wire Wire Line
+	5000 3350 5000 3400
+Wire Wire Line
+	5000 3400 5050 3400
+Wire Wire Line
+	5350 3400 5400 3400
+Wire Wire Line
+	5400 3400 5400 3350
+Wire Wire Line
+	5350 4300 5400 4300
+Wire Wire Line
+	5400 4300 5400 4350
+Wire Wire Line
+	5050 4300 5000 4300
+Wire Wire Line
+	5000 4300 5000 4350
+Wire Wire Line
+	5050 3500 4950 3500
+Wire Wire Line
+	5050 3600 4950 3600
+Wire Wire Line
+	5050 3700 4950 3700
+Wire Wire Line
+	5050 3800 4950 3800
+Wire Wire Line
+	5350 4200 5450 4200
+Wire Wire Line
+	5350 4100 5450 4100
+Wire Wire Line
+	5350 4000 5450 4000
+Wire Wire Line
+	5350 3800 5450 3800
+Wire Wire Line
+	5350 3700 5450 3700
+Wire Wire Line
+	5350 3600 5450 3600
+Wire Wire Line
+	5350 3500 5450 3500
+Wire Wire Line
+	5050 3900 4950 3900
+Wire Wire Line
+	5050 2600 4950 2600
+Wire Wire Line
+	5050 2700 4950 2700
+Wire Wire Line
+	4950 2800 5050 2800
+Wire Wire Line
+	5050 4000 4950 4000
+Wire Wire Line
+	4950 4100 5050 4100
+Wire Wire Line
+	5350 2600 5450 2600
+Wire Wire Line
+	5350 3900 5450 3900
+Wire Wire Line
+	5050 4200 4950 4200
+Wire Wire Line
+	5050 2900 4950 2900
+Wire Wire Line
+	5150 4850 5300 4850
+Text Label 5300 4850 0    60   ~ 0
+JTDI
+Text Label 5150 4850 2    60   ~ 0
+JTDO
+$Comp
+L GND #PWR017
+U 1 1 572F6057
+P 6050 4750
+F 0 "#PWR017" H 5920 4790 50  0001 L CNN
+F 1 "GND" H 6050 4650 50  0000 C CNN
+F 2 "" H 6050 4750 60  0000 C CNN
+F 3 "" H 6050 4750 60  0000 C CNN
+	1    6050 4750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6050 4750 6050 4700
+$Comp
+L PWR #FLG018
+U 1 1 572F60D4
+P 6050 4700
+F 0 "#FLG018" H 6050 4860 50  0001 C CNN
+F 1 "PWR" H 6050 4790 50  0000 C CNN
+F 2 "" H 6050 4700 50  0001 C CNN
+F 3 "" H 6050 4700 50  0001 C CNN
+	1    6050 4700
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

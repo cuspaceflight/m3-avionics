@@ -576,14 +576,6 @@ Text Label 5200 2000 2    60   ~ 0
 ~INT_PWR_ON
 Text Label 2550 4300 0    60   ~ 0
 JTDO
-Text Label 10050 6150 0    60   ~ 0
-PYRO1
-Text Label 10050 6250 0    60   ~ 0
-PYRO2
-Text Label 10050 6350 0    60   ~ 0
-PYRO3
-Text Label 10050 6450 0    60   ~ 0
-PYRO4
 $Comp
 L VCC #PWR014
 U 1 1 56EC3D5F
@@ -1698,8 +1690,6 @@ Wire Wire Line
 Wire Wire Line
 	10500 5750 10600 5750
 Wire Wire Line
-	9950 5550 9950 6450
-Wire Wire Line
 	9500 5350 9550 5350
 Wire Wire Line
 	9500 5450 9550 5450
@@ -1812,17 +1802,6 @@ Wire Wire Line
 	1450 7300 1350 7300
 Wire Wire Line
 	1450 7400 1350 7400
-Wire Wire Line
-	9950 6150 10050 6150
-Wire Wire Line
-	9950 6250 10050 6250
-Connection ~ 9950 6150
-Wire Wire Line
-	9950 6350 10050 6350
-Connection ~ 9950 6250
-Wire Wire Line
-	9950 6450 10050 6450
-Connection ~ 9950 6350
 Wire Wire Line
 	4650 3500 4500 3500
 Wire Wire Line
@@ -2382,4 +2361,10 @@ Text Notes 5900 5850 0    60   ~ 0
 1/4 divider\n0.1% resistors
 Text Notes 5900 6600 0    60   ~ 0
 1/2 divider\n0.1% resistors
+Wire Wire Line
+	9950 5550 9950 6150
+Wire Wire Line
+	9950 6150 10150 6150
+Text Label 10150 6150 0    60   ~ 0
+PYRO_SO
 $EndSCHEMATC
