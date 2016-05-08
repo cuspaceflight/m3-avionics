@@ -3,9 +3,9 @@
   (general
     (links 121)
     (no_connects 0)
-    (area 79.924999 79.924999 120.075001 120.075001)
+    (area 79.926499 83.424999 120.073501 120.073501)
     (thickness 1.6)
-    (drawings 31)
+    (drawings 32)
     (tracks 658)
     (zones 0)
     (modules 34)
@@ -15,7 +15,7 @@
   (page A4)
   (layers
     (0 F.Cu signal)
-    (31 B.Cu signal)
+    (31 B.Cu signal hide)
     (32 B.Adhes user)
     (33 F.Adhes user)
     (34 B.Paste user)
@@ -37,7 +37,7 @@
   )
 
   (setup
-    (last_trace_width 0.3)
+    (last_trace_width 0.15)
     (user_trace_width 0.2)
     (user_trace_width 0.3)
     (user_trace_width 0.5)
@@ -1541,7 +1541,7 @@
   )
 
   (module M3_IMU:cusf_logo_small (layer F.Cu) (tedit 56E343F1) (tstamp 56E37AC4)
-    (at 99.95 82.775 90)
+    (at 98.1 88.8 90)
     (path /56E3CE9F)
     (fp_text reference X1 (at 2.675 0.65 90) (layer F.Fab) hide
       (effects (font (thickness 0.3)))
@@ -1959,6 +1959,8 @@
     (pad "" np_thru_hole circle (at -8 13.85 180) (size 2.1 2.1) (drill 2.1) (layers *.Cu *.Mask B.SilkS))
   )
 
+  (gr_arc (start 100 100) (end 111.3 83.5) (angle 291.1895314) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 88.7 83.5) (end 111.3 83.5) (layer Edge.Cuts) (width 0.15))
   (gr_text Err (at 93.75 117.5) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.25)))
   )
@@ -1971,7 +1973,7 @@
   (gr_circle (center 112.25 86.15) (end 114.25 86.15) (layer F.Fab) (width 0.2) (tstamp 56FC1968))
   (gr_circle (center 104.25 86.15) (end 106.25 86.15) (layer F.Fab) (width 0.2) (tstamp 56FC194A))
   (gr_circle (center 96.25 86.15) (end 98.25 86.15) (layer F.Fab) (width 0.2))
-  (gr_text "M3 IMU v0.2\n11 Mar 2016\n\n" (at 99.925 83.525) (layer B.SilkS)
+  (gr_text "M3 IMU v0.2\n11 Mar 2016\n\n" (at 101.3 118.4) (layer B.SilkS)
     (effects (font (size 1 1) (thickness 0.25)) (justify mirror))
   )
   (gr_line (start 116.975 96.85) (end 116.775 97.05) (layer B.SilkS) (width 0.2) (tstamp 56E3799E))
@@ -2001,7 +2003,6 @@
   (gr_line (start 117.75 103.89358) (end 118.15 103.49358) (layer B.SilkS) (width 0.2))
   (gr_line (start 117.75 103.89358) (end 117.35 103.49358) (layer B.SilkS) (width 0.2))
   (gr_line (start 117.75 103.85) (end 117.75 101.85) (layer B.SilkS) (width 0.2))
-  (gr_circle (center 100 100) (end 120 100) (layer Edge.Cuts) (width 0.15))
 
   (segment (start 116.365 105.715) (end 116.365 106.115) (width 0.5) (layer F.Cu) (net 1))
   (segment (start 116.365 106.115) (end 117 106.75) (width 0.5) (layer F.Cu) (net 1))
