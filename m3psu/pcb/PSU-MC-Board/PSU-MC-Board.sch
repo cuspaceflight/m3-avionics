@@ -2233,10 +2233,10 @@ Wire Wire Line
 	1350 7100 1450 7100
 Wire Wire Line
 	1350 7000 1450 7000
-Text Label 1300 6200 2    60   ~ 0
+Text Label 1350 6200 2    60   ~ 0
 EN_PYRO
 Wire Wire Line
-	1300 6200 1450 6200
+	1350 6200 1450 6200
 Text Label 2550 6100 0    60   ~ 0
 BLEED_BATT1
 Text Label 1350 6700 2    60   ~ 0
@@ -2260,7 +2260,7 @@ Wire Wire Line
 Wire Wire Line
 	5750 6300 5750 6350
 Wire Wire Line
-	5750 6550 5750 6450
+	5750 6450 5750 6550
 Wire Wire Line
 	5750 6500 5600 6500
 Connection ~ 5750 6500
@@ -2300,7 +2300,7 @@ Wire Wire Line
 Wire Wire Line
 	5750 5550 5750 5600
 Wire Wire Line
-	5750 5800 5750 5700
+	5750 5700 5750 5800
 Wire Wire Line
 	5750 5750 5600 5750
 Connection ~ 5750 5750
@@ -2367,4 +2367,8 @@ Wire Wire Line
 	9950 6150 10150 6150
 Text Label 10150 6150 0    60   ~ 0
 PYRO_SO
+Text Label 1350 6100 2    60   ~ 0
+PWR
+Wire Wire Line
+	1350 6100 1450 6100
 $EndSCHEMATC
