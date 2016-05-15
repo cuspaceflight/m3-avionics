@@ -1,6 +1,6 @@
-update=Wed 10 Feb 2016 04:16:45 GMT
+update=17/02/2016 16:41:37
 version=1
-last_client=kicad
+last_client=eeschema
 [pcbnew]
 version=1
 LastNetListRead=
@@ -25,19 +25,9 @@ version=1
 NetIExt=net
 [general]
 version=1
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=Pcbnew
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
-ERC_TestSimilarLabels=1
 [eeschema]
 version=1
-LibDir=
+LibDir=../../agg-kicad;../../agg-kicad/lib/ic/microcontroller
 [eeschema/libraries]
-LibName1=../../agg-kicad/agg-kicad
+LibName1=m3radio-rescue
+LibName2=agg-kicad

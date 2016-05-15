@@ -1,4 +1,4 @@
-update=Wed 10 Feb 2016 04:16:45 GMT
+update=19/02/2016 11:36:47
 version=1
 last_client=kicad
 [pcbnew]
@@ -25,19 +25,8 @@ version=1
 NetIExt=net
 [general]
 version=1
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=Pcbnew
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
-ERC_TestSimilarLabels=1
 [eeschema]
 version=1
-LibDir=
+LibDir=../../agg-kicad;../../agg-kicad/lib/ic/microcontroller
 [eeschema/libraries]
-LibName1=../../agg-kicad/agg-kicad
+LibName1=agg-kicad
