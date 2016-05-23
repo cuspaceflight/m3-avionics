@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:\Users\grego\Documents\CUSF\m3-avionics\m3imu\pcb\m3imu.sch)
-    (date "22/05/2016 20:48:14")
+    (date "23/05/2016 09:33:55")
     (tool "Eeschema 4.0.0-rc1-stable")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -262,7 +262,7 @@
       (footprint agg:0402)
       (fields
         (field (name Digikey) Value)
-        (field (name Farnell) 1738892)
+        (field (name Farnell) 2072575)
         (field (name Fieldname) Value))
       (libsource (lib agg-kicad) (part R))
       (sheetpath (names /) (tstamps /))
