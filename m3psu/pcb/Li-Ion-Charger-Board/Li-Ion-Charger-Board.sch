@@ -1456,57 +1456,6 @@ F 4 "SFML-110-02-L-D-LC" H 10350 2150 60  0001 C CNN "Samtec"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_02x05 J3
-U 1 1 56ECF1F6
-P 8950 3400
-F 0 "J3" H 8850 3500 50  0000 L CNN
-F 1 "NORTH TOP" H 8900 2900 50  0000 C CNN
-F 2 "agg:TFML-105-02-L-D" H 8950 3400 50  0001 C CNN
-F 3 "" H 8950 3400 50  0001 C CNN
-	1    8950 3400
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8750 3400 8650 3400
-Wire Wire Line
-	8750 3500 8650 3500
-Wire Wire Line
-	8750 3600 8650 3600
-Wire Wire Line
-	8750 3700 8650 3700
-Wire Wire Line
-	8750 3800 8650 3800
-Wire Wire Line
-	9050 3400 9150 3400
-Wire Wire Line
-	9050 3500 9150 3500
-Wire Wire Line
-	9050 3600 9150 3600
-Wire Wire Line
-	9050 3700 9150 3700
-Text Label 8650 3400 2    60   ~ 0
-V_MAIN
-Text Label 9150 3400 0    60   ~ 0
-V_MAIN
-Text Label 8650 3700 2    60   ~ 0
-SDA
-Text Label 8650 3800 2    60   ~ 0
-SCL
-Text Label 8650 3500 2    60   ~ 0
-VBATT
-Text Label 9150 3600 0    60   ~ 0
-BATT1
-Text Label 9150 3500 0    60   ~ 0
-VBATT
-Text Label 8650 3600 2    60   ~ 0
-3v3_PSU
-Text Label 9150 3700 0    60   ~ 0
-BATT2
-Wire Wire Line
-	9050 3800 9150 3800
-Text Label 9150 3800 0    60   ~ 0
-~ALERT
-$Comp
 L CONN_02x05 J6
 U 1 1 56ECF211
 P 10350 3400
