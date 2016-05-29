@@ -1,0 +1,49 @@
+Bill Of Materials
+=================
+
+Source file: gps-preamp.xml
+Date: 2016-05-29T22:05:55.884469
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+
+
+Inconsistent Order Codes
+------------------------
+
+
+Vendor Specific BOMs
+--------------------
+  DigiKey
+  ~~~~~~~
+1,BGM1043N7E6327XUSA1CT-ND,1x BGM1043N7 DFN-6-EP-BGM IC1
+
+
+  Farnell
+  ~~~~~~~
+1865434,1,1x 200p 0402
+1608592,1,1x RECEIVER SMA-EDGE
+8819742,1,1x 100n 0402
+1762616,1,1x 9n1 0402
+1845729,1,1x 1µ 0402
+2470339,3,3x 92n 0402
+2135970,1,1x ANTENNA SMA-PTH
+1762614,1,1x 8n2 0402
+
+
+Assembly BOM
+------------
+BGM1043N7E6327XUSA1CT-ND 1   BGM1043N7       DFN-6-EP-BGM    IC1
+1865434              1   200p            0402            C3
+1608592              1   RECEIVER        SMA-EDGE        P3
+8819742              1   100n            0402            C2
+1762616              1   9n1             0402            L1
+1845729              1   1µ              0402            C1
+2470339              3   92n             0402            L3 L4 L5
+2135970              1   ANTENNA         SMA-PTH         P2
+1762614              1   8n2             0402            L2
+
