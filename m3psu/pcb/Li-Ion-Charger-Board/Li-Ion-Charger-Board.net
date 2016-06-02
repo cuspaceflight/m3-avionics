@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source D:/GitHub/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/Li-Ion-Charger-Board.sch)
-    (date "05/23/16 15:46:45")
+    (date "06/02/16 18:04:29")
     (tool "Eeschema 4.0.0-rc2-stable")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
