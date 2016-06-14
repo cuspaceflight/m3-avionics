@@ -1,4 +1,4 @@
-update=Sun 12 Jun 2016 22:19:54 BST
+update=Tue 14 Jun 2016 22:49:31 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -56,6 +56,6 @@ LibName26=opto
 LibName27=atmel
 LibName28=contrib
 LibName29=valves
-LibName30=/home/matt/Documents/CUSF/agg-kicad/agg-kicad
+LibName30=/home/matt/Documents/CUSF/m3-avionics/agg-kicad/agg-kicad
 [general]
 version=1
