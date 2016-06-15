@@ -2,8 +2,8 @@
 <export version="D">
   <design>
     <source>/home/adam/Projects/m3-avionics/m3debug/pcb/m3debug.sch</source>
-    <date>Mon 06 Jun 2016 17:46:34 BST</date>
-    <tool>Eeschema 0.201604290946+6713~44~ubuntu14.04.1-product</tool>
+    <date>Wed 15 Jun 2016 01:40:23 BST</date>
+    <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>M3 Debug</title>
@@ -301,6 +301,9 @@
     <comp ref="R6">
       <value>120</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2072575</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56BAFAD0</tstamp>
@@ -368,6 +371,9 @@
     <comp ref="C14">
       <value>1n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496767</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56BC1185</tstamp>
@@ -375,6 +381,9 @@
     <comp ref="C16">
       <value>10µ</value>
       <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">2456110</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56BC1871</tstamp>
@@ -382,6 +391,9 @@
     <comp ref="C17">
       <value>10µ</value>
       <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">2456110</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56BC204B</tstamp>
@@ -399,6 +411,9 @@
     <comp ref="R7">
       <value>4k7</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1358060</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56BC890C</tstamp>
@@ -406,6 +421,9 @@
     <comp ref="R8">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1358069</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56BC8D72</tstamp>
@@ -523,6 +541,9 @@
     <comp ref="J13">
       <value>PWRSW</value>
       <footprint>agg:SIL-254P-02</footprint>
+      <fields>
+        <field name="Farnell">1022245</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_02x01"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C2A83D</tstamp>
@@ -530,6 +551,9 @@
     <comp ref="J7">
       <value>PYRO_ARM</value>
       <footprint>agg:SIL-254P-02</footprint>
+      <fields>
+        <field name="Farnell">1022245</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_02x01"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C2AB4D</tstamp>
@@ -537,6 +561,9 @@
     <comp ref="J6">
       <value>PYROS</value>
       <footprint>agg:DIL-254P-08</footprint>
+      <fields>
+        <field name="Farnell">1022232</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_02x04"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C2AC0F</tstamp>
@@ -544,6 +571,9 @@
     <comp ref="J8">
       <value>CHARGE</value>
       <footprint>agg:S02B-PASK-2</footprint>
+      <fields>
+        <field name="Farnell">1830747</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_01x02"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C2ACF9</tstamp>
@@ -551,6 +581,9 @@
     <comp ref="J5">
       <value>PYRO_SUPPLY</value>
       <footprint>agg:S02B-PASK-2</footprint>
+      <fields>
+        <field name="Farnell">1830747</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_01x02"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C2AE1C</tstamp>
@@ -558,6 +591,9 @@
     <comp ref="J10">
       <value>5V_SUPPLY</value>
       <footprint>agg:DIL-254P-10</footprint>
+      <fields>
+        <field name="Farnell">1022235</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_02x05"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C2A1E0</tstamp>
@@ -565,6 +601,9 @@
     <comp ref="J12">
       <value>3V3_SUPPLY</value>
       <footprint>agg:DIL-254P-14</footprint>
+      <fields>
+        <field name="Farnell">1022232</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_02x07"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C2A654</tstamp>
@@ -572,6 +611,9 @@
     <comp ref="J11">
       <value>CAN_SUPPLY</value>
       <footprint>agg:SIL-254P-02</footprint>
+      <fields>
+        <field name="Farnell">1022245</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_02x01"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C2F416</tstamp>
@@ -619,9 +661,30 @@
     <comp ref="J14">
       <value>GND</value>
       <footprint>agg:SIL-254P-04</footprint>
+      <fields>
+        <field name="Farnell">1022250</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_01x04"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C3FE03</tstamp>
+    </comp>
+    <comp ref="X1">
+      <value>2x3 conn</value>
+      <fields>
+        <field name="Farnell">1022230</field>
+      </fields>
+      <libsource lib="agg-kicad" part="PART"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5760D0D4</tstamp>
+    </comp>
+    <comp ref="X2">
+      <value>jumper</value>
+      <fields>
+        <field name="Farnell">2396303</field>
+      </fields>
+      <libsource lib="agg-kicad" part="PART"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5760DB58</tstamp>
     </comp>
   </components>
   <libparts>
@@ -814,6 +877,12 @@
         <pin num="5" name="GND" type="power_in"/>
         <pin num="S" name="SHIELD" type="power_in"/>
       </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="PART">
+      <fields>
+        <field name="Reference">X</field>
+        <field name="Value">PART</field>
+      </fields>
     </libpart>
     <libpart lib="agg-kicad" part="R">
       <fields>
