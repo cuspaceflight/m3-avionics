@@ -2,94 +2,110 @@ Bill Of Materials
 =================
 
 Source file: m3debug.xml
-Date: 2016-02-17T04:27:37.657251
+Date: 2016-06-15T00:53:42.396188
 
 Parts Missing Footprints
 ------------------------
-
+X1     2x3 conn       
+X2     jumper         
 
 Parts Missing Order Codes
 -------------------------
 P1     SWD_TC          agg:TC2030-NL
-D4     RED             agg:0603-LED
-D5     RED             agg:0603-LED
-D6     RED             agg:0603-LED
-D7     RED             agg:0603-LED
-D11    GRN             agg:0603-LED
-C15    2µ2             agg:0603
-C13    2µ2             agg:0603
-R6     120             agg:0402
-D12    GRN             agg:0603-LED
-D10    GRN             agg:0603-LED
-D2     YLW             agg:0603-LED
-D1     YLW             agg:0603-LED
-C14    1n              agg:0402
-C16    10µ             agg:0603
-C17    10µ             agg:0603
-D3     RED             agg:0603-LED
-R7     4k7             agg:0402
-R8     10k             agg:0402
-J13    PWRSW           agg:SIL-254P-02
-J7     PYRO_ARM        agg:SIL-254P-02
-J6     PYROS           agg:DIL-254P-08
-J8     CHARGE          agg:S02B-PASK-2
-J5     PYRO_SUPPLY     agg:S02B-PASK-2
-J10    5V_SUPPLY       agg:DIL-254P-10
-J12    3V3_SUPPLY      agg:DIL-254P-14
-J11    CAN_SUPPLY      agg:SIL-254P-02
-D8     RED             agg:0603-LED
-D9     GRN             agg:0603-LED
-J14    GND             agg:SIL-254P-04
 
 Inconsistent Order Codes
 ------------------------
+  Farnell
+  ~~~~~~~
+    1022232: 
+      J6     PYROS           agg:DIL-254P-08
+      J12    3V3_SUPPLY      agg:DIL-254P-14
+    1830747: 
+      J8     CHARGE          agg:S02B-PASK-2
+      J5     PYRO_SUPPLY     agg:S02B-PASK-2
+    1022245: 
+      J13    PWRSW           agg:SIL-254P-02
+      J7     PYRO_ARM        agg:SIL-254P-02
+      J11    CAN_SUPPLY      agg:SIL-254P-02
   Samtec
   ~~~~~~
-    TFML-110-02-L-D: 
-      J3     EAST TOP        agg:TFML-110-02-L-D
-      J1     WEST TOP        agg:TFML-110-02-L-D
     SFML-110-02-L-D-LC: 
       J4     EAST BOT        agg:SFML-110-02-L-D-LC
       J2     WEST BOT        agg:SFML-110-02-L-D-LC
+    TFML-110-02-L-D: 
+      J3     EAST TOP        agg:TFML-110-02-L-D
+      J1     WEST TOP        agg:TFML-110-02-L-D
 
 Vendor Specific BOMs
 --------------------
-  Samtec
-  ~~~~~~
-TFML-110-02-L-D,2,2x J3 J1 TFML-110-02-L-D
-SFML-110-02-L-D-LC,2,2x J4 J2 SFML-110-02-L-D-LC
-
-
   Farnell
   ~~~~~~~
-2496771,6,6x 100n 0402
-9239111,1,1x 100 0402
-9232761,13,13x 1k 0402
-2362088,2,2x 2µ2 0402
+2396303,1,1x jumper None
 2426952,1,1x 4µ7 0402
-2506952,1,1x 26M XTAL-20x16
+9232761,13,13x 1k 0402
+1358069,1,1x 10k 0402
+2290328,4,4x GRN 0603-LED
+2496767,1,1x 1n 0402
+2496771,6,6x 100n 0402
+2362088,2,2x 2µ2 0402
 2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
 1568023,1,1x MICROUSB MICROUSB_MOLEX_475
-2496790,2,2x 10p 0402
-2496814,1,1x 1µ 0402
+1022235,1,1x 5V_SUPPLY DIL-254P-10
+2506952,1,1x 26M XTAL-20x16
 2067775,1,1x ADP3335 MSOP-8
+2072575,1,1x 120 0402
+1830747,2,2x PYRO_SUPPLY CHARGE S02B-PAS
+1022250,1,1x GND SIL-254P-04
+2456110,2,2x 10µ 0603
+9239111,1,1x 100 0402
+2496790,2,2x 10p 0402
+2290329,6,6x RED 0603-LED
+2496923,2,2x 2µ2 0603
+1022230,1,1x 2x3 conn None
+2290330,2,2x YLW 0603-LED
+1022232,2,2x PYROS 3V3_SUPPLY DIL-254P-1
+1022245,3,3x PYRO_ARM PWRSW CAN_SUPPLY S
 2064363,1,1x STM32F405RxTx LQFP-64
+1358060,1,1x 4k7 0402
+2496814,1,1x 1µ 0402
+
+
+  Samtec
+  ~~~~~~
+SFML-110-02-L-D-LC,2,2x J4 J2 SFML-110-02-L-D-LC
+TFML-110-02-L-D,2,2x J3 J1 TFML-110-02-L-D
 
 
 Assembly BOM
 ------------
-TFML-110-02-L-D      2   WEST TOP,EAST TOP TFML-110-02-L-D J1 J3
-SFML-110-02-L-D-LC   2   WEST BOT,EAST BOT SFML-110-02-L-D-LC J2 J4
-2496771              6   100n            0402            C12 C4 C5 C7 C8 C9
-9239111              1   100             0402            R5
-9232761              13  1k              0402            R1 R10 R11 R12 R13 R14 R15 R16 R17 R2 R3 R4 R9
-2362088              2   2µ2             0402            C10 C11
+2396303              1   jumper          None            X2
 2426952              1   4µ7             0402            C3
-2506952              1   26M             XTAL-20x16      Y1
+9232761              13  1k              0402            R1 R10 R11 R12 R13 R14 R15 R16 R17 R2 R3 R4 R9
+1358069              1   10k             0402            R8
+2290328              4   GRN             0603-LED        D10 D11 D12 D9
+2496767              1   1n              0402            C14
+2496771              6   100n            0402            C12 C4 C5 C7 C8 C9
+2362088              2   2µ2             0402            C10 C11
 2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC2
 1568023              1   MICROUSB        MICROUSB_MOLEX_47589-0001 J9
-2496790              2   10p             0402            C1 C2
-2496814              1   1µ              0402            C6
+1022235              1   5V_SUPPLY       DIL-254P-10     J10
+2506952              1   26M             XTAL-20x16      Y1
 2067775              1   ADP3335         MSOP-8          IC3
+2072575              1   120             0402            R6
+1830747              2   PYRO_SUPPLY,CHARGE S02B-PASK-2     J5 J8
+1022250              1   GND             SIL-254P-04     J14
+2456110              2   10µ             0603            C16 C17
+9239111              1   100             0402            R5
+2496790              2   10p             0402            C1 C2
+2290329              6   RED             0603-LED        D3 D4 D5 D6 D7 D8
+2496923              2   2µ2             0603            C13 C15
+1022230              1   2x3 conn        None            X1
+2290330              2   YLW             0603-LED        D1 D2
+1022232              2   PYROS,3V3_SUPPLY DIL-254P-14,DIL-254P-08 J12 J6
+1022245              3   PYRO_ARM,PWRSW,CAN_SUPPLY SIL-254P-02     J11 J13 J7
 2064363              1   STM32F405RxTx   LQFP-64         IC1
+1358060              1   4k7             0402            R7
+2496814              1   1µ              0402            C6
+SFML-110-02-L-D-LC   2   EAST BOT,WEST BOT SFML-110-02-L-D-LC J2 J4
+TFML-110-02-L-D      2   EAST TOP,WEST TOP TFML-110-02-L-D J1 J3
 
