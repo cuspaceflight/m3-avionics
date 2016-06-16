@@ -1,4 +1,4 @@
-update=29/01/2016 15:59:08
+update=Thu 16 Jun 2016 12:13:28 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -29,4 +29,4 @@ version=1
 version=1
 LibDir=
 [eeschema/libraries]
-LibName1=C:/Users/User/Documents/m3-avionics/agg-kicad/agg-kicad
+LibName1=../../agg-kicad/agg-kicad
