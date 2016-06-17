@@ -65,7 +65,6 @@ F 1 "MCP2562" H 9400 5300 50  0000 L CNN
 F 2 "agg:DFN-8-EP-MICROCHIP" H 9400 5200 50  0001 L CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20005167C.pdf" H 9400 5100 50  0001 L CNN
 F 4 "2448755" H 9400 5000 50  0001 L CNN "Farnell"
-F 5 "824-3135" H 9400 4900 50  0001 L CNN "RS"
 	1    9700 5600
 	1    0    0    -1  
 $EndComp

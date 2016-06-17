@@ -1,0 +1,38 @@
+Bill Of Materials
+=================
+
+Source file: breakout.xml
+Date: 2016-06-17T17:24:32.298932
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J2     EAST TOP        agg:TFML-110-02-L-D
+J4     EAST BOT        agg:SFML-110-02-L-D-LC
+J1     WEST TOP        agg:TFML-110-02-L-D
+J3     WEST BOT        agg:SFML-110-02-L-D-LC
+
+Inconsistent Order Codes
+------------------------
+  Farnell
+  ~~~~~~~
+    1830753: 
+      J5     North           agg:S08B-PASK-2
+      J6     South           agg:S08B-PASK-2
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+1830753,2,2x North South S08B-PASK-2
+2368169,9,9x ESD_DIODE 0402
+
+
+Assembly BOM
+------------
+1830753              2   North,South     S08B-PASK-2     J5 J6
+2368169              9   ESD_DIODE       0402            D1 D2 D3 D4 D5 D6 D7 D8 D9
+

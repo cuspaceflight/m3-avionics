@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>/home/matt/Documents/CUSF/m3-avionics/m3dl/main/main.sch</source>
-    <date>Wed 15 Jun 2016 00:54:25 BST</date>
+    <date>Fri 17 Jun 2016 17:27:39 BST</date>
     <tool>Eeschema 4.0.2+e4-6225~38~ubuntu14.04.1-stable</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -32,7 +32,6 @@
       <datasheet>http://ww1.microchip.com/downloads/en/DeviceDoc/20005167C.pdf</datasheet>
       <fields>
         <field name="Farnell">2448755</field>
-        <field name="RS">824-3135</field>
       </fields>
       <libsource lib="agg-kicad" part="MCP2562"/>
       <sheetpath names="/" tstamps="/"/>

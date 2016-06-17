@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: main.xml
-Date: 2016-06-15T00:54:26.024365
+Date: 2016-06-17T17:27:39.662692
 
 Parts Missing Footprints
 ------------------------
@@ -23,11 +23,6 @@ Inconsistent Order Codes
 
 Vendor Specific BOMs
 --------------------
-  RS
-  ~~
-824-3135,1,,1x--MCP2562--DFN-8-EP-MICROCHIP--IC2
-
-
   Farnell
   ~~~~~~~
 2502395,1,1x 100R R_0603
@@ -49,7 +44,6 @@ Vendor Specific BOMs
 
 Assembly BOM
 ------------
-824-3135             1   MCP2562         DFN-8-EP-MICROCHIP IC2
 2502395              1   100R            R_0603          R2
 2064363              1   STM32F405RxTx   LQFP-64         IC1
 2496930              1   4u7             C_0603          C10

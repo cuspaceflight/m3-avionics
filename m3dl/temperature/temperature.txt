@@ -1,0 +1,58 @@
+Bill Of Materials
+=================
+
+Source file: temperature.xml
+Date: 2016-06-17T18:56:00.152399
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J2     EAST TOP        agg:TFML-110-02-L-D
+J4     EAST BOT        agg:SFML-110-02-L-D-LC
+J1     WEST TOP        agg:TFML-110-02-L-D
+J3     WEST BOT        agg:SFML-110-02-L-D-LC
+J5     SOUTH TOP       agg:TFML-110-02-L-D
+J6     SOUTH BOT       agg:SFML-110-02-L-D-LC
+
+Inconsistent Order Codes
+------------------------
+  Farnell
+  ~~~~~~~
+    1012259: 
+      J7     TEMP1           Connectors_Molex:Connector_Molex_PicoBlade_53048-0210
+      J8     TEMP9           Connectors_Molex:Connector_Molex_PicoBlade_53048-0210
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+2059366,18,18x 3.74K R_0603
+1773476,1,1x D SOD-123
+2211164,2,2x 10u C_0603
+1012259,2,2x TEMP1 TEMP9 Connector_Molex
+9238603,1,1x 10K R_0603
+2461149,1,1x LTC2983 LQFP-48
+614890,1,1x TEMP2-8 Connector_Molex_Pic
+2496834,2,2x 100n C_0603
+1813443,9,9x 1n C_0603
+1657936,1,1x 10u 0805
+1865556,1,1x 1u C_0603
+
+
+Assembly BOM
+------------
+2059366              18  3.74K           R_0603          R10 R11 R12 R13 R14 R15 R16 R17 R18 R19 R2 R3 R4 R5 R6 R7 R8 R9
+1773476              1   D               SOD-123         D1
+2211164              2   10u             C_0603          C3 C5
+1012259              2   TEMP1,TEMP9     Connector_Molex_PicoBlade_53048-0210 J7 J8
+9238603              1   10K             R_0603          R1
+2461149              1   LTC2983         LQFP-48         IC1
+614890               1   TEMP2-8         Connector_Molex_PicoBlade_53048-1410 J9
+2496834              2   100n            C_0603          C15 C2
+1813443              9   1n              C_0603          C10 C11 C12 C13 C14 C6 C7 C8 C9
+1657936              1   10u             0805            C4
+1865556              1   1u              C_0603          C1
+
