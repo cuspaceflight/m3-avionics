@@ -97,6 +97,21 @@ def generate_feedline(points, w, h):
     line = []
 
     def emit_corner(pa, pb, pc):
+        """
+        Compute where to stick a zone corner for the three points along a line.
+        The corner will be near pb, but is mostly w/2 away from it to get the
+        right track width.
+        For concave corners, we simply stick the corner at the point which is
+        w/2 away from pb perpendicular to pa->pb and w/2 away in the pb->pa
+        direction (in other words, this is the inside corner in the pa-pb-pc
+        angle, a distance sqrt(2)*w/2 from pb).
+        For convex corners we must mitre, so take the previous point and first
+        pull it in the pb->pa direction by a, and then make a second point
+        pushed in the pb->pc direction (perpendicular to pb->pa) by a.
+        The parameter a is as per Douville and James "Experimental study of
+        symmetric microstrip bends and their compensation", 1978, IEEE Trans
+        Microwave Theory Tech.
+        """
         v1, v2 = direction(pa, pb), direction(pb, pc)
         if convex(v1, v2):
             line.append((pb[0] - v1[1]*w/2 + v1[0]*(w/2 - a),
@@ -272,17 +287,12 @@ patch = generate_patch(116e-3, 92e-3, 20e-3, 20e-3, 15e-3)
 feednet = [
     (100e-3, 75e-3), (100e-3, 39e-3), (250e-3, 39e-3), (250e-3, 75e-3)
 ]
-squiggle = translate(scale([
-    (0, 2), (0, 1), (1, 1), (1, 2), (2, 2), (2, 1), (3, 1), (3, 0), (2, 0)
-], 50e-3), 300e-3, 300e-3)
 line = generate_feedline(feednet, 2e-3, 0.7e-3)
-line2 = generate_feedline(squiggle, 5e-3, 10e-3)
 pcb = generate_pcb(
     (100e-3, 40e-3),
     ((30e-3, 30e-3), (30e-3, 180e-3), (330e-3, 180e-3), (330e-3, 30e-3)),
-    [translate(patch, 100e-3, 100e-3), translate(patch, 250e-3, 100e-3),
-     line, line2],
-    [feednet, squiggle]
+    [translate(patch, 100e-3, 100e-3), translate(patch, 250e-3, 100e-3), line],
+    [feednet]
 )
 
 with open("test_patch.kicad_pcb", "w") as f:
