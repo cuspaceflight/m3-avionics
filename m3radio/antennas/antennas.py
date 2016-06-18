@@ -1,61 +1,155 @@
-from __future__ import print_function, division
-import datetime
-import numpy as np
-from scipy.integrate import quad
-from sexp import generate
-
 # Microstrip patch antenna array drawing script.
 # Units are metres/kilograms/seconds
 # Axis has origin in the top left, x increasing right, y increasing down
+# Copyright 2016 Adam Greig
+
+from __future__ import print_function, division
+import datetime
+import numpy as np
+from sexp import generate
 
 # Constants
 c0 = 299792458
-er = 3.4
-h = 0.7e-3
+feed_space = 10e-3
 
-
+# Antennas to make
+# Each should specify:
+# d: diameter of conformed antenna [m]
+# f: centre frequency of antenna [Hz]
+# w: patch element width [m]
+# l: patch element length [m]
+# w_inset: patch element inset width [m]
+# l_inset: patch element inset length [m]
+# r_corner: patch element corner radius, if truncated [m]
+# h: height of dielectric [m]
+# e_r: relative permittivity of dielectric
+# t_copper: thickness of the copper layer [m]
 antennas = {
+    "test": {
+        "d": 300e-3,
+        "w": 50e-3,
+        "l": 50e-3,
+        "w_inset": 10e-3,
+        "l_inset": 10e-3,
+        "r_corner": 10e-3,
+        "h": 0.7e-3,
+        "e_r": 3.4,
+        "t_copper": 35e-6,
+    },
     "dart-telem": {
         "d": 44e-3,
         "f": 869.5e6,
+        "w": 116e-3,
+        "l": 104e-3,
+        "w_inset": 10e-3,
+        "l_inset": 20e-3,
+        "r_corner": None,
+        "h": 0.7e-3,
+        "e_r": 3.4,
+        "t_copper": 35e-6,
     },
     "dart-gps": {
         "d": 44e-3,
         "f": 1575.42e6,
+        "w": 64e-3,
+        "l": 52e-3,
+        "w_inset": 10e-3,
+        "l_inset": 10e-3,
+        "r_corner": 10e-3,
+        "h": 0.7e-3,
+        "e_r": 3.4,
+        "t_copper": 35e-6,
     },
     "booster-telem": {
         "d": 112e-3,
         "f": 869.5e6,
+        "w": 116e-3,
+        "l": 104e-3,
+        "w_inset": 10e-3,
+        "l_inset": 20e-3,
+        "r_corner": None,
+        "h": 0.7e-3,
+        "e_r": 3.4,
+        "t_copper": 35e-6,
     },
     "booster-gps": {
         "d": 112e-3,
         "f": 1575.42e6,
+        "w": 64e-3,
+        "l": 52e-3,
+        "w_inset": 10e-3,
+        "l_inset": 10e-3,
+        "r_corner": 10e-3,
+        "h": 0.7e-3,
+        "e_r": 3.4,
+        "t_copper": 35e-6,
     }
 }
 
 
-def designpatch(f):
-    w = (c0 / (2*f)) * np.sqrt(2/(er + 1))
-    ereff = (er + 1)/2 + (er - 1)/2 * (1 + 12*(h/w))**(-.5)
-    dl = 0.412 * h * \
-        ((ereff + 0.3) * (w/h + 0.264)) / ((ereff - 0.258) * (w/h + 0.8))
-    l = c0/(2*f*np.sqrt(ereff)) - 2*dl
-    return w, l
+def make_array(spec):
+    """
+    From an antenna specification, work out what the array should look like.
+    """
+    patches = patch_array(spec)
+    n = len(patches)
+    strips = microstrip_tree(spec, n)
+
+    return patches, strips
 
 
-def patchimpedance(f, w, l):
-    si = lambda t: quad(lambda y: np.sin(y)/y, 0, t)[0]
-    k0 = 2 * np.pi * f / c0
-    x = k0 * w
-    i1 = -2 * np.cos(x) + x * si(x) + np.sin(x)/x
-    g1 = i1 / (120 * np.pi**2)
-    print(g1)
-    z = 1 / (2*g1)
-    return z
+def patch_array(spec):
+    """
+    Make an array of patches such that we have a power of two number of patches
+    and they fill the width as best as possible.
+    """
+    w_body = np.pi * spec['d']
+    n = int(2**(np.floor(np.log2(w_body / spec['w']))))
+    spacing = w_body / n
+    patch = generate_patch(spec['w'], spec['l'],
+                           spec['w_inset'], spec['l_inset'],
+                           spec['r_corner'])
+    array = []
+    for idx in range(n):
+        array.append(translate(patch, idx*spacing - (n/2 - 1/2)*spacing, 0))
+
+    return array
+
+
+def microstrip_tree(spec, n):
+    """
+    Make a tree of microstrip to connect up antennas.
+    """
+    # Compute microstrip width for 50R match
+    # TODO this is probably not the best match or the best formula
+    h = spec['h']
+    er = spec['e_r']
+    t_copper = spec['t_copper']
+    w_f = (7.48 * h)/(np.exp(np.sqrt(0.33 * (er + 1.41)))) - 1.25 * t_copper
+
+    spacing = np.pi * spec['d'] / n
+
+    strips = []
+
+    for layer in range(int(np.log2(n))):
+        y1 = -spec['l']/2 - (layer+1)*feed_space
+        y2 = y1 + feed_space
+        if layer == 0:
+            y2 = 0.0
+        pairs = 2**(np.log2(n) - layer - 1)
+        pairspace = spacing * 2**layer
+        for i in range(int(pairs)):
+            mid = (2*i + 1 - pairs) * pairspace
+            x1 = mid - pairspace/2
+            x2 = mid + pairspace/2
+            strips.append(generate_feedline(
+                [(x1, y2), (x1, y1), (x2, y1), (x2, y2)], w_f, h))
+
+    return strips
 
 
 def direction(pa, pb):
-    """Find the direction bedirection two points."""
+    """Find the direction between two points."""
     v = pb[0] - pa[0], pb[1] - pa[1]
     l = np.sqrt(v[0]**2 + v[1]**2)
     return v[0]/l, v[1]/l
@@ -212,20 +306,40 @@ def pcb_lines(points, layer, w=0.1):
     return lines
 
 
-def generate_pcb(feedpoint, corners, zones, drawings):
+def generate_pcb(feedpoints, cuts, zones, drawings):
     """
-    Generate a KiCAD PCB file, with a single PTH pad located at the feedpoint,
-    a rectangular board edge defined by corners, many copper zones (which must
-    intersect to be filled) defined by lists of points in zones, and drawings
+    Generate a KiCAD PCB file, with PTH pads located at the feedpoints,
+    rectangular board edges defined by cuts, copper zones (which must intersect
+    a feedpoint to be filled) defined by lists of points in zones, and drawings
     (list of lists of points).
-    Coordinates should all be given in [m].
     """
-    feedpoint = [feedpoint[0]*1e3, feedpoint[1]*1e3]
-    corners = scale(corners, 1e3)
+    # Rescale inputs to millimetres for KiCAD
+    feedpoints = scale(feedpoints, 1e3)
+    cuts = [scale(cut, 1e3) for cut in cuts]
     zones = [scale(z, 1e3) for z in zones]
     drawings = [scale(d, 1e3) for d in drawings]
 
-    edges = pcb_lines(corners + [corners[0]], "Edge.Cuts")
+    # Draw feedpoints
+    modules = []
+    for idx, feedpoint in enumerate(feedpoints):
+        modules += [
+            "module",
+            "X{}".format(idx),
+            ["layer", "F.Cu"],
+            ["tedit", 0],
+            ["tstamp", 0],
+            ["at", feedpoint[0], feedpoint[1]],
+            ["pad",
+                1, "thru_hole", "circle", ["at", 0, 0], ["size", 2.5, 2.5],
+                ["drill", 1.5], ["layers", "F.Cu"], ["zone_connect", 2],
+                ["net", 1, "Antennas"]]],
+
+    # Draw cutouts
+    edges = []
+    for cut in cuts:
+        edges += pcb_lines(cut + [cut[0]], "Edge.Cuts")
+
+    # Draw zones
     kicad_zones = []
     for zone in zones:
         pts = ["pts"]
@@ -248,10 +362,12 @@ def generate_pcb(feedpoint, corners, zones, drawings):
             ["polygon", pts]
         ])
 
+    # Draw drawing lines
     kicad_drawings = []
     for drawing in drawings:
         kicad_drawings += pcb_lines(drawing, "Dwgs.User")
 
+    # Render the PCB
     out = [
         "kicad_pcb",
         ["version", 4],
@@ -269,30 +385,16 @@ def generate_pcb(feedpoint, corners, zones, drawings):
             ["trace_width", 0.2],
             ["via_dia", 0.8],
             ["via_drill", 0.4]],
-        ["module",
-            "X1",
-            ["layer", "F.Cu"],
-            ["tedit", 0],
-            ["tstamp", 0],
-            ["at", feedpoint[0], feedpoint[1]],
-            ["pad",
-                1, "thru_hole", "circle", ["at", 0, 0], ["size", 2.5, 2.5],
-                ["drill", 1.5], ["layers", "F.Cu"], ["zone_connect", 2],
-                ["net", 1, "Antennas"]]],
-    ] + edges + kicad_drawings + kicad_zones
+    ] + modules + edges + kicad_drawings + kicad_zones
     return generate(out)
 
 
-patch = generate_patch(116e-3, 92e-3, 20e-3, 20e-3, 15e-3)
-feednet = [
-    (100e-3, 75e-3), (100e-3, 39e-3), (250e-3, 39e-3), (250e-3, 75e-3)
-]
-line = generate_feedline(feednet, 2e-3, 0.7e-3)
+patches, strips = make_array(antennas['test'])
 pcb = generate_pcb(
-    (100e-3, 40e-3),
-    ((30e-3, 30e-3), (30e-3, 180e-3), (330e-3, 180e-3), (330e-3, 30e-3)),
-    [translate(patch, 100e-3, 100e-3), translate(patch, 250e-3, 100e-3), line],
-    [feednet]
+    [],
+    [],
+    patches + strips,
+    []
 )
 
 with open("test_patch.kicad_pcb", "w") as f:
