@@ -1,32 +1,216 @@
 from __future__ import print_function, division
 import datetime
+import numpy as np
+from scipy.integrate import quad
 from sexp import generate
 
+# Microstrip patch antenna array drawing script.
+# Units are metres/kilograms/seconds
+# Axis has origin in the top left, x increasing right, y increasing down
 
-def generate_pcb(feedpoint, corners, zones):
-    edges = [
-        [
-            "gr_line",
-            ["start", corners[0][0], corners[0][1]],
-            ["end", corners[1][0], corners[1][1]],
-            ["layer", "Edge.Cuts"], ["width", 0.1]
-        ], [
-            "gr_line",
-            ["start", corners[1][0], corners[1][1]],
-            ["end", corners[2][0], corners[2][1]],
-            ["layer", "Edge.Cuts"], ["width", 0.1]
-        ], [
-            "gr_line",
-            ["start", corners[2][0], corners[2][1]],
-            ["end", corners[3][0], corners[3][1]],
-            ["layer", "Edge.Cuts"], ["width", 0.1]
-        ], [
-            "gr_line",
-            ["start", corners[3][0], corners[3][1]],
-            ["end", corners[0][0], corners[0][1]],
-            ["layer", "Edge.Cuts"], ["width", 0.1]
+# Constants
+c0 = 299792458
+er = 3.4
+h = 0.7e-3
+
+
+antennas = {
+    "dart-telem": {
+        "d": 44e-3,
+        "f": 869.5e6,
+    },
+    "dart-gps": {
+        "d": 44e-3,
+        "f": 1575.42e6,
+    },
+    "booster-telem": {
+        "d": 112e-3,
+        "f": 869.5e6,
+    },
+    "booster-gps": {
+        "d": 112e-3,
+        "f": 1575.42e6,
+    }
+}
+
+
+def designpatch(f):
+    w = (c0 / (2*f)) * np.sqrt(2/(er + 1))
+    ereff = (er + 1)/2 + (er - 1)/2 * (1 + 12*(h/w))**(-.5)
+    dl = 0.412 * h * \
+        ((ereff + 0.3) * (w/h + 0.264)) / ((ereff - 0.258) * (w/h + 0.8))
+    l = c0/(2*f*np.sqrt(ereff)) - 2*dl
+    return w, l
+
+
+def patchimpedance(f, w, l):
+    si = lambda t: quad(lambda y: np.sin(y)/y, 0, t)[0]
+    k0 = 2 * np.pi * f / c0
+    x = k0 * w
+    i1 = -2 * np.cos(x) + x * si(x) + np.sin(x)/x
+    g1 = i1 / (120 * np.pi**2)
+    print(g1)
+    z = 1 / (2*g1)
+    return z
+
+
+def direction(pa, pb):
+    """Find the direction bedirection two points."""
+    v = pb[0] - pa[0], pb[1] - pa[1]
+    l = np.sqrt(v[0]**2 + v[1]**2)
+    return v[0]/l, v[1]/l
+
+
+def convex(v1, v2):
+    """See if (v1, v2) are convex."""
+    return (-v1[1] * v2[0] + v1[0]*v2[1]) < 0
+
+
+def generate_feedline(points, w, h):
+    """
+    Generate microstrip feedline passing through points of width w [m].
+    Specify the height above dielectric h [m] for mitreing purposes.
+    Returns a zone definition (list of zone corners).
+    """
+
+    assert len(points) >= 2, "Must have at least two points to draw feedline"
+
+    # Cop out if there are only two points (easy mode)
+    if len(points) == 2:
+        pa, pb = points
+        v, l = direction(pa, pb)
+        return [
+            (pa[0] + v[1]*w/2, pa[1] + v[0]*w/2),
+            (pb[0] + v[1]*w/2, pb[1] + v[0]*w/2),
+            (pb[0] - v[1]*w/2, pb[1] - v[0]*w/2),
+            (pa[0] - v[1]*w/2, pa[1] - v[0]*w/2),
+            (pa[0] + v[1]*w/2, pa[1] + v[0]*w/2)
         ]
-    ]
+
+    # Compute mitre related constants for three or more points (hard mode)
+    assert w/h >= 1/4, "Microstrip W/H must >= 1/4 for mitres to be correct"
+    m = (52 + 65 * np.exp(-27/20 * w/h)) / 100
+    d = w * np.sqrt(2)
+    x = d * m
+    a = x * np.sqrt(2)
+
+    line = []
+
+    def emit_corner(pa, pb, pc):
+        v1, v2 = direction(pa, pb), direction(pb, pc)
+        if convex(v1, v2):
+            line.append((pb[0] - v1[1]*w/2 + v1[0]*(w/2 - a),
+                         pb[1] + v1[1]*(w/2 - a) + v1[0]*w/2))
+            line.append((pb[0] - v1[1]*(w/2 - a) + v1[0]*w/2,
+                         pb[1] + v1[1]*w/2 + v1[0]*(w/2 - a)))
+        else:
+            line.append((pb[0] - v1[1]*w/2 - v1[0]*w/2,
+                         pb[1] - v1[1]*w/2 + v1[0]*w/2))
+
+    # Starting corner by the first point
+    v = direction(points[0], points[1])
+    line.append((points[0][0] - v[1]*w/2, points[0][1] + v[0]*w/2))
+
+    # Run in the forward direction
+    for pa, pb, pc in zip(points, points[1:], points[2:]):
+        emit_corner(pa, pb, pc)
+
+    # Two corners at the end of the run
+    v = direction(points[-2], points[-1])
+    line.append((points[-1][0] - v[1]*w/2, points[-1][1] + v[0]*w/2))
+    line.append((points[-1][0] + v[1]*w/2, points[-1][1] - v[0]*w/2))
+
+    # Now run back to the start, doing the other side of the track
+    for pa, pb, pc in zip(points[::-1], points[-2::-1], points[-3::-1]):
+        emit_corner(pa, pb, pc)
+
+    # Final point and close the loop
+    v = direction(points[0], points[1])
+    line.append((points[0][0] + v[1]*w/2, points[0][1] - v[0]*w/2))
+    line.append((points[0][0] - v[1]*w/2, points[0][1] + v[0]*w/2))
+
+    return line
+
+
+def generate_patch(w, l, w_inset=None, l_inset=None, r_corner=None):
+    """
+    Draw a patch of width w [m] and length l [m],
+    with optional inset feedpoint width w_inset [m] and length l_inset [m],
+    and optional opposite corner truncation of length r_corner [m].
+    Returns a zone definition (list of zone corners).
+    """
+
+    patch = [(-w/2, -l/2)]
+
+    if r_corner:
+        patch.append((-w/2, l/2 - r_corner))
+        patch.append((-w/2 + r_corner, l/2))
+    else:
+        patch.append((-w/2, l/2))
+
+    patch.append((w/2, l/2))
+
+    if r_corner:
+        patch.append((w/2, -l/2 + r_corner))
+        patch.append((w/2 - r_corner, -l/2))
+    else:
+        patch.append((w/2, -l/2))
+
+    if w_inset and l_inset:
+        patch.append((w_inset/2, -l/2))
+        patch.append((w_inset/2, -l/2 + l_inset))
+        patch.append((-w_inset/2, -l/2 + l_inset))
+        patch.append((-w_inset/2, -l/2))
+
+    patch.append((-w/2, -l/2))
+
+    return patch
+
+
+def translate(points, x, y):
+    """
+    Translate a list of points by x and y.
+    """
+    return [(p[0]+x, p[1]+y) for p in points]
+
+
+def scale(points, s):
+    """
+    Scale a list of points by s.
+    """
+    return [(p[0]*s, p[1]*s) for p in points]
+
+
+def pcb_lines(points, layer, w=0.1):
+    """
+    Draw connected lines through points on layer.
+    """
+    lines = []
+    for p, pp in zip(points, points[1:]):
+        lines.append([
+            "gr_line",
+            ["start", p[0], p[1]],
+            ["end", pp[0], pp[1]],
+            ["layer", layer], ["width", w]
+        ])
+
+    return lines
+
+
+def generate_pcb(feedpoint, corners, zones, drawings):
+    """
+    Generate a KiCAD PCB file, with a single PTH pad located at the feedpoint,
+    a rectangular board edge defined by corners, many copper zones (which must
+    intersect to be filled) defined by lists of points in zones, and drawings
+    (list of lists of points).
+    Coordinates should all be given in [m].
+    """
+    feedpoint = [feedpoint[0]*1e3, feedpoint[1]*1e3]
+    corners = scale(corners, 1e3)
+    zones = [scale(z, 1e3) for z in zones]
+    drawings = [scale(d, 1e3) for d in drawings]
+
+    edges = pcb_lines(corners + [corners[0]], "Edge.Cuts")
     kicad_zones = []
     for zone in zones:
         pts = ["pts"]
@@ -35,7 +219,7 @@ def generate_pcb(feedpoint, corners, zones):
         kicad_zones.append([
             "zone",
             ["net", 1],
-            ["net_name", "A"],
+            ["net_name", "Antennas"],
             ["layer", "F.Cu"],
             ["tstamp", 0],
             ["hatch", "edge", 0.5],
@@ -48,6 +232,11 @@ def generate_pcb(feedpoint, corners, zones):
                 ["thermal_bridge_width", 0.25]],
             ["polygon", pts]
         ])
+
+    kicad_drawings = []
+    for drawing in drawings:
+        kicad_drawings += pcb_lines(drawing, "Dwgs.User")
+
     out = [
         "kicad_pcb",
         ["version", 4],
@@ -56,15 +245,15 @@ def generate_pcb(feedpoint, corners, zones):
         ["layers",
             [0, "F.Cu", "signal"],
             [31, "B.Cu", "signal", "hide"],
+            [40, "Dwgs.User", "user"],
             [44, "Edge.Cuts", "user"]],
         ["net", 0, ""],
-        ["net", 1, "A"],
+        ["net", 1, "Antennas"],
         ["net_class", "Default", "",
             ["clearance", 0.2],
             ["trace_width", 0.2],
             ["via_dia", 0.8],
-            ["via_drill", 0.4],
-            ["add_net", "A"]],
+            ["via_drill", 0.4]],
         ["module",
             "X1",
             ["layer", "F.Cu"],
@@ -74,14 +263,27 @@ def generate_pcb(feedpoint, corners, zones):
             ["pad",
                 1, "thru_hole", "circle", ["at", 0, 0], ["size", 2.5, 2.5],
                 ["drill", 1.5], ["layers", "F.Cu"], ["zone_connect", 2],
-                ["net", 1, "A"]]],
-    ] + edges + kicad_zones
+                ["net", 1, "Antennas"]]],
+    ] + edges + kicad_drawings + kicad_zones
     return generate(out)
 
-print(
-    generate_pcb(
-        (100, 100),
-        ((90, 90), (90, 110), (110, 110), (110, 90)),
-        [[[95, 95], [105, 95], [105, 105], [95, 105]]]
-    )
+
+patch = generate_patch(116e-3, 92e-3, 20e-3, 20e-3, 15e-3)
+feednet = [
+    (100e-3, 75e-3), (100e-3, 39e-3), (250e-3, 39e-3), (250e-3, 75e-3)
+]
+squiggle = translate(scale([
+    (0, 2), (0, 1), (1, 1), (1, 2), (2, 2), (2, 1), (3, 1), (3, 0), (2, 0)
+], 50e-3), 300e-3, 300e-3)
+line = generate_feedline(feednet, 2e-3, 0.7e-3)
+line2 = generate_feedline(squiggle, 5e-3, 10e-3)
+pcb = generate_pcb(
+    (100e-3, 40e-3),
+    ((30e-3, 30e-3), (30e-3, 180e-3), (330e-3, 180e-3), (330e-3, 30e-3)),
+    [translate(patch, 100e-3, 100e-3), translate(patch, 250e-3, 100e-3),
+     line, line2],
+    [feednet, squiggle]
 )
+
+with open("test_patch.kicad_pcb", "w") as f:
+    f.write(pcb)
