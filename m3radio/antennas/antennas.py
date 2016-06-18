@@ -25,17 +25,6 @@ feed_space = 10e-3
 # e_r: relative permittivity of dielectric
 # t_copper: thickness of the copper layer [m]
 antennas = {
-    "test": {
-        "d": 300e-3,
-        "w": 50e-3,
-        "l": 50e-3,
-        "w_inset": 10e-3,
-        "l_inset": 10e-3,
-        "r_corner": 10e-3,
-        "h": 0.7e-3,
-        "e_r": 3.4,
-        "t_copper": 35e-6,
-    },
     "dart-telem": {
         "d": 44e-3,
         "f": 869.5e6,
@@ -87,6 +76,25 @@ antennas = {
 }
 
 
+def make_arrays(specs):
+    y = 100e-3
+    cutouts = []
+    feedpoints = []
+    zones = []
+    for spec in specs.values():
+        fp, co, p, s = make_array(spec)
+        h = co[0][1] - co[1][1]
+        w = co[0][0] - co[2][0]
+        x = -w/2 + 100e-3
+        cutouts.append(translate(co, x, y))
+        feedpoints.append((fp[0]+x, fp[1]+y))
+        zones += [translate(patch, x, y) for patch in p]
+        zones += [translate(strip, x, y) for strip in s]
+        y += h + 20e-3
+
+    return feedpoints, cutouts, zones
+
+
 def make_array(spec):
     """
     From an antenna specification, work out what the array should look like.
@@ -94,8 +102,14 @@ def make_array(spec):
     patches = patch_array(spec)
     n = len(patches)
     strips = microstrip_tree(spec, n)
+    layers = np.log2(n)
+    feedpoint = (0, -spec['l']/2 - layers*feed_space)
+    y1 = spec['l']/2 + 2*feed_space
+    y2 = -spec['l']/2 - layers*feed_space - 2*feed_space
+    w = spec['d'] * np.pi
+    cutout = [(-w/2, y1), (-w/2, y2), (w/2, y2), (w/2, y1)]
 
-    return patches, strips
+    return feedpoint, cutout, patches, strips
 
 
 def patch_array(spec):
@@ -372,7 +386,7 @@ def generate_pcb(feedpoints, cuts, zones, drawings):
         "kicad_pcb",
         ["version", 4],
         ["host", "antennas.py", datetime.datetime.utcnow().isoformat()],
-        ["page", "A2"],
+        ["page", "A0"],
         ["layers",
             [0, "F.Cu", "signal"],
             [31, "B.Cu", "signal", "hide"],
@@ -389,13 +403,8 @@ def generate_pcb(feedpoints, cuts, zones, drawings):
     return generate(out)
 
 
-patches, strips = make_array(antennas['test'])
-pcb = generate_pcb(
-    [],
-    [],
-    patches + strips,
-    []
-)
+feedpoints, cutouts, zones = make_arrays(antennas)
+pcb = generate_pcb(feedpoints, cutouts, zones, [])
 
 with open("test_patch.kicad_pcb", "w") as f:
     f.write(pcb)
