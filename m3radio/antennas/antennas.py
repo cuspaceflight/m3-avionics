@@ -6,11 +6,13 @@
 from __future__ import print_function, division
 import datetime
 import numpy as np
+from scipy.integrate import quad
+from scipy.special import jn
 from sexp import generate
 
 # Constants
 c0 = 299792458
-feed_space = 10e-3
+feed_space = 33.6e-3
 
 # Antennas to make
 # Each should specify:
@@ -24,8 +26,9 @@ feed_space = 10e-3
 # h: height of dielectric [m]
 # e_r: relative permittivity of dielectric
 # t_copper: thickness of the copper layer [m]
-antennas = {
-    "dart-telem": {
+antennas = [
+    # Dart telemetry
+    {
         "d": 44e-3,
         "f": 869.5e6,
         "w": 116e-3,
@@ -37,19 +40,21 @@ antennas = {
         "e_r": 3.4,
         "t_copper": 35e-6,
     },
-    "dart-gps": {
+    # Dart GPS
+    {
         "d": 44e-3,
         "f": 1575.42e6,
         "w": 64e-3,
-        "l": 52e-3,
+        "l": 52.626e-3,
         "w_inset": 10e-3,
-        "l_inset": 10e-3,
+        "l_inset": 0,
         "r_corner": 10e-3,
         "h": 0.7e-3,
         "e_r": 3.4,
         "t_copper": 35e-6,
     },
-    "booster-telem": {
+    # Booster telemetry
+    {
         "d": 112e-3,
         "f": 869.5e6,
         "w": 116e-3,
@@ -61,7 +66,8 @@ antennas = {
         "e_r": 3.4,
         "t_copper": 35e-6,
     },
-    "booster-gps": {
+    # Booster GPS
+    {
         "d": 112e-3,
         "f": 1575.42e6,
         "w": 64e-3,
@@ -72,25 +78,77 @@ antennas = {
         "h": 0.7e-3,
         "e_r": 3.4,
         "t_copper": 35e-6,
-    }
-}
+    },
+    # Test GPS patch
+    {
+        "d": 22e-3,
+        "f": 1575.42e6,
+        "w": 57.48e-3,
+        "l": 57.48e-3,
+        "w_inset": 0e-3,
+        "l_inset": 0e-3,
+        "r_corner": 2e-3,
+        "h": 0.7e-3,
+        "e_r": 2.67,
+        "t_copper": 35e-6,
+    },
+    # Test telemetry patch
+    {
+        "d": 44e-3,
+        "f": 869.5e6,
+        "w": 114e-3,
+        "l": 104e-3,
+        "w_inset": 5e-3,
+        "l_inset": 30e-3,
+        "r_corner": 0,
+        "h": 0.7e-3,
+        "e_r": 2.74,
+        "t_copper": 35e-6,
+    },
+]
+
+
+def patch_impedance(w, l, r, h, f0):
+    """
+    Compute an estimate of the patch impedance, for patch of width w and length
+    l, inset feed at distance r, and height above ground h, at frequency f0.
+    """
+    l0 = c0 / f0
+    k0 = 2 * np.pi / l0
+    si = lambda x: quad(lambda t: np.sin(t)/t, 0, x)[0]
+    x = k0 * w
+    i1 = -2 + np.cos(x) + x * si(x) + np.sin(x)/x
+    g1 = i1 / (120 * np.pi**2)
+    g12 = 1/(120*np.pi**2) * quad(
+        lambda th: (np.sin((k0*w)/2 * np.cos(th))/np.cos(th))**2
+        * jn(0, k0 * l * np.sin(th)) * np.sin(th)**3,
+        0, np.pi)[0]
+    rin0 = 1/(2*(g1 + g12))
+    rin = rin0 * np.cos(np.pi * r / l)**2
+    print("l0={:.4f} g1={:.4e} g12={:.4e} rin0={:.2f} rin={:.2f}"
+          .format(l0, g1, g12, rin0, rin))
 
 
 def make_arrays(specs):
-    y = 100e-3
+    """
+    For each item in specs, generate the antenna array, and tile them
+    vertically.
+    """
+    y = 20e-3
     cutouts = []
     feedpoints = []
     zones = []
-    for spec in specs.values():
+    for spec in specs:
         fp, co, p, s = make_array(spec)
         h = co[0][1] - co[1][1]
+        y += h/2
         w = co[0][0] - co[2][0]
-        x = -w/2 + 100e-3
+        x = -w/2 + 20e-3
         cutouts.append(translate(co, x, y))
         feedpoints.append((fp[0]+x, fp[1]+y))
         zones += [translate(patch, x, y) for patch in p]
         zones += [translate(strip, x, y) for strip in s]
-        y += h + 20e-3
+        y += h/2 + 20e-3
 
     return feedpoints, cutouts, zones
 
@@ -103,9 +161,11 @@ def make_array(spec):
     n = len(patches)
     strips = microstrip_tree(spec, n)
     layers = np.log2(n)
-    feedpoint = (0, -spec['l']/2 - layers*feed_space)
-    y1 = spec['l']/2 + 2*feed_space
-    y2 = -spec['l']/2 - layers*feed_space - 2*feed_space
+    if layers == 0:
+        layers = 1
+    feedpoint = [0, -spec['l']/2 - layers*feed_space + 1e-4]
+    y1 = spec['l']/2 + 5e-3
+    y2 = -spec['l']/2 - layers*feed_space - 5e-3
     w = spec['d'] * np.pi
     cutout = [(-w/2, y1), (-w/2, y2), (w/2, y2), (w/2, y1)]
 
@@ -140,10 +200,15 @@ def microstrip_tree(spec, n):
     er = spec['e_r']
     t_copper = spec['t_copper']
     w_f = (7.48 * h)/(np.exp(np.sqrt(0.33 * (er + 1.41)))) - 1.25 * t_copper
+    #w_f = 0.39e-3
 
     spacing = np.pi * spec['d'] / n
 
     strips = []
+
+    if n == 1:
+        y1 = -spec['l']/2 - feed_space
+        return [generate_feedline([(0, 0), (0, y1)], w_f, h)]
 
     for layer in range(int(np.log2(n))):
         y1 = -spec['l']/2 - (layer+1)*feed_space
@@ -186,7 +251,7 @@ def generate_feedline(points, w, h):
     # Cop out if there are only two points (easy mode)
     if len(points) == 2:
         pa, pb = points
-        v, l = direction(pa, pb)
+        v = direction(pa, pb)
         return [
             (pa[0] + v[1]*w/2, pa[1] + v[0]*w/2),
             (pb[0] + v[1]*w/2, pb[1] + v[0]*w/2),
@@ -367,7 +432,7 @@ def generate_pcb(feedpoints, cuts, zones, drawings):
             ["tstamp", 0],
             ["hatch", "edge", 0.5],
             ["connect_pads", ["clearance", 0.3]],
-            ["min_thickness", 0.2],
+            ["min_thickness", 0.01],
             ["fill",
                 "yes",
                 ["arc_segments", 32],
@@ -403,8 +468,9 @@ def generate_pcb(feedpoints, cuts, zones, drawings):
     return generate(out)
 
 
-feedpoints, cutouts, zones = make_arrays(antennas)
-pcb = generate_pcb(feedpoints, cutouts, zones, [])
+if __name__ == "__main__":
+    feedpoints, cutouts, zones = make_arrays(antennas)
+    pcb = generate_pcb(feedpoints, cutouts, zones, [])
 
-with open("test_patch.kicad_pcb", "w") as f:
-    f.write(pcb)
+    with open("test_patch.kicad_pcb", "w") as f:
+        f.write(pcb)
