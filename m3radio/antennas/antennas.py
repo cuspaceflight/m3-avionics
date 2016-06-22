@@ -236,12 +236,19 @@ def make_array(spec):
     """
     From an antenna specification, work out what the array should look like.
     """
+    # Generate the patches and microstrip feed tree
     patches = patch_array(spec)
     n = len(patches)
-    strips, height = microstrip_tree(spec, n)
-    feedpoint = [0, -height + 0.1e-3]
+    strips, h = microstrip_tree(spec, n)
+
+    # Put a little bit of strip right by the feed point to ensure connectivity
+    d = 0.5e-3
+    strips.append([(-d, -h-d), (-d, -h+d), (d, -h+d), (d, -h-d)])
+    feedpoint = [0, -h]
+
+    # Compute the cutout shape
     y1 = spec['l_patch']/2 + 5e-3
-    y2 = -height - 5e-3
+    y2 = -h - 5e-3
     w = spec['w_array']
     cutout = [(-w/2, y1), (-w/2, y2), (w/2, y2), (w/2, y1)]
 
@@ -269,7 +276,7 @@ def patch_array(spec):
 def microstrip_tree(spec, n):
     """
     Make a tree of microstrip to connect up antennas.
-    Returns a list of microstrip patches, and the height of the centrepoint of
+    Returns a list of microstrip zones, and the height of the centrepoint of
     the top layer of the tree.
     """
     feed = spec['feed']
@@ -317,7 +324,7 @@ def microstrip_l(x, x2, y, lspec, h):
     segments and the second a list of horizontal segments, each segment with a
     width and a length).
 
-    Returns a list of patches and the new height.
+    Returns a list of zones and the new height.
     """
 
     # Store generated strips
@@ -358,6 +365,7 @@ def microstrip_l(x, x2, y, lspec, h):
         points.append((x, y))
 
     # Generate last strip
+    points.append((x, y - w/2))
     strips.append(generate_feedline(points, w, h))
 
     return strips, y
