@@ -127,7 +127,7 @@ antennas = [
         "feed": feed_booster_telemetry,
         "w_patch": 114e-3,
         "l_patch": 104e-3,
-        "w_inset": 10e-3,
+        "w_inset": 3e-3,
         "l_inset": 30e-3,
         "r_corner": None,
         "h": 0.7e-3,
@@ -143,33 +143,11 @@ antennas = [
         "r_corner": 2e-3,
         "h": 0.7e-3,
     },
-    # Tuned flat GPS patch at e=2.67
-    {
-        "w_array": 22e-3 * np.pi,
-        "w_patch": 57.48e-3,
-        "l_patch": 57.48e-3,
-        "w_inset": 0e-3,
-        "l_inset": 0e-3,
-        "r_corner": 2e-3,
-        "h": 0.7e-3,
-        "feed": [[[(strip_w_112r91, 33.57e-3)], []], [[], []]]
-    },
-    # Tuned flat telemetry patch at e=2.67 (still being tuned)
-    {
-        "w_array": 44e-3 * np.pi,
-        "w_patch": 114e-3,
-        "l_patch": 104e-3,
-        "w_inset": 5e-3,
-        "l_inset": 37e-3,
-        "r_corner": 0,
-        "h": 0.7e-3,
-        "feed": [[[(strip_w_50r, 50e-3)], []], [[], []]]
-    },
 ]
 
-antennas = [
+test_antennas = [
 
-    # Booster GPS
+    # 8-big panel of GPS antennas
     {
         "w_array": 500e-3,
         "feed": feed_booster_gps,
@@ -181,6 +159,29 @@ antennas = [
         "h": 0.7e-3,
     },
 
+    # Tuned flat GPS patch at e=2.67
+    {
+        "w_array": 22e-3 * np.pi,
+        "w_patch": 57.48e-3,
+        "l_patch": 57.48e-3,
+        "w_inset": 0e-3,
+        "l_inset": 0e-3,
+        "r_corner": 2e-3,
+        "h": 0.7e-3,
+        "feed": [[[(strip_w_112r91, 33.57e-3)], []], [[], []]]
+    },
+
+    # Tuned flat telemetry patch at e=2.67 (still being tuned)
+    {
+        "w_array": 44e-3 * np.pi,
+        "w_patch": 114e-3,
+        "l_patch": 104e-3,
+        "w_inset": 5e-3,
+        "l_inset": 37e-3,
+        "r_corner": 0,
+        "h": 0.7e-3,
+        "feed": [[[(strip_w_50r, 50e-3)], []], [[], []]]
+    },
 ]
 
 
