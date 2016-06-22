@@ -1,4 +1,4 @@
-update=19/02/2016 11:36:47
+update=21/06/2016 15:22:54
 version=1
 last_client=kicad
 [pcbnew]
@@ -27,6 +27,6 @@ NetIExt=net
 version=1
 [eeschema]
 version=1
-LibDir=../../agg-kicad;../../agg-kicad/lib/ic/microcontroller
+LibDir=../../agg-kicad;../../agg-kicad/lib/ic/microcontroller;../../agg-kicad
 [eeschema/libraries]
 LibName1=agg-kicad

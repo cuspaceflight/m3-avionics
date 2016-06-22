@@ -1,9 +1,9 @@
-(kicad_pcb (version 4) (host pcbnew 4.0.2-4+6225~38~ubuntu14.04.1-stable)
+(kicad_pcb (version 4) (host pcbnew 4.0.0-rc1-stable)
 
   (general
     (links 169)
     (no_connects 10)
-    (area 79.8 79.765 120.075001 120.075001)
+    (area 79.924999 79.924999 120.075001 120.075001)
     (thickness 1.6)
     (drawings 6)
     (tracks 670)
@@ -13,6 +13,17 @@
   )
 
   (page A4)
+  (title_block
+    (title "M3 Radio board layout")
+    (date "8 feb 2016")
+    (rev "Rev 1")
+    (company "Cambridge University Spaceflight")
+    (comment 1 "G Brooks")
+    (comment 2 "A Raghu")
+    (comment 3 "E R Eide")
+    (comment 4 "Drawn by: ")
+  )
+
   (layers
     (0 F.Cu signal)
     (31 B.Cu signal)
@@ -37,7 +48,7 @@
   )
 
   (setup
-    (last_trace_width 0.28)
+    (last_trace_width 0.2)
     (user_trace_width 0.2)
     (user_trace_width 0.28)
     (user_trace_width 0.5)
