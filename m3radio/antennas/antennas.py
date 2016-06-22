@@ -10,101 +10,177 @@ from scipy.integrate import quad
 from scipy.special import jn
 from sexp import generate
 
-# Constants
-c0 = 299792458
-feed_space = 33.6e-3
+# Target frequencies (for reference only)
+# GPS: 1575.42MHz
+# Telemetry: 869.5MHz
+
+# Board constants (for reference only)
+# dielectric constant: 2.67
+
+# Microstrip line widths for various impedances [m]
+strip_w_50r = 1.90e-3
+strip_w_70r71 = 1.07e-3
+strip_w_100r = 0.527e-3
+strip_w_112r91 = 0.39e-3
+
+# Feed networks. Entries are (width [m], length [m]).
+# Lengths of None imply "continue to junction".
+feed_booster_gps = [
+    [  # Patch to first T-junction
+        [  # Vertical section
+            (strip_w_112r91, 22.32e-3),  # Part of L/4, 255 to 100R
+        ],
+
+        [  # Horizontal section
+            (strip_w_112r91, 11.25e-3),  # Rest of L/4, 255 to 100R
+            (strip_w_70r71, None),  # Complete L/4, 100 to 50R.
+                                    # Will be 32.73e-3 long.
+        ],
+    ],
+
+    [  # Subsequent T-junction to T-junction
+        [  # Vertical section
+            (strip_w_70r71, 20e-3),  # Part of L/4, 50 to 100R
+        ],
+
+        [  # Horizontal section
+            (strip_w_70r71, 12.73e-3),  # Rest of L/4, 50 to 100R
+            (strip_w_100r, None),  # Normal stripline for remaining length
+        ],
+    ]
+]
+
+feed_booster_telemetry = [
+    [  # Patch to first T-junction at feedpoint
+        [  # Vertical section
+            (strip_w_100r, 50e-3),  # Plain 100R feedline
+        ],
+
+        [  # Horizontal section
+            (strip_w_100r, None),  # Plain 100R feedline
+        ]
+    ],
+    [[], []]
+]
+
+feed_dart_gps = [
+    [  # Patch to first T-junction at feedpoint
+        [  # Vertical
+            (strip_w_112r91, 31.75e-3),  # Part of L/4 255 to 50R
+        ],
+
+        [  # Horizontal
+            (strip_w_112r91, 1.82e-3),  # Rest of L/4 255 to 50R
+            (strip_w_70r71, None),  # Complete L/4 50 to 100R
+                                    # Will be 32.73e-3 long
+        ]
+    ],
+    [[], []]
+]
+
+feed_dart_telemetry = [
+    [  # Patch to feed directly
+        [  # Vertical
+            (strip_w_50r, 50e-3),  # Plain 50R feedline up to the feedpoint
+        ],
+        [],
+    ],
+    [[], []]
+]
 
 # Antennas to make
 # Each should specify:
-# d: diameter of conformed antenna [m]
-# f: centre frequency of antenna [Hz]
-# w: patch element width [m]
-# l: patch element length [m]
+# w_array: width of final array [m]
+# w_patch: patch element width [m]
+# l_patch: patch element length [m]
 # w_inset: patch element inset width [m]
 # l_inset: patch element inset length [m]
 # r_corner: patch element corner radius, if truncated [m]
-# h: height of dielectric [m]
-# e_r: relative permittivity of dielectric
-# t_copper: thickness of the copper layer [m]
+# h: dielectric height [m]
+# feed: a feed network spec, as described above
 antennas = [
     # Dart telemetry
     {
-        "d": 44e-3,
-        "f": 869.5e6,
-        "w": 116e-3,
-        "l": 104e-3,
+        "w_array": 44e-3 * np.pi,
+        "feed": feed_dart_telemetry,
+        "w_patch": 116e-3,
+        "l_patch": 104e-3,
         "w_inset": 10e-3,
-        "l_inset": 20e-3,
+        "l_inset": 37e-3,
         "r_corner": None,
         "h": 0.7e-3,
-        "e_r": 3.4,
-        "t_copper": 35e-6,
     },
     # Dart GPS
     {
-        "d": 44e-3,
-        "f": 1575.42e6,
-        "w": 64e-3,
-        "l": 52.626e-3,
-        "w_inset": 10e-3,
+        "w_array": 44e-3 * np.pi,
+        "feed": feed_dart_gps,
+        "w_patch": 57.48e-3,
+        "l_patch": 57.48e-3,
+        "w_inset": 0,
         "l_inset": 0,
-        "r_corner": 10e-3,
+        "r_corner": 2e-3,
         "h": 0.7e-3,
-        "e_r": 3.4,
-        "t_copper": 35e-6,
     },
     # Booster telemetry
     {
-        "d": 112e-3,
-        "f": 869.5e6,
-        "w": 116e-3,
-        "l": 104e-3,
+        "w_array": 112e-3 * np.pi,
+        "feed": feed_booster_telemetry,
+        "w_patch": 114e-3,
+        "l_patch": 104e-3,
         "w_inset": 10e-3,
-        "l_inset": 20e-3,
+        "l_inset": 30e-3,
         "r_corner": None,
         "h": 0.7e-3,
-        "e_r": 3.4,
-        "t_copper": 35e-6,
     },
     # Booster GPS
     {
-        "d": 112e-3,
-        "f": 1575.42e6,
-        "w": 64e-3,
-        "l": 52e-3,
-        "w_inset": 10e-3,
-        "l_inset": 10e-3,
-        "r_corner": 10e-3,
+        "w_array": 112e-3 * np.pi,
+        "feed": feed_booster_gps,
+        "w_patch": 57.48e-3,
+        "l_patch": 57.48e-3,
+        "w_inset": 0,
+        "l_inset": 0,
+        "r_corner": 2e-3,
         "h": 0.7e-3,
-        "e_r": 3.4,
-        "t_copper": 35e-6,
     },
-    # Test GPS patch
+    # Tuned flat GPS patch at e=2.67
     {
-        "d": 22e-3,
-        "f": 1575.42e6,
-        "w": 57.48e-3,
-        "l": 57.48e-3,
+        "w_array": 22e-3 * np.pi,
+        "w_patch": 57.48e-3,
+        "l_patch": 57.48e-3,
         "w_inset": 0e-3,
         "l_inset": 0e-3,
         "r_corner": 2e-3,
         "h": 0.7e-3,
-        "e_r": 2.67,
-        "t_copper": 35e-6,
+        "feed": [[[(strip_w_112r91, 33.57e-3)], []], [[], []]]
     },
-    # Test telemetry patch
+    # Tuned flat telemetry patch at e=2.67 (still being tuned)
     {
-        "d": 44e-3,
-        "f": 869.5e6,
-        "w": 114e-3,
-        "l": 104e-3,
+        "w_array": 44e-3 * np.pi,
+        "w_patch": 114e-3,
+        "l_patch": 104e-3,
         "w_inset": 5e-3,
-        "l_inset": 30e-3,
+        "l_inset": 37e-3,
         "r_corner": 0,
         "h": 0.7e-3,
-        "e_r": 2.74,
-        "t_copper": 35e-6,
+        "feed": [[[(strip_w_50r, 50e-3)], []], [[], []]]
     },
+]
+
+antennas = [
+
+    # Booster GPS
+    {
+        "w_array": 500e-3,
+        "feed": feed_booster_gps,
+        "w_patch": 57.48e-3,
+        "l_patch": 57.48e-3,
+        "w_inset": 0,
+        "l_inset": 0,
+        "r_corner": 2e-3,
+        "h": 0.7e-3,
+    },
+
 ]
 
 
@@ -113,6 +189,7 @@ def patch_impedance(w, l, r, h, f0):
     Compute an estimate of the patch impedance, for patch of width w and length
     l, inset feed at distance r, and height above ground h, at frequency f0.
     """
+    c0 = 299792458
     l0 = c0 / f0
     k0 = 2 * np.pi / l0
     si = lambda x: quad(lambda t: np.sin(t)/t, 0, x)[0]
@@ -127,12 +204,14 @@ def patch_impedance(w, l, r, h, f0):
     rin = rin0 * np.cos(np.pi * r / l)**2
     print("l0={:.4f} g1={:.4e} g12={:.4e} rin0={:.2f} rin={:.2f}"
           .format(l0, g1, g12, rin0, rin))
+    return rin
 
 
 def make_arrays(specs):
     """
     For each item in specs, generate the antenna array, and tile them
     vertically.
+    Returns feedpoints, cutouts, and zones, suitable for generate_pcb.
     """
     y = 20e-3
     cutouts = []
@@ -141,7 +220,7 @@ def make_arrays(specs):
     for spec in specs:
         fp, co, p, s = make_array(spec)
         h = co[0][1] - co[1][1]
-        y += h/2
+        y -= co[1][1]
         w = co[0][0] - co[2][0]
         x = -w/2 + 20e-3
         cutouts.append(translate(co, x, y))
@@ -159,14 +238,11 @@ def make_array(spec):
     """
     patches = patch_array(spec)
     n = len(patches)
-    strips = microstrip_tree(spec, n)
-    layers = np.log2(n)
-    if layers == 0:
-        layers = 1
-    feedpoint = [0, -spec['l']/2 - layers*feed_space + 1e-4]
-    y1 = spec['l']/2 + 5e-3
-    y2 = -spec['l']/2 - layers*feed_space - 5e-3
-    w = spec['d'] * np.pi
+    strips, height = microstrip_tree(spec, n)
+    feedpoint = [0, -height + 0.1e-3]
+    y1 = spec['l_patch']/2 + 5e-3
+    y2 = -height - 5e-3
+    w = spec['w_array']
     cutout = [(-w/2, y1), (-w/2, y2), (w/2, y2), (w/2, y1)]
 
     return feedpoint, cutout, patches, strips
@@ -177,10 +253,10 @@ def patch_array(spec):
     Make an array of patches such that we have a power of two number of patches
     and they fill the width as best as possible.
     """
-    w_body = np.pi * spec['d']
-    n = int(2**(np.floor(np.log2(w_body / spec['w']))))
+    w_body = spec['w_array']
+    n = int(2**(np.floor(np.log2(w_body / spec['w_patch']))))
     spacing = w_body / n
-    patch = generate_patch(spec['w'], spec['l'],
+    patch = generate_patch(spec['w_patch'], spec['l_patch'],
                            spec['w_inset'], spec['l_inset'],
                            spec['r_corner'])
     array = []
@@ -193,38 +269,98 @@ def patch_array(spec):
 def microstrip_tree(spec, n):
     """
     Make a tree of microstrip to connect up antennas.
+    Returns a list of microstrip patches, and the height of the centrepoint of
+    the top layer of the tree.
     """
-    # Compute microstrip width for 50R match
-    # TODO this is probably not the best match or the best formula
+    feed = spec['feed']
     h = spec['h']
-    er = spec['e_r']
-    t_copper = spec['t_copper']
-    w_f = (7.48 * h)/(np.exp(np.sqrt(0.33 * (er + 1.41)))) - 1.25 * t_copper
-    #w_f = 0.39e-3
-
-    spacing = np.pi * spec['d'] / n
-
+    spacing = spec['w_array'] / n
+    y = -spec['l_patch']/2 + spec['l_inset']
     strips = []
 
+    # Bypass the tree for a single patch with a direct feed
     if n == 1:
-        y1 = -spec['l']/2 - feed_space
-        return [generate_feedline([(0, 0), (0, y1)], w_f, h)]
+        w = feed[0][0][0][0]
+        y1 = -spec['l_patch']/2 + spec['l_inset']
+        y2 = y1 - feed[0][0][0][1]
+        return [generate_feedline([(0, y1), (0, y2)], w, h)], -y2
 
+    # Walk the tree, from the bottom up
     for layer in range(int(np.log2(n))):
-        y1 = -spec['l']/2 - (layer+1)*feed_space
-        y2 = y1 + feed_space
+        # Pick either the patch-to-first-T or the general T-to-T spec
         if layer == 0:
-            y2 = 0.0
+            lspec = feed[0]
+        else:
+            lspec = feed[1]
+
+        # Consider each pair of child objects
         pairs = 2**(np.log2(n) - layer - 1)
         pairspace = spacing * 2**layer
         for i in range(int(pairs)):
             mid = (2*i + 1 - pairs) * pairspace
             x1 = mid - pairspace/2
             x2 = mid + pairspace/2
-            strips.append(generate_feedline(
-                [(x1, y2), (x1, y1), (x2, y1), (x2, y2)], w_f, h))
+            p, y2 = microstrip_l(x1, mid, y, lspec, h)
+            strips += p
+            p, y2 = microstrip_l(x2, mid, y, lspec, h)
+            strips += p
 
-    return strips
+        y = y2
+
+    return strips, -y
+
+
+def microstrip_l(x, x2, y, lspec, h):
+    """
+    Draw a microstrip upside-down-L shape from x to x2, starting at y,
+    and according to lspec (a list of two lists; the first a list of vertical
+    segments and the second a list of horizontal segments, each segment with a
+    width and a length).
+
+    Returns a list of patches and the new height.
+    """
+
+    # Store generated strips
+    strips = []
+
+    # Emit a strip whenever the current width changes
+    w = None
+
+    # Store points to draw current strip between
+    points = [(x, y)]
+
+    # Compute the horizontal direction
+    hdir = 1 if x2 > x else -1
+
+    # Process each bit of vertical strip
+    for vspec in lspec[0]:
+        if w is None:
+            w = vspec[0]
+        elif w != vspec[0]:
+            strips.append(generate_feedline(points, w, h))
+            points = [(x, y)]
+            w = vspec[0]
+        y -= vspec[1]
+        points.append((x, y))
+
+    # Process the horizontal strips
+    for hspec in lspec[1]:
+        if w is None:
+            w = hspec[0]
+        elif w != hspec[0]:
+            strips.append(generate_feedline(points, w, h))
+            points = [(x, y)]
+            w = hspec[0]
+        dx = hspec[1]
+        if dx is None:
+            dx = abs(x2 - x)
+        x += dx * hdir
+        points.append((x, y))
+
+    # Generate last strip
+    strips.append(generate_feedline(points, w, h))
+
+    return strips, y
 
 
 def direction(pa, pb):
