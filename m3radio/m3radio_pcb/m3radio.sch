@@ -904,7 +904,6 @@ NoConn ~ 1600 3900
 NoConn ~ 1600 4000
 NoConn ~ 1600 4100
 NoConn ~ 2600 4500
-NoConn ~ 2600 4300
 NoConn ~ 2600 4200
 NoConn ~ 2600 4100
 NoConn ~ 2600 4000
@@ -1580,10 +1579,8 @@ Text Label 9400 2150 2    60   ~ 0
 ANT_EN
 Wire Wire Line
 	9500 2150 9400 2150
-Text Label 1350 3400 2    60   ~ 0
+Text Label 2700 4300 0    60   ~ 0
 ANT_EN
-Wire Wire Line
-	1600 3400 1350 3400
 $Comp
 L R R2
 U 1 1 576A742B
@@ -1705,4 +1702,21 @@ Wire Wire Line
 	2700 3500 2600 3500
 Text Notes 9600 1500 0    59   ~ 0
 App note: see hardware integration \nmanual, figure 3.4.2.1 for \ncircuit diagram
+Wire Wire Line
+	2600 4300 2700 4300
+NoConn ~ 1600 3400
+$Comp
+L PWR #FLG040
+U 1 1 576DCF29
+P 8950 1650
+F 0 "#FLG040" H 8950 1810 50  0001 C CNN
+F 1 "PWR" H 8950 1740 50  0000 C CNN
+F 2 "" H 8950 1650 50  0001 C CNN
+F 3 "" H 8950 1650 50  0001 C CNN
+	1    8950 1650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8950 1650 8900 1650
+Connection ~ 8900 1650
 $EndSCHEMATC
