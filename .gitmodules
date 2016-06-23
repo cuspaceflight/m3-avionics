@@ -1,3 +1,6 @@
 [submodule "agg-kicad"]
 	path = agg-kicad
 	url = https://github.com/adamgreig/agg-kicad.git
+[submodule "m3debug/blackmagic"]
+	path = m3debug/blackmagic
+	url = git@github.com:cuspaceflight/blackmagic.git
