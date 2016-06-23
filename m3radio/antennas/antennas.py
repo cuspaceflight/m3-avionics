@@ -103,10 +103,10 @@ antennas = [
     {
         "w_array": 44e-3 * np.pi,
         "feed": feed_dart_telemetry,
-        "w_patch": 116e-3,
-        "l_patch": 104e-3,
+        "w_patch": 114e-3,
+        "l_patch": 102.2e-3,
         "w_inset": 10e-3,
-        "l_inset": 37e-3,
+        "l_inset": 38.2e-3,
         "r_corner": None,
         "h": 0.7e-3,
     },
@@ -126,7 +126,7 @@ antennas = [
         "w_array": 112e-3 * np.pi,
         "feed": feed_booster_telemetry,
         "w_patch": 114e-3,
-        "l_patch": 104e-3,
+        "l_patch": 102.2e-3,
         "w_inset": 3e-3,
         "l_inset": 30e-3,
         "r_corner": None,
@@ -149,13 +149,25 @@ test_antennas = [
 
     # 8-big panel of GPS antennas
     {
-        "w_array": 500e-3,
+        "w_array": 224e-3 * np.pi,
         "feed": feed_booster_gps,
         "w_patch": 57.48e-3,
         "l_patch": 57.48e-3,
         "w_inset": 0,
         "l_inset": 0,
         "r_corner": 2e-3,
+        "h": 0.7e-3,
+    },
+
+    # 4-big panel of telem antennas
+    {
+        "w_array": 112e-3 * np.pi,
+        "feed": feed_booster_telemetry,
+        "w_patch": 114e-3,
+        "l_patch": 104e-3,
+        "w_inset": 3e-3,
+        "l_inset": 30e-3,
+        "r_corner": None,
         "h": 0.7e-3,
     },
 
@@ -577,7 +589,7 @@ def generate_pcb(feedpoints, cuts, zones, drawings):
             ["tstamp", 0],
             ["hatch", "edge", 0.5],
             ["connect_pads", ["clearance", 0.3]],
-            ["min_thickness", 0.01],
+            ["min_thickness", 0.05],
             ["fill",
                 "yes",
                 ["arc_segments", 32],
