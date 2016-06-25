@@ -124,7 +124,7 @@ Text Label 2800 2400 0    60   ~ 0
 Radio_SCLK
 Text Label 2800 2600 0    60   ~ 0
 Radio_SDI
-Text Label 2800 2200 0    60   ~ 0
+Text Label 1500 4200 2    60   ~ 0
 Radio_nIRQ
 Text Label 2800 2500 0    60   ~ 0
 Radio_SDO
@@ -904,7 +904,6 @@ NoConn ~ 1600 3900
 NoConn ~ 1600 4000
 NoConn ~ 1600 4100
 NoConn ~ 2600 4500
-NoConn ~ 2600 4200
 NoConn ~ 2600 4100
 NoConn ~ 2600 4000
 NoConn ~ 2600 3900
@@ -958,8 +957,6 @@ $EndComp
 NoConn ~ 2600 1100
 NoConn ~ 1600 3500
 NoConn ~ 2600 3200
-NoConn ~ 1600 4200
-NoConn ~ 1600 4300
 $Comp
 L LED D101
 U 1 1 56C564CF
@@ -991,7 +988,7 @@ F 6 "Value" H 9200 1400 60  0001 C CNN "Fieldname"
 	1    9200 1400
 	1    0    0    -1  
 $EndComp
-Text Label 8850 2300 0    60   ~ 0
+Text Label 8850 2400 0    60   ~ 0
 GPS_RESET_N
 Text Label 1350 3300 2    60   ~ 0
 GPS_RESET_N
@@ -1096,13 +1093,11 @@ Wire Notes Line
 Wire Notes Line
 	4300 550  4300 7800
 Wire Notes Line
-	500  5200 4300 5200
+	500  5200 7300 5200
 Wire Wire Line
 	1350 3200 1600 3200
 Wire Wire Line
 	1350 3100 1600 3100
-Wire Wire Line
-	2600 2200 2800 2200
 Wire Wire Line
 	2600 2300 2800 2300
 Wire Wire Line
@@ -1483,8 +1478,6 @@ Wire Wire Line
 Wire Wire Line
 	1400 2800 1600 2800
 Wire Wire Line
-	8850 2300 8750 2300
-Wire Wire Line
 	1600 3300 1350 3300
 Wire Wire Line
 	8750 1500 9100 1500
@@ -1557,7 +1550,6 @@ Wire Wire Line
 	9500 1950 8900 1950
 Wire Wire Line
 	8900 1950 8900 1600
-NoConn ~ 9500 2250
 $Comp
 L GND #PWR037
 U 1 1 576A3CFF
@@ -1576,11 +1568,9 @@ Wire Wire Line
 Wire Wire Line
 	9400 2550 9500 2550
 Text Label 9400 2150 2    60   ~ 0
-ANT_EN
+ANT_~EN
 Wire Wire Line
 	9500 2150 9400 2150
-Text Label 2700 4300 0    60   ~ 0
-ANT_EN
 $Comp
 L R R2
 U 1 1 576A742B
@@ -1692,18 +1682,16 @@ Wire Wire Line
 	8550 5250 8700 5250
 Wire Wire Line
 	8550 5400 8700 5400
-Text Label 2700 3500 0    60   ~ 0
+Text Label 1500 4300 2    60   ~ 0
 Radio_GPIO1
 Text Label 2700 3400 0    60   ~ 0
 Radio_SDN
 Wire Wire Line
 	2600 3400 2700 3400
-Wire Wire Line
-	2700 3500 2600 3500
 Text Notes 9600 1500 0    59   ~ 0
 App note: see hardware integration \nmanual, figure 3.4.2.1 for \ncircuit diagram
 Wire Wire Line
-	2600 4300 2700 4300
+	2600 4300 2750 4300
 NoConn ~ 1600 3400
 $Comp
 L PWR #FLG040
@@ -1719,4 +1707,132 @@ $EndComp
 Wire Wire Line
 	8950 1650 8900 1650
 Connection ~ 8900 1650
+$Comp
+L 1v8 #PWR041
+U 1 1 576EF247
+P 6200 5600
+F 0 "#PWR041" H 6200 5710 50  0001 L CNN
+F 1 "1v8" H 6200 5690 50  0000 C CNN
+F 2 "" H 6200 5600 60  0000 C CNN
+F 3 "" H 6200 5600 60  0000 C CNN
+	1    6200 5600
+	1    0    0    -1  
+$EndComp
+Text Notes 4600 5500 0    118  ~ 0
+1v8 power
+$Comp
+L NCP4620 U1
+U 1 1 576F086E
+P 5250 5650
+F 0 "U1" H 5700 5750 60  0000 C CNN
+F 1 "NCP4620" H 5700 5350 60  0000 C CNN
+F 2 "agg:SC-70-5" H 5700 5150 60  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/1878393.pdf" H 5400 5250 60  0001 C CNN
+F 4 "2464259" H 5700 5050 60  0001 C CNN "Farnell"
+F 5 "Value" H 5700 4950 60  0001 C CNN "Fieldname"
+F 6 "Value" H 5700 5000 60  0001 C CNN "Digikey"
+	1    5250 5650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6150 5650 6250 5650
+Wire Wire Line
+	6200 5650 6200 5600
+Wire Wire Line
+	5150 5650 5250 5650
+$Comp
+L 3v3 #PWR042
+U 1 1 576F17CB
+P 5150 5650
+F 0 "#PWR042" H 5150 5760 50  0001 L CNN
+F 1 "3v3" H 5150 5740 50  0000 C CNN
+F 2 "" H 5150 5650 60  0000 C CNN
+F 3 "" H 5150 5650 60  0000 C CNN
+	1    5150 5650
+	1    0    0    -1  
+$EndComp
+Connection ~ 5200 5650
+$Comp
+L C C7
+U 1 1 576F3062
+P 5200 5850
+F 0 "C7" H 5250 5920 50  0000 C CNN
+F 1 "1uF" H 5200 5800 50  0000 C CNN
+F 2 "agg:0402" H 5200 5850 50  0001 C CNN
+F 3 "" H 5200 5850 50  0001 C CNN
+F 4 "Value" H 5200 5850 60  0001 C CNN "Digikey"
+F 5 "2496814" H 5200 5850 60  0001 C CNN "Farnell"
+F 6 "Value" H 5200 5850 60  0001 C CNN "Fieldname"
+	1    5200 5850
+	0    -1   -1   0   
+$EndComp
+$Comp
+L C C8
+U 1 1 576F3ED0
+P 6250 5750
+F 0 "C8" H 6300 5820 50  0000 C CNN
+F 1 "1uF" H 6250 5700 50  0000 C CNN
+F 2 "agg:0402" H 6250 5750 50  0001 C CNN
+F 3 "" H 6250 5750 50  0001 C CNN
+F 4 "Value" H 6250 5750 60  0001 C CNN "Digikey"
+F 5 "2496814" H 6250 5750 60  0001 C CNN "Farnell"
+F 6 "Value" H 6250 5750 60  0001 C CNN "Fieldname"
+	1    6250 5750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR043
+U 1 1 576F4B11
+P 6250 5800
+F 0 "#PWR043" H 6120 5840 50  0001 L CNN
+F 1 "GND" H 6250 5700 50  0000 C CNN
+F 2 "" H 6250 5800 60  0000 C CNN
+F 3 "" H 6250 5800 60  0000 C CNN
+	1    6250 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR044
+U 1 1 576F5176
+P 5200 5900
+F 0 "#PWR044" H 5070 5940 50  0001 L CNN
+F 1 "GND" H 5200 5800 50  0000 C CNN
+F 2 "" H 5200 5900 60  0000 C CNN
+F 3 "" H 5200 5900 60  0000 C CNN
+	1    5200 5900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5250 5750 5200 5750
+Wire Wire Line
+	5200 5750 5200 5650
+Wire Wire Line
+	5200 5850 5200 5900
+Wire Wire Line
+	5200 5850 5250 5850
+Wire Wire Line
+	6250 5750 6250 5800
+Connection ~ 6200 5650
+Wire Notes Line
+	7300 6300 4300 6300
+NoConn ~ 2600 2200
+NoConn ~ 2600 3500
+Wire Wire Line
+	1500 4200 1600 4200
+Wire Wire Line
+	1500 4300 1600 4300
+Wire Wire Line
+	8850 2400 8750 2400
+Wire Wire Line
+	8750 2400 8750 2300
+Text Label 9400 2250 2    60   ~ 0
+ANT_~FLAG
+Wire Wire Line
+	9400 2250 9500 2250
+Text Label 2750 4300 0    60   ~ 0
+ANT_~EN
+Text Label 2750 4200 0    60   ~ 0
+ANT_~FLAG
+Wire Wire Line
+	2600 4200 2750 4200
 $EndSCHEMATC
