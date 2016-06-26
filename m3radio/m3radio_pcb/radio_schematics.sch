@@ -71,9 +71,7 @@ F 0 "C6" H 1950 2420 50  0000 C CNN
 F 1 "1u" H 1950 2280 50  0000 C CNN
 F 2 "agg:0402" H 1900 2350 50  0001 C CNN
 F 3 "" H 1900 2350 50  0001 C CNN
-F 4 "Value" H 1900 2350 60  0001 C CNN "Digikey"
 F 5 "2496814" H 1900 2350 60  0001 C CNN "Farnell"
-F 6 "Value" H 1900 2350 60  0001 C CNN "Fieldname"
 	1    1900 2350
 	0    1    1    0   
 $EndComp
@@ -85,9 +83,7 @@ F 0 "C202" H 1750 2420 50  0000 C CNN
 F 1 "100n" H 1750 2280 50  0000 C CNN
 F 2 "agg:0402" H 1700 2350 50  0001 C CNN
 F 3 "" H 1700 2350 50  0001 C CNN
-F 4 "Value" H 1700 2350 60  0001 C CNN "Digikey"
 F 5 "2496771" H 1700 2350 60  0001 C CNN "Farnell"
-F 6 "Value" H 1700 2350 60  0001 C CNN "Fieldname"
 	1    1700 2350
 	0    1    1    0   
 $EndComp
@@ -99,9 +95,7 @@ F 0 "C201" H 1500 2420 50  0000 C CNN
 F 1 "100p" H 1500 2280 50  0000 C CNN
 F 2 "agg:0402" H 1450 2350 50  0001 C CNN
 F 3 "" H 1450 2350 50  0001 C CNN
-F 4 "Value" H 1450 2350 60  0001 C CNN "Digikey"
 F 5 "2496792" H 1450 2350 60  0001 C CNN "Farnell"
-F 6 "Value" H 1450 2350 60  0001 C CNN "Fieldname"
 	1    1450 2350
 	0    1    1    0   
 $EndComp
@@ -125,7 +119,6 @@ F 0 "L201" H 6300 4000 50  0000 C CNN
 F 1 "120nH" H 6300 3900 50  0000 C CNN
 F 2 "agg:0603-L" H 6250 3950 50  0001 C CNN
 F 3 "http://www.farnell.com/datasheets/1327494.pdf" H 6250 3950 50  0001 C CNN
-F 4 "Value" H 6250 3950 60  0001 C CNN "Digikey"
 F 5 "1865812" H 6250 3950 60  0001 C CNN "Farnell"
 	1    6250 3950
 	0    1    1    0   
@@ -138,9 +131,7 @@ F 0 "C204" H 6550 4270 50  0000 C CNN
 F 1 "36pF" H 6500 4100 50  0000 C CNN
 F 2 "agg:0402" H 6500 4200 50  0001 C CNN
 F 3 "" H 6500 4200 50  0001 C CNN
-F 4 "Value" H 6500 4200 60  0001 C CNN "Digikey"
 F 5 "1865427" H 6500 4200 60  0001 C CNN "Farnell"
-F 6 "Value" H 6500 4200 60  0001 C CNN "Fieldname"
 	1    6500 4200
 	1    0    0    -1  
 $EndComp
@@ -152,7 +143,6 @@ F 0 "L204" H 6750 4250 50  0000 C CNN
 F 1 "6.8nH" H 6750 4100 50  0000 C CNN
 F 2 "agg:0603-L" H 6700 4200 50  0001 C CNN
 F 3 "http://www.farnell.com/datasheets/321058.pdf" H 6700 4200 50  0001 C CNN
-F 4 "Value" H 6700 4200 60  0001 C CNN "Digikey"
 F 5 "1515395" H 6700 4200 60  0001 C CNN "Farnell"
 	1    6700 4200
 	1    0    0    -1  
@@ -165,9 +155,7 @@ F 0 "C205" H 6600 4670 50  0000 C CNN
 F 1 "1.2pF" H 6600 4530 50  0000 C CNN
 F 2 "agg:0402" H 6550 4600 50  0001 C CNN
 F 3 "" H 6550 4600 50  0001 C CNN
-F 4 "Value" H 6550 4600 60  0001 C CNN "Digikey"
 F 5 "2218843" H 6550 4600 60  0001 C CNN "Farnell"
-F 6 "Value" H 6550 4600 60  0001 C CNN "Fieldname"
 	1    6550 4600
 	1    0    0    -1  
 $EndComp
@@ -179,9 +167,7 @@ F 0 "L202" H 6300 4800 50  0000 C CNN
 F 1 "18nH" H 6300 4700 50  0000 C CNN
 F 2 "agg:0603-L" H 6250 4750 50  0001 C CNN
 F 3 "" H 6250 4750 50  0001 C CNN
-F 4 "Value" H 6250 4750 60  0001 C CNN "Digikey"
 F 5 "2424720" H 6250 4750 60  0001 C CNN "Farnell"
-F 6 "Value" H 6250 4750 60  0001 C CNN "Fieldname"
 	1    6250 4750
 	0    1    1    0   
 $EndComp
@@ -193,7 +179,6 @@ F 0 "L203" H 6550 5050 50  0000 C CNN
 F 1 "22nH" H 6550 4950 50  0000 C CNN
 F 2 "agg:0603-L" H 6500 5000 50  0001 C CNN
 F 3 "http://www.farnell.com/datasheets/360119.pdf" H 6500 5000 50  0001 C CNN
-F 4 "Value" H 6500 5000 60  0001 C CNN "Digikey"
 F 5 "1711755" H 6500 5000 60  0001 C CNN "Farnell"
 	1    6500 5000
 	1    0    0    -1  
@@ -206,9 +191,7 @@ F 0 "C203" H 6300 5170 50  0000 C CNN
 F 1 "3pF" H 6300 5030 50  0000 C CNN
 F 2 "agg:0402" H 6250 5100 50  0001 C CNN
 F 3 "" H 6250 5100 50  0001 C CNN
-F 4 "Value" H 6250 5100 60  0001 C CNN "Digikey"
 F 5 "2210752" H 6250 5100 60  0001 C CNN "Farnell"
-F 6 "Value" H 6250 5100 60  0001 C CNN "Fieldname"
 	1    6250 5100
 	0    1    1    0   
 $EndComp
@@ -231,9 +214,7 @@ F 0 "C206" H 7350 4370 50  0000 C CNN
 F 1 "3.3pF" H 7350 4230 50  0000 C CNN
 F 2 "agg:0402" H 7300 4300 50  0001 C CNN
 F 3 "" H 7300 4300 50  0001 C CNN
-F 4 "Value" H 7300 4300 60  0001 C CNN "Digikey"
 F 5 "2434610" H 7300 4300 60  0001 C CNN "Farnell"
-F 6 "Value" H 7300 4300 60  0001 C CNN "Fieldname"
 	1    7300 4300
 	0    1    1    0   
 $EndComp
@@ -245,9 +226,7 @@ F 0 "C207" H 7650 4370 50  0000 C CNN
 F 1 "10pF" H 7650 4230 50  0000 C CNN
 F 2 "agg:0402" H 7600 4300 50  0001 C CNN
 F 3 "" H 7600 4300 50  0001 C CNN
-F 4 "Value" H 7600 4300 60  0001 C CNN "Digikey"
 F 5 "2496790" H 7600 4300 60  0001 C CNN "Farnell"
-F 6 "Value" H 7600 4300 60  0001 C CNN "Fieldname"
 	1    7600 4300
 	0    1    1    0   
 $EndComp
@@ -259,9 +238,7 @@ F 0 "C208" H 7950 4370 50  0000 C CNN
 F 1 "4.7pF" H 7950 4230 50  0000 C CNN
 F 2 "agg:0402" H 7900 4300 50  0001 C CNN
 F 3 "" H 7900 4300 50  0001 C CNN
-F 4 "Value" H 7900 4300 60  0001 C CNN "Digikey"
 F 5 "2434644" H 7900 4300 60  0001 C CNN "Farnell"
-F 6 "Value" H 7900 4300 60  0001 C CNN "Fieldname"
 	1    7900 4300
 	0    1    1    0   
 $EndComp
@@ -273,7 +250,6 @@ F 0 "L206" H 7750 4250 50  0000 C CNN
 F 1 "6.8nH" H 7750 4150 50  0000 C CNN
 F 2 "agg:0603-L" H 7700 4200 50  0001 C CNN
 F 3 "http://www.farnell.com/datasheets/321058.pdf" H 7700 4200 50  0001 C CNN
-F 4 "Value" H 7700 4200 60  0001 C CNN "Digikey"
 F 5 "1515395" H 7700 4200 60  0001 C CNN "Farnell"
 	1    7700 4200
 	1    0    0    -1  
@@ -286,7 +262,6 @@ F 0 "L205" H 7450 4250 50  0000 C CNN
 F 1 "6.8nH" H 7450 4150 50  0000 C CNN
 F 2 "agg:0603-L" H 7400 4200 50  0001 C CNN
 F 3 "http://www.farnell.com/datasheets/321058.pdf" H 7400 4200 50  0001 C CNN
-F 4 "Value" H 7400 4200 60  0001 C CNN "Digikey"
 F 5 "1515395" H 7400 4200 60  0001 C CNN "Farnell"
 	1    7400 4200
 	1    0    0    -1  
@@ -314,9 +289,7 @@ F 0 "P201" H 8500 4300 50  0000 C CNN
 F 1 "COAX" H 8500 4050 50  0000 C CNN
 F 2 "M3radio:U.FL-R-SMT-1" H 8500 3990 50  0001 C CNN
 F 3 "http://www.farnell.com/datasheets/1947917.pdf" H 8600 4100 50  0001 C CNN
-F 4 "Value" H 8500 4200 60  0001 C CNN "Digikey"
 F 5 "3908021" H 8500 3920 50  0001 C CNN "Farnell"
-F 6 "Value" H 8500 4200 60  0001 C CNN "Fieldname"
 	1    8500 4200
 	1    0    0    -1  
 $EndComp
@@ -460,9 +433,7 @@ F 0 "Y201" H 1300 3000 50  0000 L CNN
 F 1 "TCXO" H 1300 2700 50  0000 L CNN
 F 2 "agg:TG-5006CG" H 1300 2900 50  0001 C CNN
 F 3 "http://www.farnell.com/datasheets/1804153.pdf" H 1300 2900 50  0001 C CNN
-F 4 "Value" H 1500 2900 60  0001 C CNN "Digikey"
 F 5 "2405785" H 1300 2600 50  0001 L CNN "Farnell"
-F 6 "Value" H 1500 2900 60  0001 C CNN "Fieldname"
 	1    1500 2900
 	1    0    0    -1  
 $EndComp
@@ -523,9 +494,7 @@ F 0 "C4" H 1150 2970 50  0000 C CNN
 F 1 "10nF" H 1150 2830 50  0000 C CNN
 F 2 "agg:0402" H 1100 2900 50  0001 C CNN
 F 3 "" H 1100 2900 50  0001 C CNN
-F 4 "Value" H 1100 2900 60  0001 C CNN "Digikey"
 F 5 "1414575" H 1100 2900 60  0001 C CNN "Farnell"
-F 6 "Value" H 1100 2900 60  0001 C CNN "Fieldname"
 	1    1100 2900
 	0    1    1    0   
 $EndComp
@@ -539,9 +508,7 @@ F 0 "C5" H 2150 2970 50  0000 C CNN
 F 1 "100pF" H 2150 2830 50  0000 C CNN
 F 2 "agg:0402" H 2100 2900 50  0001 C CNN
 F 3 "" H 2100 2900 50  0001 C CNN
-F 4 "Value" H 2100 2900 60  0001 C CNN "Digikey"
 F 5 "2496792" H 2100 2900 60  0001 C CNN "Farnell"
-F 6 "Value" H 2100 2900 60  0001 C CNN "Fieldname"
 	1    2100 2900
 	-1   0    0    1   
 $EndComp
