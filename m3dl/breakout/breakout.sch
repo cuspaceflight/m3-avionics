@@ -407,7 +407,7 @@ Wire Wire Line
 Wire Wire Line
 	1550 2100 1550 2200
 Wire Wire Line
-	1200 2100 1150 2100
+	1050 2100 1200 2100
 Wire Wire Line
 	1150 2100 1150 2200
 Wire Wire Line
@@ -941,4 +941,16 @@ Wire Notes Line
 	500  4600 5100 4600
 Wire Notes Line
 	5100 4600 5100 2600
+$Comp
+L PWR #FLG?
+U 1 1 57764EA9
+P 1050 2100
+F 0 "#FLG?" H 1050 2260 50  0001 C CNN
+F 1 "PWR" H 1050 2190 50  0000 C CNN
+F 2 "" H 1050 2100 50  0001 C CNN
+F 3 "" H 1050 2100 50  0001 C CNN
+	1    1050 2100
+	0    -1   -1   0   
+$EndComp
+Connection ~ 1150 2100
 $EndSCHEMATC
