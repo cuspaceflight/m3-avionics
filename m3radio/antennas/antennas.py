@@ -81,7 +81,7 @@ feed_dart_gps = [
 feed_dart_telemetry = [
     [  # Patch to feed directly
         [  # Vertical
-            (strip_w_50r, 50e-3),  # Plain 50R feedline up to the feedpoint
+            (strip_w_50r, 30e-3),  # Plain 50R feedline up to the feedpoint
         ],
         [],
     ],
@@ -103,10 +103,10 @@ antennas = [
     {
         "w_array": 44e-3 * np.pi,
         "feed": feed_dart_telemetry,
-        "w_patch": 114e-3,
-        "l_patch": 102.2e-3,
+        "w_patch": 130e-3,
+        "l_patch": 104e-3,
         "w_inset": 10e-3,
-        "l_inset": 38.2e-3,
+        "l_inset": 21.36e-3,
         "r_corner": None,
         "h": 0.7e-3,
     },
