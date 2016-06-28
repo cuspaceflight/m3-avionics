@@ -6,11 +6,11 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 3
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
+Title "M3PSU - DC/DC Converter Board 2"
+Date "2016-06-28"
+Rev "1"
+Comp "CU Spaceflight"
+Comment1 "Drawn by: Levin Tan, Jamie Wood"
 Comment2 ""
 Comment3 ""
 Comment4 ""
@@ -19,8 +19,6 @@ Text Notes 5100 2800 0    60   ~ 0
 AUX 1 (5V @ 1A)\nIMU ADIS (5V @ 0.3A)\nAddress 0x42
 Text Notes 5100 4050 0    60   ~ 0
 CAN transceivers (5V @ 0.1A)\nIMU Other (3.3V @ 0.3A)\nAddress 0x43
-Text Notes 8200 6950 0    240  ~ 0
-BOARD 2
 $Sheet
 S 5100 2900 1250 550 
 U 56E22E4E

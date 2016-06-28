@@ -6,11 +6,11 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 3 3
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
+Title "M3PSU - DC/DC Converter Board 2 - Converter 2"
+Date "2016-06-28"
+Rev "1"
+Comp "CU Spaceflight"
+Comment1 "Drawn by: Levin Tan, Jamie Wood"
 Comment2 ""
 Comment3 ""
 Comment4 ""
