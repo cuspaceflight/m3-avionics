@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/adam/Projects/m3-avionics/m3dl/breakout/breakout.sch</source>
+    <date>Tue 28 Jun 2016 01:23:38 BST</date>
+    <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>Martlet 3 - Breakout Board</title>
+        <company>Cambridge University Space Flight</company>
+        <rev>1</rev>
+        <date>2016-06-12</date>
+        <source>breakout.sch</source>
+        <comment number="1" value="Matt Coates"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="J2">
+      <value>EAST TOP</value>
+      <footprint>agg:TFML-110-02-L-D</footprint>
+      <libsource lib="breakout-cache" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C4B296</tstamp>
+    </comp>
+    <comp ref="J4">
+      <value>EAST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <libsource lib="breakout-cache" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C4B2BD</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>WEST TOP</value>
+      <footprint>agg:TFML-110-02-L-D</footprint>
+      <libsource lib="breakout-cache" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C4B2D4</tstamp>
+    </comp>
+    <comp ref="J3">
+      <value>WEST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <libsource lib="breakout-cache" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C4B2DB</tstamp>
+    </comp>
+    <comp ref="J5">
+      <value>North</value>
+      <footprint>agg:S08B-PASK-2</footprint>
+      <fields>
+        <field name="Farnell">1830753</field>
+      </fields>
+      <libsource lib="breakout-cache" part="CONN_01x08"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575DDBC7</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="breakout-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575DF94A</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="breakout-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575DF9BA</tstamp>
+    </comp>
+    <comp ref="D3">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="breakout-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575DF9E8</tstamp>
+    </comp>
+    <comp ref="J6">
+      <value>South</value>
+      <footprint>agg:S08B-PASK-2</footprint>
+      <fields>
+        <field name="Farnell">1830753</field>
+      </fields>
+      <libsource lib="breakout-cache" part="CONN_01x08"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575E1309</tstamp>
+    </comp>
+    <comp ref="D5">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="breakout-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575E1326</tstamp>
+    </comp>
+    <comp ref="D6">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="breakout-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575E132D</tstamp>
+    </comp>
+    <comp ref="D7">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="breakout-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575E1334</tstamp>
+    </comp>
+    <comp ref="D8">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="breakout-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575E133B</tstamp>
+    </comp>
+    <comp ref="D9">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="breakout-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575E1677</tstamp>
+    </comp>
+    <comp ref="D4">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="breakout-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>575DF8D0</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="breakout-cache" part="CONN_01x08">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_01x08</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+        <pin num="7" name="7" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="breakout-cache" part="CONN_02x10">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_02x10</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+        <pin num="7" name="7" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+        <pin num="9" name="9" type="passive"/>
+        <pin num="10" name="10" type="passive"/>
+        <pin num="11" name="11" type="passive"/>
+        <pin num="12" name="12" type="passive"/>
+        <pin num="13" name="13" type="passive"/>
+        <pin num="14" name="14" type="passive"/>
+        <pin num="15" name="15" type="passive"/>
+        <pin num="16" name="16" type="passive"/>
+        <pin num="17" name="17" type="passive"/>
+        <pin num="18" name="18" type="passive"/>
+        <pin num="19" name="19" type="passive"/>
+        <pin num="20" name="20" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="breakout-cache" part="ESD_DIODE">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">ESD_DIODE</field>
+        <field name="Footprint">agg:0402</field>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="breakout-cache">
+      <uri>/home/adam/Projects/m3-avionics/m3dl/breakout/breakout-cache.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="/5v_AUX2">
+      <node ref="J4" pin="13"/>
+      <node ref="J2" pin="13"/>
+    </net>
+    <net code="2" name="/3v3_DL">
+      <node ref="J3" pin="11"/>
+      <node ref="J1" pin="11"/>
+    </net>
+    <net code="3" name="/5v_AUX1">
+      <node ref="J4" pin="11"/>
+      <node ref="J2" pin="11"/>
+    </net>
+    <net code="4" name="/5v_IMU">
+      <node ref="J2" pin="9"/>
+      <node ref="J4" pin="9"/>
+    </net>
+    <net code="5" name="/5v_RADIO">
+      <node ref="J2" pin="7"/>
+      <node ref="J4" pin="7"/>
+    </net>
+    <net code="6" name="GND">
+      <node ref="D4" pin="2"/>
+      <node ref="D9" pin="2"/>
+      <node ref="D8" pin="2"/>
+      <node ref="D7" pin="2"/>
+      <node ref="D6" pin="2"/>
+      <node ref="J2" pin="19"/>
+      <node ref="D5" pin="2"/>
+      <node ref="J4" pin="2"/>
+      <node ref="J3" pin="19"/>
+      <node ref="J1" pin="1"/>
+      <node ref="J6" pin="8"/>
+      <node ref="J1" pin="2"/>
+      <node ref="J6" pin="6"/>
+      <node ref="J6" pin="4"/>
+      <node ref="J4" pin="1"/>
+      <node ref="J6" pin="2"/>
+      <node ref="D2" pin="2"/>
+      <node ref="D3" pin="2"/>
+      <node ref="J4" pin="19"/>
+      <node ref="J2" pin="2"/>
+      <node ref="D1" pin="2"/>
+      <node ref="J2" pin="20"/>
+      <node ref="J4" pin="20"/>
+      <node ref="J1" pin="20"/>
+      <node ref="J5" pin="4"/>
+      <node ref="J1" pin="19"/>
+      <node ref="J3" pin="2"/>
+      <node ref="J3" pin="20"/>
+      <node ref="J2" pin="1"/>
+      <node ref="J5" pin="6"/>
+      <node ref="J5" pin="8"/>
+      <node ref="J3" pin="1"/>
+    </net>
+    <net code="7" name="/JTDI">
+      <node ref="J1" pin="8"/>
+      <node ref="J3" pin="8"/>
+    </net>
+    <net code="8" name="/RSVD2">
+      <node ref="J3" pin="17"/>
+      <node ref="J1" pin="17"/>
+    </net>
+    <net code="9" name="/RSVD1">
+      <node ref="J1" pin="12"/>
+      <node ref="J3" pin="12"/>
+    </net>
+    <net code="10" name="/3v3_AUX2">
+      <node ref="J3" pin="15"/>
+      <node ref="J1" pin="15"/>
+    </net>
+    <net code="11" name="/3v3_AUX1">
+      <node ref="J3" pin="13"/>
+      <node ref="J1" pin="13"/>
+    </net>
+    <net code="12" name="/CAN+">
+      <node ref="J1" pin="18"/>
+      <node ref="J3" pin="18"/>
+    </net>
+    <net code="13" name="/JTMS">
+      <node ref="J1" pin="4"/>
+      <node ref="J3" pin="4"/>
+    </net>
+    <net code="14" name="/JTCK">
+      <node ref="J1" pin="6"/>
+      <node ref="J3" pin="6"/>
+    </net>
+    <net code="15" name="/JTDR">
+      <node ref="J1" pin="10"/>
+      <node ref="J3" pin="10"/>
+    </net>
+    <net code="16" name="/3v3_PYRO">
+      <node ref="J3" pin="9"/>
+      <node ref="J1" pin="9"/>
+    </net>
+    <net code="17" name="/3v3_FC">
+      <node ref="J3" pin="7"/>
+      <node ref="J1" pin="7"/>
+    </net>
+    <net code="18" name="/3v3_RADIO">
+      <node ref="J1" pin="5"/>
+      <node ref="J3" pin="5"/>
+    </net>
+    <net code="19" name="/3v3_IMU">
+      <node ref="J3" pin="3"/>
+      <node ref="J1" pin="3"/>
+    </net>
+    <net code="20" name="/5v_CAN">
+      <node ref="J1" pin="14"/>
+      <node ref="J3" pin="14"/>
+    </net>
+    <net code="21" name="/CAN-">
+      <node ref="J1" pin="16"/>
+      <node ref="J3" pin="16"/>
+    </net>
+    <net code="22" name="/PWR">
+      <node ref="D7" pin="1"/>
+      <node ref="J4" pin="16"/>
+      <node ref="J6" pin="3"/>
+      <node ref="J2" pin="16"/>
+    </net>
+    <net code="23" name="/5v_CAM">
+      <node ref="J6" pin="5"/>
+      <node ref="D6" pin="1"/>
+      <node ref="J2" pin="15"/>
+      <node ref="J4" pin="15"/>
+    </net>
+    <net code="24" name="/CHARGE">
+      <node ref="J4" pin="17"/>
+      <node ref="J4" pin="18"/>
+      <node ref="J6" pin="7"/>
+      <node ref="D5" pin="1"/>
+      <node ref="J2" pin="18"/>
+      <node ref="J2" pin="17"/>
+    </net>
+    <net code="25" name="/PYRO4">
+      <node ref="J6" pin="1"/>
+      <node ref="D4" pin="1"/>
+      <node ref="J2" pin="14"/>
+      <node ref="J4" pin="14"/>
+    </net>
+    <net code="26" name="/PYRO2">
+      <node ref="J2" pin="10"/>
+      <node ref="J5" pin="5"/>
+      <node ref="D2" pin="1"/>
+      <node ref="J4" pin="10"/>
+    </net>
+    <net code="27" name="/PYRO3">
+      <node ref="J2" pin="12"/>
+      <node ref="J4" pin="12"/>
+      <node ref="J5" pin="7"/>
+      <node ref="D1" pin="1"/>
+    </net>
+    <net code="28" name="/PYRO_SI">
+      <node ref="J4" pin="5"/>
+      <node ref="J5" pin="2"/>
+      <node ref="D8" pin="1"/>
+      <node ref="J2" pin="6"/>
+      <node ref="J2" pin="5"/>
+      <node ref="J4" pin="6"/>
+    </net>
+    <net code="29" name="/PYRO_SO">
+      <node ref="J4" pin="4"/>
+      <node ref="J5" pin="1"/>
+      <node ref="D9" pin="1"/>
+      <node ref="J4" pin="3"/>
+      <node ref="J2" pin="3"/>
+      <node ref="J2" pin="4"/>
+    </net>
+    <net code="30" name="/PYRO1">
+      <node ref="J2" pin="8"/>
+      <node ref="J4" pin="8"/>
+      <node ref="D3" pin="1"/>
+      <node ref="J5" pin="3"/>
+    </net>
+  </nets>
+</export>

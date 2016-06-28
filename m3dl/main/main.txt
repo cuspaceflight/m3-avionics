@@ -1,0 +1,62 @@
+Bill Of Materials
+=================
+
+Source file: main.xml
+Date: 2016-06-17T17:27:39.662692
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J2     EAST TOP        agg:TFML-110-02-L-D
+J4     EAST BOT        agg:SFML-110-02-L-D-LC
+P1     SWD_TC          agg:TC2030-NL
+J1     WEST TOP        agg:TFML-110-02-L-D
+J3     WEST BOT        agg:SFML-110-02-L-D-LC
+J7     SOUTH BOT       agg:SFML-110-02-L-D-LC
+
+Inconsistent Order Codes
+------------------------
+
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+2502395,1,1x 100R R_0603
+2064363,1,1x STM32F405RxTx LQFP-64
+2496930,1,1x 4u7 C_0603
+2309035,2,2x 10p C_0603
+2506952,1,1x 26MHz XTAL-20x16
+2309108,4,4x 1k 0603-L
+2290328,2,2x LED 0603-LED
+1797012,2,2x 2u2 C_0603
+2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
+2502463,5,5x 47K R_0603
+2358234,1,1x MICROSD MICROSD_MOLEX_50339
+2496834,9,9x 100n C_0603
+2290329,1,1x LED 0603-LED
+1125374,1,1x USB Connector_Molex_PicoBla
+1865556,1,1x 1u C_0603
+
+
+Assembly BOM
+------------
+2502395              1   100R            R_0603          R2
+2064363              1   STM32F405RxTx   LQFP-64         IC1
+2496930              1   4u7             C_0603          C10
+2309035              2   10p             C_0603          C2 C3
+2506952              1   26MHz           XTAL-20x16      Y1
+2309108              4   1k              0603-L          R10 R3 R8 R9
+2290328              2   LED             0603-LED        D1 D2
+1797012              2   2u2             C_0603          C4 C5
+2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC2
+2502463              5   47K             R_0603          R1 R4 R5 R6 R7
+2358234              1   MICROSD         MICROSD_MOLEX_503398-1892 U1
+2496834              9   100n            C_0603          C1 C12 C13 C14 C16 C6 C7 C8 C9
+2290329              1   LED             0603-LED        D3
+1125374              1   USB             Connector_Molex_PicoBlade_53261-0471 J6
+1865556              1   1u              C_0603          C15
+
