@@ -13,6 +13,14 @@
   )
 
   (page A4)
+  (title_block
+    (title "M3PSU - Li-Ion Charger")
+    (date 2016-06-28)
+    (rev 1)
+    (company "CU Spaceflight")
+    (comment 1 "Drawn by: Levin Tan, Jamie Wood")
+  )
+
   (layers
     (0 F.Cu signal)
     (31 B.Cu signal)
