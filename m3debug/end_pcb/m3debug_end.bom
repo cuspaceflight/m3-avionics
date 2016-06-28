@@ -1,0 +1,46 @@
+Bill Of Materials
+=================
+
+Source file: m3debug_end.xml
+Date: 2016-06-15T00:17:04.947007
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    TFML-110-02-L-D: 
+      J2     EAST TOP        agg:TFML-110-02-L-D
+      J1     WEST TOP        agg:TFML-110-02-L-D
+    SFML-110-02-L-D-LC: 
+      J4     EAST BOT        agg:SFML-110-02-L-D-LC
+      J3     WEST BOT        agg:SFML-110-02-L-D-LC
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+2072575,1,1x 120 0402
+1022259,4,4x CONN_01x10 SIL-254P-10
+
+
+  Samtec
+  ~~~~~~
+TFML-110-02-L-D,2,2x J2 J1 TFML-110-02-L-D
+SFML-110-02-L-D-LC,2,2x J4 J3 SFML-110-02-L-D-LC
+
+
+Assembly BOM
+------------
+2072575              1   120             0402            R1
+1022259              4   CONN_01x10      SIL-254P-10     J5 J6 J7 J8
+TFML-110-02-L-D      2   WEST TOP,EAST TOP TFML-110-02-L-D J1 J2
+SFML-110-02-L-D-LC   2   EAST BOT,WEST BOT SFML-110-02-L-D-LC J3 J4
+

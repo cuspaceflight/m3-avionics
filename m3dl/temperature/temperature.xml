@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
+<<<<<<< HEAD
     <source>/home/matt/Documents/CUSF/m3-avionics/m3dl/temperature/temperature.sch</source>
     <date>Tue 28 Jun 2016 15:54:43 BST</date>
     <tool>Eeschema 4.0.2+e4-6225~38~ubuntu14.04.1-stable</tool>
+=======
+    <source>/home/adam/Projects/m3-avionics/m3dl/temperature/temperature.sch</source>
+    <date>Tue 28 Jun 2016 00:04:07 BST</date>
+    <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
+>>>>>>> 8c16febc3eeee1708c758ba67c8bcc6d0a7f64bf
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>m3dl - Temperature</title>
@@ -22,28 +28,28 @@
     <comp ref="J2">
       <value>EAST TOP</value>
       <footprint>agg:TFML-110-02-L-D</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56B8BFF0</tstamp>
     </comp>
     <comp ref="J4">
       <value>EAST BOT</value>
       <footprint>agg:SFML-110-02-L-D-LC</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56B8C017</tstamp>
     </comp>
     <comp ref="J1">
       <value>WEST TOP</value>
       <footprint>agg:TFML-110-02-L-D</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56B8C02E</tstamp>
     </comp>
     <comp ref="J3">
       <value>WEST BOT</value>
       <footprint>agg:SFML-110-02-L-D-LC</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56B8C035</tstamp>
     </comp>
@@ -84,7 +90,7 @@
       <fields>
         <field name="Digikey">LTC2983ILX#PBF-ND </field>
       </fields>
-      <libsource lib="agg-kicad" part="LTC2983"/>
+      <libsource lib="temperature-cache" part="LTC2983"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56BF0F99</tstamp>
     </comp>
@@ -151,14 +157,14 @@
     <comp ref="J5">
       <value>SOUTH TOP</value>
       <footprint>agg:TFML-110-02-L-D</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C973AA</tstamp>
     </comp>
     <comp ref="J6">
       <value>SOUTH BOT</value>
       <footprint>agg:SFML-110-02-L-D-LC</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C973B7</tstamp>
     </comp>
@@ -168,7 +174,7 @@
       <fields>
         <field name="Digikey">WM17007-ND </field>
       </fields>
-      <libsource lib="agg-kicad" part="CONN_02x07"/>
+      <libsource lib="temperature-cache" part="CONN_02x07"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56CCD539</tstamp>
     </comp>
@@ -178,7 +184,7 @@
       <fields>
         <field name="Farnell">1012259</field>
       </fields>
-      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <libsource lib="temperature-cache" part="CONN_01x02"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56CCDD65</tstamp>
     </comp>
@@ -188,7 +194,7 @@
       <fields>
         <field name="Farnell">1012259</field>
       </fields>
-      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <libsource lib="temperature-cache" part="CONN_01x02"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56CCDEFF</tstamp>
     </comp>
@@ -454,7 +460,7 @@
     </comp>
   </components>
   <libparts>
-    <libpart lib="agg-kicad" part="CONN_01x02">
+    <libpart lib="temperature-cache" part="CONN_01x02">
       <fields>
         <field name="Reference">J</field>
         <field name="Value">CONN_01x02</field>
@@ -464,7 +470,7 @@
         <pin num="2" name="2" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="agg-kicad" part="CONN_02x07">
+    <libpart lib="temperature-cache" part="CONN_02x07">
       <fields>
         <field name="Reference">J</field>
         <field name="Value">CONN_02x07</field>
@@ -486,7 +492,7 @@
         <pin num="14" name="14" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="agg-kicad" part="CONN_02x10">
+    <libpart lib="temperature-cache" part="CONN_02x10">
       <fields>
         <field name="Reference">J</field>
         <field name="Value">CONN_02x10</field>
@@ -550,7 +556,7 @@
         <pin num="2" name="A" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="agg-kicad" part="LTC2983">
+    <libpart lib="temperature-cache" part="LTC2983">
       <fields>
         <field name="Reference">IC</field>
         <field name="Value">LTC2983</field>
@@ -626,11 +632,11 @@
     </libpart>
   </libparts>
   <libraries>
+    <library logical="temperature-cache">
+      <uri>/home/adam/Projects/m3-avionics/m3dl/temperature/temperature-cache.lib</uri>
+    </library>
     <library logical="device">
       <uri>/usr/share/kicad/library/device.lib</uri>
-    </library>
-    <library logical="agg-kicad">
-      <uri>/home/matt/Documents/CUSF/m3-avionics/agg-kicad/agg-kicad.lib</uri>
     </library>
   </libraries>
   <nets>

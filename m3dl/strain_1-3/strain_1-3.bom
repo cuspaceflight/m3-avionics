@@ -1,0 +1,85 @@
+Bill Of Materials
+=================
+
+Source file: strain_1-3.xml
+Date: 2016-06-27T23:46:52.389645
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J2     EAST TOP        agg:TFML-110-02-L-D
+J4     EAST BOT        agg:SFML-110-02-L-D-LC
+J1     WEST TOP        agg:TFML-110-02-L-D
+J3     WEST BOT        agg:SFML-110-02-L-D-LC
+J5     SOUTH TOP       agg:TFML-110-02-L-D
+J6     SOUTH BOT       agg:SFML-110-02-L-D-LC
+
+Inconsistent Order Codes
+------------------------
+  RS
+  ~~
+    279-9285: 
+      J8     S3              Connectors_Molex:Connector_Molex_PicoBlade_53048-0410
+      J9     S2              Connectors_Molex:Connector_Molex_PicoBlade_53048-0410
+      J7     S1              Connectors_Molex:Connector_Molex_PicoBlade_53048-0410
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+2502447,3,3x 330 R_0603
+2368169,9,9x ESD_DIODE 0402
+1813443,6,6x 1n C_0603
+2462026,3,3x AD8226 MSOP-8
+2464412,1,1x NCP380 DFN-6-EP-ONSEMI
+2059339,3,3x 1.69K R_0603
+1865464,6,6x 8.2n C_0603
+1457729,3,3x 10n C_0603
+2502502,1,1x 110k 0402-L
+2211164,1,1x 10u 0603-L
+1333254,3,3x AD8541 SC-70-5
+1697388,6,6x 10K R_0603
+2059386,3,3x 6.04K R_0603
+2346884,2,2x 1u 0402-L
+1170763,3,3x 562R R_0603
+1170912,3,3x 17.8K R_0603
+1865539,6,6x 82n C_0603
+1858055,3,3x AD8656 MSOP-8
+2496834,12,12x 100n 0603-L
+9331662,3,3x 0R 0603
+2059366,6,6x 3.74K R_0603
+
+
+  RS
+  ~~
+279-9285,3,,3x--S2-S3-S1--Connector_Molex_PicoBlade_53048-0410--J8J9J7
+
+
+Assembly BOM
+------------
+2502447              3   330             R_0603          R10 R23 R9
+2368169              9   ESD_DIODE       0402            D1 D2 D3 D4 D5 D6 D7 D8 D9
+1813443              6   1n              C_0603          C1 C15 C17 C3 C4 C6
+2462026              3   AD8226          MSOP-8          IC1 IC3 IC6
+2464412              1   NCP380          DFN-6-EP-ONSEMI IC10
+2059339              3   1.69K           R_0603          R11 R12 R24
+1865464              6   8.2n            C_0603          C11 C12 C18 C20 C7 C8
+1457729              3   10n             C_0603          C16 C2 C5
+2502502              1   110k            0402-L          R32
+2211164              1   10u             0603-L          C34
+1333254              3   AD8541          SC-70-5         IC2 IC4 IC7
+1697388              6   10K             R_0603          R21 R22 R5 R6 R7 R8
+2059386              3   6.04K           R_0603          R13 R14 R25
+2346884              2   1u              0402-L          C35 C37
+1170763              3   562R            R_0603          R15 R16 R26
+1170912              3   17.8K           R_0603          R17 R18 R27
+1865539              6   82n             C_0603          C10 C13 C14 C19 C21 C9
+1858055              3   AD8656          MSOP-8          IC5 IC8 IC9
+2496834              12  100n            0603-L          C22 C23 C24 C25 C26 C27 C28 C29 C30 C31 C32 C33
+9331662              3   0R              0603            R28 R29 R30
+2059366              6   3.74K           R_0603          R1 R19 R2 R20 R3 R4
+279-9285             3   S2,S3,S1        Connector_Molex_PicoBlade_53048-0410 J7 J8 J9
+

@@ -1,0 +1,71 @@
+Bill Of Materials
+=================
+
+Source file: base.xml
+Date: 2016-06-28T00:38:17.285038
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J2     EAST TOP        agg:TFML-110-02-L-D
+P1     SWD_TC          agg:TC2030-NL
+J1     WEST TOP        agg:TFML-110-02-L-D
+
+Inconsistent Order Codes
+------------------------
+  Farnell
+  ~~~~~~~
+    1830734: 
+      J5     PYRO1           agg:B02B-PASK
+      J9     PYRO4           agg:B02B-PASK
+      J11    CHG             agg:B02B-PASK
+      J10    PWR             agg:B02B-PASK
+      J12    CAM             agg:B02B-PASK
+      J7     ARM             agg:B02B-PASK
+      J6     PYRO3           agg:B02B-PASK
+      J8     PYRO2           agg:B02B-PASK
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+1865556,1,1x 1u C_0603
+1797012,2,2x 2u2 C_0603
+2064363,1,1x STM32F405RxTx LQFP-64
+2496930,1,1x 4u7 C_0603
+2502395,1,1x 100R R_0603
+2368169,12,12x ESD_DIODE 0402
+9238603,1,1x 10K R_0603
+2309035,2,2x 10p C_0603
+1830737,1,1x USB B04B-PASK
+9238379,1,1x 120R R_0603
+2502463,1,1x 4K7 R_0603
+2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
+1830734,8,8x CAM ARM PYRO1 PYRO3 PWR PYR
+2496834,7,7x 100n C_0603
+2309108,1,1x 1K R_0603
+2506952,1,1x 26MHz XTAL-20x16
+
+
+Assembly BOM
+------------
+1865556              1   1u              C_0603          C6
+1797012              2   2u2             C_0603          C4 C5
+2064363              1   STM32F405RxTx   LQFP-64         IC1
+2496930              1   4u7             C_0603          C15
+2502395              1   100R            R_0603          R1
+2368169              12  ESD_DIODE       0402            D1 D10 D11 D12 D2 D3 D4 D5 D6 D7 D8 D9
+9238603              1   10K             R_0603          R3
+2309035              2   10p             C_0603          C2 C3
+1830737              1   USB             B04B-PASK       J13
+9238379              1   120R            R_0603          R5
+2502463              1   4K7             R_0603          R2
+2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC2
+1830734              8   CAM,ARM,PYRO1,PYRO3,PWR,PYRO2,CHG,PYRO4 B02B-PASK       J10 J11 J12 J5 J6 J7 J8 J9
+2496834              7   100n            C_0603          C1 C11 C12 C13 C16 C7 C8
+2309108              1   1K              R_0603          R4
+2506952              1   26MHz           XTAL-20x16      Y1
+
