@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>/home/matt/Documents/CUSF/m3-avionics/m3dl/temperature/temperature.sch</source>
-    <date>Tue 21 Jun 2016 16:54:00 BST</date>
-    <tool>Eeschema 4.0.2+e4-6225~38~ubuntu14.04.1-stable</tool>
+    <source>/home/adam/Projects/m3-avionics/m3dl/temperature/temperature.sch</source>
+    <date>Tue 28 Jun 2016 00:04:07 BST</date>
+    <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>m3dl - Temperature</title>
@@ -22,28 +22,28 @@
     <comp ref="J2">
       <value>EAST TOP</value>
       <footprint>agg:TFML-110-02-L-D</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56B8BFF0</tstamp>
     </comp>
     <comp ref="J4">
       <value>EAST BOT</value>
       <footprint>agg:SFML-110-02-L-D-LC</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56B8C017</tstamp>
     </comp>
     <comp ref="J1">
       <value>WEST TOP</value>
       <footprint>agg:TFML-110-02-L-D</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56B8C02E</tstamp>
     </comp>
     <comp ref="J3">
       <value>WEST BOT</value>
       <footprint>agg:SFML-110-02-L-D-LC</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56B8C035</tstamp>
     </comp>
@@ -84,7 +84,7 @@
       <fields>
         <field name="Farnell">2461149</field>
       </fields>
-      <libsource lib="agg-kicad" part="LTC2983"/>
+      <libsource lib="temperature-cache" part="LTC2983"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56BF0F99</tstamp>
     </comp>
@@ -151,14 +151,14 @@
     <comp ref="J5">
       <value>SOUTH TOP</value>
       <footprint>agg:TFML-110-02-L-D</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C973AA</tstamp>
     </comp>
     <comp ref="J6">
       <value>SOUTH BOT</value>
       <footprint>agg:SFML-110-02-L-D-LC</footprint>
-      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <libsource lib="temperature-cache" part="CONN_02x10"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C973B7</tstamp>
     </comp>
@@ -168,7 +168,7 @@
       <fields>
         <field name="Farnell">614890</field>
       </fields>
-      <libsource lib="agg-kicad" part="CONN_02x07"/>
+      <libsource lib="temperature-cache" part="CONN_02x07"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56CCD539</tstamp>
     </comp>
@@ -178,7 +178,7 @@
       <fields>
         <field name="Farnell">1012259</field>
       </fields>
-      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <libsource lib="temperature-cache" part="CONN_01x02"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56CCDD65</tstamp>
     </comp>
@@ -188,7 +188,7 @@
       <fields>
         <field name="Farnell">1012259</field>
       </fields>
-      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <libsource lib="temperature-cache" part="CONN_01x02"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56CCDEFF</tstamp>
     </comp>
@@ -454,7 +454,7 @@
     </comp>
   </components>
   <libparts>
-    <libpart lib="agg-kicad" part="CONN_01x02">
+    <libpart lib="temperature-cache" part="CONN_01x02">
       <fields>
         <field name="Reference">J</field>
         <field name="Value">CONN_01x02</field>
@@ -464,7 +464,7 @@
         <pin num="2" name="2" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="agg-kicad" part="CONN_02x07">
+    <libpart lib="temperature-cache" part="CONN_02x07">
       <fields>
         <field name="Reference">J</field>
         <field name="Value">CONN_02x07</field>
@@ -486,7 +486,7 @@
         <pin num="14" name="14" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="agg-kicad" part="CONN_02x10">
+    <libpart lib="temperature-cache" part="CONN_02x10">
       <fields>
         <field name="Reference">J</field>
         <field name="Value">CONN_02x10</field>
@@ -550,7 +550,7 @@
         <pin num="2" name="A" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="agg-kicad" part="LTC2983">
+    <libpart lib="temperature-cache" part="LTC2983">
       <fields>
         <field name="Reference">IC</field>
         <field name="Value">LTC2983</field>
@@ -626,85 +626,85 @@
     </libpart>
   </libparts>
   <libraries>
+    <library logical="temperature-cache">
+      <uri>/home/adam/Projects/m3-avionics/m3dl/temperature/temperature-cache.lib</uri>
+    </library>
     <library logical="device">
       <uri>/usr/share/kicad/library/device.lib</uri>
     </library>
-    <library logical="agg-kicad">
-      <uri>/home/matt/Documents/CUSF/m3-avionics/agg-kicad/agg-kicad.lib</uri>
-    </library>
   </libraries>
   <nets>
-    <net code="1" name="/5v_CAN">
-      <node ref="J3" pin="14"/>
-      <node ref="J1" pin="14"/>
+    <net code="1" name="/JTCK">
+      <node ref="J1" pin="6"/>
+      <node ref="J3" pin="6"/>
     </net>
     <net code="2" name="/3v3_RADIO">
       <node ref="J3" pin="5"/>
       <node ref="J1" pin="5"/>
     </net>
     <net code="3" name="/3v3_FC">
-      <node ref="J3" pin="7"/>
       <node ref="J1" pin="7"/>
+      <node ref="J3" pin="7"/>
     </net>
     <net code="4" name="/3v3_PYRO">
-      <node ref="J3" pin="9"/>
       <node ref="J1" pin="9"/>
+      <node ref="J3" pin="9"/>
     </net>
     <net code="5" name="/CAN+">
-      <node ref="J1" pin="18"/>
       <node ref="J3" pin="18"/>
+      <node ref="J1" pin="18"/>
     </net>
     <net code="6" name="/CAN-">
-      <node ref="J1" pin="16"/>
       <node ref="J3" pin="16"/>
+      <node ref="J1" pin="16"/>
     </net>
-    <net code="7" name="/JTDR">
-      <node ref="J3" pin="10"/>
+    <net code="7" name="/5v_CAN">
+      <node ref="J1" pin="14"/>
+      <node ref="J3" pin="14"/>
+    </net>
+    <net code="8" name="/JTDR">
       <node ref="J1" pin="10"/>
-    </net>
-    <net code="8" name="/JTCK">
-      <node ref="J1" pin="6"/>
-      <node ref="J3" pin="6"/>
+      <node ref="J3" pin="10"/>
     </net>
     <net code="9" name="/JTMS">
-      <node ref="J1" pin="4"/>
       <node ref="J3" pin="4"/>
+      <node ref="J1" pin="4"/>
     </net>
     <net code="10" name="/PYRO_SO">
-      <node ref="J2" pin="4"/>
       <node ref="J4" pin="3"/>
       <node ref="J4" pin="4"/>
+      <node ref="J2" pin="4"/>
       <node ref="J2" pin="3"/>
     </net>
     <net code="11" name="/PYRO_SI">
-      <node ref="J2" pin="6"/>
-      <node ref="J2" pin="5"/>
       <node ref="J4" pin="6"/>
       <node ref="J4" pin="5"/>
+      <node ref="J2" pin="5"/>
+      <node ref="J2" pin="6"/>
     </net>
     <net code="12" name="/5v_RADIO">
-      <node ref="J4" pin="7"/>
       <node ref="J2" pin="7"/>
+      <node ref="J4" pin="7"/>
     </net>
     <net code="13" name="/5v_IMU">
       <node ref="J2" pin="9"/>
       <node ref="J4" pin="9"/>
     </net>
     <net code="14" name="/5v_AUX1">
-      <node ref="J2" pin="11"/>
       <node ref="J4" pin="11"/>
+      <node ref="J2" pin="11"/>
     </net>
     <net code="15" name="/5v_AUX2">
-      <node ref="J4" pin="13"/>
       <node ref="J2" pin="13"/>
+      <node ref="J4" pin="13"/>
     </net>
     <net code="16" name="/5v_CAM">
-      <node ref="J2" pin="15"/>
       <node ref="J4" pin="15"/>
+      <node ref="J2" pin="15"/>
     </net>
     <net code="17" name="/CHARGE">
-      <node ref="J4" pin="17"/>
       <node ref="J4" pin="18"/>
+      <node ref="J4" pin="17"/>
       <node ref="J2" pin="18"/>
       <node ref="J2" pin="17"/>
     </net>
@@ -712,349 +712,349 @@
       <node ref="J2" pin="16"/>
       <node ref="J4" pin="16"/>
     </net>
-    <net code="19" name="3v3">
-      <node ref="IC1" pin="2"/>
-      <node ref="J1" pin="11"/>
-      <node ref="IC1" pin="4"/>
-      <node ref="IC1" pin="45"/>
-      <node ref="R1" pin="1"/>
-      <node ref="IC1" pin="6"/>
-      <node ref="IC1" pin="8"/>
-      <node ref="C15" pin="1"/>
-      <node ref="J3" pin="11"/>
-    </net>
-    <net code="20" name="/PYRO4">
-      <node ref="J2" pin="14"/>
+    <net code="19" name="/PYRO4">
       <node ref="J4" pin="14"/>
+      <node ref="J2" pin="14"/>
     </net>
-    <net code="21" name="/3v3_IMU">
-      <node ref="J1" pin="3"/>
-      <node ref="J3" pin="3"/>
-    </net>
-    <net code="22" name="/TEMP4-">
-      <node ref="R17" pin="2"/>
-      <node ref="J9" pin="9"/>
-    </net>
-    <net code="23" name="/3v3_AUX1">
-      <node ref="J3" pin="13"/>
-      <node ref="J1" pin="13"/>
-    </net>
-    <net code="24" name="/3v3_AUX2">
-      <node ref="J1" pin="15"/>
-      <node ref="J3" pin="15"/>
-    </net>
-    <net code="25" name="/RSVD1">
-      <node ref="J1" pin="12"/>
-      <node ref="J3" pin="12"/>
-    </net>
-    <net code="26" name="/RSVD2">
-      <node ref="J3" pin="17"/>
-      <node ref="J1" pin="17"/>
-    </net>
-    <net code="27" name="/TEMP8-">
-      <node ref="R19" pin="2"/>
-      <node ref="J9" pin="1"/>
-    </net>
-    <net code="28" name="/TEMP7-">
-      <node ref="J9" pin="3"/>
-      <node ref="R15" pin="2"/>
-    </net>
-    <net code="29" name="/TEMP6-">
-      <node ref="J9" pin="5"/>
-      <node ref="R11" pin="2"/>
-    </net>
-    <net code="30" name="/TEMP5-">
-      <node ref="J9" pin="7"/>
-      <node ref="R5" pin="2"/>
-    </net>
-    <net code="31" name="/TEMP3-">
-      <node ref="R13" pin="2"/>
-      <node ref="J9" pin="11"/>
-    </net>
-    <net code="32" name="/TEMP2-">
-      <node ref="J9" pin="13"/>
-      <node ref="R9" pin="2"/>
-    </net>
-    <net code="33" name="/TEMP1-">
-      <node ref="R3" pin="2"/>
-      <node ref="J7" pin="1"/>
-    </net>
-    <net code="34" name="/TEMP8+">
-      <node ref="J9" pin="2"/>
-      <node ref="R18" pin="2"/>
-    </net>
-    <net code="35" name="/TEMP7+">
-      <node ref="J9" pin="4"/>
-      <node ref="R14" pin="2"/>
-    </net>
-    <net code="36" name="/TEMP6+">
-      <node ref="J9" pin="6"/>
-      <node ref="R10" pin="2"/>
-    </net>
-    <net code="37" name="/TEMP5+">
-      <node ref="R4" pin="2"/>
-      <node ref="J9" pin="8"/>
-    </net>
-    <net code="38" name="/TEMP4+">
-      <node ref="R16" pin="2"/>
-      <node ref="J9" pin="10"/>
-    </net>
-    <net code="39" name="/TEMP3+">
-      <node ref="R12" pin="2"/>
-      <node ref="J9" pin="12"/>
-    </net>
-    <net code="40" name="/TEMP2+">
-      <node ref="J9" pin="14"/>
-      <node ref="R8" pin="2"/>
-    </net>
-    <net code="41" name="/TEMP1+">
-      <node ref="J7" pin="2"/>
-      <node ref="R2" pin="2"/>
-    </net>
-    <net code="42" name="/PYRO3">
+    <net code="20" name="/PYRO3">
       <node ref="J4" pin="12"/>
       <node ref="J2" pin="12"/>
     </net>
-    <net code="43" name="/PYRO2">
+    <net code="21" name="/PYRO2">
       <node ref="J4" pin="10"/>
       <node ref="J2" pin="10"/>
     </net>
-    <net code="44" name="/PYRO1">
+    <net code="22" name="/PYRO1">
       <node ref="J4" pin="8"/>
       <node ref="J2" pin="8"/>
     </net>
-    <net code="45" name="/CH1+">
-      <node ref="R2" pin="1"/>
-      <node ref="IC1" pin="17"/>
-      <node ref="C6" pin="2"/>
+    <net code="23" name="/3v3_IMU">
+      <node ref="J3" pin="3"/>
+      <node ref="J1" pin="3"/>
     </net>
-    <net code="46" name="Net-(C4-Pad2)">
+    <net code="24" name="/TEMP1-">
+      <node ref="R3" pin="2"/>
+      <node ref="J7" pin="1"/>
+    </net>
+    <net code="25" name="/3v3_AUX2">
+      <node ref="J3" pin="15"/>
+      <node ref="J1" pin="15"/>
+    </net>
+    <net code="26" name="/RSVD1">
+      <node ref="J3" pin="12"/>
+      <node ref="J1" pin="12"/>
+    </net>
+    <net code="27" name="/RSVD2">
+      <node ref="J3" pin="17"/>
+      <node ref="J1" pin="17"/>
+    </net>
+    <net code="28" name="/TEMP8-">
+      <node ref="R19" pin="2"/>
+      <node ref="J9" pin="1"/>
+    </net>
+    <net code="29" name="/TEMP7-">
+      <node ref="R15" pin="2"/>
+      <node ref="J9" pin="3"/>
+    </net>
+    <net code="30" name="/TEMP6-">
+      <node ref="J9" pin="5"/>
+      <node ref="R11" pin="2"/>
+    </net>
+    <net code="31" name="/TEMP5-">
+      <node ref="R5" pin="2"/>
+      <node ref="J9" pin="7"/>
+    </net>
+    <net code="32" name="/TEMP4-">
+      <node ref="J9" pin="9"/>
+      <node ref="R17" pin="2"/>
+    </net>
+    <net code="33" name="/TEMP3-">
+      <node ref="R13" pin="2"/>
+      <node ref="J9" pin="11"/>
+    </net>
+    <net code="34" name="/TEMP2-">
+      <node ref="J9" pin="13"/>
+      <node ref="R9" pin="2"/>
+    </net>
+    <net code="35" name="/3v3_AUX1">
+      <node ref="J3" pin="13"/>
+      <node ref="J1" pin="13"/>
+    </net>
+    <net code="36" name="/TEMP9-">
+      <node ref="J8" pin="1"/>
+      <node ref="R7" pin="2"/>
+    </net>
+    <net code="37" name="/TEMP8+">
+      <node ref="R18" pin="2"/>
+      <node ref="J9" pin="2"/>
+    </net>
+    <net code="38" name="/TEMP7+">
+      <node ref="R14" pin="2"/>
+      <node ref="J9" pin="4"/>
+    </net>
+    <net code="39" name="/TEMP6+">
+      <node ref="R10" pin="2"/>
+      <node ref="J9" pin="6"/>
+    </net>
+    <net code="40" name="/TEMP5+">
+      <node ref="J9" pin="8"/>
+      <node ref="R4" pin="2"/>
+    </net>
+    <net code="41" name="/TEMP4+">
+      <node ref="R16" pin="2"/>
+      <node ref="J9" pin="10"/>
+    </net>
+    <net code="42" name="/TEMP3+">
+      <node ref="R12" pin="2"/>
+      <node ref="J9" pin="12"/>
+    </net>
+    <net code="43" name="/TEMP2+">
+      <node ref="R8" pin="2"/>
+      <node ref="J9" pin="14"/>
+    </net>
+    <net code="44" name="/TEMP1+">
+      <node ref="R2" pin="2"/>
+      <node ref="J7" pin="2"/>
+    </net>
+    <net code="45" name="/TEMP9+">
+      <node ref="R6" pin="2"/>
+      <node ref="J8" pin="2"/>
+    </net>
+    <net code="46" name="/CH1+">
+      <node ref="C6" pin="2"/>
+      <node ref="IC1" pin="17"/>
+      <node ref="R2" pin="1"/>
+    </net>
+    <net code="47" name="Net-(C4-Pad2)">
       <node ref="C4" pin="2"/>
       <node ref="IC1" pin="47"/>
     </net>
-    <net code="47" name="Net-(C4-Pad1)">
-      <node ref="C4" pin="1"/>
+    <net code="48" name="Net-(C4-Pad1)">
       <node ref="IC1" pin="48"/>
+      <node ref="C4" pin="1"/>
     </net>
-    <net code="48" name="Net-(C5-Pad1)">
-      <node ref="C5" pin="1"/>
+    <net code="49" name="Net-(C5-Pad1)">
       <node ref="IC1" pin="46"/>
+      <node ref="C5" pin="1"/>
     </net>
-    <net code="49" name="Net-(IC1-Pad42)">
+    <net code="50" name="Net-(IC1-Pad42)">
       <node ref="R1" pin="2"/>
       <node ref="IC1" pin="42"/>
-    </net>
-    <net code="50" name="/CH8+">
-      <node ref="IC1" pin="31"/>
-      <node ref="R18" pin="1"/>
-      <node ref="C14" pin="2"/>
     </net>
     <net code="51" name="Net-(C3-Pad2)">
       <node ref="IC1" pin="43"/>
       <node ref="C3" pin="2"/>
     </net>
-    <net code="52" name="Net-(C2-Pad2)">
+    <net code="52" name="/CH7+">
+      <node ref="C12" pin="2"/>
+      <node ref="IC1" pin="29"/>
+      <node ref="R14" pin="1"/>
+    </net>
+    <net code="53" name="Net-(C2-Pad2)">
       <node ref="IC1" pin="11"/>
       <node ref="C2" pin="2"/>
     </net>
-    <net code="53" name="Net-(C1-Pad2)">
-      <node ref="IC1" pin="14"/>
+    <net code="54" name="Net-(C1-Pad2)">
       <node ref="C1" pin="2"/>
+      <node ref="IC1" pin="14"/>
       <node ref="IC1" pin="13"/>
     </net>
-    <net code="54" name="/CH9+">
+    <net code="55" name="/CH9+">
+      <node ref="IC1" pin="33"/>
       <node ref="C8" pin="2"/>
       <node ref="R6" pin="1"/>
-      <node ref="IC1" pin="33"/>
     </net>
-    <net code="55" name="GND">
-      <node ref="C1" pin="1"/>
-      <node ref="C3" pin="1"/>
-      <node ref="C2" pin="1"/>
-      <node ref="IC1" pin="1"/>
-      <node ref="C5" pin="2"/>
-      <node ref="IC1" pin="3"/>
-      <node ref="IC1" pin="5"/>
-      <node ref="IC1" pin="7"/>
-      <node ref="IC1" pin="9"/>
-      <node ref="IC1" pin="20"/>
-      <node ref="IC1" pin="30"/>
-      <node ref="IC1" pin="16"/>
-      <node ref="IC1" pin="28"/>
+    <net code="56" name="GND">
       <node ref="IC1" pin="18"/>
-      <node ref="J2" pin="1"/>
+      <node ref="IC1" pin="28"/>
       <node ref="IC1" pin="36"/>
       <node ref="IC1" pin="26"/>
+      <node ref="IC1" pin="16"/>
       <node ref="IC1" pin="15"/>
       <node ref="IC1" pin="44"/>
-      <node ref="D1" pin="1"/>
-      <node ref="J2" pin="19"/>
+      <node ref="IC1" pin="24"/>
+      <node ref="IC1" pin="32"/>
+      <node ref="IC1" pin="22"/>
+      <node ref="IC1" pin="12"/>
+      <node ref="J4" pin="1"/>
+      <node ref="IC1" pin="20"/>
       <node ref="J2" pin="20"/>
-      <node ref="J1" pin="19"/>
-      <node ref="J3" pin="2"/>
-      <node ref="J4" pin="20"/>
+      <node ref="IC1" pin="9"/>
+      <node ref="IC1" pin="7"/>
+      <node ref="IC1" pin="5"/>
+      <node ref="IC1" pin="1"/>
+      <node ref="C2" pin="1"/>
+      <node ref="IC1" pin="30"/>
+      <node ref="J4" pin="2"/>
+      <node ref="C1" pin="1"/>
+      <node ref="J2" pin="2"/>
+      <node ref="C3" pin="1"/>
+      <node ref="IC1" pin="3"/>
+      <node ref="C5" pin="2"/>
+      <node ref="C6" pin="1"/>
+      <node ref="J2" pin="1"/>
+      <node ref="D1" pin="1"/>
       <node ref="J4" pin="19"/>
+      <node ref="J4" pin="20"/>
+      <node ref="J3" pin="2"/>
+      <node ref="J3" pin="1"/>
+      <node ref="J1" pin="19"/>
+      <node ref="J1" pin="1"/>
       <node ref="J1" pin="20"/>
       <node ref="J1" pin="2"/>
-      <node ref="J1" pin="1"/>
-      <node ref="C6" pin="1"/>
-      <node ref="J3" pin="1"/>
-      <node ref="J4" pin="1"/>
-      <node ref="J4" pin="2"/>
-      <node ref="J2" pin="2"/>
-      <node ref="J5" pin="1"/>
-      <node ref="J6" pin="19"/>
-      <node ref="J6" pin="20"/>
-      <node ref="J6" pin="2"/>
-      <node ref="J6" pin="1"/>
-      <node ref="J5" pin="20"/>
-      <node ref="J5" pin="19"/>
-      <node ref="J5" pin="2"/>
+      <node ref="J2" pin="19"/>
+      <node ref="C15" pin="2"/>
       <node ref="R13" pin="1"/>
-      <node ref="IC1" pin="24"/>
-      <node ref="R15" pin="1"/>
       <node ref="R11" pin="1"/>
+      <node ref="R15" pin="1"/>
+      <node ref="J6" pin="19"/>
+      <node ref="C14" pin="1"/>
       <node ref="R7" pin="1"/>
+      <node ref="J6" pin="20"/>
+      <node ref="J5" pin="19"/>
+      <node ref="J6" pin="1"/>
+      <node ref="J6" pin="2"/>
+      <node ref="C13" pin="1"/>
+      <node ref="R3" pin="1"/>
       <node ref="R9" pin="1"/>
       <node ref="R17" pin="1"/>
-      <node ref="C10" pin="1"/>
-      <node ref="C14" pin="1"/>
-      <node ref="C13" pin="1"/>
-      <node ref="C11" pin="1"/>
-      <node ref="C9" pin="1"/>
-      <node ref="C12" pin="1"/>
-      <node ref="C8" pin="1"/>
-      <node ref="C7" pin="1"/>
-      <node ref="R5" pin="1"/>
-      <node ref="R3" pin="1"/>
-      <node ref="C15" pin="2"/>
       <node ref="R19" pin="1"/>
-      <node ref="IC1" pin="12"/>
-      <node ref="J3" pin="20"/>
-      <node ref="IC1" pin="22"/>
-      <node ref="IC1" pin="32"/>
+      <node ref="R5" pin="1"/>
+      <node ref="C7" pin="1"/>
+      <node ref="C8" pin="1"/>
+      <node ref="C10" pin="1"/>
+      <node ref="C12" pin="1"/>
+      <node ref="C9" pin="1"/>
+      <node ref="C11" pin="1"/>
       <node ref="J3" pin="19"/>
+      <node ref="J3" pin="20"/>
+      <node ref="J5" pin="20"/>
+      <node ref="J5" pin="1"/>
+      <node ref="J5" pin="2"/>
     </net>
-    <net code="56" name="/CH7+">
-      <node ref="R14" pin="1"/>
-      <node ref="C12" pin="2"/>
-      <node ref="IC1" pin="29"/>
+    <net code="57" name="/CH8+">
+      <node ref="C14" pin="2"/>
+      <node ref="R18" pin="1"/>
+      <node ref="IC1" pin="31"/>
     </net>
-    <net code="57" name="/CH6+">
+    <net code="58" name="/CH6+">
+      <node ref="IC1" pin="27"/>
       <node ref="C10" pin="2"/>
       <node ref="R10" pin="1"/>
-      <node ref="IC1" pin="27"/>
     </net>
-    <net code="58" name="/CH5+">
+    <net code="59" name="/CH5+">
+      <node ref="R4" pin="1"/>
       <node ref="IC1" pin="25"/>
       <node ref="C7" pin="2"/>
-      <node ref="R4" pin="1"/>
     </net>
-    <net code="59" name="/CH4+">
+    <net code="60" name="/CH4+">
       <node ref="IC1" pin="23"/>
       <node ref="C13" pin="2"/>
       <node ref="R16" pin="1"/>
     </net>
-    <net code="60" name="/CH3+">
+    <net code="61" name="/CH3+">
+      <node ref="C11" pin="2"/>
       <node ref="R12" pin="1"/>
       <node ref="IC1" pin="21"/>
-      <node ref="C11" pin="2"/>
     </net>
-    <net code="61" name="/CH2+">
+    <net code="62" name="/CH2+">
+      <node ref="R8" pin="1"/>
       <node ref="IC1" pin="19"/>
       <node ref="C9" pin="2"/>
-      <node ref="R8" pin="1"/>
-    </net>
-    <net code="62" name="/PRESSURE4">
-      <node ref="J5" pin="11"/>
-      <node ref="J6" pin="11"/>
     </net>
     <net code="63" name="/JTDI">
-      <node ref="J3" pin="8"/>
       <node ref="J1" pin="8"/>
+      <node ref="J3" pin="8"/>
     </net>
-    <net code="64" name="/SPI1_MOSI">
+    <net code="64" name="/PRESSURE4">
+      <node ref="J6" pin="11"/>
+      <node ref="J5" pin="11"/>
+    </net>
+    <net code="65" name="3v3">
+      <node ref="IC1" pin="2"/>
+      <node ref="IC1" pin="8"/>
+      <node ref="J3" pin="11"/>
+      <node ref="J1" pin="11"/>
+      <node ref="C15" pin="1"/>
+      <node ref="IC1" pin="6"/>
+      <node ref="R1" pin="1"/>
+      <node ref="IC1" pin="45"/>
+      <node ref="IC1" pin="4"/>
+    </net>
+    <net code="66" name="/SPI1_MOSI">
+      <node ref="IC1" pin="40"/>
       <node ref="J6" pin="9"/>
       <node ref="J5" pin="9"/>
-      <node ref="IC1" pin="40"/>
     </net>
-    <net code="65" name="/STRAIN6">
-      <node ref="J5" pin="14"/>
-      <node ref="J6" pin="14"/>
-    </net>
-    <net code="66" name="/PRESSURE1">
-      <node ref="J6" pin="16"/>
-      <node ref="J5" pin="16"/>
-    </net>
-    <net code="67" name="/PRESSURE2">
-      <node ref="J5" pin="18"/>
-      <node ref="J6" pin="18"/>
-    </net>
-    <net code="68" name="/TEMP9+">
-      <node ref="J8" pin="2"/>
-      <node ref="R6" pin="2"/>
-    </net>
-    <net code="69" name="/STRAIN5">
-      <node ref="J6" pin="12"/>
-      <node ref="J5" pin="12"/>
-    </net>
-    <net code="70" name="/TEMP_INT">
-      <node ref="J6" pin="15"/>
-      <node ref="J5" pin="15"/>
-      <node ref="IC1" pin="37"/>
-    </net>
-    <net code="71" name="/SPI1_CS">
+    <net code="67" name="/SPI1_CS">
       <node ref="J5" pin="17"/>
       <node ref="J6" pin="17"/>
       <node ref="IC1" pin="41"/>
     </net>
-    <net code="72" name="/PRESSURE3">
-      <node ref="J6" pin="3"/>
-      <node ref="J5" pin="3"/>
+    <net code="68" name="/STRAIN1">
+      <node ref="J5" pin="4"/>
+      <node ref="J6" pin="4"/>
     </net>
-    <net code="73" name="/SPI1_SCK">
+    <net code="69" name="/PRESSURE3">
+      <node ref="J5" pin="3"/>
+      <node ref="J6" pin="3"/>
+    </net>
+    <net code="70" name="/SPI1_SCK">
       <node ref="IC1" pin="38"/>
       <node ref="J6" pin="5"/>
       <node ref="J5" pin="5"/>
     </net>
-    <net code="74" name="/SPI1_MISO">
-      <node ref="J6" pin="7"/>
-      <node ref="IC1" pin="39"/>
-      <node ref="J5" pin="7"/>
-    </net>
-    <net code="75" name="/PRESSURE5">
-      <node ref="J6" pin="13"/>
-      <node ref="J5" pin="13"/>
-    </net>
-    <net code="76" name="/STRAIN2">
+    <net code="71" name="/STRAIN2">
       <node ref="J5" pin="6"/>
       <node ref="J6" pin="6"/>
     </net>
-    <net code="77" name="/STRAIN3">
-      <node ref="J5" pin="8"/>
+    <net code="72" name="/SPI1_MISO">
+      <node ref="J5" pin="7"/>
+      <node ref="IC1" pin="39"/>
+      <node ref="J6" pin="7"/>
+    </net>
+    <net code="73" name="/STRAIN3">
       <node ref="J6" pin="8"/>
+      <node ref="J5" pin="8"/>
     </net>
-    <net code="78" name="/STRAIN4">
-      <node ref="J5" pin="10"/>
+    <net code="74" name="/STRAIN4">
       <node ref="J6" pin="10"/>
+      <node ref="J5" pin="10"/>
     </net>
-    <net code="79" name="/STRAIN1">
-      <node ref="J6" pin="4"/>
-      <node ref="J5" pin="4"/>
+    <net code="75" name="/PRESSURE5">
+      <node ref="J5" pin="13"/>
+      <node ref="J6" pin="13"/>
     </net>
-    <net code="80" name="Net-(IC1-Pad34)">
+    <net code="76" name="/TEMP_INT">
+      <node ref="J5" pin="15"/>
+      <node ref="J6" pin="15"/>
+      <node ref="IC1" pin="37"/>
+    </net>
+    <net code="77" name="/STRAIN6">
+      <node ref="J6" pin="14"/>
+      <node ref="J5" pin="14"/>
+    </net>
+    <net code="78" name="/PRESSURE1">
+      <node ref="J5" pin="16"/>
+      <node ref="J6" pin="16"/>
+    </net>
+    <net code="79" name="/PRESSURE2">
+      <node ref="J6" pin="18"/>
+      <node ref="J5" pin="18"/>
+    </net>
+    <net code="80" name="/STRAIN5">
+      <node ref="J5" pin="12"/>
+      <node ref="J6" pin="12"/>
+    </net>
+    <net code="81" name="Net-(IC1-Pad34)">
       <node ref="IC1" pin="34"/>
     </net>
-    <net code="81" name="Net-(IC1-Pad10)">
+    <net code="82" name="Net-(IC1-Pad10)">
       <node ref="IC1" pin="10"/>
     </net>
-    <net code="82" name="/TEMP9-">
-      <node ref="R7" pin="2"/>
-      <node ref="J8" pin="1"/>
-    </net>
     <net code="83" name="Net-(D1-Pad2)">
-      <node ref="D1" pin="2"/>
       <node ref="IC1" pin="35"/>
+      <node ref="D1" pin="2"/>
     </net>
   </nets>
 </export>
