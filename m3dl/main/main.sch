@@ -29,6 +29,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:agg-kicad
 LIBS:main-cache
 EELAYER 25 0
 EELAYER END
