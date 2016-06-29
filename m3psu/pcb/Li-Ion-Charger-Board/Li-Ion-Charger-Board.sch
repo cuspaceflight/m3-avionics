@@ -1,5 +1,4 @@
 EESchema Schematic File Version 2
-LIBS:Li-Ion-Charger-Board-rescue
 LIBS:agg-kicad
 LIBS:Li-Ion-Charger-Board-cache
 EELAYER 25 0
@@ -382,7 +381,7 @@ F 3 "" H 6100 2850 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L PFET-RESCUE-Li-Ion-Charger-Board Q5
+L PFET_GDS Q5
 U 1 1 56C79D18
 P 6650 2750
 F 0 "Q5" V 6500 2750 50  0000 L CNN
@@ -640,7 +639,7 @@ Wire Wire Line
 Wire Wire Line
 	4400 4150 4400 4200
 $Comp
-L PFET-RESCUE-Li-Ion-Charger-Board Q2
+L PFET_GDS Q2
 U 1 1 56DFD606
 P 5150 1650
 F 0 "Q2" V 5000 1650 50  0000 L CNN
@@ -1571,7 +1570,7 @@ F 4 "2098274" H 6450 2900 60  0001 C CNN "Farnell"
 	1    0    0    -1  
 $EndComp
 $Comp
-L NFET-RESCUE-Li-Ion-Charger-Board Q3
+L NFET_GDS Q3
 U 1 1 56E1C9CD
 P 5400 2150
 F 0 "Q3" H 5150 2180 50  0000 L CNN
@@ -1583,7 +1582,7 @@ F 4 "2498598" H 5400 2150 60  0001 C CNN "Farnell"
 	0    1    -1   0   
 $EndComp
 $Comp
-L NFET-RESCUE-Li-Ion-Charger-Board Q1
+L NFET_GDS Q1
 U 1 1 56E1CA5A
 P 4850 1900
 F 0 "Q1" H 4600 1930 50  0000 L CNN

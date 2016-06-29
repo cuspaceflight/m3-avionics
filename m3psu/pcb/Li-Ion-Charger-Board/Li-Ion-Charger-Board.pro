@@ -1,4 +1,4 @@
-update=Wed 29 Jun 2016 01:09:52 BST
+update=Wed 29 Jun 2016 03:20:52 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -29,5 +29,4 @@ version=1
 version=1
 LibDir=../../../agg-kicad/lib
 [eeschema/libraries]
-LibName1=Li-Ion-Charger-Board-rescue
-LibName2=../../../agg-kicad/agg-kicad
+LibName1=../../../agg-kicad/agg-kicad
