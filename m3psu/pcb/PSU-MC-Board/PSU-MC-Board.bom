@@ -1,0 +1,108 @@
+Bill Of Materials
+=================
+
+Source file: PSU-MC-Board.xml
+Date: 2016-07-03T01:07:12.792123
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J3     NORTH TOP       agg:TFML-105-02-L-D
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    SFML-110-02-L-D-LC: 
+      J2     WEST BOT        agg:SFML-110-02-L-D-LC
+      J5     EAST BOT        agg:SFML-110-02-L-D-LC
+    TFML-110-02-L-D: 
+      J1     WEST TOP        agg:TFML-110-02-L-D
+      J4     EAST TOP        agg:TFML-110-02-L-D
+  Power
+  ~~~~~
+    0.5W: 
+      R15    10m             agg:0805
+      R13    47              agg:0805
+      R14    47              agg:0805
+
+Vendor Specific BOMs
+--------------------
+  Power
+  ~~~~~
+0.5W,3,3x R15 R13 R14 0805
+
+
+  Samtec
+  ~~~~~~
+SFML-110-02-L-D-LC,2,2x J2 J5 SFML-110-02-L-D-LC
+TFML-110-02-L-D,2,2x J1 J4 TFML-110-02-L-D
+
+
+  Farnell
+  ~~~~~~~
+2447160,11,11x 33k 0402
+2496814,1,1x 1µ 0402
+2324779,1,1x 30k 0402
+2064363,1,1x STM32F405RxTx LQFP-64
+2506952,1,1x 26M XTAL-20x16
+2426952,1,1x 4µ7 0402
+2496790,2,2x 10p 0402
+2295457,1,1x LTC4151 DFN-10-EP-LT
+1828868,2,2x 47n 0402
+2455373,1,1x 3µ3 VLS201610HBX-1
+1758918,1,1x 3n3 0402
+2496771,9,9x 100n 0402
+2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
+2503034,1,1x 10m 0805
+2498601,2,2x PFET SOT-883-B
+2447096,1,1x 10k 0402
+1577717,3,3x 10k 0402
+2498598,4,4x NFET SOT-883-B
+2447187,3,3x 4k7 0402
+9239111,1,1x 100 0402
+2362088,2,2x 2µ2 0402
+1750737,2,2x 47 0805
+2115909,1,1x LTC4353 DFN-16-EP-LTC-DE
+2382918,1,1x TPS62152 QFN-16-EP-TI
+2098274,2,2x NFET2 PowerFLAT5x6
+2501102,1,1x PFET SON2x2
+1907510,2,2x 22µ 0805
+
+
+Assembly BOM
+------------
+0.5W                 3   10m,47          0805            R13 R14 R15
+SFML-110-02-L-D-LC   2   EAST BOT,WEST BOT SFML-110-02-L-D-LC J2 J5
+TFML-110-02-L-D      2   WEST TOP,EAST TOP TFML-110-02-L-D J1 J4
+2447160              11  33k             0402            R1 R11 R12 R16 R2 R21 R22 R23 R5 R6 R9
+2496814              1   1µ              0402            C6
+2324779              1   30k             0402            R17
+2064363              1   STM32F405RxTx   LQFP-64         IC1
+2506952              1   26M             XTAL-20x16      Y1
+2426952              1   4µ7             0402            C3
+2496790              2   10p             0402            C1 C2
+2295457              1   LTC4151         DFN-10-EP-LT    IC5
+1828868              2   47n             0402            C17 C18
+2455373              1   3µ3             VLS201610HBX-1  L1
+1758918              1   3n3             0402            C13
+2496771              9   100n            0402            C15 C16 C19 C20 C4 C5 C7 C8 C9
+2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC3
+2503034              1   10m             0805            R15
+2498601              2   PFET            SOT-883-B       Q2 Q6
+2447096              1   10k             0402            R4
+1577717              3   10k             0402            R18 R19 R20
+2498598              4   NFET            SOT-883-B       Q1 Q3 Q7 Q9
+2447187              3   4k7             0402            R10 R7 R8
+9239111              1   100             0402            R3
+2362088              2   2µ2             0402            C10 C11
+1750737              2   47              0805            R13 R14
+2115909              1   LTC4353         DFN-16-EP-LTC-DE IC4
+2382918              1   TPS62152        QFN-16-EP-TI    IC2
+2098274              2   NFET2           PowerFLAT5x6    Q4 Q5
+2501102              1   PFET            SON2x2          Q8
+1907510              2   22µ             0805            C12 C14
+
