@@ -592,7 +592,7 @@ U 2 1 56E00BC6
 P 7100 1200
 F 0 "Q4" H 6850 1230 50  0000 L CNN
 F 1 "NFET2" H 6800 1050 50  0000 L CNN
-F 2 "agg:PowerFLAT5x6" H 7100 1200 50  0001 C CNN
+F 2 "agg:PowerFLAT-5x6" H 7100 1200 50  0001 C CNN
 F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 7100 1200 50  0001 C CNN
 F 4 "2098274" H 7100 1200 60  0001 C CNN "Farnell"
 	2    7100 1200
@@ -604,7 +604,7 @@ U 1 1 56E00C63
 P 7100 950
 F 0 "Q4" H 6850 980 50  0000 L CNN
 F 1 "NFET2" H 6800 800 50  0000 L CNN
-F 2 "agg:PowerFLAT5x6" H 7100 950 50  0001 C CNN
+F 2 "agg:PowerFLAT-5x6" H 7100 950 50  0001 C CNN
 F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 7100 950 50  0001 C CNN
 F 4 "2098274" H 7100 950 60  0001 C CNN "Farnell"
 	1    7100 950 
@@ -1416,7 +1416,7 @@ U 2 1 56E38673
 P 7100 2150
 F 0 "Q5" H 6850 2180 50  0000 L CNN
 F 1 "NFET2" H 6800 2000 50  0000 L CNN
-F 2 "agg:PowerFLAT5x6" H 7100 2150 50  0001 C CNN
+F 2 "agg:PowerFLAT-5x6" H 7100 2150 50  0001 C CNN
 F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 7100 2150 50  0001 C CNN
 F 4 "2098274" H 7100 2150 60  0001 C CNN "Farnell"
 	2    7100 2150
@@ -1428,7 +1428,7 @@ U 1 1 56E38757
 P 7100 1900
 F 0 "Q5" H 6850 1930 50  0000 L CNN
 F 1 "NFET2" H 6800 1750 50  0000 L CNN
-F 2 "agg:PowerFLAT5x6" H 7100 1900 50  0001 C CNN
+F 2 "agg:PowerFLAT-5x6" H 7100 1900 50  0001 C CNN
 F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 7100 1900 50  0001 C CNN
 F 4 "2098274" H 7100 1900 60  0001 C CNN "Farnell"
 	1    7100 1900
