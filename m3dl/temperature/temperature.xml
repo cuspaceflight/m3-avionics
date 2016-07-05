@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-<<<<<<< HEAD
-    <source>/home/matt/Documents/CUSF/m3-avionics/m3dl/temperature/temperature.sch</source>
-    <date>Tue 28 Jun 2016 15:54:43 BST</date>
-    <tool>Eeschema 4.0.2+e4-6225~38~ubuntu14.04.1-stable</tool>
-=======
     <source>/home/adam/Projects/m3-avionics/m3dl/temperature/temperature.sch</source>
-    <date>Tue 28 Jun 2016 00:04:07 BST</date>
+    <date>Tue 05 Jul 2016 04:06:09 BST</date>
     <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
->>>>>>> 8c16febc3eeee1708c758ba67c8bcc6d0a7f64bf
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>m3dl - Temperature</title>
@@ -632,11 +626,11 @@
     </libpart>
   </libparts>
   <libraries>
-    <library logical="temperature-cache">
-      <uri>/home/adam/Projects/m3-avionics/m3dl/temperature/temperature-cache.lib</uri>
-    </library>
     <library logical="device">
       <uri>/usr/share/kicad/library/device.lib</uri>
+    </library>
+    <library logical="temperature-cache">
+      <uri>/home/adam/Projects/m3-avionics/m3dl/temperature/temperature-cache.lib</uri>
     </library>
   </libraries>
   <nets>
