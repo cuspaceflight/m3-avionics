@@ -1,0 +1,44 @@
+Bill Of Materials
+=================
+
+Source file: extpressure.xml
+Date: 2016-07-10T17:13:32.897685
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+IC105  STM32F0xxKxTx   agg:LQFP-32
+C109   10n             agg:0402
+C107   100n            agg:0402
+C106   100n            agg:0402
+C108   1µ              agg:0402
+C105   4µ7             agg:0402
+P101   SWD_TC          agg:TC2030-NL
+C104   100n            agg:0402
+J101   SERIAL          agg:S04B-PASK-2
+D101   RED             agg:0603-LED
+D102   GRN             agg:0603-L
+R101   1k              agg:0402
+R102   1k              agg:0402
+C101   100n            agg:0402
+C102   100n            agg:0402
+C103   100n            agg:0402
+
+Inconsistent Order Codes
+------------------------
+
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+1845345,4,4x SP100 SP100
+
+
+Assembly BOM
+------------
+1845345              4   SP100           SP100           IC101 IC102 IC103 IC104
+
