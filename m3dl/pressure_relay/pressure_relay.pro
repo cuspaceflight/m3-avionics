@@ -1,6 +1,6 @@
-update=Wed 20 Jul 2016 02:28:21 BST
+update=Wed 20 Jul 2016 03:55:24 BST
 version=1
-last_client=eeschema
+last_client=kicad
 [pcbnew]
 version=1
 LastNetListRead=
@@ -23,8 +23,6 @@ ModuleOutlineThickness=0.150000000000
 [cvpcb]
 version=1
 NetIExt=net
-[general]
-version=1
 [eeschema]
 version=1
 LibDir=
@@ -59,3 +57,5 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=/home/matt/Documents/CUSF/m3-avionics/agg-kicad/agg-kicad
+[general]
+version=1
