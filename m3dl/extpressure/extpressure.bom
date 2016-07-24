@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: extpressure.xml
-Date: 2016-07-10T17:13:32.897685
+Date: 2016-07-24T22:54:40.939718
 
 Parts Missing Footprints
 ------------------------
@@ -10,22 +10,7 @@ Parts Missing Footprints
 
 Parts Missing Order Codes
 -------------------------
-IC105  STM32F0xxKxTx   agg:LQFP-32
-C109   10n             agg:0402
-C107   100n            agg:0402
-C106   100n            agg:0402
-C108   1µ              agg:0402
-C105   4µ7             agg:0402
-P101   SWD_TC          agg:TC2030-NL
-C104   100n            agg:0402
-J101   SERIAL          agg:S04B-PASK-2
-D101   RED             agg:0603-LED
-D102   GRN             agg:0603-L
-R101   1k              agg:0402
-R102   1k              agg:0402
-C101   100n            agg:0402
-C102   100n            agg:0402
-C103   100n            agg:0402
+P1     SWD_TC          agg:TC2030-NL
 
 Inconsistent Order Codes
 ------------------------
@@ -35,10 +20,30 @@ Vendor Specific BOMs
 --------------------
   Farnell
   ~~~~~~~
+2447120,2,2x 1k 0402
 1845345,4,4x SP100 SP100
+2496814,1,1x 1µ 0402
+1830749,1,1x SERIAL S04B-PASK-2
+2496771,6,6x 100n 0402
+2426952,1,1x 4µ7 0402
+2290329,1,1x RED 0603-LED
+2368169,3,3x ESD_DIODE 0402
+2333141,1,1x STM32F0xxKxTx LQFP-32
+2210793,1,1x 10n 0402
+2290328,1,1x GRN 0603-LED
 
 
 Assembly BOM
 ------------
-1845345              4   SP100           SP100           IC101 IC102 IC103 IC104
+2447120              2   1k              0402            R1 R2
+1845345              4   SP100           SP100           IC1 IC2 IC3 IC4
+2496814              1   1µ              0402            C8
+1830749              1   SERIAL          S04B-PASK-2     J1
+2496771              6   100n            0402            C1 C2 C3 C4 C6 C7
+2426952              1   4µ7             0402            C5
+2290329              1   RED             0603-LED        D1
+2368169              3   ESD_DIODE       0402            D3 D4 D5
+2333141              1   STM32F0xxKxTx   LQFP-32         IC5
+2210793              1   10n             0402            C9
+2290328              1   GRN             0603-LED        D2
 
