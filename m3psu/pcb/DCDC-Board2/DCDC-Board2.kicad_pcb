@@ -2,7 +2,7 @@
 
   (general
     (links 272)
-    (no_connects 7)
+    (no_connects 4)
     (area 79.899999 79.4575 120.1775 143.438819)
     (thickness 1.6)
     (drawings 2)
@@ -507,7 +507,7 @@
   )
 
   (module m3psu:cusf_logo_full locked (layer B.Cu) (tedit 0) (tstamp 57731D6F)
-    (at 108.99 133.94 180)
+    (at 100 106 180)
     (fp_text reference G*** (at 0 0 180) (layer B.SilkS) hide
       (effects (font (thickness 0.3)) (justify mirror))
     )
