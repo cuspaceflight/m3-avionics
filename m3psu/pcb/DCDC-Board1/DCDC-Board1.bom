@@ -1,0 +1,81 @@
+Bill Of Materials
+=================
+
+Source file: DCDC-Board1.xml
+Date: 2016-07-25T07:59:02.808891
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J3     NORTH TOP       agg:TFML-105-02-L-D
+J6     NORTH BOT       agg:SFML-105-02-L-D-LC
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    TFML-110-02-L-D: 
+      J1     WEST TOP        agg:TFML-110-02-L-D
+      J4     EAST TOP        agg:TFML-110-02-L-D
+    SFML-110-02-L-D-LC: 
+      J2     WEST BOT        agg:SFML-110-02-L-D-LC
+      J5     EAST BOT        agg:SFML-110-02-L-D-LC
+
+Vendor Specific BOMs
+--------------------
+  Samtec
+  ~~~~~~
+TFML-110-02-L-D,2,2x J1 J4 TFML-110-02-L-D
+SFML-110-02-L-D-LC,2,2x J2 J5 SFML-110-02-L-D-LC
+
+
+  Farnell
+  ~~~~~~~
+1803690,1,1x 24k9 0402
+2302693,1,1x 3k57 0402
+2210772,4,4x 220p 0402
+2317558,4,4x SCHOTTKY 0603-LED
+1469715,6,6x 4k99 0402
+2218855,4,4x 1µ 0402
+1506129,4,4x 50m 0603
+2210781,4,4x 47p 0402
+2292532,4,4x 10µ TYS5040
+2447095,8,8x 100 0402
+2496786,4,4x 4n7 0402
+2447096,4,4x 10k 0402
+2073037,1,1x 4k32 0402
+2346881,2,2x 4µ7 0402
+2475658,2,2x LTC3887 QFN-40-EP-LTC-UJ
+2496811,8,8x 100n 0402
+2072900,1,1x 30k1 0402
+2346925,6,6x 22µ 0805
+2422226,4,4x SiZ340DT PowerPair3x3
+
+
+Assembly BOM
+------------
+TFML-110-02-L-D      2   EAST TOP,WEST TOP TFML-110-02-L-D J1 J4
+SFML-110-02-L-D-LC   2   WEST BOT,EAST BOT SFML-110-02-L-D-LC J2 J5
+1803690              1   24k9            0402            R21
+2302693              1   3k57            0402            R10
+2210772              4   220p            0402            C20 C24 C5 C9
+2317558              4   SCHOTTKY        0603-LED        D1 D2 D3 D4
+1469715              6   4k99            0402            R12 R17 R25 R4 R5 R7
+2218855              4   1µ              0402            C10 C14 C25 C29
+1506129              4   50m             0603            R1 R13 R14 R26
+2210781              4   47p             0402            C21 C23 C6 C8
+2292532              4   10µ             TYS5040         L1 L2 L3 L4
+2447095              8   100             0402            R11 R16 R19 R22 R24 R3 R6 R9
+2496786              4   4n7             0402            C12 C18 C27 C3
+2447096              4   10k             0402            R15 R18 R2 R20
+2073037              1   4k32            0402            R23
+2346881              2   4µ7             0402            C19 C4
+2475658              2   LTC3887         QFN-40-EP-LTC-UJ IC1 IC2
+2496811              8   100n            0402            C11 C13 C17 C2 C26 C28 C31 C32
+2072900              1   30k1            0402            R8
+2346925              6   22µ             0805            C1 C15 C16 C22 C30 C7
+2422226              4   SiZ340DT        PowerPair3x3    Q1 Q2 Q3 Q4
+

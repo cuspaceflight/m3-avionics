@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>/home/adam/Projects/m3-avionics/m3psu/pcb/DCDC-Board2/DCDC-Board2.sch</source>
-    <date>Mon 25 Jul 2016 08:35:00 BST</date>
+    <source>/home/adam/Projects/m3-avionics/m3psu/pcb/DCDC-Board3/DCDC-Board3.sch</source>
+    <date>Mon 25 Jul 2016 08:35:14 BST</date>
     <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
-        <title>M3PSU - DC/DC Converter Board 2</title>
+        <title>M3PSU - DC/DC Converter Board 3</title>
         <company>CU Spaceflight</company>
         <rev>1</rev>
         <date>2016-06-28</date>
-        <source>DCDC-Board2.sch</source>
+        <source>DCDC-Board3.sch</source>
         <comment number="1" value="Drawn by: Levin Tan, Jamie Wood"/>
         <comment number="2" value=""/>
         <comment number="3" value=""/>
         <comment number="4" value=""/>
       </title_block>
     </sheet>
-    <sheet number="2" name="/Board 2 Regulator 1/" tstamps="/56E22E4E/">
+    <sheet number="2" name="/Board 3 Regulator 1/" tstamps="/56E22E4E/">
       <title_block>
-        <title>M3PSU - DC/DC Converter Board 2 - Converter 1</title>
+        <title>M3PSU - DC/DC Converter Board 3 - Converter 1</title>
         <company>CU Spaceflight</company>
         <rev>1</rev>
         <date>2016-06-28</date>
-        <source>DCDC-Board2-Reg1.sch</source>
+        <source>DCDC-Board3-Reg1.sch</source>
         <comment number="1" value="Drawn by: Levin Tan, Jamie Wood"/>
         <comment number="2" value=""/>
         <comment number="3" value=""/>
         <comment number="4" value=""/>
       </title_block>
     </sheet>
-    <sheet number="3" name="/Board 2 Regulator 2/" tstamps="/56E22E64/">
+    <sheet number="3" name="/Board 3 Regulator 2/" tstamps="/56E22E64/">
       <title_block>
-        <title>M3PSU - DC/DC Converter Board 2 - Converter 2</title>
+        <title>M3PSU - DC/DC Converter Board 3 - Converter 2</title>
         <company>CU Spaceflight</company>
         <rev>1</rev>
         <date>2016-06-28</date>
-        <source>DCDC-Board2-Reg2.sch</source>
+        <source>DCDC-Board3-Reg2.sch</source>
         <comment number="1" value="Drawn by: Levin Tan, Jamie Wood"/>
         <comment number="2" value=""/>
         <comment number="3" value=""/>
@@ -107,7 +107,7 @@
         <field name="Farnell">2475658</field>
       </fields>
       <libsource lib="agg-kicad" part="LTC3887"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56D83</tstamp>
     </comp>
     <comp ref="C11">
@@ -117,7 +117,7 @@
         <field name="Farnell">2496811</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56DAB</tstamp>
     </comp>
     <comp ref="C2">
@@ -127,7 +127,7 @@
         <field name="Farnell">2496811</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56DB3</tstamp>
     </comp>
     <comp ref="L2">
@@ -137,7 +137,7 @@
         <field name="Farnell">2292532</field>
       </fields>
       <libsource lib="agg-kicad" part="L"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56DBB</tstamp>
     </comp>
     <comp ref="L1">
@@ -147,7 +147,7 @@
         <field name="Farnell">2292532</field>
       </fields>
       <libsource lib="agg-kicad" part="L"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56DC3</tstamp>
     </comp>
     <comp ref="C4">
@@ -157,7 +157,7 @@
         <field name="Farnell">2346881</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56DD1</tstamp>
     </comp>
     <comp ref="C7">
@@ -167,7 +167,7 @@
         <field name="Farnell">2346925</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56DDF</tstamp>
     </comp>
     <comp ref="R13">
@@ -177,7 +177,7 @@
         <field name="Farnell">1506129</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56DED</tstamp>
     </comp>
     <comp ref="R1">
@@ -187,7 +187,7 @@
         <field name="Farnell">1506129</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56DF5</tstamp>
     </comp>
     <comp ref="R9">
@@ -197,7 +197,7 @@
         <field name="Farnell">2447095</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56DFD</tstamp>
     </comp>
     <comp ref="R11">
@@ -207,7 +207,7 @@
         <field name="Farnell">2447095</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E05</tstamp>
     </comp>
     <comp ref="C15">
@@ -217,7 +217,7 @@
         <field name="Farnell">2346925</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E0D</tstamp>
     </comp>
     <comp ref="C1">
@@ -227,7 +227,7 @@
         <field name="Farnell">2346925</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E1B</tstamp>
     </comp>
     <comp ref="C8">
@@ -237,7 +237,7 @@
         <field name="Farnell">2210781</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E29</tstamp>
     </comp>
     <comp ref="C6">
@@ -247,7 +247,7 @@
         <field name="Farnell">2210781</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E31</tstamp>
     </comp>
     <comp ref="R6">
@@ -257,7 +257,7 @@
         <field name="Farnell">2447095</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E39</tstamp>
     </comp>
     <comp ref="R3">
@@ -267,7 +267,7 @@
         <field name="Farnell">2447095</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E41</tstamp>
     </comp>
     <comp ref="C10">
@@ -277,7 +277,7 @@
         <field name="Farnell">2218855</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E4F</tstamp>
     </comp>
     <comp ref="C14">
@@ -287,7 +287,7 @@
         <field name="Farnell">2218855</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E57</tstamp>
     </comp>
     <comp ref="D1">
@@ -297,7 +297,7 @@
         <field name="Farnell">2317558</field>
       </fields>
       <libsource lib="agg-kicad" part="SCHOTTKY"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E71</tstamp>
     </comp>
     <comp ref="D2">
@@ -307,7 +307,7 @@
         <field name="Farnell">2317558</field>
       </fields>
       <libsource lib="agg-kicad" part="SCHOTTKY"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E79</tstamp>
     </comp>
     <comp ref="C13">
@@ -317,21 +317,21 @@
         <field name="Farnell">2496811</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56E81</tstamp>
     </comp>
     <comp ref="R10">
-      <value>5k76</value>
+      <value>9k09</value>
       <footprint>agg:0402</footprint>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56ED8</tstamp>
     </comp>
     <comp ref="R8">
       <value>24k9</value>
       <footprint>agg:0402</footprint>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56EE6</tstamp>
     </comp>
     <comp ref="R12">
@@ -341,7 +341,7 @@
         <field name="Farnell">1469715</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56EEE</tstamp>
     </comp>
     <comp ref="C12">
@@ -351,7 +351,7 @@
         <field name="Farnell">2496786</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56EFC</tstamp>
     </comp>
     <comp ref="C3">
@@ -361,7 +361,7 @@
         <field name="Farnell">2496786</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56F04</tstamp>
     </comp>
     <comp ref="R4">
@@ -371,7 +371,7 @@
         <field name="Farnell">1469715</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56F0C</tstamp>
     </comp>
     <comp ref="C9">
@@ -381,7 +381,7 @@
         <field name="Farnell">2210772</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56FC8</tstamp>
     </comp>
     <comp ref="C5">
@@ -391,7 +391,7 @@
         <field name="Farnell">2210772</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56D56FD0</tstamp>
     </comp>
     <comp ref="R2">
@@ -401,7 +401,7 @@
         <field name="Farnell">2447096</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56DDC77D</tstamp>
     </comp>
     <comp ref="Q2">
@@ -412,7 +412,7 @@
         <field name="Farnell">2422226</field>
       </fields>
       <libsource lib="agg-kicad" part="SiZ340DT"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56E08906</tstamp>
     </comp>
     <comp ref="Q1">
@@ -423,7 +423,7 @@
         <field name="Farnell">2422226</field>
       </fields>
       <libsource lib="agg-kicad" part="SiZ340DT"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>56E08A62</tstamp>
     </comp>
     <comp ref="R5">
@@ -433,7 +433,7 @@
         <field name="Farnell">1469715</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>571930DA</tstamp>
     </comp>
     <comp ref="R18">
@@ -443,7 +443,7 @@
         <field name="Farnell">2447096</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>57472437</tstamp>
     </comp>
     <comp ref="C31">
@@ -453,7 +453,7 @@
         <field name="Farnell">2496811</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 1/" tstamps="/56E22E4E/"/>
+      <sheetpath names="/Board 3 Regulator 1/" tstamps="/56E22E4E/"/>
       <tstamp>574761D4</tstamp>
     </comp>
     <comp ref="IC2">
@@ -464,7 +464,7 @@
         <field name="Farnell">2475658</field>
       </fields>
       <libsource lib="agg-kicad" part="LTC3887"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D586AD</tstamp>
     </comp>
     <comp ref="C26">
@@ -474,7 +474,7 @@
         <field name="Farnell">2496811</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D586D5</tstamp>
     </comp>
     <comp ref="C17">
@@ -484,7 +484,7 @@
         <field name="Farnell">2496811</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D586DD</tstamp>
     </comp>
     <comp ref="L4">
@@ -494,7 +494,7 @@
         <field name="Farnell">2292532</field>
       </fields>
       <libsource lib="agg-kicad" part="L"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D586E5</tstamp>
     </comp>
     <comp ref="L3">
@@ -504,7 +504,7 @@
         <field name="Farnell">2292532</field>
       </fields>
       <libsource lib="agg-kicad" part="L"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D586ED</tstamp>
     </comp>
     <comp ref="C19">
@@ -514,7 +514,7 @@
         <field name="Farnell">2346881</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D586FB</tstamp>
     </comp>
     <comp ref="C22">
@@ -524,7 +524,7 @@
         <field name="Farnell">2346925</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58709</tstamp>
     </comp>
     <comp ref="R26">
@@ -534,7 +534,7 @@
         <field name="Farnell">1506129</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58717</tstamp>
     </comp>
     <comp ref="R14">
@@ -544,7 +544,7 @@
         <field name="Farnell">1506129</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D5871F</tstamp>
     </comp>
     <comp ref="R22">
@@ -554,7 +554,7 @@
         <field name="Farnell">2447095</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58727</tstamp>
     </comp>
     <comp ref="R24">
@@ -564,7 +564,7 @@
         <field name="Farnell">2447095</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D5872F</tstamp>
     </comp>
     <comp ref="C30">
@@ -574,7 +574,7 @@
         <field name="Farnell">2346925</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58737</tstamp>
     </comp>
     <comp ref="C16">
@@ -584,7 +584,7 @@
         <field name="Farnell">2346925</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58745</tstamp>
     </comp>
     <comp ref="C23">
@@ -594,7 +594,7 @@
         <field name="Farnell">2210781</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58753</tstamp>
     </comp>
     <comp ref="C21">
@@ -604,7 +604,7 @@
         <field name="Farnell">2210781</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D5875B</tstamp>
     </comp>
     <comp ref="R19">
@@ -614,7 +614,7 @@
         <field name="Farnell">2447095</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58763</tstamp>
     </comp>
     <comp ref="R16">
@@ -624,7 +624,7 @@
         <field name="Farnell">2447095</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D5876B</tstamp>
     </comp>
     <comp ref="C25">
@@ -634,7 +634,7 @@
         <field name="Farnell">2218855</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58779</tstamp>
     </comp>
     <comp ref="C29">
@@ -644,7 +644,7 @@
         <field name="Farnell">2218855</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58781</tstamp>
     </comp>
     <comp ref="D3">
@@ -654,7 +654,7 @@
         <field name="Farnell">2317558</field>
       </fields>
       <libsource lib="agg-kicad" part="SCHOTTKY"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D5879B</tstamp>
     </comp>
     <comp ref="D4">
@@ -664,7 +664,7 @@
         <field name="Farnell">2317558</field>
       </fields>
       <libsource lib="agg-kicad" part="SCHOTTKY"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D587A3</tstamp>
     </comp>
     <comp ref="C28">
@@ -674,14 +674,14 @@
         <field name="Farnell">2496811</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D587AB</tstamp>
     </comp>
     <comp ref="R23">
-      <value>7k32</value>
+      <value>11k3</value>
       <footprint>agg:0402</footprint>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58802</tstamp>
     </comp>
     <comp ref="R21">
@@ -691,7 +691,7 @@
         <field name="Farnell">1803690</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58810</tstamp>
     </comp>
     <comp ref="R25">
@@ -701,7 +701,7 @@
         <field name="Farnell">1469715</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58818</tstamp>
     </comp>
     <comp ref="C27">
@@ -711,7 +711,7 @@
         <field name="Farnell">2496786</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58826</tstamp>
     </comp>
     <comp ref="C18">
@@ -721,7 +721,7 @@
         <field name="Farnell">2496786</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D5882E</tstamp>
     </comp>
     <comp ref="R17">
@@ -731,7 +731,7 @@
         <field name="Farnell">1469715</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D58836</tstamp>
     </comp>
     <comp ref="C24">
@@ -741,7 +741,7 @@
         <field name="Farnell">2210772</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D588F2</tstamp>
     </comp>
     <comp ref="C20">
@@ -751,7 +751,7 @@
         <field name="Farnell">2210772</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56D588FA</tstamp>
     </comp>
     <comp ref="R15">
@@ -761,7 +761,7 @@
         <field name="Farnell">2447096</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56DDD727</tstamp>
     </comp>
     <comp ref="Q4">
@@ -772,7 +772,7 @@
         <field name="Farnell">2422226</field>
       </fields>
       <libsource lib="agg-kicad" part="SiZ340DT"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56E09108</tstamp>
     </comp>
     <comp ref="Q3">
@@ -783,7 +783,7 @@
         <field name="Farnell">2422226</field>
       </fields>
       <libsource lib="agg-kicad" part="SiZ340DT"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>56E09178</tstamp>
     </comp>
     <comp ref="R7">
@@ -793,7 +793,7 @@
         <field name="Farnell">1469715</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>5717E02F</tstamp>
     </comp>
     <comp ref="R20">
@@ -803,7 +803,7 @@
         <field name="Farnell">2447096</field>
       </fields>
       <libsource lib="agg-kicad" part="R"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>574746C5</tstamp>
     </comp>
     <comp ref="C32">
@@ -813,7 +813,7 @@
         <field name="Farnell">2496811</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
-      <sheetpath names="/Board 2 Regulator 2/" tstamps="/56E22E64/"/>
+      <sheetpath names="/Board 3 Regulator 2/" tstamps="/56E22E64/"/>
       <tstamp>57476DF7</tstamp>
     </comp>
   </components>
@@ -975,7 +975,7 @@
   </libparts>
   <libraries>
     <library logical="agg-kicad">
-      <uri>/home/adam/Projects/m3-avionics/m3psu/pcb/DCDC-Board2/../../../agg-kicad/agg-kicad.lib</uri>
+      <uri>/home/adam/Projects/m3-avionics/m3psu/pcb/DCDC-Board3/../../../agg-kicad/agg-kicad.lib</uri>
     </library>
   </libraries>
   <nets>
@@ -987,121 +987,114 @@
       <node ref="J2" pin="15"/>
       <node ref="J1" pin="15"/>
     </net>
-    <net code="3" name="/3v3_AUX1">
-      <node ref="J2" pin="13"/>
-      <node ref="J1" pin="13"/>
-    </net>
-    <net code="4" name="/3v3_DL">
-      <node ref="J1" pin="11"/>
-      <node ref="J2" pin="11"/>
-    </net>
-    <net code="5" name="/RSVD1">
-      <node ref="J2" pin="12"/>
+    <net code="3" name="/RSVD1">
       <node ref="J1" pin="12"/>
+      <node ref="J2" pin="12"/>
     </net>
-    <net code="6" name="/VBATT">
-      <node ref="J3" pin="3"/>
-      <node ref="J6" pin="4"/>
+    <net code="4" name="/VBATT">
       <node ref="J6" pin="3"/>
+      <node ref="J6" pin="4"/>
+      <node ref="J3" pin="3"/>
       <node ref="J3" pin="4"/>
     </net>
-    <net code="7" name="/BATT2">
-      <node ref="J6" pin="8"/>
+    <net code="5" name="/BATT2">
       <node ref="J3" pin="8"/>
+      <node ref="J6" pin="8"/>
     </net>
-    <net code="8" name="3v3">
+    <net code="6" name="3v3">
       <node ref="J3" pin="5"/>
       <node ref="J6" pin="5"/>
     </net>
-    <net code="9" name="/BATT1">
-      <node ref="J3" pin="6"/>
+    <net code="7" name="/BATT1">
       <node ref="J6" pin="6"/>
+      <node ref="J3" pin="6"/>
     </net>
-    <net code="10" name="/SCL">
-      <node ref="J3" pin="9"/>
-      <node ref="IC1" pin="9"/>
+    <net code="8" name="/SCL">
       <node ref="IC2" pin="9"/>
+      <node ref="J3" pin="9"/>
       <node ref="J6" pin="9"/>
+      <node ref="IC1" pin="9"/>
     </net>
-    <net code="11" name="/SDA">
-      <node ref="IC2" pin="10"/>
+    <net code="9" name="/SDA">
       <node ref="J3" pin="7"/>
       <node ref="J6" pin="7"/>
       <node ref="IC1" pin="10"/>
+      <node ref="IC2" pin="10"/>
     </net>
-    <net code="12" name="VCC">
-      <node ref="J6" pin="2"/>
-      <node ref="Q4" pin="D1"/>
-      <node ref="IC1" pin="35"/>
-      <node ref="J6" pin="1"/>
-      <node ref="C7" pin="1"/>
+    <net code="10" name="VCC">
       <node ref="C22" pin="1"/>
-      <node ref="C32" pin="1"/>
+      <node ref="J6" pin="1"/>
+      <node ref="J6" pin="2"/>
       <node ref="J3" pin="1"/>
       <node ref="J3" pin="2"/>
-      <node ref="Q3" pin="D1"/>
-      <node ref="C31" pin="1"/>
-      <node ref="Q2" pin="D1"/>
+      <node ref="C7" pin="1"/>
+      <node ref="Q4" pin="D1"/>
+      <node ref="C32" pin="1"/>
       <node ref="IC2" pin="35"/>
+      <node ref="IC1" pin="35"/>
+      <node ref="C31" pin="1"/>
+      <node ref="Q3" pin="D1"/>
       <node ref="Q1" pin="D1"/>
+      <node ref="Q2" pin="D1"/>
     </net>
-    <net code="13" name="/~ALERT">
-      <node ref="J6" pin="10"/>
+    <net code="11" name="/~ALERT">
       <node ref="IC1" pin="11"/>
-      <node ref="J3" pin="10"/>
+      <node ref="J6" pin="10"/>
       <node ref="IC2" pin="11"/>
+      <node ref="J3" pin="10"/>
     </net>
-    <net code="14" name="/3v3_PYRO">
+    <net code="12" name="/3v3_DL">
       <node ref="R16" pin="1"/>
       <node ref="C16" pin="1"/>
       <node ref="R14" pin="1"/>
-      <node ref="J1" pin="9"/>
+      <node ref="J1" pin="11"/>
       <node ref="IC2" pin="1"/>
-      <node ref="J2" pin="9"/>
+      <node ref="J2" pin="11"/>
     </net>
-    <net code="15" name="/3v3_RADIO">
+    <net code="13" name="/5v_CAN">
       <node ref="IC2" pin="27"/>
       <node ref="R26" pin="2"/>
-      <node ref="J1" pin="5"/>
+      <node ref="J1" pin="14"/>
       <node ref="R24" pin="2"/>
-      <node ref="J2" pin="5"/>
       <node ref="C30" pin="1"/>
+      <node ref="J2" pin="14"/>
     </net>
-    <net code="16" name="/5v_AUX1">
-      <node ref="R11" pin="2"/>
-      <node ref="C15" pin="1"/>
-      <node ref="IC1" pin="27"/>
-      <node ref="R13" pin="2"/>
-      <node ref="J4" pin="11"/>
-      <node ref="J5" pin="11"/>
-    </net>
-    <net code="17" name="/5v_RADIO">
-      <node ref="J4" pin="7"/>
-      <node ref="R3" pin="1"/>
-      <node ref="J5" pin="7"/>
+    <net code="14" name="/5v_CAM">
+      <node ref="J4" pin="15"/>
       <node ref="R1" pin="1"/>
+      <node ref="R3" pin="1"/>
       <node ref="IC1" pin="1"/>
+      <node ref="J5" pin="15"/>
       <node ref="C1" pin="1"/>
     </net>
-    <net code="18" name="/JTDI">
+    <net code="15" name="/3v3_AUX1">
+      <node ref="IC1" pin="27"/>
+      <node ref="J2" pin="13"/>
+      <node ref="J1" pin="13"/>
+      <node ref="C15" pin="1"/>
+      <node ref="R13" pin="2"/>
+      <node ref="R11" pin="2"/>
+    </net>
+    <net code="16" name="/JTDI">
       <node ref="J2" pin="8"/>
       <node ref="J1" pin="8"/>
     </net>
-    <net code="19" name="GND">
-      <node ref="R12" pin="2"/>
-      <node ref="IC1" pin="23"/>
+    <net code="17" name="GND">
       <node ref="IC1" pin="28"/>
+      <node ref="R12" pin="2"/>
+      <node ref="IC1" pin="2"/>
+      <node ref="IC1" pin="23"/>
       <node ref="IC1" pin="34"/>
-      <node ref="Q2" pin="S2"/>
       <node ref="C31" pin="2"/>
+      <node ref="Q2" pin="S2"/>
       <node ref="Q1" pin="S2"/>
       <node ref="R4" pin="1"/>
-      <node ref="C4" pin="2"/>
-      <node ref="IC1" pin="40"/>
+      <node ref="C28" pin="2"/>
       <node ref="C1" pin="2"/>
       <node ref="C15" pin="2"/>
       <node ref="IC1" pin="EP"/>
-      <node ref="IC1" pin="2"/>
+      <node ref="C4" pin="2"/>
+      <node ref="IC1" pin="40"/>
       <node ref="C7" pin="2"/>
       <node ref="C9" pin="2"/>
       <node ref="C5" pin="1"/>
@@ -1125,109 +1118,116 @@
       <node ref="R10" pin="2"/>
       <node ref="C10" pin="2"/>
       <node ref="C14" pin="2"/>
-      <node ref="C28" pin="2"/>
       <node ref="C24" pin="2"/>
       <node ref="C20" pin="1"/>
       <node ref="C32" pin="2"/>
       <node ref="Q4" pin="S2"/>
       <node ref="Q3" pin="S2"/>
-      <node ref="J5" pin="20"/>
       <node ref="J5" pin="19"/>
+      <node ref="J5" pin="20"/>
       <node ref="J1" pin="20"/>
       <node ref="J1" pin="2"/>
       <node ref="J1" pin="1"/>
       <node ref="J2" pin="2"/>
+      <node ref="J4" pin="19"/>
+      <node ref="J5" pin="2"/>
+      <node ref="J2" pin="20"/>
       <node ref="J1" pin="19"/>
       <node ref="J4" pin="1"/>
       <node ref="J4" pin="2"/>
-      <node ref="J2" pin="20"/>
+      <node ref="J2" pin="1"/>
       <node ref="J2" pin="19"/>
       <node ref="J5" pin="1"/>
-      <node ref="J5" pin="2"/>
-      <node ref="J2" pin="1"/>
-      <node ref="J4" pin="19"/>
     </net>
-    <net code="20" name="/CAN-">
-      <node ref="J2" pin="16"/>
+    <net code="18" name="/CAN-">
       <node ref="J1" pin="16"/>
+      <node ref="J2" pin="16"/>
     </net>
-    <net code="21" name="/5v_CAN">
-      <node ref="J1" pin="14"/>
-      <node ref="J2" pin="14"/>
+    <net code="19" name="/3v3_PYRO">
+      <node ref="J1" pin="9"/>
+      <node ref="J2" pin="9"/>
     </net>
-    <net code="22" name="/3v3_FC">
-      <node ref="J1" pin="7"/>
+    <net code="20" name="/3v3_FC">
       <node ref="J2" pin="7"/>
+      <node ref="J1" pin="7"/>
     </net>
-    <net code="23" name="/3v3_IMU">
-      <node ref="J2" pin="3"/>
+    <net code="21" name="/3v3_RADIO">
+      <node ref="J1" pin="5"/>
+      <node ref="J2" pin="5"/>
+    </net>
+    <net code="22" name="/3v3_IMU">
       <node ref="J1" pin="3"/>
+      <node ref="J2" pin="3"/>
     </net>
-    <net code="24" name="/JTCK">
+    <net code="23" name="/JTCK">
       <node ref="J2" pin="6"/>
       <node ref="J1" pin="6"/>
     </net>
-    <net code="25" name="/JTMS">
+    <net code="24" name="/JTMS">
       <node ref="J2" pin="4"/>
       <node ref="J1" pin="4"/>
     </net>
-    <net code="26" name="/JTDR">
-      <node ref="J2" pin="10"/>
+    <net code="25" name="/JTDR">
       <node ref="J1" pin="10"/>
+      <node ref="J2" pin="10"/>
     </net>
-    <net code="27" name="/CAN+">
-      <node ref="J2" pin="18"/>
+    <net code="26" name="/CAN+">
       <node ref="J1" pin="18"/>
+      <node ref="J2" pin="18"/>
     </net>
-    <net code="28" name="/PWR">
+    <net code="27" name="/PWR">
       <node ref="J4" pin="16"/>
       <node ref="J5" pin="16"/>
     </net>
-    <net code="29" name="/PYRO1">
+    <net code="28" name="/PYRO1">
       <node ref="J4" pin="8"/>
       <node ref="J5" pin="8"/>
     </net>
-    <net code="30" name="/PYRO2">
+    <net code="29" name="/PYRO2">
       <node ref="J4" pin="10"/>
       <node ref="J5" pin="10"/>
     </net>
-    <net code="31" name="/PYRO3">
-      <node ref="J5" pin="12"/>
+    <net code="30" name="/PYRO3">
       <node ref="J4" pin="12"/>
+      <node ref="J5" pin="12"/>
     </net>
-    <net code="32" name="/PYRO4">
+    <net code="31" name="/PYRO4">
       <node ref="J4" pin="14"/>
       <node ref="J5" pin="14"/>
     </net>
-    <net code="33" name="/CHARGE">
-      <node ref="J4" pin="18"/>
-      <node ref="J4" pin="17"/>
+    <net code="32" name="/CHARGE">
       <node ref="J5" pin="18"/>
       <node ref="J5" pin="17"/>
+      <node ref="J4" pin="18"/>
+      <node ref="J4" pin="17"/>
     </net>
-    <net code="34" name="/5v_CAM">
-      <node ref="J4" pin="15"/>
-      <node ref="J5" pin="15"/>
-    </net>
-    <net code="35" name="/5v_AUX2">
+    <net code="33" name="/5v_AUX2">
       <node ref="J4" pin="13"/>
       <node ref="J5" pin="13"/>
     </net>
-    <net code="36" name="/5v_IMU">
+    <net code="34" name="/5v_AUX1">
+      <node ref="J4" pin="11"/>
+      <node ref="J5" pin="11"/>
+    </net>
+    <net code="35" name="/5v_IMU">
       <node ref="J4" pin="9"/>
       <node ref="J5" pin="9"/>
     </net>
+    <net code="36" name="/5v_RADIO">
+      <node ref="J4" pin="7"/>
+      <node ref="J5" pin="7"/>
+    </net>
     <net code="37" name="/PYRO_SI">
-      <node ref="J4" pin="5"/>
       <node ref="J5" pin="5"/>
       <node ref="J4" pin="6"/>
+      <node ref="J4" pin="5"/>
       <node ref="J5" pin="6"/>
     </net>
     <net code="38" name="/PYRO_SO">
       <node ref="J5" pin="3"/>
-      <node ref="J5" pin="4"/>
       <node ref="J4" pin="4"/>
       <node ref="J4" pin="3"/>
+      <node ref="J5" pin="4"/>
     </net>
     <net code="39" name="Net-(L2-Pad2)">
       <node ref="R9" pin="2"/>
@@ -1235,13 +1235,13 @@
       <node ref="R13" pin="1"/>
     </net>
     <net code="40" name="Net-(IC1-Pad38)">
-      <node ref="Q1" pin="G1"/>
       <node ref="IC1" pin="38"/>
+      <node ref="Q1" pin="G1"/>
     </net>
     <net code="41" name="Net-(C2-Pad1)">
-      <node ref="IC1" pin="39"/>
       <node ref="Q1" pin="S1D2"/>
       <node ref="C2" pin="1"/>
+      <node ref="IC1" pin="39"/>
       <node ref="L1" pin="2"/>
     </net>
     <net code="42" name="Net-(IC1-Pad36)">
@@ -1249,9 +1249,9 @@
       <node ref="Q1" pin="G2"/>
     </net>
     <net code="43" name="Net-(L1-Pad1)">
-      <node ref="R6" pin="1"/>
-      <node ref="R1" pin="2"/>
       <node ref="L1" pin="1"/>
+      <node ref="R1" pin="2"/>
+      <node ref="R6" pin="1"/>
     </net>
     <net code="44" name="Net-(C11-Pad1)">
       <node ref="C11" pin="1"/>
@@ -1259,14 +1259,14 @@
       <node ref="D2" pin="1"/>
     </net>
     <net code="45" name="Net-(C2-Pad2)">
-      <node ref="C2" pin="2"/>
       <node ref="D1" pin="1"/>
+      <node ref="C2" pin="2"/>
       <node ref="IC1" pin="37"/>
     </net>
     <net code="46" name="Net-(C13-Pad1)">
-      <node ref="IC1" pin="33"/>
       <node ref="D2" pin="2"/>
       <node ref="C13" pin="1"/>
+      <node ref="IC1" pin="33"/>
       <node ref="C4" pin="1"/>
       <node ref="D1" pin="2"/>
     </net>
@@ -1276,22 +1276,22 @@
       <node ref="R8" pin="2"/>
     </net>
     <net code="48" name="Net-(IC1-Pad8)">
-      <node ref="R5" pin="2"/>
       <node ref="IC1" pin="8"/>
+      <node ref="R5" pin="2"/>
     </net>
     <net code="49" name="Net-(IC1-Pad20)">
       <node ref="IC1" pin="20"/>
     </net>
     <net code="50" name="Net-(IC1-Pad14)">
-      <node ref="R2" pin="2"/>
-      <node ref="IC1" pin="15"/>
       <node ref="IC1" pin="14"/>
+      <node ref="IC1" pin="15"/>
+      <node ref="R2" pin="2"/>
     </net>
     <net code="51" name="Net-(C11-Pad2)">
+      <node ref="L2" pin="1"/>
+      <node ref="C11" pin="2"/>
       <node ref="Q2" pin="S1D2"/>
       <node ref="IC1" pin="29"/>
-      <node ref="C11" pin="2"/>
-      <node ref="L2" pin="1"/>
     </net>
     <net code="52" name="Net-(IC1-Pad21)">
       <node ref="IC1" pin="21"/>
@@ -1302,8 +1302,8 @@
     </net>
     <net code="54" name="Net-(IC1-Pad12)">
       <node ref="IC1" pin="12"/>
-      <node ref="IC1" pin="13"/>
       <node ref="R18" pin="1"/>
+      <node ref="IC1" pin="13"/>
     </net>
     <net code="55" name="Net-(IC1-Pad32)">
       <node ref="IC1" pin="32"/>
@@ -1316,15 +1316,15 @@
       <node ref="IC1" pin="18"/>
     </net>
     <net code="58" name="Net-(C14-Pad1)">
+      <node ref="R18" pin="2"/>
       <node ref="IC1" pin="25"/>
       <node ref="R5" pin="1"/>
-      <node ref="R18" pin="2"/>
-      <node ref="C14" pin="1"/>
       <node ref="R2" pin="1"/>
+      <node ref="C14" pin="1"/>
     </net>
     <net code="59" name="Net-(C6-Pad1)">
-      <node ref="C6" pin="1"/>
       <node ref="R6" pin="2"/>
+      <node ref="C6" pin="1"/>
       <node ref="IC1" pin="6"/>
     </net>
     <net code="60" name="Net-(C8-Pad2)">
@@ -1333,8 +1333,8 @@
       <node ref="IC1" pin="4"/>
     </net>
     <net code="61" name="Net-(C8-Pad1)">
-      <node ref="R9" pin="1"/>
       <node ref="C8" pin="1"/>
+      <node ref="R9" pin="1"/>
       <node ref="IC1" pin="3"/>
     </net>
     <net code="62" name="Net-(IC1-Pad17)">
@@ -1344,8 +1344,8 @@
       <node ref="IC1" pin="24"/>
     </net>
     <net code="64" name="Net-(C3-Pad2)">
-      <node ref="C5" pin="2"/>
       <node ref="IC1" pin="5"/>
+      <node ref="C5" pin="2"/>
       <node ref="C3" pin="2"/>
     </net>
     <net code="65" name="Net-(C3-Pad1)">
@@ -1357,9 +1357,9 @@
       <node ref="C12" pin="2"/>
     </net>
     <net code="67" name="Net-(C6-Pad2)">
-      <node ref="IC1" pin="7"/>
-      <node ref="R3" pin="2"/>
       <node ref="C6" pin="2"/>
+      <node ref="R3" pin="2"/>
+      <node ref="IC1" pin="7"/>
     </net>
     <net code="68" name="Net-(IC1-Pad16)">
       <node ref="R8" pin="1"/>
@@ -1368,44 +1368,44 @@
     </net>
     <net code="69" name="Net-(C12-Pad1)">
       <node ref="C12" pin="1"/>
-      <node ref="C9" pin="1"/>
       <node ref="IC1" pin="26"/>
+      <node ref="C9" pin="1"/>
     </net>
     <net code="70" name="Net-(L4-Pad2)">
-      <node ref="R22" pin="2"/>
       <node ref="R26" pin="1"/>
+      <node ref="R22" pin="2"/>
       <node ref="L4" pin="2"/>
     </net>
     <net code="71" name="Net-(IC2-Pad36)">
-      <node ref="IC2" pin="36"/>
       <node ref="Q3" pin="G2"/>
+      <node ref="IC2" pin="36"/>
     </net>
     <net code="72" name="Net-(IC2-Pad38)">
-      <node ref="IC2" pin="38"/>
       <node ref="Q3" pin="G1"/>
+      <node ref="IC2" pin="38"/>
     </net>
     <net code="73" name="Net-(C17-Pad1)">
-      <node ref="IC2" pin="39"/>
-      <node ref="C17" pin="1"/>
       <node ref="L3" pin="2"/>
       <node ref="Q3" pin="S1D2"/>
+      <node ref="C17" pin="1"/>
+      <node ref="IC2" pin="39"/>
     </net>
     <net code="74" name="Net-(C26-Pad1)">
       <node ref="C26" pin="1"/>
-      <node ref="D4" pin="1"/>
       <node ref="IC2" pin="31"/>
+      <node ref="D4" pin="1"/>
     </net>
     <net code="75" name="Net-(C17-Pad2)">
       <node ref="C17" pin="2"/>
-      <node ref="D3" pin="1"/>
       <node ref="IC2" pin="37"/>
+      <node ref="D3" pin="1"/>
     </net>
     <net code="76" name="Net-(C19-Pad1)">
-      <node ref="IC2" pin="33"/>
       <node ref="C28" pin="1"/>
       <node ref="D3" pin="2"/>
-      <node ref="C19" pin="1"/>
+      <node ref="IC2" pin="33"/>
       <node ref="D4" pin="2"/>
+      <node ref="C19" pin="1"/>
     </net>
     <net code="77" name="Net-(L3-Pad1)">
       <node ref="L3" pin="1"/>
@@ -1413,9 +1413,9 @@
       <node ref="R19" pin="1"/>
     </net>
     <net code="78" name="Net-(C25-Pad1)">
+      <node ref="IC2" pin="22"/>
       <node ref="R21" pin="2"/>
       <node ref="C25" pin="1"/>
-      <node ref="IC2" pin="22"/>
     </net>
     <net code="79" name="Net-(IC2-Pad8)">
       <node ref="IC2" pin="8"/>
@@ -1425,8 +1425,8 @@
       <node ref="IC2" pin="20"/>
     </net>
     <net code="81" name="Net-(IC2-Pad14)">
-      <node ref="IC2" pin="15"/>
       <node ref="IC2" pin="14"/>
+      <node ref="IC2" pin="15"/>
       <node ref="R15" pin="2"/>
     </net>
     <net code="82" name="Net-(C26-Pad2)">
@@ -1443,9 +1443,9 @@
       <node ref="IC2" pin="30"/>
     </net>
     <net code="85" name="Net-(IC2-Pad12)">
-      <node ref="IC2" pin="13"/>
       <node ref="R20" pin="1"/>
       <node ref="IC2" pin="12"/>
+      <node ref="IC2" pin="13"/>
     </net>
     <net code="86" name="Net-(IC2-Pad32)">
       <node ref="Q4" pin="G2"/>
@@ -1458,31 +1458,31 @@
       <node ref="IC2" pin="18"/>
     </net>
     <net code="89" name="Net-(C29-Pad1)">
-      <node ref="R15" pin="1"/>
+      <node ref="IC2" pin="25"/>
       <node ref="R7" pin="1"/>
       <node ref="C29" pin="1"/>
+      <node ref="R15" pin="1"/>
       <node ref="R20" pin="2"/>
-      <node ref="IC2" pin="25"/>
     </net>
     <net code="90" name="Net-(C21-Pad2)">
       <node ref="IC2" pin="7"/>
-      <node ref="R16" pin="2"/>
       <node ref="C21" pin="2"/>
+      <node ref="R16" pin="2"/>
     </net>
     <net code="91" name="Net-(C21-Pad1)">
-      <node ref="R19" pin="2"/>
       <node ref="C21" pin="1"/>
+      <node ref="R19" pin="2"/>
       <node ref="IC2" pin="6"/>
     </net>
     <net code="92" name="Net-(C23-Pad2)">
-      <node ref="C23" pin="2"/>
-      <node ref="IC2" pin="4"/>
       <node ref="R24" pin="1"/>
+      <node ref="IC2" pin="4"/>
+      <node ref="C23" pin="2"/>
     </net>
     <net code="93" name="Net-(C23-Pad1)">
       <node ref="C23" pin="1"/>
-      <node ref="IC2" pin="3"/>
       <node ref="R22" pin="1"/>
+      <node ref="IC2" pin="3"/>
     </net>
     <net code="94" name="Net-(IC2-Pad17)">
       <node ref="IC2" pin="17"/>
@@ -1491,9 +1491,9 @@
       <node ref="IC2" pin="24"/>
     </net>
     <net code="96" name="Net-(C18-Pad2)">
+      <node ref="IC2" pin="5"/>
       <node ref="C20" pin="2"/>
       <node ref="C18" pin="2"/>
-      <node ref="IC2" pin="5"/>
     </net>
     <net code="97" name="Net-(C18-Pad1)">
       <node ref="C18" pin="1"/>
@@ -1504,14 +1504,14 @@
       <node ref="R25" pin="1"/>
     </net>
     <net code="99" name="Net-(IC2-Pad16)">
+      <node ref="R21" pin="1"/>
       <node ref="IC2" pin="16"/>
       <node ref="R23" pin="1"/>
-      <node ref="R21" pin="1"/>
     </net>
     <net code="100" name="Net-(C24-Pad1)">
+      <node ref="C27" pin="1"/>
       <node ref="IC2" pin="26"/>
       <node ref="C24" pin="1"/>
-      <node ref="C27" pin="1"/>
     </net>
   </nets>
 </export>
