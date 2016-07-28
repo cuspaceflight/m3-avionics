@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name m3psu)(type KiCad)(uri ${KIPRJMOD}/m3psu.pretty)(options "")(descr ""))
+)

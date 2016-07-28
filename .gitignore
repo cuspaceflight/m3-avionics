@@ -9,3 +9,5 @@ _autosave*
 *.bin
 *.o
 build/
+
+*~
