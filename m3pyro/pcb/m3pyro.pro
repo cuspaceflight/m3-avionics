@@ -1,4 +1,4 @@
-update=Sun 24 Jul 2016 22:22:20 BST
+update=Thu 28 Jul 2016 20:33:03 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -32,3 +32,4 @@ LibDir=
 LibName1=m3pyro-rescue
 LibName2=../../agg-kicad/agg-kicad
 LibName3=m3pyroextra
+LibName4=extended pyro library
