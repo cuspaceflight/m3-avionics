@@ -2,8 +2,8 @@
 <export version="D">
   <design>
     <source>/home/adam/Projects/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/Li-Ion-Charger-Board.sch</source>
-    <date>Wed 29 Jun 2016 02:37:39 BST</date>
-    <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
+    <date>Wed 03 Aug 2016 07:10:33 BST</date>
+    <tool>Eeschema 4.1.0-alpha+201607281302+6996~46~ubuntu14.04.1-product</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>M3PSU Li-Ion Charger Board</title>
@@ -240,7 +240,7 @@
       <fields>
         <field name="Farnell">2471947</field>
       </fields>
-      <libsource lib="Li-Ion-Charger-Board-rescue" part="PFET-RESCUE-Li-Ion-Charger-Board"/>
+      <libsource lib="agg-kicad" part="PFET_GDS"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56C79D18</tstamp>
     </comp>
@@ -276,12 +276,12 @@
     </comp>
     <comp ref="Q2">
       <value>PFET</value>
-      <footprint>PowerPAK-1212-8</footprint>
+      <footprint>agg:PowerPAK-1212-8</footprint>
       <datasheet>http://www.vishay.com/docs/63232/sqm50p04-09l_ps.pdf</datasheet>
       <fields>
         <field name="Farnell">2364059</field>
       </fields>
-      <libsource lib="Li-Ion-Charger-Board-rescue" part="PFET-RESCUE-Li-Ion-Charger-Board"/>
+      <libsource lib="agg-kicad" part="PFET_GDS"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56DFD606</tstamp>
     </comp>
@@ -412,7 +412,7 @@
       <fields>
         <field name="Farnell">2498598</field>
       </fields>
-      <libsource lib="Li-Ion-Charger-Board-rescue" part="NFET-RESCUE-Li-Ion-Charger-Board"/>
+      <libsource lib="agg-kicad" part="NFET_GDS"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56E1C9CD</tstamp>
     </comp>
@@ -423,7 +423,7 @@
       <fields>
         <field name="Farnell">2498598</field>
       </fields>
-      <libsource lib="Li-Ion-Charger-Board-rescue" part="NFET-RESCUE-Li-Ion-Charger-Board"/>
+      <libsource lib="agg-kicad" part="NFET_GDS"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56E1CA5A</tstamp>
     </comp>
@@ -571,17 +571,6 @@
         <pin num="EP" name="GND" type="power_in"/>
       </pins>
     </libpart>
-    <libpart lib="Li-Ion-Charger-Board-rescue" part="NFET-RESCUE-Li-Ion-Charger-Board">
-      <fields>
-        <field name="Reference">Q</field>
-        <field name="Value">NFET-RESCUE-Li-Ion-Charger-Board</field>
-      </fields>
-      <pins>
-        <pin num="D" name="D" type="passive"/>
-        <pin num="G" name="G" type="passive"/>
-        <pin num="S" name="S" type="passive"/>
-      </pins>
-    </libpart>
     <libpart lib="agg-kicad" part="NFET2">
       <fields>
         <field name="Reference">Q</field>
@@ -594,6 +583,17 @@
         <pin num="G2" name="G" type="passive"/>
         <pin num="S1" name="S" type="passive"/>
         <pin num="S2" name="S" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="NFET_GDS">
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">NFET_GDS</field>
+      </fields>
+      <pins>
+        <pin num="D" name="D" type="passive"/>
+        <pin num="G" name="G" type="passive"/>
+        <pin num="S" name="S" type="passive"/>
       </pins>
     </libpart>
     <libpart lib="agg-kicad" part="PCAL9538A">
@@ -624,10 +624,10 @@
         <pin num="EP" name="VSS" type="power_in"/>
       </pins>
     </libpart>
-    <libpart lib="Li-Ion-Charger-Board-rescue" part="PFET-RESCUE-Li-Ion-Charger-Board">
+    <libpart lib="agg-kicad" part="PFET_GDS">
       <fields>
         <field name="Reference">Q</field>
-        <field name="Value">PFET-RESCUE-Li-Ion-Charger-Board</field>
+        <field name="Value">PFET_GDS</field>
       </fields>
       <pins>
         <pin num="D" name="D" type="passive"/>
@@ -663,9 +663,6 @@
     </libpart>
   </libparts>
   <libraries>
-    <library logical="Li-Ion-Charger-Board-rescue">
-      <uri>/home/adam/Projects/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/Li-Ion-Charger-Board-rescue.lib</uri>
-    </library>
     <library logical="agg-kicad">
       <uri>/home/adam/Projects/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/../../../agg-kicad/agg-kicad.lib</uri>
     </library>
