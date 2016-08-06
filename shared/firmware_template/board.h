@@ -26,7 +26,7 @@
 /*
     Board identifier
 */
-#define BOARD_M3TEMPLATE
+#define BOARD_
 #define BOARD_NAME                     "M3Template"
 
 /*
@@ -80,8 +80,8 @@
 #define GPIOB_PIN5                     5U
 #define GPIOB_PIN6                     6U
 #define GPIOB_PIN7                     7U
-#define GPIOB_CANRX                    8U
-#define GPIOB_CANTX                    9U
+#define GPIOB_CAN_RX                   8U
+#define GPIOB_CAN_TX                   9U
 #define GPIOB_PIN10                    10U
 #define GPIOB_PIN11                    11U
 #define GPIOB_PIN12                    12U
@@ -212,8 +212,8 @@
     IO lines assignments.
 */
 
-#define LINE_CANRX                     PAL_LINE(GPIOB, 8U)
-#define LINE_CANTX                     PAL_LINE(GPIOB, 9U)
+#define LINE_CAN_RX                    PAL_LINE(GPIOB, 8U)
+#define LINE_CAN_TX                    PAL_LINE(GPIOB, 9U)
 #define LINE_JTCK                      PAL_LINE(GPIOA, 14U)
 #define LINE_JTDI                      PAL_LINE(GPIOA, 15U)
 #define LINE_JTDO                      PAL_LINE(GPIOB, 3U)
@@ -370,8 +370,8 @@
  * PB5  - PIN5                         (unused).
  * PB6  - PIN6                         (unused).
  * PB7  - PIN7                         (unused).
- * PB8  - CANRX                        (af9).
- * PB9  - CANTX                        (af9).
+ * PB8  - CAN_RX                       (af9).
+ * PB9  - CAN_TX                       (af9).
  * PB10 - PIN10                        (unused).
  * PB11 - PIN11                        (unused).
  * PB12 - PIN12                        (unused).
@@ -387,8 +387,8 @@
                                         PIN_MODE_INPUT(GPIOB_PIN5) | \
                                         PIN_MODE_INPUT(GPIOB_PIN6) | \
                                         PIN_MODE_INPUT(GPIOB_PIN7) | \
-                                        PIN_MODE_ALTERNATE(GPIOB_CANRX) | \
-                                        PIN_MODE_ALTERNATE(GPIOB_CANTX) | \
+                                        PIN_MODE_ALTERNATE(GPIOB_CAN_RX) | \
+                                        PIN_MODE_ALTERNATE(GPIOB_CAN_TX) | \
                                         PIN_MODE_INPUT(GPIOB_PIN10) | \
                                         PIN_MODE_INPUT(GPIOB_PIN11) | \
                                         PIN_MODE_INPUT(GPIOB_PIN12) | \
@@ -403,8 +403,8 @@
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN5) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN6) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN7) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_CANRX) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_CANTX) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOB_CAN_RX) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOB_CAN_TX) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN10) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN11) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN12) | \
@@ -419,8 +419,8 @@
                                         PIN_OSPEED_HIGH(GPIOB_PIN5) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN6) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN7) | \
-                                        PIN_OSPEED_HIGH(GPIOB_CANRX) | \
-                                        PIN_OSPEED_HIGH(GPIOB_CANTX) | \
+                                        PIN_OSPEED_HIGH(GPIOB_CAN_RX) | \
+                                        PIN_OSPEED_HIGH(GPIOB_CAN_TX) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN10) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN11) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN12) | \
@@ -435,8 +435,8 @@
                                         PIN_PUPD_PULLUP(GPIOB_PIN5) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN6) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN7) | \
-                                        PIN_PUPD_PULLUP(GPIOB_CANRX) | \
-                                        PIN_PUPD_PULLUP(GPIOB_CANTX) | \
+                                        PIN_PUPD_PULLUP(GPIOB_CAN_RX) | \
+                                        PIN_PUPD_PULLUP(GPIOB_CAN_TX) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN10) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN11) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN12) | \
@@ -451,8 +451,8 @@
                                         PIN_OD_HIGH(GPIOB_PIN5) | \
                                         PIN_OD_HIGH(GPIOB_PIN6) | \
                                         PIN_OD_HIGH(GPIOB_PIN7) | \
-                                        PIN_OD_HIGH(GPIOB_CANRX) | \
-                                        PIN_OD_HIGH(GPIOB_CANTX) | \
+                                        PIN_OD_HIGH(GPIOB_CAN_RX) | \
+                                        PIN_OD_HIGH(GPIOB_CAN_TX) | \
                                         PIN_OD_HIGH(GPIOB_PIN10) | \
                                         PIN_OD_HIGH(GPIOB_PIN11) | \
                                         PIN_OD_HIGH(GPIOB_PIN12) | \
@@ -467,8 +467,8 @@
                                         PIN_AFIO_AF(GPIOB_PIN5, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN6, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN7, 0U))
-#define VAL_GPIOB_AFRH                 (PIN_AFIO_AF(GPIOB_CANRX, 9U) | \
-                                        PIN_AFIO_AF(GPIOB_CANTX, 9U) | \
+#define VAL_GPIOB_AFRH                 (PIN_AFIO_AF(GPIOB_CAN_RX, 9U) | \
+                                        PIN_AFIO_AF(GPIOB_CAN_TX, 9U) | \
                                         PIN_AFIO_AF(GPIOB_PIN10, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN11, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN12, 0U) | \
