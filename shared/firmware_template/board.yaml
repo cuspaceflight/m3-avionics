@@ -1,0 +1,14 @@
+name: M3Template
+lsefreq: 0
+hsefreq: 26000000
+voltage: 3.3
+mcutype: STM32F405xx
+default: input, pushpull, starthigh, pullup, highspeed
+pins:
+    jtms: pa13, af0, pulldown
+    jtck: pa14, af0, pulldown
+    jtdi: pa15, af0, pullup
+    jtdo: pb3, af0
+    njtrst: pb4, af0, pullup
+    canrx: pb8, af9
+    cantx: pb9, af9
