@@ -1,6 +1,6 @@
 # M3 Avionics Firmware Template
 
-Copy this folder's contents to `m3bla/firmware`, then:
+Copy this folder's contents to `m3bla/firmware` (including `.gitignore`), then:
 1. Modify `Makefile` and set `CHIBIOS=../../shared/ChibiOS` and `PROJECT=m3bla`
    (adjust for your board name).
 2. Modify `board.yaml` to reflect your PCB, leaving the current pins all in 
