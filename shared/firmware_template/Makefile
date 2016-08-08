@@ -71,7 +71,7 @@ endif
 
 # Enables the use of FPU on Cortex-M4 (no, softfp, hard).
 ifeq ($(USE_FPU),)
-  USE_FPU = no
+  USE_FPU = hard
 endif
 
 #
@@ -83,7 +83,7 @@ endif
 #
 
 # Define project name here
-PROJECT = ch
+PROJECT = m3template
 
 # Imported source files and paths
 CHIBIOS = ../ChibiOS
@@ -182,7 +182,7 @@ AOPT =
 TOPT = -mthumb -DTHUMB
 
 # Define C warning options here
-CWARN = -Wall -Wextra -Wundef -Wstrict-prototypes
+CWARN = -Wall -Wextra -Werror -Wundef -Wstrict-prototypes
 
 # Define C++ warning options here
 CPPWARN = -Wall -Wextra -Wundef
@@ -216,3 +216,26 @@ ULIBS =
 
 RULESPATH = $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC
 include $(RULESPATH)/rules.mk
+
+##############################################################################
+# M3Debug flashing via GDB
+#
+BMP_PORT = $(wildcard /dev/serial/by-id/usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00)
+flash: build/$(PROJECT).elf $(OUTFILES)
+	arm-none-eabi-gdb --batch \
+		              -ex 'target extended-remote $(BMP_PORT)' \
+					  -ex 'monitor version' \
+					  -ex 'monitor jtag_scan' \
+					  -ex 'attach 1' \
+					  -ex 'load' \
+					  -ex 'compare-sections' build/$(PROJECT).elf
+
+debug: build/$(PROJECT).elf $(OUTFILES)
+	arm-none-eabi-gdb -ex 'target extended-remote $(BMP_PORT)' \
+		              -ex 'monitor jtag_scan' \
+					  -ex 'attach 1' \
+					  -ex "file build/$(PROJECT).elf"
+
+#
+# End BMP flashing
+##############################################################################
