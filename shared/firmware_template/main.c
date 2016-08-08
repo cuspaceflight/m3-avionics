@@ -7,6 +7,5 @@ int main(void) {
   chSysInit();
 
   while (true) {
-    chThdSleepMilliseconds(500);
   }
 }
