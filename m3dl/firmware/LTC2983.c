@@ -28,9 +28,15 @@ static THD_FUNCTION(ltc2983_thd, arg) {
    chRegSetThreadName("LTC2983");
    spiStart(&SPID1, &hs_spicfg);
 
-   /* Sleep until power up interrupt */
+   /* Sleep until LTC2983 power up fires
+      interrupt taking TEMP_INT HIGH  */
  
-   /* Call ltc2983_setup */
+   /* Call ltc2983_setup function */
+
+   /* Enter while loop that continually starts
+      a multi-channel conversion and sleeps until
+      completion is signalled by the LTC2983 
+      taking the TEMP_INT pin high  */
   
 }
 
@@ -51,8 +57,10 @@ static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data) {
 
 	/* Check Data Length */
 	if (len > 80){
-	    err(1);
+	    err(0x01);
 	}
+        
+        else {
 
 	/* Populate TX Buffer */
 	txbuf[0] = 0x02;
@@ -64,7 +72,8 @@ static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data) {
 	spiSelect(&SPID1);                  
   	spiSend(&SPID1, len + 3, txbuf);        
  	spiUnselect(&SPID1);                
-
+	
+	}
 }
 
 /* Read from LTC2983 */
@@ -82,7 +91,7 @@ static void ltc2983_read_reg(uint16_t addr, size_t len, uint8_t* data) {
 	spiSelect(&SPID1);                  
   	spiSend(&SPID1, 3, txbuf);        
  	
-	/* SPI Reccieve*/
+	/* SPI Reccieve */
 	spiReceive(&SPID1, len, data)
 	spiUnselect(&SPID1);
 }
@@ -90,7 +99,18 @@ static void ltc2983_read_reg(uint16_t addr, size_t len, uint8_t* data) {
 /* Register Setup */
 static void ltc2983_setup(void) {
 
+	/*
+	 * Read command status register and check
+	 * that 0x40 is returned ensuring power up
+         * is complete.
+	 */
 
+	/* Loop over address to populate sensor config registers
+	 */
+
+	 /*
+  	  * Return to thread
+	  */
 
 
 
