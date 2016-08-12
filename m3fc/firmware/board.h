@@ -258,7 +258,7 @@
 /*
  *  GPIOA setup:
  *
- * PA0  - BEEPER                       (output).
+ * PA0  - BEEPER                       (af2).
  * PA1  - LED_RED                      (output).
  * PA2  - LED_YLW                      (output).
  * PA3  - LED_GRN                      (output).
@@ -275,7 +275,7 @@
  * PA14 - JTCK                         (af0, pulldown).
  * PA15 - JTDI                         (af0, pullup).
 */
-#define VAL_GPIOA_MODER                (PIN_MODE_OUTPUT(GPIOA_BEEPER) | \
+#define VAL_GPIOA_MODER                (PIN_MODE_ALTERNATE(GPIOA_BEEPER) | \
                                         PIN_MODE_OUTPUT(GPIOA_LED_RED) | \
                                         PIN_MODE_OUTPUT(GPIOA_LED_YLW) | \
                                         PIN_MODE_OUTPUT(GPIOA_LED_GRN) | \
@@ -355,7 +355,7 @@
                                         PIN_OD_HIGH(GPIOA_JTMS) | \
                                         PIN_OD_HIGH(GPIOA_JTCK) | \
                                         PIN_OD_HIGH(GPIOA_JTDI))
-#define VAL_GPIOA_AFRL                 (PIN_AFIO_AF(GPIOA_BEEPER, 0U) | \
+#define VAL_GPIOA_AFRL                 (PIN_AFIO_AF(GPIOA_BEEPER, 2U) | \
                                         PIN_AFIO_AF(GPIOA_LED_RED, 0U) | \
                                         PIN_AFIO_AF(GPIOA_LED_YLW, 0U) | \
                                         PIN_AFIO_AF(GPIOA_LED_GRN, 0U) | \
