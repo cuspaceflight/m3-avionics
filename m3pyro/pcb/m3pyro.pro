@@ -1,4 +1,4 @@
-update=29/01/2016 15:59:08
+update=Thu 28 Jul 2016 20:33:03 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -29,4 +29,7 @@ version=1
 version=1
 LibDir=
 [eeschema/libraries]
-LibName1=C:/Users/User/Documents/m3-avionics/agg-kicad/agg-kicad
+LibName1=m3pyro-rescue
+LibName2=../../agg-kicad/agg-kicad
+LibName3=m3pyroextra
+LibName4=extended pyro library

@@ -1,0 +1,1526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/adam/Projects/m3-avionics/m3psu/pcb/DCDC-Board1/DCDC-Board1.sch</source>
+    <date>Mon 25 Jul 2016 07:59:02 BST</date>
+    <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>M3PSU - DC/DC Converter Board 1</title>
+        <company>CU Spaceflight</company>
+        <rev>1</rev>
+        <date>2016-06-28</date>
+        <source>DCDC-Board1.sch</source>
+        <comment number="1" value="Drawn by: Levin Tan, Jamie Wood"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="2" name="/Board 1 Regulator 1/" tstamps="/56E22E4E/">
+      <title_block>
+        <title>M3PSU - DC/DC Converter Board 1 - Converter 1</title>
+        <company>CU Spaceflight</company>
+        <rev>1</rev>
+        <date>2016-06-28</date>
+        <source>DCDC-Board1-Reg1.sch</source>
+        <comment number="1" value="Drawn by: Levin Tan, Jamie Wood"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="3" name="/Board 1 Regulator 2/" tstamps="/56E22E64/">
+      <title_block>
+        <title>M3PSU - DC/DC Converter Board 1 - Converter 2</title>
+        <company>CU Spaceflight</company>
+        <rev>1</rev>
+        <date>2016-06-28</date>
+        <source>DCDC-Board1-Reg2.sch</source>
+        <comment number="1" value="Drawn by: Levin Tan, Jamie Wood"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="J1">
+      <value>WEST TOP</value>
+      <footprint>agg:TFML-110-02-L-D</footprint>
+      <fields>
+        <field name="Samtec">TFML-110-02-L-D</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56E23C29</tstamp>
+    </comp>
+    <comp ref="J4">
+      <value>EAST TOP</value>
+      <footprint>agg:TFML-110-02-L-D</footprint>
+      <fields>
+        <field name="Samtec">TFML-110-02-L-D</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56E23C31</tstamp>
+    </comp>
+    <comp ref="J2">
+      <value>WEST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <fields>
+        <field name="Samtec">SFML-110-02-L-D-LC</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56E23C39</tstamp>
+    </comp>
+    <comp ref="J5">
+      <value>EAST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <fields>
+        <field name="Samtec">SFML-110-02-L-D-LC</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56E23C41</tstamp>
+    </comp>
+    <comp ref="J3">
+      <value>NORTH TOP</value>
+      <footprint>agg:TFML-105-02-L-D</footprint>
+      <libsource lib="agg-kicad" part="CONN_02x05"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56E23C48</tstamp>
+    </comp>
+    <comp ref="J6">
+      <value>NORTH BOT</value>
+      <footprint>agg:SFML-105-02-L-D-LC</footprint>
+      <libsource lib="agg-kicad" part="CONN_02x05"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56E23C63</tstamp>
+    </comp>
+    <comp ref="IC1">
+      <value>LTC3887</value>
+      <footprint>agg:QFN-40-EP-LTC-UJ</footprint>
+      <datasheet>http://cds.linear.com/docs/en/datasheet/3887fb.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2475658</field>
+      </fields>
+      <libsource lib="agg-kicad" part="LTC3887"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56D83</tstamp>
+    </comp>
+    <comp ref="C11">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496811</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56DAB</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496811</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56DB3</tstamp>
+    </comp>
+    <comp ref="L2">
+      <value>10µ</value>
+      <footprint>agg:TYS5040</footprint>
+      <fields>
+        <field name="Farnell">2292532</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56DBB</tstamp>
+    </comp>
+    <comp ref="L1">
+      <value>10µ</value>
+      <footprint>agg:TYS5040</footprint>
+      <fields>
+        <field name="Farnell">2292532</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56DC3</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>4µ7</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2346881</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56DD1</tstamp>
+    </comp>
+    <comp ref="C7">
+      <value>22µ</value>
+      <footprint>agg:0805</footprint>
+      <fields>
+        <field name="Farnell">2346925</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56DDF</tstamp>
+    </comp>
+    <comp ref="R13">
+      <value>50m</value>
+      <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">1506129</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56DED</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>50m</value>
+      <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">1506129</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56DF5</tstamp>
+    </comp>
+    <comp ref="R9">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447095</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56DFD</tstamp>
+    </comp>
+    <comp ref="R11">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447095</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E05</tstamp>
+    </comp>
+    <comp ref="C15">
+      <value>22µ</value>
+      <footprint>agg:0805</footprint>
+      <fields>
+        <field name="Farnell">2346925</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E0D</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>22µ</value>
+      <footprint>agg:0805</footprint>
+      <fields>
+        <field name="Farnell">2346925</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E1B</tstamp>
+    </comp>
+    <comp ref="C8">
+      <value>47p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210781</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E29</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>47p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210781</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E31</tstamp>
+    </comp>
+    <comp ref="R6">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447095</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E39</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447095</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E41</tstamp>
+    </comp>
+    <comp ref="C10">
+      <value>1µ</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2218855</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E4F</tstamp>
+    </comp>
+    <comp ref="C14">
+      <value>1µ</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2218855</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E57</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>SCHOTTKY</value>
+      <footprint>agg:0603-LED</footprint>
+      <fields>
+        <field name="Farnell">2317558</field>
+      </fields>
+      <libsource lib="agg-kicad" part="SCHOTTKY"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E71</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>SCHOTTKY</value>
+      <footprint>agg:0603-LED</footprint>
+      <fields>
+        <field name="Farnell">2317558</field>
+      </fields>
+      <libsource lib="agg-kicad" part="SCHOTTKY"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E79</tstamp>
+    </comp>
+    <comp ref="C13">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496811</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56E81</tstamp>
+    </comp>
+    <comp ref="R10">
+      <value>3k57</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2302693</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56ED8</tstamp>
+    </comp>
+    <comp ref="R8">
+      <value>30k1</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2072900</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56EE6</tstamp>
+    </comp>
+    <comp ref="R12">
+      <value>4k99</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1469715</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56EEE</tstamp>
+    </comp>
+    <comp ref="C12">
+      <value>4n7</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496786</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56EFC</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>4n7</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496786</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56F04</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>4k99</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1469715</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56F0C</tstamp>
+    </comp>
+    <comp ref="C9">
+      <value>220p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210772</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56FC8</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>220p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210772</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56D56FD0</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>10k</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56DDC77D</tstamp>
+    </comp>
+    <comp ref="Q2">
+      <value>SiZ340DT</value>
+      <footprint>agg:PowerPair3x3</footprint>
+      <datasheet>http://www.vishay.com/docs/62877/siz340dt.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2422226</field>
+      </fields>
+      <libsource lib="agg-kicad" part="SiZ340DT"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56E08906</tstamp>
+    </comp>
+    <comp ref="Q1">
+      <value>SiZ340DT</value>
+      <footprint>agg:PowerPair3x3</footprint>
+      <datasheet>http://www.vishay.com/docs/62877/siz340dt.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2422226</field>
+      </fields>
+      <libsource lib="agg-kicad" part="SiZ340DT"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>56E08A62</tstamp>
+    </comp>
+    <comp ref="R5">
+      <value>4k99</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1469715</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>571930DA</tstamp>
+    </comp>
+    <comp ref="R18">
+      <value>10k</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>57472437</tstamp>
+    </comp>
+    <comp ref="C31">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496811</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 1/" tstamps="/56E22E4E/"/>
+      <tstamp>574761D4</tstamp>
+    </comp>
+    <comp ref="IC2">
+      <value>LTC3887</value>
+      <footprint>agg:QFN-40-EP-LTC-UJ</footprint>
+      <datasheet>http://cds.linear.com/docs/en/datasheet/3887fb.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2475658</field>
+      </fields>
+      <libsource lib="agg-kicad" part="LTC3887"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D586AD</tstamp>
+    </comp>
+    <comp ref="C26">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496811</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D586D5</tstamp>
+    </comp>
+    <comp ref="C17">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496811</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D586DD</tstamp>
+    </comp>
+    <comp ref="L4">
+      <value>10µ</value>
+      <footprint>agg:TYS5040</footprint>
+      <fields>
+        <field name="Farnell">2292532</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D586E5</tstamp>
+    </comp>
+    <comp ref="L3">
+      <value>10µ</value>
+      <footprint>agg:TYS5040</footprint>
+      <fields>
+        <field name="Farnell">2292532</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D586ED</tstamp>
+    </comp>
+    <comp ref="C19">
+      <value>4µ7</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2346881</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D586FB</tstamp>
+    </comp>
+    <comp ref="C22">
+      <value>22µ</value>
+      <footprint>agg:0805</footprint>
+      <fields>
+        <field name="Farnell">2346925</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58709</tstamp>
+    </comp>
+    <comp ref="R26">
+      <value>50m</value>
+      <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">1506129</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58717</tstamp>
+    </comp>
+    <comp ref="R14">
+      <value>50m</value>
+      <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">1506129</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D5871F</tstamp>
+    </comp>
+    <comp ref="R22">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447095</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58727</tstamp>
+    </comp>
+    <comp ref="R24">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447095</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D5872F</tstamp>
+    </comp>
+    <comp ref="C30">
+      <value>22µ</value>
+      <footprint>agg:0805</footprint>
+      <fields>
+        <field name="Farnell">2346925</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58737</tstamp>
+    </comp>
+    <comp ref="C16">
+      <value>22µ</value>
+      <footprint>agg:0805</footprint>
+      <fields>
+        <field name="Farnell">2346925</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58745</tstamp>
+    </comp>
+    <comp ref="C23">
+      <value>47p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210781</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58753</tstamp>
+    </comp>
+    <comp ref="C21">
+      <value>47p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210781</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D5875B</tstamp>
+    </comp>
+    <comp ref="R19">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447095</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58763</tstamp>
+    </comp>
+    <comp ref="R16">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447095</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D5876B</tstamp>
+    </comp>
+    <comp ref="C25">
+      <value>1µ</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2218855</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58779</tstamp>
+    </comp>
+    <comp ref="C29">
+      <value>1µ</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2218855</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58781</tstamp>
+    </comp>
+    <comp ref="D3">
+      <value>SCHOTTKY</value>
+      <footprint>agg:0603-LED</footprint>
+      <fields>
+        <field name="Farnell">2317558</field>
+      </fields>
+      <libsource lib="agg-kicad" part="SCHOTTKY"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D5879B</tstamp>
+    </comp>
+    <comp ref="D4">
+      <value>SCHOTTKY</value>
+      <footprint>agg:0603-LED</footprint>
+      <fields>
+        <field name="Farnell">2317558</field>
+      </fields>
+      <libsource lib="agg-kicad" part="SCHOTTKY"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D587A3</tstamp>
+    </comp>
+    <comp ref="C28">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496811</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D587AB</tstamp>
+    </comp>
+    <comp ref="R23">
+      <value>4k32</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2073037</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58802</tstamp>
+    </comp>
+    <comp ref="R21">
+      <value>24k9</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1803690</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58810</tstamp>
+    </comp>
+    <comp ref="R25">
+      <value>4k99</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1469715</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58818</tstamp>
+    </comp>
+    <comp ref="C27">
+      <value>4n7</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496786</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58826</tstamp>
+    </comp>
+    <comp ref="C18">
+      <value>4n7</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496786</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D5882E</tstamp>
+    </comp>
+    <comp ref="R17">
+      <value>4k99</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1469715</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D58836</tstamp>
+    </comp>
+    <comp ref="C24">
+      <value>220p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210772</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D588F2</tstamp>
+    </comp>
+    <comp ref="C20">
+      <value>220p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210772</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56D588FA</tstamp>
+    </comp>
+    <comp ref="R15">
+      <value>10k</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56DDD727</tstamp>
+    </comp>
+    <comp ref="Q4">
+      <value>SiZ340DT</value>
+      <footprint>agg:PowerPair3x3</footprint>
+      <datasheet>http://www.vishay.com/docs/62877/siz340dt.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2422226</field>
+      </fields>
+      <libsource lib="agg-kicad" part="SiZ340DT"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56E09108</tstamp>
+    </comp>
+    <comp ref="Q3">
+      <value>SiZ340DT</value>
+      <footprint>agg:PowerPair3x3</footprint>
+      <datasheet>http://www.vishay.com/docs/62877/siz340dt.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2422226</field>
+      </fields>
+      <libsource lib="agg-kicad" part="SiZ340DT"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>56E09178</tstamp>
+    </comp>
+    <comp ref="R7">
+      <value>4k99</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1469715</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>5717E02F</tstamp>
+    </comp>
+    <comp ref="R20">
+      <value>10k</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>574746C5</tstamp>
+    </comp>
+    <comp ref="C32">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496811</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Board 1 Regulator 2/" tstamps="/56E22E64/"/>
+      <tstamp>57476DF7</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="agg-kicad" part="C">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="CONN_02x05">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_02x05</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+        <pin num="7" name="7" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+        <pin num="9" name="9" type="passive"/>
+        <pin num="10" name="10" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="CONN_02x10">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_02x10</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+        <pin num="7" name="7" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+        <pin num="9" name="9" type="passive"/>
+        <pin num="10" name="10" type="passive"/>
+        <pin num="11" name="11" type="passive"/>
+        <pin num="12" name="12" type="passive"/>
+        <pin num="13" name="13" type="passive"/>
+        <pin num="14" name="14" type="passive"/>
+        <pin num="15" name="15" type="passive"/>
+        <pin num="16" name="16" type="passive"/>
+        <pin num="17" name="17" type="passive"/>
+        <pin num="18" name="18" type="passive"/>
+        <pin num="19" name="19" type="passive"/>
+        <pin num="20" name="20" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="L">
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">L</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="LTC3887">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">LTC3887</field>
+        <field name="Footprint">agg:QFN-40-EP-LTC-UJ</field>
+        <field name="Datasheet">http://cds.linear.com/docs/en/datasheet/3887fb.pdf</field>
+        <field name="Farnell">2475658</field>
+      </fields>
+      <pins>
+        <pin num="1" name="V_SENSE_0+" type="input"/>
+        <pin num="2" name="V_SENSE_0-" type="input"/>
+        <pin num="3" name="I_SENSE_1+" type="input"/>
+        <pin num="4" name="I_SENSE_1-" type="input"/>
+        <pin num="5" name="ITH_0" type="input"/>
+        <pin num="6" name="I_SENSE_0+" type="input"/>
+        <pin num="7" name="I_SENSE_0-" type="input"/>
+        <pin num="8" name="SYNC" type="3state"/>
+        <pin num="9" name="SCL" type="3state"/>
+        <pin num="10" name="SDA" type="3state"/>
+        <pin num="11" name="~ALERT" type="output"/>
+        <pin num="12" name="~GPIO0" type="BiDi"/>
+        <pin num="13" name="~GPIO1" type="BiDi"/>
+        <pin num="14" name="RUN0" type="input"/>
+        <pin num="15" name="RUN1" type="input"/>
+        <pin num="16" name="ASEL0" type="input"/>
+        <pin num="17" name="ASEL1" type="input"/>
+        <pin num="18" name="V_OUT_0_CFG" type="input"/>
+        <pin num="19" name="V_OUT_1_CFG" type="input"/>
+        <pin num="20" name="FREQ_CFG" type="input"/>
+        <pin num="21" name="PHAS_CFG" type="input"/>
+        <pin num="22" name="VDD_25" type="power_out"/>
+        <pin num="23" name="WP" type="input"/>
+        <pin num="24" name="SHARE_CLK" type="3state"/>
+        <pin num="25" name="VDD_33" type="power_out"/>
+        <pin num="26" name="ITH_1" type="input"/>
+        <pin num="27" name="V_SENSE_1" type="input"/>
+        <pin num="28" name="TSNS1" type="input"/>
+        <pin num="29" name="SW1" type="input"/>
+        <pin num="30" name="TG1" type="output"/>
+        <pin num="31" name="BOOST1" type="output"/>
+        <pin num="32" name="BG1" type="output"/>
+        <pin num="33" name="INTVCC" type="power_out"/>
+        <pin num="34" name="GND" type="power_in"/>
+        <pin num="35" name="V_IN" type="power_in"/>
+        <pin num="36" name="BG0" type="output"/>
+        <pin num="37" name="BOOST0" type="output"/>
+        <pin num="38" name="TG0" type="output"/>
+        <pin num="39" name="SW0" type="input"/>
+        <pin num="40" name="TSNS0" type="input"/>
+        <pin num="EP" name="GND" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="R">
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="SCHOTTKY">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">SCHOTTKY</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="SiZ340DT">
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">SiZ340DT</field>
+        <field name="Footprint">agg:PowerPair-3x3</field>
+        <field name="Datasheet">http://www.vishay.com/docs/62877/siz340dt.pdf</field>
+        <field name="Farnell">2422226</field>
+      </fields>
+      <pins>
+        <pin num="D1" name="S1D2" type="passive"/>
+        <pin num="G1" name="G1" type="passive"/>
+        <pin num="G2" name="G2" type="passive"/>
+        <pin num="S2" name="S2" type="passive"/>
+        <pin num="S1D2" name="S1D2" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="agg-kicad">
+      <uri>/home/adam/Projects/m3-avionics/m3psu/pcb/DCDC-Board1/../../../agg-kicad/agg-kicad.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="/RSVD2">
+      <node ref="J2" pin="17"/>
+      <node ref="J1" pin="17"/>
+    </net>
+    <net code="2" name="/3v3_AUX2">
+      <node ref="J1" pin="15"/>
+      <node ref="J2" pin="15"/>
+    </net>
+    <net code="3" name="/3v3_AUX1">
+      <node ref="J1" pin="13"/>
+      <node ref="J2" pin="13"/>
+    </net>
+    <net code="4" name="/3v3_DL">
+      <node ref="J2" pin="11"/>
+      <node ref="J1" pin="11"/>
+    </net>
+    <net code="5" name="/RSVD1">
+      <node ref="J2" pin="12"/>
+      <node ref="J1" pin="12"/>
+    </net>
+    <net code="6" name="/VBATT">
+      <node ref="J3" pin="3"/>
+      <node ref="J6" pin="3"/>
+      <node ref="J6" pin="4"/>
+      <node ref="J3" pin="4"/>
+    </net>
+    <net code="7" name="/BATT2">
+      <node ref="J3" pin="8"/>
+      <node ref="J6" pin="8"/>
+    </net>
+    <net code="8" name="3v3">
+      <node ref="J3" pin="5"/>
+      <node ref="J6" pin="5"/>
+    </net>
+    <net code="9" name="/BATT1">
+      <node ref="J3" pin="6"/>
+      <node ref="J6" pin="6"/>
+    </net>
+    <net code="10" name="/SCL">
+      <node ref="J6" pin="9"/>
+      <node ref="J3" pin="9"/>
+      <node ref="IC1" pin="9"/>
+      <node ref="IC2" pin="9"/>
+    </net>
+    <net code="11" name="/SDA">
+      <node ref="IC1" pin="10"/>
+      <node ref="J3" pin="7"/>
+      <node ref="J6" pin="7"/>
+      <node ref="IC2" pin="10"/>
+    </net>
+    <net code="12" name="VCC">
+      <node ref="J6" pin="1"/>
+      <node ref="J6" pin="2"/>
+      <node ref="C7" pin="1"/>
+      <node ref="C22" pin="1"/>
+      <node ref="J3" pin="2"/>
+      <node ref="J3" pin="1"/>
+      <node ref="IC1" pin="35"/>
+      <node ref="Q3" pin="D1"/>
+      <node ref="C31" pin="1"/>
+      <node ref="C32" pin="1"/>
+      <node ref="Q1" pin="D1"/>
+      <node ref="IC2" pin="35"/>
+      <node ref="Q2" pin="D1"/>
+      <node ref="Q4" pin="D1"/>
+    </net>
+    <net code="13" name="/~ALERT">
+      <node ref="J6" pin="10"/>
+      <node ref="IC2" pin="11"/>
+      <node ref="J3" pin="10"/>
+      <node ref="IC1" pin="11"/>
+    </net>
+    <net code="14" name="/3v3_FC">
+      <node ref="R24" pin="2"/>
+      <node ref="R26" pin="2"/>
+      <node ref="J1" pin="7"/>
+      <node ref="C30" pin="1"/>
+      <node ref="J2" pin="7"/>
+      <node ref="IC2" pin="27"/>
+    </net>
+    <net code="15" name="/3v3_IMU">
+      <node ref="C16" pin="1"/>
+      <node ref="J1" pin="3"/>
+      <node ref="IC2" pin="1"/>
+      <node ref="R14" pin="1"/>
+      <node ref="R16" pin="1"/>
+      <node ref="J2" pin="3"/>
+    </net>
+    <net code="16" name="/5v_AUX2">
+      <node ref="R13" pin="2"/>
+      <node ref="J4" pin="13"/>
+      <node ref="R11" pin="2"/>
+      <node ref="C15" pin="1"/>
+      <node ref="J5" pin="13"/>
+      <node ref="IC1" pin="27"/>
+    </net>
+    <net code="17" name="/5v_IMU">
+      <node ref="J5" pin="9"/>
+      <node ref="J4" pin="9"/>
+      <node ref="R3" pin="1"/>
+      <node ref="IC1" pin="1"/>
+      <node ref="C1" pin="1"/>
+      <node ref="R1" pin="1"/>
+    </net>
+    <net code="18" name="/JTDI">
+      <node ref="J2" pin="8"/>
+      <node ref="J1" pin="8"/>
+    </net>
+    <net code="19" name="GND">
+      <node ref="R12" pin="2"/>
+      <node ref="IC1" pin="28"/>
+      <node ref="IC1" pin="23"/>
+      <node ref="IC1" pin="34"/>
+      <node ref="Q2" pin="S2"/>
+      <node ref="C31" pin="2"/>
+      <node ref="Q1" pin="S2"/>
+      <node ref="R4" pin="1"/>
+      <node ref="C4" pin="2"/>
+      <node ref="IC1" pin="40"/>
+      <node ref="C1" pin="2"/>
+      <node ref="C15" pin="2"/>
+      <node ref="IC1" pin="EP"/>
+      <node ref="IC1" pin="2"/>
+      <node ref="C7" pin="2"/>
+      <node ref="C9" pin="2"/>
+      <node ref="C5" pin="1"/>
+      <node ref="IC2" pin="28"/>
+      <node ref="R17" pin="1"/>
+      <node ref="IC2" pin="23"/>
+      <node ref="IC2" pin="34"/>
+      <node ref="IC2" pin="2"/>
+      <node ref="IC2" pin="40"/>
+      <node ref="C30" pin="2"/>
+      <node ref="C16" pin="2"/>
+      <node ref="IC2" pin="EP"/>
+      <node ref="C19" pin="2"/>
+      <node ref="C22" pin="2"/>
+      <node ref="C25" pin="2"/>
+      <node ref="J4" pin="20"/>
+      <node ref="R23" pin="2"/>
+      <node ref="C29" pin="2"/>
+      <node ref="R25" pin="2"/>
+      <node ref="C13" pin="2"/>
+      <node ref="R10" pin="2"/>
+      <node ref="C10" pin="2"/>
+      <node ref="C14" pin="2"/>
+      <node ref="C28" pin="2"/>
+      <node ref="C24" pin="2"/>
+      <node ref="C20" pin="1"/>
+      <node ref="C32" pin="2"/>
+      <node ref="Q4" pin="S2"/>
+      <node ref="Q3" pin="S2"/>
+      <node ref="J5" pin="20"/>
+      <node ref="J5" pin="19"/>
+      <node ref="J1" pin="20"/>
+      <node ref="J1" pin="2"/>
+      <node ref="J1" pin="1"/>
+      <node ref="J2" pin="2"/>
+      <node ref="J2" pin="1"/>
+      <node ref="J4" pin="19"/>
+      <node ref="J5" pin="1"/>
+      <node ref="J4" pin="2"/>
+      <node ref="J2" pin="19"/>
+      <node ref="J2" pin="20"/>
+      <node ref="J4" pin="1"/>
+      <node ref="J1" pin="19"/>
+      <node ref="J5" pin="2"/>
+    </net>
+    <net code="20" name="/CAN-">
+      <node ref="J2" pin="16"/>
+      <node ref="J1" pin="16"/>
+    </net>
+    <net code="21" name="/5v_CAN">
+      <node ref="J2" pin="14"/>
+      <node ref="J1" pin="14"/>
+    </net>
+    <net code="22" name="/3v3_PYRO">
+      <node ref="J1" pin="9"/>
+      <node ref="J2" pin="9"/>
+    </net>
+    <net code="23" name="/3v3_RADIO">
+      <node ref="J2" pin="5"/>
+      <node ref="J1" pin="5"/>
+    </net>
+    <net code="24" name="/JTCK">
+      <node ref="J1" pin="6"/>
+      <node ref="J2" pin="6"/>
+    </net>
+    <net code="25" name="/JTMS">
+      <node ref="J1" pin="4"/>
+      <node ref="J2" pin="4"/>
+    </net>
+    <net code="26" name="/JTDR">
+      <node ref="J1" pin="10"/>
+      <node ref="J2" pin="10"/>
+    </net>
+    <net code="27" name="/CAN+">
+      <node ref="J1" pin="18"/>
+      <node ref="J2" pin="18"/>
+    </net>
+    <net code="28" name="/PWR">
+      <node ref="J5" pin="16"/>
+      <node ref="J4" pin="16"/>
+    </net>
+    <net code="29" name="/PYRO1">
+      <node ref="J5" pin="8"/>
+      <node ref="J4" pin="8"/>
+    </net>
+    <net code="30" name="/PYRO2">
+      <node ref="J5" pin="10"/>
+      <node ref="J4" pin="10"/>
+    </net>
+    <net code="31" name="/PYRO3">
+      <node ref="J5" pin="12"/>
+      <node ref="J4" pin="12"/>
+    </net>
+    <net code="32" name="/PYRO4">
+      <node ref="J4" pin="14"/>
+      <node ref="J5" pin="14"/>
+    </net>
+    <net code="33" name="/CHARGE">
+      <node ref="J4" pin="18"/>
+      <node ref="J4" pin="17"/>
+      <node ref="J5" pin="18"/>
+      <node ref="J5" pin="17"/>
+    </net>
+    <net code="34" name="/5v_CAM">
+      <node ref="J4" pin="15"/>
+      <node ref="J5" pin="15"/>
+    </net>
+    <net code="35" name="/5v_AUX1">
+      <node ref="J4" pin="11"/>
+      <node ref="J5" pin="11"/>
+    </net>
+    <net code="36" name="/5v_RADIO">
+      <node ref="J4" pin="7"/>
+      <node ref="J5" pin="7"/>
+    </net>
+    <net code="37" name="/PYRO_SI">
+      <node ref="J5" pin="6"/>
+      <node ref="J4" pin="5"/>
+      <node ref="J4" pin="6"/>
+      <node ref="J5" pin="5"/>
+    </net>
+    <net code="38" name="/PYRO_SO">
+      <node ref="J4" pin="4"/>
+      <node ref="J4" pin="3"/>
+      <node ref="J5" pin="4"/>
+      <node ref="J5" pin="3"/>
+    </net>
+    <net code="39" name="Net-(L2-Pad2)">
+      <node ref="L2" pin="2"/>
+      <node ref="R9" pin="2"/>
+      <node ref="R13" pin="1"/>
+    </net>
+    <net code="40" name="Net-(IC1-Pad38)">
+      <node ref="Q1" pin="G1"/>
+      <node ref="IC1" pin="38"/>
+    </net>
+    <net code="41" name="Net-(C2-Pad1)">
+      <node ref="IC1" pin="39"/>
+      <node ref="L1" pin="2"/>
+      <node ref="C2" pin="1"/>
+      <node ref="Q1" pin="S1D2"/>
+    </net>
+    <net code="42" name="Net-(IC1-Pad36)">
+      <node ref="Q1" pin="G2"/>
+      <node ref="IC1" pin="36"/>
+    </net>
+    <net code="43" name="Net-(L1-Pad1)">
+      <node ref="L1" pin="1"/>
+      <node ref="R6" pin="1"/>
+      <node ref="R1" pin="2"/>
+    </net>
+    <net code="44" name="Net-(C11-Pad1)">
+      <node ref="C11" pin="1"/>
+      <node ref="IC1" pin="31"/>
+      <node ref="D2" pin="1"/>
+    </net>
+    <net code="45" name="Net-(C2-Pad2)">
+      <node ref="IC1" pin="37"/>
+      <node ref="D1" pin="1"/>
+      <node ref="C2" pin="2"/>
+    </net>
+    <net code="46" name="Net-(C13-Pad1)">
+      <node ref="IC1" pin="33"/>
+      <node ref="D2" pin="2"/>
+      <node ref="C13" pin="1"/>
+      <node ref="C4" pin="1"/>
+      <node ref="D1" pin="2"/>
+    </net>
+    <net code="47" name="Net-(C10-Pad1)">
+      <node ref="IC1" pin="22"/>
+      <node ref="C10" pin="1"/>
+      <node ref="R8" pin="2"/>
+    </net>
+    <net code="48" name="Net-(IC1-Pad8)">
+      <node ref="R5" pin="2"/>
+      <node ref="IC1" pin="8"/>
+    </net>
+    <net code="49" name="Net-(IC1-Pad20)">
+      <node ref="IC1" pin="20"/>
+    </net>
+    <net code="50" name="Net-(IC1-Pad14)">
+      <node ref="R2" pin="2"/>
+      <node ref="IC1" pin="15"/>
+      <node ref="IC1" pin="14"/>
+    </net>
+    <net code="51" name="Net-(C11-Pad2)">
+      <node ref="Q2" pin="S1D2"/>
+      <node ref="IC1" pin="29"/>
+      <node ref="C11" pin="2"/>
+      <node ref="L2" pin="1"/>
+    </net>
+    <net code="52" name="Net-(IC1-Pad21)">
+      <node ref="IC1" pin="21"/>
+    </net>
+    <net code="53" name="Net-(IC1-Pad30)">
+      <node ref="Q2" pin="G1"/>
+      <node ref="IC1" pin="30"/>
+    </net>
+    <net code="54" name="Net-(IC1-Pad12)">
+      <node ref="IC1" pin="12"/>
+      <node ref="IC1" pin="13"/>
+      <node ref="R18" pin="1"/>
+    </net>
+    <net code="55" name="Net-(IC1-Pad32)">
+      <node ref="IC1" pin="32"/>
+      <node ref="Q2" pin="G2"/>
+    </net>
+    <net code="56" name="Net-(IC1-Pad19)">
+      <node ref="IC1" pin="19"/>
+    </net>
+    <net code="57" name="Net-(IC1-Pad18)">
+      <node ref="IC1" pin="18"/>
+    </net>
+    <net code="58" name="Net-(C14-Pad1)">
+      <node ref="IC1" pin="25"/>
+      <node ref="R5" pin="1"/>
+      <node ref="R18" pin="2"/>
+      <node ref="C14" pin="1"/>
+      <node ref="R2" pin="1"/>
+    </net>
+    <net code="59" name="Net-(C6-Pad1)">
+      <node ref="C6" pin="1"/>
+      <node ref="R6" pin="2"/>
+      <node ref="IC1" pin="6"/>
+    </net>
+    <net code="60" name="Net-(C8-Pad2)">
+      <node ref="R11" pin="1"/>
+      <node ref="C8" pin="2"/>
+      <node ref="IC1" pin="4"/>
+    </net>
+    <net code="61" name="Net-(C8-Pad1)">
+      <node ref="R9" pin="1"/>
+      <node ref="C8" pin="1"/>
+      <node ref="IC1" pin="3"/>
+    </net>
+    <net code="62" name="Net-(IC1-Pad17)">
+      <node ref="IC1" pin="17"/>
+    </net>
+    <net code="63" name="Net-(IC1-Pad24)">
+      <node ref="IC1" pin="24"/>
+    </net>
+    <net code="64" name="Net-(C3-Pad2)">
+      <node ref="C5" pin="2"/>
+      <node ref="IC1" pin="5"/>
+      <node ref="C3" pin="2"/>
+    </net>
+    <net code="65" name="Net-(C3-Pad1)">
+      <node ref="R4" pin="2"/>
+      <node ref="C3" pin="1"/>
+    </net>
+    <net code="66" name="Net-(C12-Pad2)">
+      <node ref="R12" pin="1"/>
+      <node ref="C12" pin="2"/>
+    </net>
+    <net code="67" name="Net-(C6-Pad2)">
+      <node ref="IC1" pin="7"/>
+      <node ref="R3" pin="2"/>
+      <node ref="C6" pin="2"/>
+    </net>
+    <net code="68" name="Net-(IC1-Pad16)">
+      <node ref="R8" pin="1"/>
+      <node ref="R10" pin="1"/>
+      <node ref="IC1" pin="16"/>
+    </net>
+    <net code="69" name="Net-(C12-Pad1)">
+      <node ref="C12" pin="1"/>
+      <node ref="C9" pin="1"/>
+      <node ref="IC1" pin="26"/>
+    </net>
+    <net code="70" name="Net-(L4-Pad2)">
+      <node ref="R22" pin="2"/>
+      <node ref="R26" pin="1"/>
+      <node ref="L4" pin="2"/>
+    </net>
+    <net code="71" name="Net-(IC2-Pad36)">
+      <node ref="IC2" pin="36"/>
+      <node ref="Q3" pin="G2"/>
+    </net>
+    <net code="72" name="Net-(IC2-Pad38)">
+      <node ref="IC2" pin="38"/>
+      <node ref="Q3" pin="G1"/>
+    </net>
+    <net code="73" name="Net-(C17-Pad1)">
+      <node ref="IC2" pin="39"/>
+      <node ref="C17" pin="1"/>
+      <node ref="L3" pin="2"/>
+      <node ref="Q3" pin="S1D2"/>
+    </net>
+    <net code="74" name="Net-(C26-Pad1)">
+      <node ref="C26" pin="1"/>
+      <node ref="D4" pin="1"/>
+      <node ref="IC2" pin="31"/>
+    </net>
+    <net code="75" name="Net-(C17-Pad2)">
+      <node ref="C17" pin="2"/>
+      <node ref="D3" pin="1"/>
+      <node ref="IC2" pin="37"/>
+    </net>
+    <net code="76" name="Net-(C19-Pad1)">
+      <node ref="IC2" pin="33"/>
+      <node ref="C28" pin="1"/>
+      <node ref="D3" pin="2"/>
+      <node ref="C19" pin="1"/>
+      <node ref="D4" pin="2"/>
+    </net>
+    <net code="77" name="Net-(L3-Pad1)">
+      <node ref="L3" pin="1"/>
+      <node ref="R14" pin="2"/>
+      <node ref="R19" pin="1"/>
+    </net>
+    <net code="78" name="Net-(C25-Pad1)">
+      <node ref="R21" pin="2"/>
+      <node ref="C25" pin="1"/>
+      <node ref="IC2" pin="22"/>
+    </net>
+    <net code="79" name="Net-(IC2-Pad8)">
+      <node ref="IC2" pin="8"/>
+      <node ref="R7" pin="2"/>
+    </net>
+    <net code="80" name="Net-(IC2-Pad20)">
+      <node ref="IC2" pin="20"/>
+    </net>
+    <net code="81" name="Net-(IC2-Pad14)">
+      <node ref="IC2" pin="15"/>
+      <node ref="IC2" pin="14"/>
+      <node ref="R15" pin="2"/>
+    </net>
+    <net code="82" name="Net-(C26-Pad2)">
+      <node ref="Q4" pin="S1D2"/>
+      <node ref="IC2" pin="29"/>
+      <node ref="L4" pin="1"/>
+      <node ref="C26" pin="2"/>
+    </net>
+    <net code="83" name="Net-(IC2-Pad21)">
+      <node ref="IC2" pin="21"/>
+    </net>
+    <net code="84" name="Net-(IC2-Pad30)">
+      <node ref="Q4" pin="G1"/>
+      <node ref="IC2" pin="30"/>
+    </net>
+    <net code="85" name="Net-(IC2-Pad12)">
+      <node ref="IC2" pin="13"/>
+      <node ref="R20" pin="1"/>
+      <node ref="IC2" pin="12"/>
+    </net>
+    <net code="86" name="Net-(IC2-Pad32)">
+      <node ref="Q4" pin="G2"/>
+      <node ref="IC2" pin="32"/>
+    </net>
+    <net code="87" name="Net-(IC2-Pad19)">
+      <node ref="IC2" pin="19"/>
+    </net>
+    <net code="88" name="Net-(IC2-Pad18)">
+      <node ref="IC2" pin="18"/>
+    </net>
+    <net code="89" name="Net-(C29-Pad1)">
+      <node ref="R15" pin="1"/>
+      <node ref="R7" pin="1"/>
+      <node ref="C29" pin="1"/>
+      <node ref="R20" pin="2"/>
+      <node ref="IC2" pin="25"/>
+    </net>
+    <net code="90" name="Net-(C21-Pad2)">
+      <node ref="IC2" pin="7"/>
+      <node ref="R16" pin="2"/>
+      <node ref="C21" pin="2"/>
+    </net>
+    <net code="91" name="Net-(C21-Pad1)">
+      <node ref="R19" pin="2"/>
+      <node ref="C21" pin="1"/>
+      <node ref="IC2" pin="6"/>
+    </net>
+    <net code="92" name="Net-(C23-Pad2)">
+      <node ref="C23" pin="2"/>
+      <node ref="IC2" pin="4"/>
+      <node ref="R24" pin="1"/>
+    </net>
+    <net code="93" name="Net-(C23-Pad1)">
+      <node ref="C23" pin="1"/>
+      <node ref="IC2" pin="3"/>
+      <node ref="R22" pin="1"/>
+    </net>
+    <net code="94" name="Net-(IC2-Pad17)">
+      <node ref="IC2" pin="17"/>
+    </net>
+    <net code="95" name="Net-(IC2-Pad24)">
+      <node ref="IC2" pin="24"/>
+    </net>
+    <net code="96" name="Net-(C18-Pad2)">
+      <node ref="C20" pin="2"/>
+      <node ref="C18" pin="2"/>
+      <node ref="IC2" pin="5"/>
+    </net>
+    <net code="97" name="Net-(C18-Pad1)">
+      <node ref="C18" pin="1"/>
+      <node ref="R17" pin="2"/>
+    </net>
+    <net code="98" name="Net-(C27-Pad2)">
+      <node ref="C27" pin="2"/>
+      <node ref="R25" pin="1"/>
+    </net>
+    <net code="99" name="Net-(IC2-Pad16)">
+      <node ref="IC2" pin="16"/>
+      <node ref="R23" pin="1"/>
+      <node ref="R21" pin="1"/>
+    </net>
+    <net code="100" name="Net-(C24-Pad1)">
+      <node ref="IC2" pin="26"/>
+      <node ref="C24" pin="1"/>
+      <node ref="C27" pin="1"/>
+    </net>
+  </nets>
+</export>

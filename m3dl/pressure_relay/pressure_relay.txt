@@ -1,0 +1,44 @@
+Bill Of Materials
+=================
+
+Source file: pressure_relay.xml
+Date: 2016-07-20T03:01:50.704035
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J2     EAST TOP        agg:TFML-110-02-L-D
+J5     EAST BOT        agg:SFML-110-02-L-D-LC
+J1     WEST TOP        agg:TFML-110-02-L-D
+J3     WEST BOT        agg:SFML-110-02-L-D-LC
+J6     SOUTH TOP       agg:TFML-110-02-L-D
+J7     SOUTH BOT       agg:SFML-110-02-L-D-LC
+
+Inconsistent Order Codes
+------------------------
+
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+2502502,1,1x 110k 0402-L
+2346884,2,2x 1u 0402-L
+1830749,1,1x UART S04B-PASK-2
+1078202,1,1x ADuM1201 SOIC-8
+2368169,1,1x ESD_DIODE 0402
+2464412,1,1x NCP380 DFN-6-EP-ONSEMI
+
+
+Assembly BOM
+------------
+2502502              1   110k            0402-L          R1
+2346884              2   1u              0402-L          C1 C2
+1830749              1   UART            S04B-PASK-2     J4
+1078202              1   ADuM1201        SOIC-8          IC2
+2368169              1   ESD_DIODE       0402            D1
+2464412              1   NCP380          DFN-6-EP-ONSEMI IC1
+

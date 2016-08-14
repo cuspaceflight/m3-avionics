@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/matt/Documents/CUSF/m3-avionics/m3dl/pressure_relay/pressure_relay.sch</source>
+    <date>Thu 21 Jul 2016 15:41:46 BST</date>
+    <tool>Eeschema 4.0.2+e4-6225~38~ubuntu14.04.1-stable</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>m3dl - Pressure Relay</title>
+        <company>Cambridge University Space Flight</company>
+        <rev>1</rev>
+        <date>2016-07-20</date>
+        <source>pressure_relay.sch</source>
+        <comment number="1" value="Matt Coates"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="J2">
+      <value>EAST TOP</value>
+      <footprint>agg:TFML-110-02-L-D</footprint>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE0D9</tstamp>
+    </comp>
+    <comp ref="J5">
+      <value>EAST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE100</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>WEST TOP</value>
+      <footprint>agg:TFML-110-02-L-D</footprint>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE117</tstamp>
+    </comp>
+    <comp ref="J3">
+      <value>WEST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE11E</tstamp>
+    </comp>
+    <comp ref="J6">
+      <value>SOUTH TOP</value>
+      <footprint>agg:TFML-110-02-L-D</footprint>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE27E</tstamp>
+    </comp>
+    <comp ref="J7">
+      <value>SOUTH BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE28B</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>1u</value>
+      <footprint>agg:0402-L</footprint>
+      <fields>
+        <field name="Farnell">2346884</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE372</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>1u</value>
+      <footprint>agg:0402-L</footprint>
+      <fields>
+        <field name="Farnell">2346884</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE37A</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>110k</value>
+      <footprint>agg:0402-L</footprint>
+      <fields>
+        <field name="Farnell">2502502</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE382</tstamp>
+    </comp>
+    <comp ref="IC1">
+      <value>NCP380</value>
+      <footprint>agg:DFN-6-EP-ONSEMI</footprint>
+      <datasheet>http://www.onsemi.com/pub_link/Collateral/NCP380-D.PDF</datasheet>
+      <fields>
+        <field name="Farnell">2464412</field>
+      </fields>
+      <libsource lib="agg-kicad" part="NCP380"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE390</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578EE3CE</tstamp>
+    </comp>
+    <comp ref="IC2">
+      <value>ADuM1201</value>
+      <footprint>agg:SOIC-8</footprint>
+      <fields>
+        <field name="Farnell">1078202</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ADuM1201"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578ED613</tstamp>
+    </comp>
+    <comp ref="J4">
+      <value>UART</value>
+      <footprint>agg:S04B-PASK-2</footprint>
+      <fields>
+        <field name="Farnell">1830749</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_01x04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578ED8D7</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="agg-kicad" part="ADuM1201">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">ADuM1201</field>
+        <field name="Footprint">agg:SOIC-8</field>
+        <field name="Farnell">1078202</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VDD1" type="power_in"/>
+        <pin num="2" name="OUT_A" type="output"/>
+        <pin num="3" name="IN_B" type="input"/>
+        <pin num="4" name="GND1" type="power_in"/>
+        <pin num="5" name="GND2" type="power_in"/>
+        <pin num="6" name="OUT_B" type="output"/>
+        <pin num="7" name="IN_A" type="input"/>
+        <pin num="8" name="VDD2" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="CONN_01x04">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_01x04</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="CONN_02x10">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_02x10</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+        <pin num="7" name="7" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+        <pin num="9" name="9" type="passive"/>
+        <pin num="10" name="10" type="passive"/>
+        <pin num="11" name="11" type="passive"/>
+        <pin num="12" name="12" type="passive"/>
+        <pin num="13" name="13" type="passive"/>
+        <pin num="14" name="14" type="passive"/>
+        <pin num="15" name="15" type="passive"/>
+        <pin num="16" name="16" type="passive"/>
+        <pin num="17" name="17" type="passive"/>
+        <pin num="18" name="18" type="passive"/>
+        <pin num="19" name="19" type="passive"/>
+        <pin num="20" name="20" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="C_Small">
+      <description>Unpolarized capacitor</description>
+      <footprints>
+        <fp>C?</fp>
+        <fp>C_????_*</fp>
+        <fp>C_????</fp>
+        <fp>SMD*_c</fp>
+        <fp>Capacitor*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C_Small</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="ESD_DIODE">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">ESD_DIODE</field>
+        <field name="Footprint">agg:0402</field>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="NCP380">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">NCP380</field>
+        <field name="Footprint">agg:DFN-6-EP-ONSEMI</field>
+        <field name="Datasheet">http://www.onsemi.com/pub_link/Collateral/NCP380-D.PDF</field>
+        <field name="Farnell">2464412</field>
+      </fields>
+      <pins>
+        <pin num="1" name="OUT" type="power_out"/>
+        <pin num="2" name="ILIM" type="input"/>
+        <pin num="3" name="~FLAG" type="openCol"/>
+        <pin num="4" name="~EN" type="input"/>
+        <pin num="5" name="GND" type="power_in"/>
+        <pin num="6" name="IN" type="power_in"/>
+        <pin num="EP" name="GND" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="R">
+      <description>Resistor</description>
+      <footprints>
+        <fp>R_*</fp>
+        <fp>Resistor_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="agg-kicad">
+      <uri>/home/matt/Documents/CUSF/m3-avionics/agg-kicad/agg-kicad.lib</uri>
+    </library>
+    <library logical="device">
+      <uri>/usr/share/kicad/library/device.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="/JTDR">
+      <node ref="J1" pin="10"/>
+      <node ref="J3" pin="10"/>
+    </net>
+    <net code="2" name="/3v3_IMU">
+      <node ref="J3" pin="3"/>
+      <node ref="J1" pin="3"/>
+    </net>
+    <net code="3" name="/3v3_RADIO">
+      <node ref="J1" pin="5"/>
+      <node ref="J3" pin="5"/>
+    </net>
+    <net code="4" name="/3v3_FC">
+      <node ref="J3" pin="7"/>
+      <node ref="J1" pin="7"/>
+    </net>
+    <net code="5" name="/3v3_PYRO">
+      <node ref="J1" pin="9"/>
+      <node ref="J3" pin="9"/>
+    </net>
+    <net code="6" name="/CAN+">
+      <node ref="J3" pin="18"/>
+      <node ref="J1" pin="18"/>
+    </net>
+    <net code="7" name="/CAN-">
+      <node ref="J1" pin="16"/>
+      <node ref="J3" pin="16"/>
+    </net>
+    <net code="8" name="/5v_CAN">
+      <node ref="J3" pin="14"/>
+      <node ref="J1" pin="14"/>
+    </net>
+    <net code="9" name="/JTCK">
+      <node ref="J3" pin="6"/>
+      <node ref="J1" pin="6"/>
+    </net>
+    <net code="10" name="/JTMS">
+      <node ref="J3" pin="4"/>
+      <node ref="J1" pin="4"/>
+    </net>
+    <net code="11" name="3v3">
+      <node ref="IC2" pin="8"/>
+      <node ref="J4" pin="1"/>
+      <node ref="C2" pin="1"/>
+      <node ref="IC2" pin="1"/>
+      <node ref="D1" pin="2"/>
+      <node ref="IC1" pin="1"/>
+    </net>
+    <net code="12" name="Net-(IC1-Pad2)">
+      <node ref="R1" pin="1"/>
+      <node ref="IC1" pin="2"/>
+    </net>
+    <net code="13" name="Net-(IC1-Pad3)">
+      <node ref="IC1" pin="3"/>
+    </net>
+    <net code="14" name="GND">
+      <node ref="J6" pin="20"/>
+      <node ref="J1" pin="20"/>
+      <node ref="J5" pin="19"/>
+      <node ref="J3" pin="19"/>
+      <node ref="J3" pin="20"/>
+      <node ref="J6" pin="1"/>
+      <node ref="J2" pin="1"/>
+      <node ref="J6" pin="2"/>
+      <node ref="J1" pin="1"/>
+      <node ref="J1" pin="2"/>
+      <node ref="J6" pin="19"/>
+      <node ref="J7" pin="1"/>
+      <node ref="J7" pin="2"/>
+      <node ref="J2" pin="20"/>
+      <node ref="J2" pin="2"/>
+      <node ref="J5" pin="20"/>
+      <node ref="J5" pin="2"/>
+      <node ref="J5" pin="1"/>
+      <node ref="J7" pin="20"/>
+      <node ref="J7" pin="19"/>
+      <node ref="J3" pin="2"/>
+      <node ref="J3" pin="1"/>
+      <node ref="J1" pin="19"/>
+      <node ref="J2" pin="19"/>
+      <node ref="IC1" pin="EP"/>
+      <node ref="D1" pin="1"/>
+      <node ref="IC1" pin="4"/>
+      <node ref="C2" pin="2"/>
+      <node ref="C1" pin="2"/>
+      <node ref="IC1" pin="5"/>
+      <node ref="R1" pin="2"/>
+      <node ref="J4" pin="2"/>
+      <node ref="IC2" pin="4"/>
+      <node ref="IC2" pin="5"/>
+    </net>
+    <net code="15" name="/3v3_DL">
+      <node ref="C1" pin="1"/>
+      <node ref="J3" pin="11"/>
+      <node ref="J1" pin="11"/>
+      <node ref="IC1" pin="6"/>
+    </net>
+    <net code="16" name="/JTDI">
+      <node ref="J3" pin="8"/>
+      <node ref="J1" pin="8"/>
+    </net>
+    <net code="17" name="/PRESSURE5">
+      <node ref="J7" pin="13"/>
+      <node ref="J6" pin="13"/>
+    </net>
+    <net code="18" name="/PRESSURE4">
+      <node ref="J6" pin="11"/>
+      <node ref="J7" pin="11"/>
+    </net>
+    <net code="19" name="/TEMP_INT">
+      <node ref="J6" pin="15"/>
+      <node ref="J7" pin="15"/>
+    </net>
+    <net code="20" name="/PRESSURE3">
+      <node ref="J6" pin="3"/>
+      <node ref="J7" pin="3"/>
+    </net>
+    <net code="21" name="/SPI1_MOSI">
+      <node ref="J7" pin="9"/>
+      <node ref="J6" pin="9"/>
+    </net>
+    <net code="22" name="/TX">
+      <node ref="J4" pin="4"/>
+      <node ref="IC2" pin="2"/>
+    </net>
+    <net code="23" name="/PRESSURE2">
+      <node ref="J7" pin="18"/>
+      <node ref="IC2" pin="6"/>
+      <node ref="J6" pin="18"/>
+    </net>
+    <net code="24" name="/PRESSURE1">
+      <node ref="J6" pin="16"/>
+      <node ref="IC2" pin="7"/>
+      <node ref="J7" pin="16"/>
+    </net>
+    <net code="25" name="/RX">
+      <node ref="J4" pin="3"/>
+      <node ref="IC2" pin="3"/>
+    </net>
+    <net code="26" name="/3v3_AUX1">
+      <node ref="J3" pin="13"/>
+      <node ref="J1" pin="13"/>
+    </net>
+    <net code="27" name="/PYRO4">
+      <node ref="J5" pin="14"/>
+      <node ref="J2" pin="14"/>
+    </net>
+    <net code="28" name="/PYRO3">
+      <node ref="J2" pin="12"/>
+      <node ref="J5" pin="12"/>
+    </net>
+    <net code="29" name="/PYRO2">
+      <node ref="J2" pin="10"/>
+      <node ref="J5" pin="10"/>
+    </net>
+    <net code="30" name="/PYRO1">
+      <node ref="J5" pin="8"/>
+      <node ref="J2" pin="8"/>
+    </net>
+    <net code="31" name="/PYRO_SI">
+      <node ref="J2" pin="6"/>
+      <node ref="J2" pin="5"/>
+      <node ref="J5" pin="6"/>
+      <node ref="J5" pin="5"/>
+    </net>
+    <net code="32" name="/PYRO_SO">
+      <node ref="J2" pin="4"/>
+      <node ref="J2" pin="3"/>
+      <node ref="J5" pin="4"/>
+      <node ref="J5" pin="3"/>
+    </net>
+    <net code="33" name="/PWR">
+      <node ref="J2" pin="16"/>
+      <node ref="J5" pin="16"/>
+    </net>
+    <net code="34" name="/3v3_AUX2">
+      <node ref="J1" pin="15"/>
+      <node ref="J3" pin="15"/>
+    </net>
+    <net code="35" name="/RSVD1">
+      <node ref="J1" pin="12"/>
+      <node ref="J3" pin="12"/>
+    </net>
+    <net code="36" name="/RSVD2">
+      <node ref="J3" pin="17"/>
+      <node ref="J1" pin="17"/>
+    </net>
+    <net code="37" name="/CHARGE">
+      <node ref="J5" pin="17"/>
+      <node ref="J2" pin="17"/>
+      <node ref="J2" pin="18"/>
+      <node ref="J5" pin="18"/>
+    </net>
+    <net code="38" name="/5v_CAM">
+      <node ref="J2" pin="15"/>
+      <node ref="J5" pin="15"/>
+    </net>
+    <net code="39" name="/5v_AUX2">
+      <node ref="J5" pin="13"/>
+      <node ref="J2" pin="13"/>
+    </net>
+    <net code="40" name="/5v_AUX1">
+      <node ref="J5" pin="11"/>
+      <node ref="J2" pin="11"/>
+    </net>
+    <net code="41" name="/5v_IMU">
+      <node ref="J2" pin="9"/>
+      <node ref="J5" pin="9"/>
+    </net>
+    <net code="42" name="/5v_RADIO">
+      <node ref="J2" pin="7"/>
+      <node ref="J5" pin="7"/>
+    </net>
+    <net code="43" name="/STRAIN6">
+      <node ref="J6" pin="14"/>
+      <node ref="J7" pin="14"/>
+    </net>
+    <net code="44" name="/STRAIN5">
+      <node ref="J7" pin="12"/>
+      <node ref="J6" pin="12"/>
+    </net>
+    <net code="45" name="/STRAIN4">
+      <node ref="J6" pin="10"/>
+      <node ref="J7" pin="10"/>
+    </net>
+    <net code="46" name="/STRAIN3">
+      <node ref="J6" pin="8"/>
+      <node ref="J7" pin="8"/>
+    </net>
+    <net code="47" name="/STRAIN2">
+      <node ref="J7" pin="6"/>
+      <node ref="J6" pin="6"/>
+    </net>
+    <net code="48" name="/STRAIN1">
+      <node ref="J7" pin="4"/>
+      <node ref="J6" pin="4"/>
+    </net>
+    <net code="49" name="/SPI1_CS">
+      <node ref="J7" pin="17"/>
+      <node ref="J6" pin="17"/>
+    </net>
+    <net code="50" name="/SPI1_SCK">
+      <node ref="J6" pin="5"/>
+      <node ref="J7" pin="5"/>
+    </net>
+    <net code="51" name="/SPI1_MISO">
+      <node ref="J7" pin="7"/>
+      <node ref="J6" pin="7"/>
+    </net>
+  </nets>
+</export>

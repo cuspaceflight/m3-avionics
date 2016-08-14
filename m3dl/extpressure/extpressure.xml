@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/adam/Projects/m3-avionics/m3dl/extpressure/extpressure.sch</source>
+    <date>Sun 24 Jul 2016 22:54:40 BST</date>
+    <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>m3dl-extpressure</title>
+        <company>CU Spaceflight</company>
+        <rev>1</rev>
+        <date>2016-07-10</date>
+        <source>extpressure.sch</source>
+        <comment number="1" value="Drawn By: Adam Greig"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="IC1">
+      <value>SP100</value>
+      <footprint>agg:SP100</footprint>
+      <datasheet>http://www.farnell.com/datasheets/654625.pdf</datasheet>
+      <fields>
+        <field name="Farnell">1845345</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="SP100"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5782701B</tstamp>
+    </comp>
+    <comp ref="IC5">
+      <value>STM32F0xxKxTx</value>
+      <footprint>agg:LQFP-32</footprint>
+      <datasheet>http://www.st.com/web/en/resource/technical/document/datasheet/DM00088500.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2333141</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="STM32F0xxKxTx"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578270BB</tstamp>
+    </comp>
+    <comp ref="C9">
+      <value>10n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210793</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578271A9</tstamp>
+    </comp>
+    <comp ref="C7">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5782723F</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57827273</tstamp>
+    </comp>
+    <comp ref="C8">
+      <value>1µ</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496814</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57827297</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>4µ7</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2426952</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>578272D9</tstamp>
+    </comp>
+    <comp ref="P1">
+      <value>SWD_TC</value>
+      <footprint>agg:TC2030-NL</footprint>
+      <libsource lib="extpressure-cache" part="SWD_TC"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5782778B</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57827B6F</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>SERIAL</value>
+      <footprint>agg:S04B-PASK-2</footprint>
+      <fields>
+        <field name="Farnell">1830749</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="CONN_01x04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57828084</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>RED</value>
+      <footprint>agg:0603-LED</footprint>
+      <fields>
+        <field name="Farnell">2290329</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="LED"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57828D56</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>GRN</value>
+      <footprint>agg:0603-LED</footprint>
+      <fields>
+        <field name="Farnell">2290328</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="LED"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57828DAC</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>1k</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447120</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57828E9F</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>1k</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447120</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57828F19</tstamp>
+    </comp>
+    <comp ref="IC2">
+      <value>SP100</value>
+      <footprint>agg:SP100</footprint>
+      <datasheet>http://www.farnell.com/datasheets/654625.pdf</datasheet>
+      <fields>
+        <field name="Farnell">1845345</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="SP100"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57829BBB</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57829BC1</tstamp>
+    </comp>
+    <comp ref="IC3">
+      <value>SP100</value>
+      <footprint>agg:SP100</footprint>
+      <datasheet>http://www.farnell.com/datasheets/654625.pdf</datasheet>
+      <fields>
+        <field name="Farnell">1845345</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="SP100"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57829E06</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57829E0C</tstamp>
+    </comp>
+    <comp ref="IC4">
+      <value>SP100</value>
+      <footprint>agg:SP100</footprint>
+      <datasheet>http://www.farnell.com/datasheets/654625.pdf</datasheet>
+      <fields>
+        <field name="Farnell">1845345</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="SP100"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57829F2F</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57829F35</tstamp>
+    </comp>
+    <comp ref="D3">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57838E79</tstamp>
+    </comp>
+    <comp ref="D4">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57838EFA</tstamp>
+    </comp>
+    <comp ref="D5">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="extpressure-cache" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57838F56</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="extpressure-cache" part="C">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="extpressure-cache" part="CONN_01x04">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_01x04</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="extpressure-cache" part="ESD_DIODE">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">ESD_DIODE</field>
+        <field name="Footprint">agg:0402</field>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="extpressure-cache" part="LED">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">LED</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="extpressure-cache" part="R">
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="extpressure-cache" part="SP100">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">SP100</field>
+        <field name="Footprint">agg:SP100</field>
+        <field name="Datasheet">http://www.farnell.com/datasheets/654625.pdf</field>
+        <field name="Farnell">1845345</field>
+      </fields>
+      <pins>
+        <pin num="1" name="WAKEUP" type="output"/>
+        <pin num="2" name="RESET" type="output"/>
+        <pin num="3" name="GND" type="passive"/>
+        <pin num="4" name="VSS" type="power_in"/>
+        <pin num="5" name="GND" type="passive"/>
+        <pin num="6" name="GND" type="passive"/>
+        <pin num="7" name="VSS" type="power_in"/>
+        <pin num="8" name="VSS" type="power_in"/>
+        <pin num="9" name="VDD" type="power_in"/>
+        <pin num="10" name="VPP" type="NotConnected"/>
+        <pin num="11" name="SDI" type="input"/>
+        <pin num="12" name="SCLK" type="input"/>
+        <pin num="13" name="SDO" type="openCol"/>
+        <pin num="14" name="~CS" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="extpressure-cache" part="STM32F0xxKxTx">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">STM32F0xxKxTx</field>
+        <field name="Footprint">agg:LQFP-32</field>
+        <field name="Datasheet">http://www.st.com/web/en/resource/technical/document/datasheet/DM00088500.pdf</field>
+        <field name="Farnell">2432085</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VDD" type="power_in"/>
+        <pin num="2" name="PF0" type="BiDi"/>
+        <pin num="3" name="PF1" type="BiDi"/>
+        <pin num="4" name="NRST" type="input"/>
+        <pin num="5" name="VDDA" type="power_in"/>
+        <pin num="6" name="PA0" type="BiDi"/>
+        <pin num="7" name="PA1" type="BiDi"/>
+        <pin num="8" name="PA2" type="BiDi"/>
+        <pin num="9" name="PA3" type="BiDi"/>
+        <pin num="10" name="PA4" type="BiDi"/>
+        <pin num="11" name="PA5" type="BiDi"/>
+        <pin num="12" name="PA6" type="BiDi"/>
+        <pin num="13" name="PA7" type="BiDi"/>
+        <pin num="14" name="PB0" type="BiDi"/>
+        <pin num="15" name="PB1" type="BiDi"/>
+        <pin num="16" name="VSS" type="power_in"/>
+        <pin num="17" name="VDD" type="power_in"/>
+        <pin num="18" name="PA8" type="BiDi"/>
+        <pin num="19" name="PA9" type="BiDi"/>
+        <pin num="20" name="PA10" type="BiDi"/>
+        <pin num="21" name="PA11" type="BiDi"/>
+        <pin num="22" name="PA12" type="BiDi"/>
+        <pin num="23" name="PA13" type="BiDi"/>
+        <pin num="24" name="PA14" type="BiDi"/>
+        <pin num="25" name="PA15" type="BiDi"/>
+        <pin num="26" name="PB3" type="BiDi"/>
+        <pin num="27" name="PB4" type="BiDi"/>
+        <pin num="28" name="PB5" type="BiDi"/>
+        <pin num="29" name="PB6" type="BiDi"/>
+        <pin num="30" name="PB7" type="BiDi"/>
+        <pin num="31" name="BOOT0" type="input"/>
+        <pin num="32" name="VSS" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="extpressure-cache" part="SWD_TC">
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">SWD_TC</field>
+        <field name="Footprint">agg:TC2030-NL</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VDD" type="power_in"/>
+        <pin num="2" name="SWDIO" type="BiDi"/>
+        <pin num="3" name="~RST" type="output"/>
+        <pin num="4" name="SWDCLK" type="output"/>
+        <pin num="5" name="GND" type="power_in"/>
+        <pin num="6" name="SWO" type="input"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="extpressure-cache">
+      <uri>/home/adam/Projects/m3-avionics/m3dl/extpressure/extpressure-cache.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="3v3">
+      <node ref="IC1" pin="9"/>
+      <node ref="D5" pin="1"/>
+      <node ref="IC5" pin="5"/>
+      <node ref="IC5" pin="1"/>
+      <node ref="C6" pin="1"/>
+      <node ref="C7" pin="1"/>
+      <node ref="C9" pin="1"/>
+      <node ref="IC5" pin="17"/>
+      <node ref="IC2" pin="9"/>
+      <node ref="C2" pin="1"/>
+      <node ref="IC4" pin="9"/>
+      <node ref="C4" pin="1"/>
+      <node ref="IC3" pin="9"/>
+      <node ref="P1" pin="1"/>
+      <node ref="C5" pin="1"/>
+      <node ref="C8" pin="1"/>
+      <node ref="C1" pin="1"/>
+      <node ref="C3" pin="1"/>
+      <node ref="J1" pin="1"/>
+    </net>
+    <net code="2" name="/MOSI">
+      <node ref="IC1" pin="11"/>
+      <node ref="IC3" pin="11"/>
+      <node ref="IC5" pin="13"/>
+      <node ref="IC2" pin="11"/>
+      <node ref="IC4" pin="11"/>
+    </net>
+    <net code="3" name="Net-(IC3-Pad10)">
+      <node ref="IC3" pin="10"/>
+    </net>
+    <net code="4" name="GND">
+      <node ref="C5" pin="2"/>
+      <node ref="R2" pin="2"/>
+      <node ref="R1" pin="2"/>
+      <node ref="C8" pin="2"/>
+      <node ref="C6" pin="2"/>
+      <node ref="P1" pin="5"/>
+      <node ref="C1" pin="2"/>
+      <node ref="J1" pin="2"/>
+      <node ref="IC1" pin="8"/>
+      <node ref="IC1" pin="7"/>
+      <node ref="IC1" pin="6"/>
+      <node ref="IC1" pin="5"/>
+      <node ref="IC1" pin="4"/>
+      <node ref="IC1" pin="3"/>
+      <node ref="C7" pin="2"/>
+      <node ref="C9" pin="2"/>
+      <node ref="IC5" pin="16"/>
+      <node ref="IC5" pin="32"/>
+      <node ref="IC5" pin="31"/>
+      <node ref="IC2" pin="8"/>
+      <node ref="D5" pin="2"/>
+      <node ref="D4" pin="2"/>
+      <node ref="D3" pin="2"/>
+      <node ref="IC2" pin="6"/>
+      <node ref="IC2" pin="3"/>
+      <node ref="IC2" pin="4"/>
+      <node ref="IC2" pin="5"/>
+      <node ref="IC2" pin="7"/>
+      <node ref="C2" pin="2"/>
+      <node ref="IC3" pin="5"/>
+      <node ref="IC3" pin="3"/>
+      <node ref="C3" pin="2"/>
+      <node ref="IC3" pin="4"/>
+      <node ref="IC3" pin="6"/>
+      <node ref="IC3" pin="7"/>
+      <node ref="C4" pin="2"/>
+      <node ref="IC3" pin="8"/>
+      <node ref="IC4" pin="3"/>
+      <node ref="IC4" pin="8"/>
+      <node ref="IC4" pin="4"/>
+      <node ref="IC4" pin="5"/>
+      <node ref="IC4" pin="6"/>
+      <node ref="IC4" pin="7"/>
+    </net>
+    <net code="5" name="Net-(IC3-Pad2)">
+      <node ref="IC3" pin="2"/>
+    </net>
+    <net code="6" name="Net-(IC3-Pad1)">
+      <node ref="IC3" pin="1"/>
+    </net>
+    <net code="7" name="/~CS2">
+      <node ref="IC2" pin="14"/>
+      <node ref="IC5" pin="15"/>
+    </net>
+    <net code="8" name="/~CS3">
+      <node ref="IC5" pin="26"/>
+      <node ref="IC3" pin="14"/>
+    </net>
+    <net code="9" name="/SCLK">
+      <node ref="IC5" pin="11"/>
+      <node ref="IC4" pin="12"/>
+      <node ref="IC2" pin="12"/>
+      <node ref="IC1" pin="12"/>
+      <node ref="IC3" pin="12"/>
+    </net>
+    <net code="10" name="/MISO">
+      <node ref="IC5" pin="12"/>
+      <node ref="IC3" pin="13"/>
+      <node ref="IC2" pin="13"/>
+      <node ref="IC4" pin="13"/>
+      <node ref="IC1" pin="13"/>
+    </net>
+    <net code="11" name="Net-(IC2-Pad10)">
+      <node ref="IC2" pin="10"/>
+    </net>
+    <net code="12" name="Net-(IC2-Pad2)">
+      <node ref="IC2" pin="2"/>
+    </net>
+    <net code="13" name="Net-(IC2-Pad1)">
+      <node ref="IC2" pin="1"/>
+    </net>
+    <net code="14" name="Net-(IC5-Pad14)">
+      <node ref="IC5" pin="14"/>
+    </net>
+    <net code="15" name="Net-(D2-Pad2)">
+      <node ref="IC5" pin="10"/>
+      <node ref="D2" pin="2"/>
+    </net>
+    <net code="16" name="/RX">
+      <node ref="IC5" pin="20"/>
+      <node ref="D4" pin="1"/>
+      <node ref="J1" pin="4"/>
+    </net>
+    <net code="17" name="/TX">
+      <node ref="D3" pin="1"/>
+      <node ref="IC5" pin="19"/>
+      <node ref="J1" pin="3"/>
+    </net>
+    <net code="18" name="Net-(IC5-Pad27)">
+      <node ref="IC5" pin="27"/>
+    </net>
+    <net code="19" name="Net-(IC5-Pad28)">
+      <node ref="IC5" pin="28"/>
+    </net>
+    <net code="20" name="/~CS4">
+      <node ref="IC5" pin="9"/>
+      <node ref="IC4" pin="14"/>
+    </net>
+    <net code="21" name="Net-(IC5-Pad6)">
+      <node ref="IC5" pin="6"/>
+    </net>
+    <net code="22" name="Net-(IC5-Pad7)">
+      <node ref="IC5" pin="7"/>
+    </net>
+    <net code="23" name="Net-(IC5-Pad8)">
+      <node ref="IC5" pin="8"/>
+    </net>
+    <net code="24" name="/~CS1">
+      <node ref="IC5" pin="25"/>
+      <node ref="IC1" pin="14"/>
+    </net>
+    <net code="25" name="Net-(IC5-Pad30)">
+      <node ref="IC5" pin="30"/>
+    </net>
+    <net code="26" name="Net-(IC4-Pad10)">
+      <node ref="IC4" pin="10"/>
+    </net>
+    <net code="27" name="Net-(IC4-Pad1)">
+      <node ref="IC4" pin="1"/>
+    </net>
+    <net code="28" name="Net-(IC4-Pad2)">
+      <node ref="IC4" pin="2"/>
+    </net>
+    <net code="29" name="Net-(D1-Pad2)">
+      <node ref="D1" pin="2"/>
+      <node ref="IC5" pin="29"/>
+    </net>
+    <net code="30" name="Net-(P1-Pad3)">
+      <node ref="P1" pin="3"/>
+    </net>
+    <net code="31" name="Net-(P1-Pad6)">
+      <node ref="P1" pin="6"/>
+    </net>
+    <net code="32" name="Net-(IC5-Pad2)">
+      <node ref="IC5" pin="2"/>
+    </net>
+    <net code="33" name="Net-(IC1-Pad2)">
+      <node ref="IC1" pin="2"/>
+    </net>
+    <net code="34" name="Net-(IC1-Pad1)">
+      <node ref="IC1" pin="1"/>
+    </net>
+    <net code="35" name="Net-(IC5-Pad3)">
+      <node ref="IC5" pin="3"/>
+    </net>
+    <net code="36" name="Net-(IC5-Pad4)">
+      <node ref="IC5" pin="4"/>
+    </net>
+    <net code="37" name="/SWDIO">
+      <node ref="P1" pin="2"/>
+      <node ref="IC5" pin="23"/>
+    </net>
+    <net code="38" name="/SWCLK">
+      <node ref="IC5" pin="24"/>
+      <node ref="P1" pin="4"/>
+    </net>
+    <net code="39" name="Net-(IC1-Pad10)">
+      <node ref="IC1" pin="10"/>
+    </net>
+    <net code="40" name="Net-(IC5-Pad18)">
+      <node ref="IC5" pin="18"/>
+    </net>
+    <net code="41" name="Net-(IC5-Pad22)">
+      <node ref="IC5" pin="22"/>
+    </net>
+    <net code="42" name="Net-(IC5-Pad21)">
+      <node ref="IC5" pin="21"/>
+    </net>
+    <net code="43" name="Net-(D1-Pad1)">
+      <node ref="D1" pin="1"/>
+      <node ref="R1" pin="1"/>
+    </net>
+    <net code="44" name="Net-(D2-Pad1)">
+      <node ref="R2" pin="1"/>
+      <node ref="D2" pin="1"/>
+    </net>
+  </nets>
+</export>

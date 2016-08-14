@@ -16,9 +16,9 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 Text Notes 5100 2800 0    60   ~ 0
-AUX 1 (5V @ 1A)\nIMU ADIS (5V @ 0.3A)\nAddress 0x42
+Address 0x44
 Text Notes 5100 4050 0    60   ~ 0
-CAN transceivers (5V @ 0.1A)\nIMU Other (3.3V @ 0.3A)\nAddress 0x43
+Address 0x45
 $Sheet
 S 5100 2900 1250 550 
 U 56E22E4E
@@ -45,10 +45,6 @@ Text Label 5000 3350 2    60   ~ 0
 SCL
 Text Label 5000 3250 2    60   ~ 0
 SDA
-Text Label 6400 3000 0    60   ~ 0
-5v_AUX1
-Text Label 6400 4350 0    60   ~ 0
-5v_CAN
 Wire Wire Line
 	5000 3250 5100 3250
 Wire Wire Line
@@ -69,10 +65,6 @@ Wire Wire Line
 	5000 4500 5100 4500
 Wire Wire Line
 	5100 4600 5000 4600
-Text Label 6400 4250 0    60   ~ 0
-3v3_IMU
-Text Label 6400 3100 0    60   ~ 0
-5v_IMU
 Wire Wire Line
 	5100 3000 5000 3000
 Text Label 5000 3000 2    60   ~ 0
@@ -825,4 +817,12 @@ Text Label 10450 4200 0    60   ~ 0
 JTDI
 Text Label 10300 4200 2    60   ~ 0
 JTDO
+Text Label 6400 3000 0    60   ~ 0
+5v_RADIO
+Text Label 6400 3100 0    60   ~ 0
+5v_AUX1
+Text Label 6400 4350 0    60   ~ 0
+3v3_RADIO
+Text Label 6400 4250 0    60   ~ 0
+3v3_PYRO
 $EndSCHEMATC
