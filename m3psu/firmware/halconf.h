@@ -132,7 +132,7 @@
  * @brief   Enables the SERIAL subsystem.
  */
 #if !defined(HAL_USE_SERIAL) || defined(__DOXYGEN__)
-#define HAL_USE_SERIAL              TRUE
+#define HAL_USE_SERIAL              FALSE
 #endif
 
 /**
@@ -353,7 +353,7 @@
  * @note    Disabling this option saves both code and data space.
  */
 #if !defined(UART_USE_WAIT) || defined(__DOXYGEN__)
-#define UART_USE_WAIT               FALSE
+#define UART_USE_WAIT               TRUE
 #endif
 
 /**
@@ -361,7 +361,7 @@
  * @note    Disabling this option saves both code and data space.
  */
 #if !defined(UART_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
-#define UART_USE_MUTUAL_EXCLUSION   FALSE
+#define UART_USE_MUTUAL_EXCLUSION   TRUE
 #endif
 
 /*===========================================================================*/
@@ -373,7 +373,7 @@
  * @note    Disabling this option saves both code and data space.
  */
 #if !defined(USB_USE_WAIT) || defined(__DOXYGEN__)
-#define USB_USE_WAIT                FALSE
+#define USB_USE_WAIT                TRUE
 #endif
 
 #endif /* _HALCONF_H_ */

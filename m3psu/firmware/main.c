@@ -33,33 +33,26 @@ static THD_WORKING_AREA(waChargeController, 1024);
 static THD_WORKING_AREA(waChargerWatchdog, 256);
 static THD_WORKING_AREA(waPowerAlert, 512);
 
-/*
- * Application entry point.
- */
 int main(void) {
-  /*
-   * System initializations.
-   * - HAL initialization, this also initializes the configured device drivers
-   *   and performs the board-specific initializations.
-   * - Kernel initialization, the main() function becomes a thread and the
-   *   RTOS is active.
-   */
+  
   halInit();
   chSysInit();
 
-  // PA8 is I2C3_SCL (alternate function 4)
-  palSetPadMode(GPIOA, 8, PAL_MODE_ALTERNATE(4));
-  // PC9 is I2C3_SDA (alternate function 4)
-  palSetPadMode(GPIOC, 9, PAL_MODE_ALTERNATE(4));
+  /*
+    // PA8 is I2C3_SCL (alternate function 4)
+    palSetPadMode(GPIOA, 8, PAL_MODE_ALTERNATE(4));
+    // PC9 is I2C3_SDA (alternate function 4)
+    palSetPadMode(GPIOC, 9, PAL_MODE_ALTERNATE(4));
 
-  // PB8 is CAN1_RC (alternate function 9)
-  palSetPadMode(GPIOB, 8, PAL_MODE_ALTERNATE(9));
-  // PB9 is CAN1_TX (alternate function 9)
-  palSetPadMode(GPIOB, 9, PAL_MODE_ALTERNATE(9));
+    // PB8 is CAN1_RC (alternate function 9)
+    palSetPadMode(GPIOB, 8, PAL_MODE_ALTERNATE(9));
+    // PB9 is CAN1_TX (alternate function 9)
+    palSetPadMode(GPIOB, 9, PAL_MODE_ALTERNATE(9));
 
-  // Set PA5 and PA6 to analog inputs
-  palSetGroupMode(GPIOA, PAL_PORT_BIT(5) | PAL_PORT_BIT(6), 0, PAL_MODE_INPUT_ANALOG);
-
+    // Set PA5 and PA6 to analog inputs
+    palSetGroupMode(GPIOA, PAL_PORT_BIT(5) | PAL_PORT_BIT(6), 0, PAL_MODE_INPUT_ANALOG);
+  */
+  
   i2cStart(&I2C_DRIVER, &i2cfg);
   canStart(&CAN_DRIVER, &cancfg);
 
@@ -81,10 +74,5 @@ int main(void) {
   // Just power on channel 0
   PowerManager_switch_on(0);
 
-
-
-  //while (true) {
-  chThdSleepS(TIME_INFINITE);
-  //}
-  return 0;
+  while (true);
 }
