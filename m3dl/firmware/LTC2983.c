@@ -5,7 +5,7 @@
 #include "err_handler.h"
 
 /* Function Prototypes */
-static void ltc2983_write_reg(uint16_t addr, uint8_t len, uint8_t* data);
+static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data);
 static void ltc2983_read_reg(uint16_t addr, size_t len, uint8_t* data);
 static void ltc2983_setup(void);
 
@@ -92,7 +92,7 @@ static void ltc2983_read_reg(uint16_t addr, size_t len, uint8_t* data) {
   	spiSend(&SPID1, 3, txbuf);        
  	
 	/* SPI Reccieve */
-	spiReceive(&SPID1, len, data)
+	spiReceive(&SPID1, len, data);
 	spiUnselect(&SPID1);
 }
 
@@ -105,15 +105,39 @@ static void ltc2983_setup(void) {
          * is complete.
 	 */
 
-	/* Loop over address to populate sensor config registers
+	/* Loop over address to populate sensor config
+	 * buffer and send to ltc2983 at 0x200
 	 */
+	
+	/* Buffer to Hold Sensor Config Data */
+	uint32_t sensor_config[20];
 
-	 /*
-  	  * Return to thread
-	  */
+	/* Loop Pointer */
+	uint8_t i;
+	i = 0;
 
+	/* Populate Thermocouple Specific Data */
+	while (i < 19){
+	
+		if ((i%2) == 0){
+			/* Odd Channel Number */
+			sensor_config[i] = 0x00000000;		
+		} 
+		else {
+			/* Even Channel Number */
+			sensor_config[i] = 0x15100000;
+		}
 
+		i = i + 1;
+	}
 
+	
+	/* Populate Diode Specific Data */
+	sensor_config[19] = 0xE4500C49;
+
+	/*
+  	 * Send over SPI & return to thread
+	 */
 
 
 }
