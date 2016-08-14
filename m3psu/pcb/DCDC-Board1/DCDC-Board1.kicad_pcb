@@ -1,9 +1,9 @@
-(kicad_pcb (version 4) (host pcbnew 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product)
+(kicad_pcb (version 4) (host pcbnew 0.201604290946+6713~44~ubuntu14.04.1-product)
 
   (general
-    (links 0)
+    (links 273)
     (no_connects 0)
-    (area 79.899999 79.4575 120.1775 120.6775)
+    (area 79.899999 79.899999 120.100001 120.100001)
     (thickness 1.6)
     (drawings 5)
     (tracks 1432)
@@ -45,7 +45,7 @@
   )
 
   (setup
-    (last_trace_width 0.16)
+    (last_trace_width 0.25)
     (user_trace_width 0.16)
     (user_trace_width 0.2)
     (user_trace_width 0.25)
@@ -1264,7 +1264,7 @@
     (fp_text reference R23 (at -1.71 0 225) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value 4k32 (at 1.71 0 225) (layer F.Fab)
+    (fp_text value 7k32 (at 1.71 0 225) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -0.5 -0.25) (end 0.5 -0.25) (layer F.Fab) (width 0.01))
@@ -1602,7 +1602,7 @@
     (fp_text reference R10 (at -1.71 0 225) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value 3k57 (at 1.71 0 225) (layer F.Fab)
+    (fp_text value 5k76 (at 1.71 0 225) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -0.5 -0.25) (end 0.5 -0.25) (layer F.Fab) (width 0.01))
@@ -1662,7 +1662,7 @@
     (fp_text reference R8 (at -1.71 0 315) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value 30k1 (at 1.71 0 315) (layer F.Fab)
+    (fp_text value 24k9 (at 1.71 0 315) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -0.5 -0.25) (end 0.5 -0.25) (layer F.Fab) (width 0.01))
@@ -4017,7 +4017,7 @@
     )
   )
 
-  (module agg:SIL-254P-01 (layer F.Cu) (tedit 5795C361) (tstamp 5795E788)
+  (module agg:SIL-254P-01 locked (layer F.Cu) (tedit 5795C361) (tstamp 5795E788)
     (at 92.83 85.13 45)
     (fp_text reference REF** (at 0 -2.22 45) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
