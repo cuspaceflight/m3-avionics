@@ -1,0 +1,54 @@
+name: m3dl
+lsefreq: 0
+hsefreq: 26000000
+voltage: 3.3
+mcutype: STM32F405xx
+default: input, pushpull, starthigh, pullup, highspeed
+pins:
+    JTMS: pa13, af0, pulldown
+    JTCK: pa14, af0, pulldown
+    JTDI: pa15, af0, pullup
+    JTDO: pb3, af0
+    NJTRST: pb4, af0, pullup
+    
+    STRAIN1: pc0, analog, floating
+    STRAIN2: pc1, analog, floating
+    STRAIN3: pc2, analog, floating
+    STRAIN4: pc3, analog, floating
+    STRAIN5: pa0, analog, floating
+    STRAIN6: pa1, analog, floating
+
+    PRESSURE_TX: pa2, af7
+    PRESSURE_RX: pa3, af7
+ 
+    SPI1_SCK: pa5, af5
+    SPI1_MISO: pa6, af5
+    SPI1_MOSI: pa7, af5
+    SPI1_CS: pa8, output, pushpull
+    TEMP_INT: pb7, input
+
+    CAN_RX: pb8, af9
+    CAN_TX: pb9, af9
+
+    LED1_GREEN: pb12, output, pushpull, startlow
+    LED2_RED: pc7, output, pushpull, startlow
+
+    OTG_HS_VBUS: pb13, input, pulldown
+    OTG_HS_DM: pb14, af12
+    OTG_HS_DP: pb15, af12
+
+    SDIO_DO: pc8, af12
+    SDIO_D1: pc9, af12
+    SDIO_D2: pc10, af12
+    SDIO_D3: pc11, af12
+    SDIO_CK: pc12, af12
+    SDIO_CMD: pd2, af12
+
+
+
+
+
+
+
+
+    

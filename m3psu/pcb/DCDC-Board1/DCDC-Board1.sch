@@ -16,9 +16,9 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 Text Notes 5100 2800 0    60   ~ 0
-Address 0x42
+Address 0x44
 Text Notes 5100 4050 0    60   ~ 0
-Address 0x43
+Address 0x45
 $Sheet
 S 5100 2900 1250 550 
 U 56E22E4E
