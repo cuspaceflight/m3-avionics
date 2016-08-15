@@ -4,12 +4,16 @@ import os.path
 import argparse
 from subprocess import Popen, PIPE
 
+basepath = os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir))
+regpath = os.path.join(basepath, "registry.yaml")
+regpath = os.path.normpath(regpath)
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--bmp', help='path to probe',
                     default="/dev/serial/by-id/"
                     "usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00")
 parser.add_argument('--registry', help='path to registry.yaml file',
-                    default='registry.yaml')
+                    default=regpath)
 parser.add_argument('--find',
                     help='just output the target for a specific board',
                     default=None)
