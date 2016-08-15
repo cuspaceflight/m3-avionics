@@ -115,7 +115,7 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
-       main.c chargecontroller.c ltc3887.c ltc4151.c max17435.c pcal9538.c powermanager.c smbus.c
+       main.c chargecontroller.c ltc3887.c ltc4151.c max17435.c pcal9538a.c powermanager.c smbus.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -217,23 +217,25 @@ ULIBS =
 RULESPATH = $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC
 include $(RULESPATH)/rules.mk
 
-##############################################################################
+##############################################################################
+
 # M3Debug flashing via GDB
 #
 BMP_PORT = $(wildcard /dev/serial/by-id/usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00)
+JTAG_SCAN = python3 ../../shared/jtag_scan/jtag_scan.py
 flash: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb --batch \
 		              -ex 'target extended-remote $(BMP_PORT)' \
 					  -ex 'monitor version' \
 					  -ex 'monitor jtag_scan' \
-					  -ex 'attach 1' \
+					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
 					  -ex 'load' \
 					  -ex 'compare-sections' build/$(PROJECT).elf
 
 debug: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb -ex 'target extended-remote $(BMP_PORT)' \
 		              -ex 'monitor jtag_scan' \
-					  -ex 'attach 1' \
+					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
 					  -ex "file build/$(PROJECT).elf"
 
 #
