@@ -12,7 +12,9 @@ pins:
     NJTRST: pb4, af0, pullup
     CAN_RX: pb8, af9
     CAN_TX: pb9, af9
-    I2C_SCL: pa8, af4
-    I2C_SDA: pc9, af4
+    I2C_SCL: pa8, opendrain, af4
+    I2C_SDA: pc9, opendrain, af4
     BATT1: pa6, analog
     BATT2: pa5, analog
+    EN_INT_PWR: pc8, output, pushpull, starthigh
+    EN_EXT_PWR: pa10, output, pushpull, starthigh

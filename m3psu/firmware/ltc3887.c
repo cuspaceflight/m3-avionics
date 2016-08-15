@@ -108,14 +108,19 @@
 static int8_t l16_exp;
 
 uint8_t ltc3887_paged_write(LTC3887 *ltc, uint8_t command_code, uint8_t page, uint8_t *data, uint8_t datalen) {
-  uint8_t txdat[datalen + 4];
+  uint8_t txdat[62];
+
+  // TODO: find actual debug-assert command, use that instead
+  if(datalen > 60){
+    return ERR_COMMS;
+  }
 
   txdat[0] = page;
   txdat[1] = command_code;
 
   // copy rest of data
-  memcpy(&txdat[4], data, datalen);
-  return smbus_write_block(ltc->config.i2c, ltc->config.address, LTC3887_CMD_PAGE_PLUS_WRITE, txdat, datalen+4);
+  memcpy(&txdat[2], data, datalen);
+  return smbus_write_block(ltc->config.i2c, ltc->config.address, LTC3887_CMD_PAGE_PLUS_WRITE, txdat, datalen+2);
 }
 
 uint8_t ltc3887_paged_read(LTC3887 *ltc, uint8_t command_code, uint8_t page,
@@ -139,7 +144,7 @@ uint8_t ltc3887_global_read(LTC3887 *ltc, uint8_t command_code, uint8_t *data,
 
 uint8_t ltc3887_read_l16_exp(LTC3887 *ltc) {
   // Read the VOUT_MODE register to get L16 exponent to use
-  uint8_t rxdat[1];
+  static uint8_t rxdat[1] __attribute__((section("DATA_RAM")));
   uint8_t status = ltc3887_global_read(ltc, LTC3887_CMD_VOUT_MODE, rxdat,
                                        sizeof(rxdat));
 
@@ -445,8 +450,9 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
   }
 
   // set on_off_config to respond to PMbus OPERATION command
+  data[1] = 0;
   data[0] = 0x1E | (1 << LTC3887_ONOFF_USE_PMBUS); // default value is 0x1E
-  if (ltc3887_global_write(ltc, LTC3887_CMD_ON_OFF_CONFIG, data, 1) != ERR_OK) {
+  if (ltc3887_global_write(ltc, LTC3887_CMD_ON_OFF_CONFIG, data, 2) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc3887_wait_for_not_busy(ltc);
