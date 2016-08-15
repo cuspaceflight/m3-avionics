@@ -86,7 +86,7 @@ endif
 PROJECT = m3template
 
 # Imported source files and paths
-CHIBIOS = ../ChibiOS
+CHIBIOS = ../../shared/ChibiOS
 # Startup files.
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
 # HAL-OSAL files (optional).
@@ -221,19 +221,20 @@ include $(RULESPATH)/rules.mk
 # M3Debug flashing via GDB
 #
 BMP_PORT = $(wildcard /dev/serial/by-id/usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00)
+JTAG_SCAN = python3 ../../shared/jtag_scan/jtag_scan.py
 flash: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb --batch \
 		              -ex 'target extended-remote $(BMP_PORT)' \
 					  -ex 'monitor version' \
 					  -ex 'monitor jtag_scan' \
-					  -ex 'attach 1' \
+					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
 					  -ex 'load' \
 					  -ex 'compare-sections' build/$(PROJECT).elf
 
 debug: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb -ex 'target extended-remote $(BMP_PORT)' \
 		              -ex 'monitor jtag_scan' \
-					  -ex 'attach 1' \
+					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
 					  -ex "file build/$(PROJECT).elf"
 
 #
