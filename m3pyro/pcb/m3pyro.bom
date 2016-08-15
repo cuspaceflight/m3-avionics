@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: m3pyro.xml
-Date: 2016-07-27T04:08:49.965690
+Date: 2016-08-11T15:26:54.670684
 
 Parts Missing Footprints
 ------------------------
@@ -25,44 +25,46 @@ Inconsistent Order Codes
 
 Vendor Specific BOMs
 --------------------
+  Farnell
+  ~~~~~~~
+2496771,10,10x 100n 0402
+2496790,2,2x 10p 0402
+2496814,1,1x 1µ 0402
+9239111,5,5x 100 0402
+2426952,1,1x 4µ7 0402
+2362088,2,2x 2µ2 0402
+2064363,1,1x STM32F405RxTx LQFP-64
+2447096,13,13x 10k 0402
+2447120,4,4x 1k 0402
+2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
+2502556,1,1x 5k6 0402
+2317565,4,4x D 0402
+2506952,1,1x 26M XTAL-20x16
+2335390,4,4x 2FET3 PowerPAK-SC-70-6-DUAL
+
+
   Samtec
   ~~~~~~
 SFML-110-02-L-D-LC,2,2x J12 J10 SFML-110-02-L-D-LC
 TFML-110-02-L-D,2,2x J11 J9 TFML-110-02-L-D
 
 
-  Farnell
-  ~~~~~~~
-2506952,1,1x 26M XTAL-20x16
-2496790,2,2x 10p 0402
-2317565,4,4x D 0402
-2064363,1,1x STM32F405RxTx LQFP-64
-2447120,4,4x 1k 0402
-2362088,2,2x 2µ2 0402
-2496771,10,10x 100n 0402
-9239111,5,5x 100 0402
-2426952,1,1x 4µ7 0402
-2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
-2502556,1,1x 5k6 0402
-2496814,1,1x 1µ 0402
-2447096,13,13x 10k 0402
-
-
 Assembly BOM
 ------------
-SFML-110-02-L-D-LC   2   WEST BOT,EAST BOT SFML-110-02-L-D-LC J10 J12
-TFML-110-02-L-D      2   EAST TOP,WEST TOP TFML-110-02-L-D J11 J9
-2506952              1   26M             XTAL-20x16      Y1
-2496790              2   10p             0402            C5 C6
-2317565              4   D               0402            D1 D2 D3 D4
-2064363              1   STM32F405RxTx   LQFP-64         IC1
-2447120              4   1k              0402            R2 R3 R4 R7
-2362088              2   2µ2             0402            C14 C15
 2496771              10  100n            0402            C1 C11 C12 C13 C16 C2 C3 C4 C8 C9
+2496790              2   10p             0402            C5 C6
+2496814              1   1µ              0402            C10
 9239111              5   100             0402            R18 R19 R20 R25 R6
 2426952              1   4µ7             0402            C7
+2362088              2   2µ2             0402            C14 C15
+2064363              1   STM32F405RxTx   LQFP-64         IC1
+2447096              13  10k             0402            R1 R10 R11 R12 R13 R14 R15 R16 R17 R26 R5 R8 R9
+2447120              4   1k              0402            R2 R3 R4 R7
 2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC2
 2502556              1   5k6             0402            R27
-2496814              1   1µ              0402            C10
-2447096              13  10k             0402            R1 R10 R11 R12 R13 R14 R15 R16 R17 R26 R5 R8 R9
+2317565              4   D               0402            D1 D2 D3 D4
+2506952              1   26M             XTAL-20x16      Y1
+2335390              4   2FET3           PowerPAK-SC-70-6-DUAL Q1 Q2 Q3 Q4
+SFML-110-02-L-D-LC   2   EAST BOT,WEST BOT SFML-110-02-L-D-LC J10 J12
+TFML-110-02-L-D      2   WEST TOP,EAST TOP TFML-110-02-L-D J11 J9
 
