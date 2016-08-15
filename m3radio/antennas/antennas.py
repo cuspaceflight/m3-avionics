@@ -103,8 +103,8 @@ antennas = [
     {
         "w_array": 44e-3 * np.pi,
         "feed": feed_dart_telemetry,
-        "w_patch": 130e-3,
-        "l_patch": 104e-3,
+        "w_patch": 134e-3,
+        "l_patch": 120e-3,
         "w_inset": 10e-3,
         "l_inset": 21.36e-3,
         "r_corner": None,
@@ -114,8 +114,8 @@ antennas = [
     {
         "w_array": 44e-3 * np.pi,
         "feed": feed_dart_gps,
-        "w_patch": 57.48e-3,
-        "l_patch": 57.48e-3,
+        "w_patch": 62e-3,
+        "l_patch": 62e-3,
         "w_inset": 0,
         "l_inset": 0,
         "r_corner": 2e-3,
