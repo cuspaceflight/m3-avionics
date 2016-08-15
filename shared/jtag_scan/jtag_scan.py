@@ -1,3 +1,4 @@
+import sys
 import yaml
 import glob
 import os.path
@@ -84,6 +85,10 @@ def main():
             if args.find == target_name:
                 print(i+1)
                 return
+
+    if args.find is not None:
+        print("Could not find any {}".format(args.find))
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
