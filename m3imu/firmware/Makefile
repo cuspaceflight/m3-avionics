@@ -10,7 +10,7 @@ endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT = 
+  USE_COPT =
 endif
 
 # C++ specific options here (added to USE_OPT).
@@ -25,7 +25,7 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT = 
+  USE_LDOPT =
 endif
 
 # Enable this if you want link time optimizations (LTO)
@@ -221,19 +221,20 @@ include $(RULESPATH)/rules.mk
 # M3Debug flashing via GDB
 #
 BMP_PORT = $(wildcard /dev/serial/by-id/usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00)
+JTAG_SCAN = python3 ../../shared/jtag_scan/jtag_scan.py
 flash: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb --batch \
 		              -ex 'target extended-remote $(BMP_PORT)' \
 					  -ex 'monitor version' \
 					  -ex 'monitor jtag_scan' \
-					  -ex 'attach 1' \
+					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
 					  -ex 'load' \
 					  -ex 'compare-sections' build/$(PROJECT).elf
 
 debug: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb -ex 'target extended-remote $(BMP_PORT)' \
 		              -ex 'monitor jtag_scan' \
-					  -ex 'attach 1' \
+					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
 					  -ex "file build/$(PROJECT).elf"
 
 #
