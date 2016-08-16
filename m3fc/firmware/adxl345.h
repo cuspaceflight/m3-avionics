@@ -2,7 +2,6 @@
  * ADXL345 Driver
  * 2014, 2016 Adam Greig, Cambridge University Spaceflight
  */
-
 #ifndef ADXL345_H
 #define ADXL345_H
 
