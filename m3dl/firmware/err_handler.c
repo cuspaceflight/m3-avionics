@@ -3,7 +3,7 @@
 #include "err_handler.h"
 
 void err(uint8_t arg) {
-	/* Do nothing with argument for now */
+	/* Set Error LED and Halt for now */
 	(void)arg;
 	palSetPad(GPIOC, GPIOC_LED2_RED);
 	chSysHalt(NULL);
@@ -16,7 +16,9 @@ void err(uint8_t arg) {
  *	0x01 = ltc2983_write_reg - SPI TX
  *             buffer overflow [NON FATAL]
  *
- *      0x02 = 
+ *      0x02 = ltc2983_setup - Init Interupt 
+ *	       triggered but cmd status does  
+ *	       not have DONE flag set [NON FATAL]
  *
  *
  *
@@ -24,6 +26,9 @@ void err(uint8_t arg) {
  *
  *
  *
- *
- *
+ */
+
+/* TODO: Implement an IF statement that causes
+ *	 the function to act based on the error
+ *	 code and to log the event occurence
  */

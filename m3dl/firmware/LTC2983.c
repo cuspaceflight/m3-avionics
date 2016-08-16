@@ -19,31 +19,54 @@ static const SPIConfig hs_spicfg = {
 };
 
 
+/* TEMP INT Callback */
+void temp_ready(EXTDriver *extp, expchannel_t channel) {
+
+    (void)extp;
+    (void)channel;
+
+}
+
 /* LTC2983 Thread */
 static THD_WORKING_AREA(ltc2983_wa, 256);
 static THD_FUNCTION(ltc2983_thd, arg) {
 	
-   /* Set Thread Name & Start SPI */
-   (void)arg;
-   chRegSetThreadName("LTC2983");
-   spiStart(&SPID1, &hs_spicfg);
+    /* Set Thread Name & Start SPI */
+    (void)arg;
+    chRegSetThreadName("LTC2983");
+    spiStart(&SPID1, &hs_spicfg);
 
-   /* Sleep until LTC2983 power up fires
-      interrupt taking TEMP_INT HIGH  */
+    /* 
+     * Sleep until LTC2983 power up fires
+     * interrupt taking TEMP_INT HIGH  
+     */
  
-   /* Call ltc2983_setup function */
+    chThdSleepMilliseconds(200);	
 
-   /* Enter while loop that continually starts
-      a multi-channel conversion and sleeps until
-      completion is signalled by the LTC2983 
-      taking the TEMP_INT pin high  */
+    /* Call ltc2983_setup function */
+
+     ltc2983_setup();
+
+    /* 
+     * Enter while loop that continually starts
+     * a multi-channel conversion and sleeps until
+     * completion is signalled by the LTC2983 
+     * taking the TEMP_INT pin high  
+     */
+
+    while(TRUE) {
+        /* Do Nothing */
+	palSetPad(GPIOC, GPIOC_LED2_RED);
+        chThdSleepMilliseconds(500);
+	palClearPad(GPIOC, GPIOC_LED2_RED);
+        chThdSleepMilliseconds(500);
+    }
   
 }
 
-
 /* Entry Point */
 void ltc2983_init(void) {
-		/* Create LTC2983 Thread */
+    /* Create LTC2983 Thread */
     chThdCreateStatic(ltc2983_wa, sizeof(ltc2983_wa),
                       NORMALPRIO, ltc2983_thd, NULL);
 }
@@ -105,39 +128,61 @@ static void ltc2983_setup(void) {
          * is complete.
 	 */
 
-	/* Loop over address to populate sensor config
+	uint8_t cmd_status_reg;
+	
+	ltc2983_read_reg(0x000, 1, &cmd_status_reg);
+
+	if (cmd_status_reg != 0x40) {
+		err(0x02);
+	}
+
+	/* 
+	 * Loop over address to populate sensor config
 	 * buffer and send to ltc2983 at 0x200
 	 */
 	
+
 	/* Buffer to Hold Sensor Config Data */
-	uint32_t sensor_config[20];
+	uint8_t sensor_config[80];
 
 	/* Loop Pointer */
 	uint8_t i;
 	i = 0;
 
 	/* Populate Thermocouple Specific Data */
-	while (i < 19){
+	while (i < 76){
 	
-		if ((i%2) == 0){
+		if ((i%8) == 0){
 			/* Odd Channel Number */
-			sensor_config[i] = 0x00000000;		
+			sensor_config[i] = 0x00;
+			sensor_config[i + 1] = 0x00;
+			sensor_config[i + 2] = 0x00;
+			sensor_config[i + 3] = 0x00;		
 		} 
 		else {
 			/* Even Channel Number */
-			sensor_config[i] = 0x15100000;
+			sensor_config[i] = 0x15;
+			sensor_config[i + 1] = 0x10;
+			sensor_config[i + 2] = 0x00;
+			sensor_config[i + 3] = 0x00;	
 		}
 
-		i = i + 1;
+		i = i + 4;
 	}
 
 	
 	/* Populate Diode Specific Data */
-	sensor_config[19] = 0xE4500C49;
+	sensor_config[76] = 0xE4;
+	sensor_config[77] = 0x50;
+	sensor_config[78] = 0x0C;
+	sensor_config[79] = 0x49;	
+
 
 	/*
   	 * Send over SPI & return to thread
 	 */
 
+	ltc2983_write_reg(0x200, 80, sensor_config);
 
 }
+
