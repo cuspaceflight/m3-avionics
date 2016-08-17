@@ -5,11 +5,11 @@ voltage: 3.3
 mcutype: STM32F405xx
 default: input, pushpull, starthigh, pullup, highspeed
 pins:
-    BEEPER: pa0, af2
+    BEEPER: pa0, af2, startlow
 
-    LED_RED: pa1, output
-    LED_YLW: pa2, output
-    LED_GRN: pa3, output
+    LED_RED: pa1, output, startlow
+    LED_YLW: pa2, output, startlow
+    LED_GRN: pa3, output, startlow
 
     BARO_CS: pc4, output
     BARO_SCLK: pa5, af5

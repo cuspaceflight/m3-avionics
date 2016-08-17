@@ -34,7 +34,7 @@ static THD_FUNCTION(leds_thd, arg) {
     chRegSetThreadName("ui_leds");
     palClearLine(LINE_LED_RED);
     while(true) {
-        palSetLine(LINE_LED_YLW);
+        palClearLine(LINE_LED_YLW);
         chThdSleepMilliseconds(300);
         palClearLine(LINE_LED_YLW);
         chThdSleepMilliseconds(300);

@@ -163,11 +163,8 @@ static THD_FUNCTION(ms5611_thd, arg) {
     ms5611_reset();
     ms5611_read_cal(&cal_data);
     while (true) {
-        palSetLine(LINE_LED_GRN);
         ms5611_read(&cal_data, &temperature, &pressure);
         chThdSleepMilliseconds(50);
-        palClearLine(LINE_LED_GRN);
-        chThdSleepMilliseconds(200);
     }
 }
 

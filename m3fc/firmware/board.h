@@ -258,10 +258,10 @@
 /*
  *  GPIOA setup:
  *
- * PA0  - BEEPER                       (af2).
- * PA1  - LED_RED                      (output).
- * PA2  - LED_YLW                      (output).
- * PA3  - LED_GRN                      (output).
+ * PA0  - BEEPER                       (af2, startlow).
+ * PA1  - LED_RED                      (output, startlow).
+ * PA2  - LED_YLW                      (output, startlow).
+ * PA3  - LED_GRN                      (output, startlow).
  * PA4  - PIN4                         (unused).
  * PA5  - BARO_SCLK                    (af5).
  * PA6  - BARO_SDO                     (af5).
@@ -339,10 +339,10 @@
                                         PIN_PUPD_PULLDOWN(GPIOA_JTMS) | \
                                         PIN_PUPD_PULLDOWN(GPIOA_JTCK) | \
                                         PIN_PUPD_PULLUP(GPIOA_JTDI))
-#define VAL_GPIOA_ODR                  (PIN_OD_HIGH(GPIOA_BEEPER) | \
-                                        PIN_OD_HIGH(GPIOA_LED_RED) | \
-                                        PIN_OD_HIGH(GPIOA_LED_YLW) | \
-                                        PIN_OD_HIGH(GPIOA_LED_GRN) | \
+#define VAL_GPIOA_ODR                  (PIN_OD_LOW(GPIOA_BEEPER) | \
+                                        PIN_OD_LOW(GPIOA_LED_RED) | \
+                                        PIN_OD_LOW(GPIOA_LED_YLW) | \
+                                        PIN_OD_LOW(GPIOA_LED_GRN) | \
                                         PIN_OD_HIGH(GPIOA_PIN4) | \
                                         PIN_OD_HIGH(GPIOA_BARO_SCLK) | \
                                         PIN_OD_HIGH(GPIOA_BARO_SDO) | \
