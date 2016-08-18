@@ -1,92 +1,79 @@
-/*
- * A basic ChibiOS app.
- * Copyright Adam Greig 2011.
- * Released under the GNU GPL v3. Insert GPL boilerplate here.
- */
-
 #include "ch.h"
 #include "hal.h"
 
-/*
- * LED control server.
- */
-static WORKING_AREA(waLEDS, 128);
-static msg_t LEDS(void * arg) {
-    Mailbox* mbox = (Mailbox *)arg;
-    msg_t msg, result;
 
-    while(TRUE) {
-        result = chMBFetch(mbox, &msg, TIME_INFINITE);
-        if(result == RDY_OK) {
-            if(msg & 1)
-                palSetPad(IOPORT2, LED1);
-            else
-                palClearPad(IOPORT2, LED1);
-            if(msg & 2)
-                palSetPad(IOPORT2, LED2);
-            else
-                palClearPad(IOPORT2, LED2);
+static const CANConfig can_cfg = {
+    .mcr =
+        /* Automatic Bus Off Management enabled,
+         * Automatic Wake Up Management enabled.
+         */
+        CAN_MCR_ABOM | CAN_MCR_AWUM,
+    .btr =
+        /* CAN is on APB1 at 42MHz, we want 1Mbit/s.
+         * 1/Baud = (BRP+1)/(APB1) * (3+TS1+TS2)
+         */
+        CAN_BTR_BRP(5) | CAN_BTR_TS1(3) | CAN_BTR_TS2(1)
+        /* Allow up to 2 time quanta clock synchronisation */
+        | CAN_BTR_SJW(1)
+        /* XXX: Enable silent loopback test mode for now */
+        /*| CAN_BTR_LBKM | CAN_BTR_SILM*/
+};
+
+static THD_WORKING_AREA(can_tx_wa, 256);
+static THD_FUNCTION(can_tx_thd, arg) {
+    (void)arg;
+
+    CANTxFrame txmsg = {
+        .IDE = CAN_IDE_STD,
+        .RTR = CAN_RTR_DATA,
+        .DLC = 8,
+        .SID = 0b00100100011,
+        .data8 = {
+            'M', '3', 'R', 'A', 'D', 'I', 'O', 0
+        },
+    };
+
+    while(true) {
+        canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));
+        chThdSleepMilliseconds(500);
+    }
+}
+
+static THD_WORKING_AREA(can_rx_wa, 256);
+static THD_FUNCTION(can_rx_thd, arg) {
+    (void)arg;
+
+    event_listener_t el;
+    CANRxFrame rxmsg;
+
+    chEvtRegister(&CAND1.rxfull_event, &el, 0);
+
+    while(true) {
+        if(chEvtWaitAnyTimeout(ALL_EVENTS, MS2ST(100)) == 0) {
+            continue;
+        }
+
+        while(canReceive(&CAND1, CAN_ANY_MAILBOX, &rxmsg,
+                         TIME_IMMEDIATE) == MSG_OK) {
+            palSetLine(LINE_LED_GRN);
+            chThdSleepMilliseconds(50);
+            palClearLine(LINE_LED_GRN);
         }
     }
-
-    return 0;
 }
 
-/*
- * LED request client.
- */
-static WORKING_AREA(waLEDC, 128);
-static msg_t LEDC(void * arg) {
-    Mailbox* mbox = (Mailbox *)arg;
-
-    while(TRUE) {
-        chMBPost(mbox, 0, TIME_INFINITE);
-        chThdSleepMilliseconds(500);
-        chMBPost(mbox, 1, TIME_INFINITE);
-        chThdSleepMilliseconds(500);
-        chMBPost(mbox, 2, TIME_INFINITE);
-        chThdSleepMilliseconds(500);
-        chMBPost(mbox, 3, TIME_INFINITE);
-        chThdSleepMilliseconds(500);
-    }
-
-    return 0;
-}
-
-/*
- * Application entry point.
- */
 int main(void) {
 
-    /*
-     * System initializations.
-     * - HAL initialization, this also initializes the configured device drivers
-     *   and performs the board-specific initializations.
-     * - Kernel initialization, the main() function becomes a thread and the
-     *   RTOS is active.
-     */
-    halInit();
-    chSysInit();
+  halInit();
+  chSysInit();
 
-    /*
-     * Create a mailbox for IPC.
-     */
-    Mailbox mbox;
-    msg_t mbox_buffer[3];
-    chMBInit(&mbox, mbox_buffer, 3);
+  canStart(&CAND1, &can_cfg);
 
-    /*
-     * Create the LED server and client threads
-     */
-    chThdCreateStatic(waLEDS, sizeof(waLEDS), NORMALPRIO, LEDS, (void *)&mbox);
-    chThdCreateStatic(waLEDC, sizeof(waLEDC), NORMALPRIO, LEDC, (void *)&mbox);
+    chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO,
+                      can_rx_thd, NULL);
+    chThdCreateStatic(can_tx_wa, sizeof(can_tx_wa), NORMALPRIO,
+                      can_tx_thd, NULL);
 
-    /*
-     * Normal main() thread activity, in this demo it does nothing
-     */
-    while (TRUE) {
-        chThdSleepMilliseconds(500);
-    }
-
-    return 0;
+  while (true) {
+  }
 }
