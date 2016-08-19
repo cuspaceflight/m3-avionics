@@ -99,14 +99,11 @@ uint8_t smbus_write_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteadd
 }
 
 uint8_t smbus_read_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint8_t *txdat, uint8_t txdatlen, uint8_t *data, uint8_t datalen){
-
-  if((uint32_t)data & 0x10000000){
-    chSysHalt("You idiot, that's not DMA memory");
-  }
   static uint8_t cmd[64] __attribute__((section("DATA_RAM")));
+  static uint8_t recv[64] __attribute__((section("DATA_RAM")));
 
   // TODO: find actual debug-assert command, use that instead
-  if(txdatlen > 62){
+  if(txdatlen > 62 || datalen > 63){
     return ERR_COMMS;
   }
 
@@ -114,13 +111,16 @@ uint8_t smbus_read_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddr
   cmd[1] = txdatlen;
 
   // copy rest of tx-data
-  memcpy(&cmd[2], txdat, txdatlen);
+  memcpy(cmd+2, txdat, txdatlen);
 
   i2cAcquireBus(i2c);
-  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, cmd, txdatlen+2, data, datalen, MS2ST(20));
+  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, cmd, txdatlen+2, recv, datalen+1, MS2ST(20));
   i2cReleaseBus(i2c);
 
   if (status == MSG_OK) {
+    // First byte read is the length of data being returned by the device.
+    uint8_t numbytes = (datalen < recv[0]) ? datalen : recv[0];
+    memcpy(data, recv+1, numbytes);
     return ERR_OK;
   }
   return ERR_COMMS;

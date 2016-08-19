@@ -34,8 +34,10 @@
 #define LTC3887_CMD_READ_VOUT           0x8B
 #define LTC3887_CMD_READ_IOUT           0x8C
 #define LTC3887_CMD_READ_POUT           0x96
+#define LTC3887_CMD_MFR_PADS            0xE5
 #define LTC3887_CMD_MFR_SPECIAL_ID      0xE7
 #define LTC3887_CMD_MFR_COMMON          0xEF
+#define LTC3887_CMD_MFR_RESET           0xFD
 
 /* Register descriptions */
 #define LTC3887_MFRC_ONIT_BIT       4 /* Output not in transition */
@@ -43,18 +45,18 @@
 #define LTC3887_MFRC_CNB_BIT        6 /* Chip not busy */
 #define LTC3887_MFRC_CNA_BIT        7 /* Chip not ALERTing */
 
-#define LTC3887_STATUS_VOUT         (1<<15)
-#define LTC3887_STATUS_IOUT         (1<<14)
-#define LTC3887_STATUS_INPUT        (1<<13)
-#define LTC3887_STATUS_MFR_SPECIFIC (1<<12)
-#define LTC3887_STATUS_POWER_GOOD   (1<<11)
-#define LTC3887_STATUS_BUSY         (1<<7)
-#define LTC3887_STATUS_OFF          (1<<6)
-#define LTC3887_STATUS_VOUT_OV      (1<<5)
-#define LTC3887_STATUS_IOUT_OC      (1<<4)
-#define LTC3887_STATUS_TEMPERATURE  (1<<2)
-#define LTC3887_STATUS_CML          (1<<1)
-#define LTC3887_STATUS_OTHER        (1<<0)
+#define LTC3887_STATUS_VOUT             (1<<15)
+#define LTC3887_STATUS_IOUT             (1<<14)
+#define LTC3887_STATUS_INPUT            (1<<13)
+#define LTC3887_STATUS_MFR_SPECIFIC     (1<<12)
+#define LTC3887_STATUS_POWER_NOT_GOOD   (1<<11)
+#define LTC3887_STATUS_BUSY             (1<<7)
+#define LTC3887_STATUS_OFF              (1<<6)
+#define LTC3887_STATUS_VOUT_OV          (1<<5)
+#define LTC3887_STATUS_IOUT_OC          (1<<4)
+#define LTC3887_STATUS_TEMPERATURE      (1<<2)
+#define LTC3887_STATUS_CML              (1<<1)
+#define LTC3887_STATUS_OTHER            (1<<0)
 
 #define LTC3887_STATUS_VOUT_VOUT_OV_FAULT       (1<<7)
 #define LTC3887_STATUS_VOUT_VOUT_OV_WARNING     (1<<6)
@@ -182,7 +184,7 @@ ltc3887_fault_status ltc3887_get_fault_status(LTC3887 *ltc, uint8_t page) {
 
   // Read STATUS_WORD to get overview of where faults are
   ltc3887_paged_read(ltc, LTC3887_CMD_STATUS_WORD, page, rxdat, sizeof(rxdat));
-  uint16_t status_word = (rxdat[0] << 8) | rxdat[1];
+  uint16_t status_word = (rxdat[1] << 8) | rxdat[0];
 
   ltc3887_fault_status fault_status;
 
@@ -282,11 +284,11 @@ ltc3887_fault_status ltc3887_get_fault_status(LTC3887 *ltc, uint8_t page) {
     fault_status.gpio_pulled_low_externally = 0;
   }
 
-  if ((status_word & LTC3887_STATUS_POWER_GOOD) != 0) {
-    fault_status.power_good = 0;
+  if ((status_word & LTC3887_STATUS_POWER_NOT_GOOD) != 0) {
+    fault_status.power_not_good = 1;
   }
   else {
-    fault_status.power_good = 1;
+    fault_status.power_not_good = 0;
   }
 
   if ((status_word & LTC3887_STATUS_BUSY) != 0) {
@@ -320,7 +322,7 @@ ltc3887_fault_status ltc3887_get_fault_status(LTC3887 *ltc, uint8_t page) {
   if ((status_word & LTC3887_STATUS_TEMPERATURE) != 0) {
     fault_status.temperature = 1;
     // read STATUS_TEMPERATURE
-    ltc3887_paged_read(ltc, LTC3887_CMD_STATUS_MFR_SPECIFIC, page, rxdat, 1);
+    ltc3887_paged_read(ltc, LTC3887_CMD_STATUS_TEMPERATURE, page, rxdat, 1);
     fault_status.ot_fault = ((rxdat[0] & LTC3887_STATUS_TEMP_OT_FAULT) != 0);
     fault_status.ot_warning =
         ((rxdat[0] & LTC3887_STATUS_TEMP_OT_WARNING) != 0);
@@ -336,7 +338,7 @@ ltc3887_fault_status ltc3887_get_fault_status(LTC3887 *ltc, uint8_t page) {
   if ((status_word & LTC3887_STATUS_CML) != 0) {
     fault_status.cml = 1;
     // read STATUS_CML
-    ltc3887_paged_read(ltc, LTC3887_CMD_STATUS_MFR_SPECIFIC, page, rxdat, 1);
+    ltc3887_paged_read(ltc, LTC3887_CMD_STATUS_CML, page, rxdat, 1);
     fault_status.invalid_command = ((rxdat[0]
         & LTC3887_STATUS_CML_INVALID_COMMAND) != 0);
     fault_status.invalid_data = ((rxdat[0] & LTC3887_STATUS_CML_INVALID_DATA)
@@ -374,12 +376,14 @@ ltc3887_fault_status ltc3887_get_fault_status(LTC3887 *ltc, uint8_t page) {
 
 bool ltc3887_is_faulting(ltc3887_fault_status *fault_status) {
   return fault_status->vout || fault_status->iout || fault_status->input
-      || fault_status->mfr_specific || fault_status->power_good
+      || fault_status->mfr_specific || fault_status->power_not_good
       || fault_status->busy || fault_status->off || fault_status->vout_ov
       || fault_status->iout_oc || fault_status->temperature || fault_status->cml
       || fault_status->other;
 }
 
+//TODO perhaps read bit 7 of STATUS_WORD instead?
+//TODO deal with i2c errors - just assume chip is rebooting?
 ltc3887_busy_status ltc3887_chip_busy_status(LTC3887 *ltc) {
   // The MFR_COMMON command has status bits 4-6 for the busy state
   uint8_t mfr_common[1];
@@ -423,13 +427,13 @@ uint8_t ltc3887_check_comms(LTC3887 *ltc) {
 }
 
 uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
-                     char name1[], float voltage1, char name2[], float voltage2) {
+                     const char *name1, float voltage1, const char *name2, float voltage2) {
 
   // Fill out LTC3887 struct with provided information
   ltc->config.i2c = i2c;
   ltc->config.address = address;
-  memcpy(name1, ltc->config.name1, strlen(name1) + 1);
-  memcpy(name2, ltc->config.name2, strlen(name2) + 1);
+  memcpy(ltc->config.name1, name1, strlen(name1) + 1);
+  memcpy(ltc->config.name2, name2, strlen(name2) + 1);
   ltc->config.voltage1 = voltage1;
   ltc->config.voltage2 = voltage2;
 
@@ -444,15 +448,20 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
 
   uint8_t data[4];
 
+  // reset device
+  if (ltc3887_global_write(ltc, LTC3887_CMD_MFR_RESET, data, 0) != ERR_OK) {
+    return ERR_COMMS;
+  }
+  ltc3887_wait_for_not_busy(ltc);
+
   // read exponent to use for l16-float conversions
   if (ltc3887_read_l16_exp(ltc) != ERR_OK) {
     return ERR_COMMS;
   }
 
   // set on_off_config to respond to PMbus OPERATION command
-  data[1] = 0;
   data[0] = 0x1E | (1 << LTC3887_ONOFF_USE_PMBUS); // default value is 0x1E
-  if (ltc3887_global_write(ltc, LTC3887_CMD_ON_OFF_CONFIG, data, 2) != ERR_OK) {
+  if (ltc3887_global_write(ltc, LTC3887_CMD_ON_OFF_CONFIG, data, 1) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc3887_wait_for_not_busy(ltc);
@@ -504,6 +513,12 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
   data[0] = LTC3887_CMD_STATUS_TEMPERATURE;
   data[1] = (1 << LTC3887_FAULT_EXT_UT_BIT);
   if (ltc3887_global_write(ltc, LTC3887_CMD_SMBALERT_MASK, data, 2) != ERR_OK) {
+    return ERR_COMMS;
+  }
+  ltc3887_wait_for_not_busy(ltc);
+  
+  // Clear Faults
+  if (ltc3887_global_write(ltc, LTC3887_CMD_CLEAR_FAULTS, data, 0) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc3887_wait_for_not_busy(ltc);
@@ -569,6 +584,12 @@ uint8_t ltc3887_turn_on(LTC3887 *ltc, uint8_t channel) {
     return ERR_COMMS;
   }
   ltc3887_wait_for_not_busy(ltc);
+  
+  //XXX
+  uint8_t tmp[2];
+  ltc3887_paged_read(ltc, LTC3887_CMD_MFR_PADS, channel, tmp, 2);
+  /////
+  
   return ERR_OK;
 }
 
