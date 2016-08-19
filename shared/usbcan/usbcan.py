@@ -57,6 +57,20 @@ class CANRX:
                     yield CANFrame.from_buf(self.outbuf)
 
 
+def ppp_pad(buf):
+    out = [0x7E]
+    for byte in buf:
+        if byte == 0x7E:
+            out.append(0x7D)
+            out.append(0x5E)
+        elif byte == 0x7D:
+            out.append(0x7D)
+            out.append(0x5D)
+        else:
+            out.append(byte)
+    return struct.pack("{}B".format(len(out)), *out)
+
+
 def run(port, txq, rxq):
     ser = serial.Serial(port, timeout=0.1)
     rx = CANRX()
@@ -64,7 +78,7 @@ def run(port, txq, rxq):
     while True:
         try:
             frame = txq.get_nowait()
-            ser.write(frame.to_bytes())
+            ser.write(ppp_pad(frame.to_bytes()))
         except Empty:
             pass
 
