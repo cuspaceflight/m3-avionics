@@ -86,7 +86,7 @@ uint8_t smbus_write_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteadd
   txdat[1] = datalen;
 
   // copy rest of data
-  memcpy(&txdat[2], data, datalen);
+  memcpy(txdat+2, data, datalen);
 
   i2cAcquireBus(i2c);
   msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, datalen+2, NULL, 0, MS2ST(20));

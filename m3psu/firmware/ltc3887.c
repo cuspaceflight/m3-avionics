@@ -21,9 +21,14 @@
 #define LTC3887_CMD_SMBALERT_MASK       0x1B
 #define LTC3887_CMD_VOUT_MODE           0x20
 #define LTC3887_CMD_VOUT_COMMAND        0x21
+#define LTC3887_CMD_VOUT_MARGIN_HIGH    0x25
+#define LTC3887_CMD_VOUT_MARGIN_LOW     0x26
 #define LTC3887_CMD_FREQENCY_SWITCH     0x33
+#define LTC3887_CMD_VOUT_OV_FAULT_LIMIT 0x40
+#define LTC3887_CMD_VOUT_UV_FAULT_LIMIT 0x44
 #define LTC3887_CMD_UT_FAULT_LIMIT      0x53
 #define LTC3887_CMD_UT_FAULT_RESPONSE   0x54
+#define LTC3887_CMD_TON_MAX_FAULT_LIMIT 0x62
 #define LTC3887_CMD_STATUS_WORD         0x79
 #define LTC3887_CMD_STATUS_VOUT         0x7A
 #define LTC3887_CMD_STATUS_IOUT         0x7B
@@ -31,12 +36,16 @@
 #define LTC3887_CMD_STATUS_TEMPERATURE  0x7D
 #define LTC3887_CMD_STATUS_CML          0x7E
 #define LTC3887_CMD_STATUS_MFR_SPECIFIC 0x80
+#define LTC3887_CMD_READ_VIN            0x88
+#define LTC3887_CMD_READ_IIN            0x89
 #define LTC3887_CMD_READ_VOUT           0x8B
 #define LTC3887_CMD_READ_IOUT           0x8C
 #define LTC3887_CMD_READ_POUT           0x96
 #define LTC3887_CMD_MFR_PADS            0xE5
 #define LTC3887_CMD_MFR_SPECIAL_ID      0xE7
 #define LTC3887_CMD_MFR_COMMON          0xEF
+#define LTC3887_CMD_MFR_CHAN_CONFIG_LTC3887 0xD0
+#define LTC3887_CMD_MFR_GPIO_RESPONSE   0xD5
 #define LTC3887_CMD_MFR_RESET           0xFD
 
 /* Register descriptions */
@@ -102,6 +111,10 @@
 /* Fault bits */
 #define LTC3887_FAULT_EXT_UT_BIT    4
 
+/* MFR_CHAN_CONFIG_LTC3887 bits */
+#define LTC3887_SHARE_CLK_CONTROL   2
+#define LTC3887_NO_GPIO_ALERT       1
+
 /* PAGE constants */
 #define PAGE_0      0x00
 #define PAGE_1      0x01
@@ -121,7 +134,7 @@ uint8_t ltc3887_paged_write(LTC3887 *ltc, uint8_t command_code, uint8_t page, ui
   txdat[1] = command_code;
 
   // copy rest of data
-  memcpy(&txdat[2], data, datalen);
+  memcpy(txdat+2, data, datalen);
   return smbus_write_block(ltc->config.i2c, ltc->config.address, LTC3887_CMD_PAGE_PLUS_WRITE, txdat, datalen+2);
 }
 
@@ -146,7 +159,7 @@ uint8_t ltc3887_global_read(LTC3887 *ltc, uint8_t command_code, uint8_t *data,
 
 uint8_t ltc3887_read_l16_exp(LTC3887 *ltc) {
   // Read the VOUT_MODE register to get L16 exponent to use
-  static uint8_t rxdat[1] __attribute__((section("DATA_RAM")));
+  uint8_t rxdat[1];
   uint8_t status = ltc3887_global_read(ltc, LTC3887_CMD_VOUT_MODE, rxdat,
                                        sizeof(rxdat));
 
@@ -183,7 +196,7 @@ ltc3887_fault_status ltc3887_get_fault_status(LTC3887 *ltc, uint8_t page) {
   uint8_t rxdat[2];
 
   // Read STATUS_WORD to get overview of where faults are
-  ltc3887_paged_read(ltc, LTC3887_CMD_STATUS_WORD, page, rxdat, sizeof(rxdat));
+  ltc3887_paged_read(ltc, LTC3887_CMD_STATUS_WORD, page, rxdat, 2);
   uint16_t status_word = (rxdat[1] << 8) | rxdat[0];
 
   ltc3887_fault_status fault_status;
@@ -402,7 +415,8 @@ ltc3887_busy_status ltc3887_chip_busy_status(LTC3887 *ltc) {
     return CALCULATIONS_PENDING;
   }
   if (!output_not_in_transition) {
-    return OUTPUT_IN_TRANSITION;
+    //return OUTPUT_IN_TRANSITION;
+    return NOT_BUSY;
   }
   return NOT_BUSY;
 }
@@ -424,6 +438,38 @@ uint8_t ltc3887_check_comms(LTC3887 *ltc) {
     return ERR_OK;
   }
   return ERR_COMMS;
+}
+
+static uint8_t ltc3887_program_voltage(LTC3887 *ltc, uint8_t channel, float voltage, float margin){
+  uint8_t data[2];
+  uint16_t voltage_l16 = float_to_L16(l16_exp, voltage);
+  data[0] = (voltage_l16 & 0xff);
+  data[1] = (voltage_l16 >> 8) & 0xff;
+  if (ltc3887_paged_write(ltc, LTC3887_CMD_VOUT_COMMAND, channel, data,
+                          2) != ERR_OK) {
+    return ERR_COMMS;
+  }
+  ltc3887_wait_for_not_busy(ltc);
+
+  voltage_l16 = float_to_L16(l16_exp, voltage * (1 + margin));
+  data[0] = (voltage_l16 & 0xff);
+  data[1] = (voltage_l16 >> 8) & 0xff;
+  if (ltc3887_paged_write(ltc, LTC3887_CMD_VOUT_OV_FAULT_LIMIT, channel, data,
+                          2) != ERR_OK) {
+    return ERR_COMMS;
+  }
+  ltc3887_wait_for_not_busy(ltc);
+
+  voltage_l16 = float_to_L16(l16_exp, voltage * (1 - margin));
+  data[0] = (voltage_l16 & 0xff);
+  data[1] = (voltage_l16 >> 8) & 0xff;
+  if (ltc3887_paged_write(ltc, LTC3887_CMD_VOUT_UV_FAULT_LIMIT, channel, data,
+                          2) != ERR_OK) {
+    return ERR_COMMS;
+  }
+  ltc3887_wait_for_not_busy(ltc);
+
+  return ERR_OK;
 }
 
 uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
@@ -467,27 +513,16 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
   ltc3887_wait_for_not_busy(ltc);
 
   // set voltages as per *ltc
-  uint16_t voltage_l16 = float_to_L16(l16_exp, voltage1);
-  data[0] = (voltage_l16 >> 8) & 0xff;
-  data[1] = (voltage_l16 & 0xff);
-  if (ltc3887_paged_write(ltc, LTC3887_CMD_VOUT_COMMAND, PAGE_0, data,
-                          2) != ERR_OK) {
+  if(ltc3887_program_voltage(ltc, PAGE_0, voltage1, 0.05) != ERR_OK){
     return ERR_COMMS;
   }
-  ltc3887_wait_for_not_busy(ltc);
-
-  voltage_l16 = float_to_L16(l16_exp, voltage2);
-  data[0] = (voltage_l16 >> 8) & 0xff;
-  data[1] = (voltage_l16 & 0xff);
-  if (ltc3887_paged_write(ltc, LTC3887_CMD_VOUT_COMMAND, PAGE_1, data,
-                          2) != ERR_OK) {
+  if(ltc3887_program_voltage(ltc, PAGE_1, voltage2, 0.05) != ERR_OK){
     return ERR_COMMS;
   }
-  ltc3887_wait_for_not_busy(ltc);
 
   // set frequency to 425kHz
-  data[0] = (LTC3887_FREQ_425KHZ >> 8) & 0xff;
-  data[1] = (LTC3887_FREQ_425KHZ & 0xff);
+  data[0] = (LTC3887_FREQ_425KHZ & 0xff);
+  data[1] = (LTC3887_FREQ_425KHZ >> 8) & 0xff;
   if (ltc3887_global_write(ltc, LTC3887_CMD_FREQENCY_SWITCH, data, 2) != ERR_OK) {
     return ERR_COMMS;
   }
@@ -495,8 +530,8 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
 
   // disable temperature sensing and alert
   // See UT_FAULT_LIMIT, UT_FAULT_RESPONSE commands
-  data[0] = (LTC3887_UT_LIMIT_MIN >> 8) & 0xff;
-  data[1] = (LTC3887_UT_LIMIT_MIN & 0xff);
+  data[0] = (LTC3887_UT_LIMIT_MIN & 0xff);
+  data[1] = (LTC3887_UT_LIMIT_MIN >> 8) & 0xff;
   if (ltc3887_global_write(ltc, LTC3887_CMD_UT_FAULT_LIMIT, data, 2) != ERR_OK) {
     return ERR_COMMS;
   }
@@ -517,11 +552,34 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
   }
   ltc3887_wait_for_not_busy(ltc);
   
-  // Clear Faults
-  if (ltc3887_global_write(ltc, LTC3887_CMD_CLEAR_FAULTS, data, 0) != ERR_OK) {
+  // Disable Share Clock Control
+  // XXX Also disable GPIO Alerts
+  data[0] = 0x1D & ~(1 << LTC3887_SHARE_CLK_CONTROL);
+  data[0] &= ~(1 << LTC3887_NO_GPIO_ALERT);
+  if (ltc3887_global_write(ltc, LTC3887_CMD_MFR_CHAN_CONFIG_LTC3887, data, 1) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc3887_wait_for_not_busy(ltc);
+
+  // XXX Set TON_MAX_FAULT_LIMIT to 3 seconds
+  uint16_t ton_max_fault_limit = float_to_L11(3000.0f);
+  data[0] = ton_max_fault_limit & 0xff;
+  data[1] = (ton_max_fault_limit >> 8) & 0xff;
+  if (ltc3887_global_write(ltc, LTC3887_CMD_TON_MAX_FAULT_LIMIT, data, 2) != ERR_OK) {
+    return ERR_COMMS;
+  }
+  ltc3887_wait_for_not_busy(ltc);
+  //
+
+  // XXX Ignore GPIO (since nothing can pull it down externally anyway)
+  data[0] = 0x00;
+  if (ltc3887_global_write(ltc, LTC3887_CMD_MFR_GPIO_RESPONSE, data, 1) != ERR_OK) {
+    return ERR_COMMS;
+  }
+  ltc3887_wait_for_not_busy(ltc);
+
+  // Clear Faults
+  ltc3887_clear_faults(ltc);
 
   return ERR_OK;
 }
@@ -534,24 +592,24 @@ uint8_t ltc3887_poll(LTC3887 *ltc) {
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->vout_1 = L16_to_float(l16_exp, ((rxdat[0] << 8) | rxdat[1]));
+  ltc->vout_1 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
   if (ltc3887_paged_read(ltc, LTC3887_CMD_READ_VOUT, PAGE_1, rxdat,
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->vout_2 = L16_to_float(l16_exp, ((rxdat[0] << 8) | rxdat[1]));
+  ltc->vout_2 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
 
   // Read current of both outputs
   if (ltc3887_paged_read(ltc, LTC3887_CMD_READ_IOUT, PAGE_0, rxdat,
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->iout_1 = L16_to_float(l16_exp, ((rxdat[0] << 8) | rxdat[1]));
+  ltc->iout_1 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
   if (ltc3887_paged_read(ltc, LTC3887_CMD_READ_IOUT, PAGE_1, rxdat,
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->iout_2 = L16_to_float(l16_exp, ((rxdat[0] << 8) | rxdat[1]));
+  ltc->iout_2 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
 
   // Read power of both outputs, or calculate it (faster)
 #if LTC3887_READ_CALCULATED_POWER
@@ -559,12 +617,12 @@ uint8_t ltc3887_poll(LTC3887 *ltc) {
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->pout_1 = L16_to_float(l16_exp, ((rxdat[0] << 8) | rxdat[1]));
+  ltc->pout_1 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
   if (ltc3887_paged_read(ltc, LTC3887_CMD_READ_POUT, PAGE_1, rxdat,
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->pout_2 = L16_to_float(l16_exp, ((rxdat[0] << 8) | rxdat[1]));
+  ltc->pout_2 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
 #else
   ltc->pout_1 = ltc->vout_1 * ltc->iout_1;
   ltc->pout_2 = ltc->vout_2 * ltc->iout_2;
@@ -584,11 +642,6 @@ uint8_t ltc3887_turn_on(LTC3887 *ltc, uint8_t channel) {
     return ERR_COMMS;
   }
   ltc3887_wait_for_not_busy(ltc);
-  
-  //XXX
-  uint8_t tmp[2];
-  ltc3887_paged_read(ltc, LTC3887_CMD_MFR_PADS, channel, tmp, 2);
-  /////
   
   return ERR_OK;
 }
