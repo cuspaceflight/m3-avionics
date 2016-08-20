@@ -44,8 +44,8 @@ uint8_t smbus_read_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddre
 uint8_t smbus_write_word(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint16_t value){
   static uint8_t txdat[3] __attribute__((section("DATA_RAM")));
   txdat[0] = byteaddress;
-  txdat[1] = (value >> 8) & 0xff;
-  txdat[2] = value & 0xff;
+  txdat[1] = value & 0xff;
+  txdat[2] = (value >> 8) & 0xff;
 
   i2cAcquireBus(i2c);
   msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, sizeof(txdat), NULL, 0, MS2ST(20));
@@ -68,7 +68,7 @@ uint8_t smbus_read_word(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddre
   i2cReleaseBus(i2c);
 
   if(status == MSG_OK){
-    *result = ((rxdat[0] << 8) | rxdat[1]);
+    *result = ((rxdat[1] << 8) | rxdat[0]);
     return ERR_OK;
   }
   return ERR_COMMS;
