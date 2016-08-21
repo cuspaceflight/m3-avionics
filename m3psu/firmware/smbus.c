@@ -15,7 +15,7 @@ uint8_t smbus_write_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddr
   txdat[1] = value;
 
   i2cAcquireBus(i2c);
-  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, sizeof(txdat), NULL, 0, MS2ST(20));
+  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, 2, NULL, 0, MS2ST(20));
   i2cReleaseBus(i2c);
 
   if(status == MSG_OK){
@@ -31,7 +31,7 @@ uint8_t smbus_read_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddre
   txdat[0] = byteaddress;
 
   i2cAcquireBus(i2c);
-  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, sizeof(txdat), rxdat, sizeof(rxdat), MS2ST(20));
+  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, 1, rxdat, 1, MS2ST(20));
   i2cReleaseBus(i2c);
 
   if(status == MSG_OK){
@@ -48,8 +48,13 @@ uint8_t smbus_write_word(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddr
   txdat[2] = (value >> 8) & 0xff;
 
   i2cAcquireBus(i2c);
-  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, sizeof(txdat), NULL, 0, MS2ST(20));
+  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, 3, NULL, 0, MS2ST(20));
   i2cReleaseBus(i2c);
+  
+  uint8_t tmp1 = txdat[1];
+  uint8_t tmp2 = txdat[2];
+  (void)tmp1;
+  (void)tmp2;
 
   if(status == MSG_OK){
     return ERR_OK;
@@ -64,8 +69,13 @@ uint8_t smbus_read_word(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddre
   txdat[0] = byteaddress;
 
   i2cAcquireBus(i2c);
-  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, sizeof(txdat), rxdat, sizeof(rxdat), MS2ST(20));
+  msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, 2, rxdat, 1, MS2ST(20));
   i2cReleaseBus(i2c);
+  
+  uint8_t tmp0 = rxdat[0];
+  uint8_t tmp1 = rxdat[1];
+  (void) tmp0;
+  (void) tmp1;
 
   if(status == MSG_OK){
     *result = ((rxdat[1] << 8) | rxdat[0]);

@@ -57,12 +57,12 @@
 
 #define GPIOA_PIN0                     0U
 #define GPIOA_PIN1                     1U
-#define GPIOA_PIN2                     2U
+#define GPIOA_EN_PYRO                  2U
 #define GPIOA_PIN3                     3U
 #define GPIOA_PIN4                     4U
 #define GPIOA_BATT2                    5U
 #define GPIOA_BATT1                    6U
-#define GPIOA_PIN7                     7U
+#define GPIOA_BLEED_BATT_2             7U
 #define GPIOA_I2C_SCL                  8U
 #define GPIOA_PIN9                     9U
 #define GPIOA_EN_EXT_PWR               10U
@@ -93,7 +93,7 @@
 #define GPIOC_PIN1                     1U
 #define GPIOC_PIN2                     2U
 #define GPIOC_PIN3                     3U
-#define GPIOC_PIN4                     4U
+#define GPIOC_BLEED_BATT_1             4U
 #define GPIOC_PIN5                     5U
 #define GPIOC_PIN6                     6U
 #define GPIOC_PIN7                     7U
@@ -214,10 +214,13 @@
 
 #define LINE_BATT1                     PAL_LINE(GPIOA, 6U)
 #define LINE_BATT2                     PAL_LINE(GPIOA, 5U)
+#define LINE_BLEED_BATT_1              PAL_LINE(GPIOC, 4U)
+#define LINE_BLEED_BATT_2              PAL_LINE(GPIOA, 7U)
 #define LINE_CAN_RX                    PAL_LINE(GPIOB, 8U)
 #define LINE_CAN_TX                    PAL_LINE(GPIOB, 9U)
 #define LINE_EN_EXT_PWR                PAL_LINE(GPIOA, 10U)
 #define LINE_EN_INT_PWR                PAL_LINE(GPIOC, 8U)
+#define LINE_EN_PYRO                   PAL_LINE(GPIOA, 2U)
 #define LINE_I2C_SCL                   PAL_LINE(GPIOA, 8U)
 #define LINE_I2C_SDA                   PAL_LINE(GPIOC, 9U)
 #define LINE_JTCK                      PAL_LINE(GPIOA, 14U)
@@ -253,12 +256,12 @@
  *
  * PA0  - PIN0                         (unused).
  * PA1  - PIN1                         (unused).
- * PA2  - PIN2                         (unused).
+ * PA2  - EN_PYRO                      (output, pushpull, startlow).
  * PA3  - PIN3                         (unused).
  * PA4  - PIN4                         (unused).
  * PA5  - BATT2                        (analog).
  * PA6  - BATT1                        (analog).
- * PA7  - PIN7                         (unused).
+ * PA7  - BLEED_BATT_2                 (output, pushpull, startlow).
  * PA8  - I2C_SCL                      (opendrain, af4).
  * PA9  - PIN9                         (unused).
  * PA10 - EN_EXT_PWR                   (output, pushpull, starthigh).
@@ -270,12 +273,12 @@
 */
 #define VAL_GPIOA_MODER                (PIN_MODE_INPUT(GPIOA_PIN0) | \
                                         PIN_MODE_INPUT(GPIOA_PIN1) | \
-                                        PIN_MODE_INPUT(GPIOA_PIN2) | \
+                                        PIN_MODE_OUTPUT(GPIOA_EN_PYRO) | \
                                         PIN_MODE_INPUT(GPIOA_PIN3) | \
                                         PIN_MODE_INPUT(GPIOA_PIN4) | \
                                         PIN_MODE_ANALOG(GPIOA_BATT2) | \
                                         PIN_MODE_ANALOG(GPIOA_BATT1) | \
-                                        PIN_MODE_INPUT(GPIOA_PIN7) | \
+                                        PIN_MODE_OUTPUT(GPIOA_BLEED_BATT_2) | \
                                         PIN_MODE_ALTERNATE(GPIOA_I2C_SCL) | \
                                         PIN_MODE_INPUT(GPIOA_PIN9) | \
                                         PIN_MODE_OUTPUT(GPIOA_EN_EXT_PWR) | \
@@ -286,12 +289,12 @@
                                         PIN_MODE_ALTERNATE(GPIOA_JTDI))
 #define VAL_GPIOA_OTYPER               (PIN_OTYPE_PUSHPULL(GPIOA_PIN0) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN1) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_PIN2) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_EN_PYRO) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN3) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN4) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_BATT2) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_BATT1) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_PIN7) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_BLEED_BATT_2) | \
                                         PIN_OTYPE_OPENDRAIN(GPIOA_I2C_SCL) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN9) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_EN_EXT_PWR) | \
@@ -302,12 +305,12 @@
                                         PIN_OTYPE_PUSHPULL(GPIOA_JTDI))
 #define VAL_GPIOA_OSPEEDR              (PIN_OSPEED_HIGH(GPIOA_PIN0) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN1) | \
-                                        PIN_OSPEED_HIGH(GPIOA_PIN2) | \
+                                        PIN_OSPEED_HIGH(GPIOA_EN_PYRO) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN3) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN4) | \
                                         PIN_OSPEED_HIGH(GPIOA_BATT2) | \
                                         PIN_OSPEED_HIGH(GPIOA_BATT1) | \
-                                        PIN_OSPEED_HIGH(GPIOA_PIN7) | \
+                                        PIN_OSPEED_HIGH(GPIOA_BLEED_BATT_2) | \
                                         PIN_OSPEED_HIGH(GPIOA_I2C_SCL) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN9) | \
                                         PIN_OSPEED_HIGH(GPIOA_EN_EXT_PWR) | \
@@ -318,12 +321,12 @@
                                         PIN_OSPEED_HIGH(GPIOA_JTDI))
 #define VAL_GPIOA_PUPDR                (PIN_PUPD_PULLUP(GPIOA_PIN0) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN1) | \
-                                        PIN_PUPD_PULLUP(GPIOA_PIN2) | \
+                                        PIN_PUPD_PULLUP(GPIOA_EN_PYRO) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN3) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN4) | \
                                         PIN_PUPD_PULLUP(GPIOA_BATT2) | \
                                         PIN_PUPD_PULLUP(GPIOA_BATT1) | \
-                                        PIN_PUPD_PULLUP(GPIOA_PIN7) | \
+                                        PIN_PUPD_PULLUP(GPIOA_BLEED_BATT_2) | \
                                         PIN_PUPD_PULLUP(GPIOA_I2C_SCL) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN9) | \
                                         PIN_PUPD_PULLUP(GPIOA_EN_EXT_PWR) | \
@@ -334,12 +337,12 @@
                                         PIN_PUPD_PULLUP(GPIOA_JTDI))
 #define VAL_GPIOA_ODR                  (PIN_OD_HIGH(GPIOA_PIN0) | \
                                         PIN_OD_HIGH(GPIOA_PIN1) | \
-                                        PIN_OD_HIGH(GPIOA_PIN2) | \
+                                        PIN_OD_LOW(GPIOA_EN_PYRO) | \
                                         PIN_OD_HIGH(GPIOA_PIN3) | \
                                         PIN_OD_HIGH(GPIOA_PIN4) | \
                                         PIN_OD_HIGH(GPIOA_BATT2) | \
                                         PIN_OD_HIGH(GPIOA_BATT1) | \
-                                        PIN_OD_HIGH(GPIOA_PIN7) | \
+                                        PIN_OD_LOW(GPIOA_BLEED_BATT_2) | \
                                         PIN_OD_HIGH(GPIOA_I2C_SCL) | \
                                         PIN_OD_HIGH(GPIOA_PIN9) | \
                                         PIN_OD_HIGH(GPIOA_EN_EXT_PWR) | \
@@ -350,12 +353,12 @@
                                         PIN_OD_HIGH(GPIOA_JTDI))
 #define VAL_GPIOA_AFRL                 (PIN_AFIO_AF(GPIOA_PIN0, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN1, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_PIN2, 0U) | \
+                                        PIN_AFIO_AF(GPIOA_EN_PYRO, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN3, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN4, 0U) | \
                                         PIN_AFIO_AF(GPIOA_BATT2, 0U) | \
                                         PIN_AFIO_AF(GPIOA_BATT1, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_PIN7, 0U))
+                                        PIN_AFIO_AF(GPIOA_BLEED_BATT_2, 0U))
 #define VAL_GPIOA_AFRH                 (PIN_AFIO_AF(GPIOA_I2C_SCL, 4U) | \
                                         PIN_AFIO_AF(GPIOA_PIN9, 0U) | \
                                         PIN_AFIO_AF(GPIOA_EN_EXT_PWR, 0U) | \
@@ -489,7 +492,7 @@
  * PC1  - PIN1                         (unused).
  * PC2  - PIN2                         (unused).
  * PC3  - PIN3                         (unused).
- * PC4  - PIN4                         (unused).
+ * PC4  - BLEED_BATT_1                 (output, pushpull, startlow).
  * PC5  - PIN5                         (unused).
  * PC6  - PIN6                         (unused).
  * PC7  - PIN7                         (unused).
@@ -506,7 +509,7 @@
                                         PIN_MODE_INPUT(GPIOC_PIN1) | \
                                         PIN_MODE_INPUT(GPIOC_PIN2) | \
                                         PIN_MODE_INPUT(GPIOC_PIN3) | \
-                                        PIN_MODE_INPUT(GPIOC_PIN4) | \
+                                        PIN_MODE_OUTPUT(GPIOC_BLEED_BATT_1) | \
                                         PIN_MODE_INPUT(GPIOC_PIN5) | \
                                         PIN_MODE_INPUT(GPIOC_PIN6) | \
                                         PIN_MODE_INPUT(GPIOC_PIN7) | \
@@ -522,7 +525,7 @@
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN1) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN2) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN3) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOC_PIN4) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOC_BLEED_BATT_1) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN5) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN6) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN7) | \
@@ -538,7 +541,7 @@
                                         PIN_OSPEED_HIGH(GPIOC_PIN1) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN2) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN3) | \
-                                        PIN_OSPEED_HIGH(GPIOC_PIN4) | \
+                                        PIN_OSPEED_HIGH(GPIOC_BLEED_BATT_1) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN5) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN6) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN7) | \
@@ -554,7 +557,7 @@
                                         PIN_PUPD_PULLUP(GPIOC_PIN1) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN2) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN3) | \
-                                        PIN_PUPD_PULLUP(GPIOC_PIN4) | \
+                                        PIN_PUPD_PULLUP(GPIOC_BLEED_BATT_1) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN5) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN6) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN7) | \
@@ -570,7 +573,7 @@
                                         PIN_OD_HIGH(GPIOC_PIN1) | \
                                         PIN_OD_HIGH(GPIOC_PIN2) | \
                                         PIN_OD_HIGH(GPIOC_PIN3) | \
-                                        PIN_OD_HIGH(GPIOC_PIN4) | \
+                                        PIN_OD_LOW(GPIOC_BLEED_BATT_1) | \
                                         PIN_OD_HIGH(GPIOC_PIN5) | \
                                         PIN_OD_HIGH(GPIOC_PIN6) | \
                                         PIN_OD_HIGH(GPIOC_PIN7) | \
@@ -586,7 +589,7 @@
                                         PIN_AFIO_AF(GPIOC_PIN1, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN2, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN3, 0U) | \
-                                        PIN_AFIO_AF(GPIOC_PIN4, 0U) | \
+                                        PIN_AFIO_AF(GPIOC_BLEED_BATT_1, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN5, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN6, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN7, 0U))

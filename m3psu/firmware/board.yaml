@@ -16,5 +16,8 @@ pins:
     I2C_SDA: pc9, opendrain, af4
     BATT1: pa6, analog
     BATT2: pa5, analog
+    BLEED_BATT_1: pc4, output, pushpull, startlow
+    BLEED_BATT_2: pa7, output, pushpull, startlow
     EN_INT_PWR: pc8, output, pushpull, starthigh
     EN_EXT_PWR: pa10, output, pushpull, starthigh
+    EN_PYRO: pa2, output, pushpull, startlow

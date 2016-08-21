@@ -30,16 +30,19 @@ uint8_t ltc4151_init(LTC4151 *ltc, I2CDriver *i2c, i2caddr_t address, float r_se
 }
 
 uint8_t ltc4151_poll(LTC4151 *ltc) {
-  uint16_t dat;
-  if(smbus_read_word(ltc->config.i2c, ltc->config.address, LTC4151_RA_SENSE_HI, &dat) != 0){
+  uint16_t dat_le, dat;
+  if(smbus_read_word(ltc->config.i2c, ltc->config.address, LTC4151_RA_SENSE_HI, &dat_le) != 0){
     return ERR_COMMS;
   }
+  // This reads in the wrong endianness, so swap it:
+  dat = ((dat_le & 0xff) << 8) | ((dat_le & 0xff00) >> 8);
   float mv = ((dat >> 4) & 0x0fff) * LTC4151_SENSE_SCALE_MV;
   ltc->current_ma = mv / ltc->config.rsense_ohms;
 
-  if(smbus_read_word(ltc->config.i2c, ltc->config.address, LTC4151_RA_VIN_HI, &dat) != 0){
+  if(smbus_read_word(ltc->config.i2c, ltc->config.address, LTC4151_RA_VIN_HI, &dat_le) != 0){
     return ERR_COMMS;
   }
+  dat = ((dat_le & 0xff) << 8) | ((dat_le & 0xff00) >> 8);
   ltc->voltage_v = ((dat >> 4) & 0x0fff) * LTC4151_VIN_SCALE_V;
 
   ltc->power_mw = ltc->voltage_v * ltc->current_ma;

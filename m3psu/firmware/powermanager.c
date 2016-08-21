@@ -19,35 +19,44 @@ void PowerManager_init(){
   // TODO: register IRQ for ~ALERT line
 
   // Setup all LTC3887s
-  
+
   // Wait for LTC3887s to boot up
   chThdSleepMilliseconds(500);
-  
+
   // Board 1
   //ltc3887_init(&LTC3887s[0], &I2C_DRIVER, 0x44, "5V IMU", 5.0f, "5V AUX 2", 5.0f);
-  ltc3887_init(&LTC3887s[1], &I2C_DRIVER, 0x45, "3V3 FC", 3.3f, "3V3 IMU", 3.3f);
+  //ltc3887_init(&LTC3887s[1], &I2C_DRIVER, 0x45, "3V3 FC", 3.3f, "3V3 IMU", 3.3f);
   // Board 2
-  //ltc3887_init(&LTC3887s[2], &I2C_DRIVER, 0x42, "5V Radio", 5.0f, "5V AUX 1", 5.0f);
-  //ltc3887_init(&LTC3887s[3], &I2C_DRIVER, 0x43, "3V3 Pyro", 3.3f, "3V3 Radio", 3.3f);
+  ltc3887_init(&LTC3887s[2], &I2C_DRIVER, 0x42, "5V Radio", 5.0f, "5V AUX 1", 5.0f);
+  ltc3887_init(&LTC3887s[3], &I2C_DRIVER, 0x43, "3V3 Pyro", 3.3f, "3V3 Radio", 3.3f);
   // Board 3
   //ltc3887_init(&LTC3887s[4], &I2C_DRIVER, 0x46, "5V Cameras", 5.0f, "3V3 AUX 1", 3.3f);
   //ltc3887_init(&LTC3887s[5], &I2C_DRIVER, 0x47, "3V3 DL", 3.3f, "5V CAN", 5.0f);
-  
-  ltc3887_turn_on(&LTC3887s[1], 0);
-  ltc3887_turn_on(&LTC3887s[1], 1);
-  
-  chThdSleepSeconds(10);
-  
+
+  //ltc3887_turn_on(&LTC3887s[0], 0);
+  //ltc3887_turn_on(&LTC3887s[0], 1);
+
+  PowerManager_switch_on(6);
+
+  int i;
+  for(i=0; i<12; i++){
+    //PowerManager_switch_on(i);
+  }
+
+  //chThdSleepSeconds(10);
+
   //ltc3887_poll(&LTC3887s[4]);
-  
+
   //chThdSleepMilliseconds(5);
-  
+
   //ltc3887_turn_off(&LTC3887s[4], 0);
-  
-  ltc3887_get_fault_status(&LTC3887s[1], 0);
+
+  //ltc3887_get_fault_status(&LTC3887s[1], 0);
 
   // Setup LTC4151
   ltc4151_init(&currentMonitor, &I2C_DRIVER, 0x6F, 0.01f);
+
+  ltc4151_poll(&currentMonitor);
 
   while(true);
 
