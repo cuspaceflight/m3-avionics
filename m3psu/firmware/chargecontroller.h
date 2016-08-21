@@ -16,9 +16,6 @@ void ChargeController_init(void);
 uint8_t ChargeController_enable_charger(void);
 uint8_t ChargeController_disable_charger(void);
 
-uint8_t ChargeController_enable_vext(void);
-uint8_t ChargeController_disable_vext(void);
-
 bool ChargeController_is_charger_overcurrent(void);
 bool ChargeController_is_adapter_present(void);
 

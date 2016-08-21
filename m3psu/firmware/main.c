@@ -59,10 +59,11 @@ int main(void) {
   halInit();
   chSysInit();
 
-  //disable_pyros();
-  enable_pyros();
+  disable_pyros();
+  //enable_pyros();
 
-  //enable_external_power();
+  // NOTE THAT THIS IS REQUIRED FOR CHARGING!!!!
+  enable_external_power();
   enable_internal_power();
 
 
@@ -71,13 +72,13 @@ int main(void) {
 
 
   PowerManager_init();
-  //ChargeController_init();
-  
+  ChargeController_init();
 
+  ChargeController_enable_charger();
 
-  //ChargeController_enable_charger();
+  chThdSleepMilliseconds(5000);
 
-  //ChargeController_disable_charger();
+  ChargeController_disable_charger();
 
 
   //chThdCreateStatic(waPowerAlert, sizeof(waPowerAlert), NORMALPRIO,
