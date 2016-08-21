@@ -3,6 +3,7 @@
  * Cambridge University Spaceflight
  */
 
+#include "hal.h"
 #include "config.h"
 #include "error.h"
 #include "chargecontroller.h"
@@ -16,6 +17,20 @@ PCAL9538A portEx;
 #define VEXT_ENABLE         (0)
 
 static bool shouldCharge = FALSE;
+
+static const ADCConversionGroup adcgrpcfg = {
+  FALSE, // circular mode disabled
+  2, // 2 channels
+  NULL, // no end callback
+  NULL, // no error callback
+  0, // no ACD_CR1 settings
+  ADC_CR2_SWSTART, // started by software
+  0, // no sample times for channels 10-18
+  ADC_SMPR2_SMP_AN5(ADC_SAMPLE_144) | ADC_SMPR2_SMP_AN6(ADC_SAMPLE_144), // 144-cycle samples for channels 5,6
+  ADC_SQR1_NUM_CH(2), // 2 channels in sequence
+  0, // no channels in sequence positions 7-12
+  ADC_SQR3_SQ2_N(ADC_CHANNEL_IN6) | ADC_SQR3_SQ1_N(ADC_CHANNEL_IN5) // sample IN5 then IN6
+};
 
 void ChargeController_init(void) {
   // Setup charger to 8.4V at 0.5A, 10mohm sense resistor
@@ -117,12 +132,32 @@ bool ChargeController_is_charging(void){
 THD_FUNCTION(chargecontroller_thread, arg) {
   (void)arg;
   chRegSetThreadName("Charge Monitor");
+
+  msg_t status;
+  uint16_t samplebuf[2];
+
   while (!chThdShouldTerminateX()) {
     // Poll total system current
     uint16_t ma;
     max17435_get_current(&charger, &ma);
     // TODO: balance if charging?
     // TODO: calc battery level etc?
+
+    // Measure battery voltages
+    adcAcquireBus(&ADC_DRIVER);
+    status = adcConvert(&ADC_DRIVER, &adcgrpcfg, samplebuf, 1);
+    adcReleaseBus(&ADC_DRIVER);
+    if(status == MSG_OK){
+      // BATT2 is samplebuf[0], BATT1 is samplebuf[1]
+      float batt2 = ((float)samplebuf[0] * 3.3f) / 4096.0f;
+      float batt1 = ((float)samplebuf[1] * 3.3f) / 4096.0f;
+
+      batt2 *= 4; // BATT2 has a 1/4 divider
+      batt1 *= 2; // BATT1 has a 1/2 divider
+
+      batt2 -= batt1; // get batt2 as a cell voltage
+    }
+    chThdSleepMilliseconds(10);
   }
 }
 

@@ -28,9 +28,9 @@ static const CANConfig cancfg = {CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
                                  CAN_BTR_SJW(0) | CAN_BTR_TS2(1)
                                      | CAN_BTR_TS1(8) | CAN_BTR_BRP(6)};
 
-//static THD_WORKING_AREA(waPowerManager, 1024);
-//static THD_WORKING_AREA(waChargeController, 1024);
-//static THD_WORKING_AREA(waChargerWatchdog, 256);
+static THD_WORKING_AREA(waPowerManager, 1024);
+static THD_WORKING_AREA(waChargeController, 1024);
+static THD_WORKING_AREA(waChargerWatchdog, 512);
 //static THD_WORKING_AREA(waPowerAlert, 512);
 
 void enable_internal_power(void){
@@ -54,6 +54,18 @@ void disable_pyros(void){
   palClearLine(LINE_EN_PYRO);
 }
 
+void switch_to_external_power(void){
+  enable_external_power();
+  chThdSleepMilliseconds(5);
+  ChargeController_enable_charger();
+}
+
+void switch_to_internal_power(void){
+  ChargeController_disable_charger();
+  chThdSleepMilliseconds(5);
+  disable_external_power();
+}
+
 int main(void) {
 
   halInit();
@@ -62,34 +74,31 @@ int main(void) {
   disable_pyros();
   //enable_pyros();
 
-  // NOTE THAT THIS IS REQUIRED FOR CHARGING!!!!
-  enable_external_power();
   enable_internal_power();
 
-
+  adcStart(&ADC_DRIVER, NULL); // STM32F4 has no ADCConfig
   i2cStart(&I2C_DRIVER, &i2cfg);
   //canStart(&CAN_DRIVER, &cancfg);
-
 
   PowerManager_init();
   ChargeController_init();
 
-  ChargeController_enable_charger();
+  switch_to_external_power();
 
   chThdSleepMilliseconds(5000);
 
-  ChargeController_disable_charger();
+  //switch_to_internal_power();
 
 
-  //chThdCreateStatic(waPowerAlert, sizeof(waPowerAlert), NORMALPRIO,
+  //chThdCreateStatic(waPowerAlert, sizeof(waPowerAlert), NORMALPRIO + 3,
   //                  powermanager_alert, NULL);
-  //chThdCreateStatic(waPowerManager, sizeof(waPowerManager), NORMALPRIO,
-  //                  powermanager_thread, NULL);
+  chThdCreateStatic(waPowerManager, sizeof(waPowerManager), NORMALPRIO + 4,
+                    powermanager_thread, NULL);
 
-  //chThdCreateStatic(waChargeController, sizeof(waChargeController), NORMALPRIO,
-  //                  chargecontroller_thread, NULL);
-  //chThdCreateStatic(waChargerWatchdog, sizeof(waChargerWatchdog), NORMALPRIO,
-  //                  charger_watchdog_thread, NULL);
+  chThdCreateStatic(waChargeController, sizeof(waChargeController), NORMALPRIO + 2,
+                    chargecontroller_thread, NULL);
+  chThdCreateStatic(waChargerWatchdog, sizeof(waChargerWatchdog), NORMALPRIO + 1,
+                    charger_watchdog_thread, NULL);
 
   while (true);
 }

@@ -8,7 +8,8 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-// Which I2C device we're using
+// Which devices we're using
+#define ADC_DRIVER      ADCD1
 #define I2C_DRIVER      I2CD3
 #define CAN_DRIVER      CAND1
 
