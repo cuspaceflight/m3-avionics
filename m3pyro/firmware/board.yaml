@@ -16,7 +16,7 @@ pins:
     FIRE2: pb13, output, startlow
     FIRE3: pc2, output, startlow
     FIRE4: pa0, output, startlow
-    CONT1: pa2, floating
-    CONT2: pa1, floating
-    CONT3: pc1, floating
-    CONT4: pc3, floating
+    CONT1: pa2, analog, floating
+    CONT2: pa1, analog, floating
+    CONT3: pc1, analog, floating
+    CONT4: pc3, analog, floating

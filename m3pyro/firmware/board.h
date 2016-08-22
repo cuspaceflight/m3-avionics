@@ -254,8 +254,8 @@
  *  GPIOA setup:
  *
  * PA0  - FIRE4                        (output, startlow).
- * PA1  - CONT2                        (floating).
- * PA2  - CONT1                        (floating).
+ * PA1  - CONT2                        (analog, floating).
+ * PA2  - CONT1                        (analog, floating).
  * PA3  - PIN3                         (unused).
  * PA4  - PIN4                         (unused).
  * PA5  - PIN5                         (unused).
@@ -271,8 +271,8 @@
  * PA15 - JTDI                         (af0, pullup).
 */
 #define VAL_GPIOA_MODER                (PIN_MODE_OUTPUT(GPIOA_FIRE4) | \
-                                        PIN_MODE_INPUT(GPIOA_CONT2) | \
-                                        PIN_MODE_INPUT(GPIOA_CONT1) | \
+                                        PIN_MODE_ANALOG(GPIOA_CONT2) | \
+                                        PIN_MODE_ANALOG(GPIOA_CONT1) | \
                                         PIN_MODE_INPUT(GPIOA_PIN3) | \
                                         PIN_MODE_INPUT(GPIOA_PIN4) | \
                                         PIN_MODE_INPUT(GPIOA_PIN5) | \
@@ -488,9 +488,9 @@
  *  GPIOC setup:
  *
  * PC0  - PIN0                         (unused).
- * PC1  - CONT3                        (floating).
+ * PC1  - CONT3                        (analog, floating).
  * PC2  - FIRE3                        (output, startlow).
- * PC3  - CONT4                        (floating).
+ * PC3  - CONT4                        (analog, floating).
  * PC4  - PIN4                         (unused).
  * PC5  - PIN5                         (unused).
  * PC6  - PIN6                         (unused).
@@ -505,9 +505,9 @@
  * PC15 - PIN15                        (unused).
 */
 #define VAL_GPIOC_MODER                (PIN_MODE_INPUT(GPIOC_PIN0) | \
-                                        PIN_MODE_INPUT(GPIOC_CONT3) | \
+                                        PIN_MODE_ANALOG(GPIOC_CONT3) | \
                                         PIN_MODE_OUTPUT(GPIOC_FIRE3) | \
-                                        PIN_MODE_INPUT(GPIOC_CONT4) | \
+                                        PIN_MODE_ANALOG(GPIOC_CONT4) | \
                                         PIN_MODE_INPUT(GPIOC_PIN4) | \
                                         PIN_MODE_INPUT(GPIOC_PIN5) | \
                                         PIN_MODE_INPUT(GPIOC_PIN6) | \

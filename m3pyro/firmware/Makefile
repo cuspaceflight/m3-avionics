@@ -115,6 +115,8 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
+	   ../../shared/m3can/m3can.c \
+	   m3pyro_continuity.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -146,7 +148,8 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(CHIBIOS)/os/various
+         $(CHIBIOS)/os/various \
+		 ../../shared/m3can
 
 #
 # Project, sources and paths
@@ -220,7 +223,7 @@ include $(RULESPATH)/rules.mk
 ##############################################################################
 # M3Debug flashing via GDB
 #
-BMP_PORT = $(wildcard /dev/serial/by-id/usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00)
+BMP_PORT = $(wildcard /dev/serial/by-id/*m3debug*-if00)
 JTAG_SCAN = python3 ../../shared/jtag_scan/jtag_scan.py
 flash: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb --batch \
