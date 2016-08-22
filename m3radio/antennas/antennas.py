@@ -20,8 +20,11 @@ from sexp import generate
 # Microstrip line widths for various impedances [m]
 strip_w_50r = 1.90e-3
 strip_w_70r71 = 1.07e-3
-strip_w_100r = 0.527e-3
-strip_w_112r91 = 0.39e-3
+#strip_w_100r = 0.527e-3
+#strip_w_112r91 = 0.39e-3
+# wider for home etching ;(
+strip_w_100r = 0.8e-3
+strip_w_112r91 = 0.8e-3
 
 # Feed networks. Entries are (width [m], length [m]).
 # Lengths of None imply "continue to junction".
@@ -127,7 +130,8 @@ antennas = [
         "feed": feed_booster_telemetry,
         "w_patch": 114e-3,
         "l_patch": 102.2e-3,
-        "w_inset": 3e-3,
+        #"w_inset": 3e-3,
+        "w_inset": 5e-3,
         "l_inset": 30e-3,
         "r_corner": None,
         "h": 0.7e-3,
