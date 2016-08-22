@@ -53,20 +53,20 @@ static THD_WORKING_AREA(can_tx_wa, 256);
 static THD_FUNCTION(can_tx_thd, arg) {
     (void)arg;
 
-    CANTxFrame txmsg = {
-        .IDE = CAN_IDE_STD,
-        .RTR = CAN_RTR_DATA,
-        .DLC = 8,
-        .SID = 0b00100100011,
-        .data32 = {
-            0xDEADBEEF,
-            0xCAFEBABE
-        },
-    };
+    /*CANTxFrame txmsg = {*/
+        /*.IDE = CAN_IDE_STD,*/
+        /*.RTR = CAN_RTR_DATA,*/
+        /*.DLC = 8,*/
+        /*.SID = 0b00100100011,*/
+        /*.data32 = {*/
+            /*0xDEADBEEF,*/
+            /*0xCAFEBABE*/
+        /*},*/
+    /*};*/
 
     while(true) {
-        canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));
-        chThdSleepMilliseconds(500);
+        /*canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));*/
+        chThdSleepMilliseconds(100);
     }
 }
 

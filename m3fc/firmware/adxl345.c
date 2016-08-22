@@ -223,6 +223,7 @@ static THD_FUNCTION(adxl345_thd, arg)
 {
     (void)arg;
     int16_t accels[3];
+    int loopcount = 0;
     msg_t wait_result;
 
     chRegSetThreadName("ADXL345");
@@ -235,6 +236,22 @@ static THD_FUNCTION(adxl345_thd, arg)
 
     while(true) {
         adxl345_read_accel(accels);
+
+        if(loopcount++ == 100) {
+            loopcount = 0;
+            CANTxFrame txmsg = {
+                .IDE = CAN_IDE_STD,
+                .RTR = CAN_RTR_DATA,
+                .DLC = 6,
+                .SID = 1,
+                .data16 = {
+                    accels[0], accels[1], accels[2]
+                }
+            };
+
+            canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));
+        }
+
         wait_result = chBSemWaitTimeout(&adxl345_thd_sem, MS2ST(100));
 
         if(wait_result == MSG_TIMEOUT) {

@@ -164,6 +164,17 @@ static THD_FUNCTION(ms5611_thd, arg) {
     ms5611_read_cal(&cal_data);
     while (true) {
         ms5611_read(&cal_data, &temperature, &pressure);
+        CANTxFrame txmsg = {
+            .IDE = CAN_IDE_STD,
+            .RTR = CAN_RTR_DATA,
+            .DLC = 8,
+            .SID = 2,
+            .data32 = {
+                temperature,
+                pressure
+            }
+        };
+        canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));
         chThdSleepMilliseconds(50);
     }
 }
