@@ -7,3 +7,7 @@
 [submodule "shared/gen-board.h"]
 	path = shared/gen-board.h
 	url = https://github.com/cuspaceflight/gen-board.h.git
+[submodule "m3debug/blackmagic"]
+	path = m3debug/blackmagic
+	url = git@github.com:cuspaceflight/blackmagic.git
+
