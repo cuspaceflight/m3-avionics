@@ -115,6 +115,7 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
+       ../../shared/m3can/m3can.c \
        main.c chargecontroller.c ltc3887.c ltc4151.c max17435.c pcal9538a.c powermanager.c smbus.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -146,7 +147,8 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(CHIBIOS)/os/various
+         $(CHIBIOS)/os/various \
+         ../../shared/m3can
 
 #
 # Project, sources and paths

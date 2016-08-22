@@ -6,6 +6,7 @@
 #include "hal.h"
 #include "config.h"
 #include "error.h"
+#include "m3can.h"
 #include "chargecontroller.h"
 
 MAX17435 charger;
@@ -135,6 +136,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
 
   msg_t status;
   uint16_t samplebuf[2];
+  uint8_t can_data[2];
 
   while (!chThdShouldTerminateX()) {
     // Poll total system current
@@ -156,8 +158,14 @@ THD_FUNCTION(chargecontroller_thread, arg) {
       batt1 *= 2; // BATT1 has a 1/2 divider
 
       batt2 -= batt1; // get batt2 as a cell voltage
+      
+      // report voltages in multiples of 0.02v
+      can_data[0] = (uint8_t) ((batt1 * 100) / 2);
+      can_data[1] = (uint8_t) ((batt1 * 100) / 2);
+      
+      can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, sizeof(can_data));
     }
-    chThdSleepMilliseconds(10);
+    chThdSleepMilliseconds(100);
   }
 }
 

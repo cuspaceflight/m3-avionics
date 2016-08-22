@@ -11,7 +11,6 @@
 // Which devices we're using
 #define ADC_DRIVER      ADCD1
 #define I2C_DRIVER      I2CD3
-#define CAN_DRIVER      CAND1
 
 // Whether to read the calculated power value from the LTC3887, or
 //  calculate it ourselves (faster, less accurate)

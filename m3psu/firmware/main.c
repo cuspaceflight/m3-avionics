@@ -22,16 +22,15 @@
 #include "config.h"
 #include "powermanager.h"
 #include "chargecontroller.h"
+#include "m3can.h"
 
 static const I2CConfig i2cfg = {OPMODE_SMBUS_HOST, 100000, STD_DUTY_CYCLE};
-static const CANConfig cancfg = {CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-                                 CAN_BTR_SJW(0) | CAN_BTR_TS2(1)
-                                     | CAN_BTR_TS1(8) | CAN_BTR_BRP(6)};
 
 static THD_WORKING_AREA(waPowerManager, 1024);
 static THD_WORKING_AREA(waChargeController, 1024);
 static THD_WORKING_AREA(waChargerWatchdog, 512);
 //static THD_WORKING_AREA(waPowerAlert, 512);
+
 
 void enable_internal_power(void){
   palClearLine(LINE_EN_INT_PWR);
@@ -66,19 +65,36 @@ void switch_to_internal_power(void){
   disable_external_power();
 }
 
+void can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
+  (void)msg_id;
+  (void)rtr;
+  (void)data;
+  (void)datalen;
+  
+  static bool enabled = true;
+  
+  if(enabled){
+    disable_pyros();
+  }else{
+    enable_pyros();
+  }
+  
+  enabled = !enabled;
+}
+
 int main(void) {
 
   halInit();
   chSysInit();
 
-  disable_pyros();
-  //enable_pyros();
+  //disable_pyros();
+  enable_pyros();
 
   enable_internal_power();
 
   adcStart(&ADC_DRIVER, NULL); // STM32F4 has no ADCConfig
   i2cStart(&I2C_DRIVER, &i2cfg);
-  //canStart(&CAN_DRIVER, &cancfg);
+  can_init();
 
   PowerManager_init();
   ChargeController_init();
