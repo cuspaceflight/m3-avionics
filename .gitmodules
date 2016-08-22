@@ -10,4 +10,3 @@
 [submodule "m3debug/blackmagic"]
 	path = m3debug/blackmagic
 	url = git@github.com:cuspaceflight/blackmagic.git
-
