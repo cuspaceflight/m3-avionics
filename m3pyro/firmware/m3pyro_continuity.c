@@ -20,8 +20,8 @@ static const ADCConversionGroup adc_grp = {
     .sqr3 = ADC_SQR3_SQ1_N(ADC_CHANNEL_IN2) |
             ADC_SQR3_SQ2_N(ADC_CHANNEL_IN1) |
             ADC_SQR3_SQ3_N(ADC_CHANNEL_IN11) |
-            ADC_SQR3_SQ3_N(ADC_CHANNEL_IN13) |
-            ADC_SQR3_SQ4_N(ADC_CHANNEL_IN8),
+            ADC_SQR3_SQ4_N(ADC_CHANNEL_IN13) |
+            ADC_SQR3_SQ5_N(ADC_CHANNEL_IN8),
 };
 
 /* 12bit ADC reading of PYRO_CONTINUITY into 0.1ohm/LSB uint8t */
