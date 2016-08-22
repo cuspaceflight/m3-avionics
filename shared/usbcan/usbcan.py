@@ -1,5 +1,6 @@
 import os
 import glob
+import time
 import struct
 import serial
 import binascii
@@ -32,6 +33,14 @@ class CANFrame:
         return "ID={} RTR={} DLC={} DATA={}".format(
             bin(self.sid)[2:], self.rtr, self.dlc,
             " ".join("{:02X}".format(b) for b in self.data))
+
+    def as_int16(self):
+        n = self.dlc//2
+        return struct.unpack("<{}h".format(n), bytes(self.data[:self.dlc]))
+
+    def as_int32(self):
+        n = self.dlc//4
+        return struct.unpack("<{}i".format(n), bytes(self.data[:self.dlc]))
 
 
 class CANRX:
@@ -91,6 +100,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--serial-port", help="path to serial port on m3debug",
                         default="/dev/serial/by-id/*m3debug*-if02")
+    parser.add_argument("--rx", help="RX only", action="store_true")
     args = parser.parse_args()
     unglob = glob.glob(args.serial_port)
     if len(unglob) == 0:
@@ -104,12 +114,13 @@ def main():
     runner = multiprocessing.Process(target=run, args=(port, txq, rxq))
     runner.start()
 
-    print("Press enter to view received packets, or type a packet to send")
-    print("in the following format (DLC is inferred from DATA):")
-    print("ID (binary)     RTR (0/1)    DATA (hex)")
-    print("Example: 11001100110 0 CAFEC0FFEECAFE00")
-    print("Ctrl-C to quit")
-    print()
+    if not args.rx:
+        print("Press enter to view received packets, or type a packet to send")
+        print("in the following format (DLC is inferred from DATA):")
+        print("ID (binary)     RTR (0/1)    DATA (hex)")
+        print("Example: 11001100110 0 CAFEC0FFEECAFE00")
+        print("Ctrl-C to quit")
+        print()
 
     def dump_packets():
         while True:
@@ -137,6 +148,11 @@ def main():
         txq.put(packet)
 
     while True:
+        if args.rx:
+            dump_packets()
+            time.sleep(0.1)
+            continue
+
         try:
             cmd = input("> ")
         except KeyboardInterrupt:
