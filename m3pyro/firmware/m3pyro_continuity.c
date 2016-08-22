@@ -3,7 +3,7 @@
 #include "m3can.h"
 #include "m3pyro_continuity.h"
 
-static const ADCConversionGroup adc_cfg = {
+static const ADCConversionGroup adc_grp = {
     .circular = false,
     .num_channels = 5,
     .end_cb = NULL,
@@ -44,16 +44,17 @@ static THD_WORKING_AREA(m3pyro_continuity_thd_wa, 256);
 static THD_FUNCTION(m3pyro_continuity_thd, arg)
 {
     (void)arg;
-    adcsample_t sampbuf[5];
     adcStart(&ADCD1, NULL);
+
     while(true) {
-        adcConvert(&ADCD1, &adc_cfg, sampbuf, 1);
+        adcsample_t sampbuf[5];
+        adcConvert(&ADCD1, &adc_grp, sampbuf, 1);
 
         uint8_t continuities[4];
         continuities[0] = adc_to_resistance(sampbuf[0]);
-        continuities[2] = adc_to_resistance(sampbuf[1]);
-        continuities[3] = adc_to_resistance(sampbuf[2]);
-        continuities[4] = adc_to_resistance(sampbuf[3]);
+        continuities[1] = adc_to_resistance(sampbuf[1]);
+        continuities[2] = adc_to_resistance(sampbuf[2]);
+        continuities[3] = adc_to_resistance(sampbuf[3]);
         can_send(CAN_MSG_ID_M3PYRO_CONTINUITY, false,
                  continuities, sizeof(continuities));
 
@@ -62,7 +63,7 @@ static THD_FUNCTION(m3pyro_continuity_thd, arg)
         can_send(CAN_MSG_ID_M3PYRO_SUPPLY_STATUS, false,
                  &supply, 1);
 
-        /*chThdSleepMilliseconds(500);*/
+        chThdSleepMilliseconds(500);
     }
 }
 

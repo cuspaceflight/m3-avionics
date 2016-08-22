@@ -72,7 +72,7 @@
 #define GPIOA_JTCK                     14U
 #define GPIOA_JTDI                     15U
 
-#define GPIOB_PIN0                     0U
+#define GPIOB_SUPPLY                   0U
 #define GPIOB_PIN1                     1U
 #define GPIOB_PIN2                     2U
 #define GPIOB_JTDO                     3U
@@ -227,6 +227,7 @@
 #define LINE_JTDO                      PAL_LINE(GPIOB, 3U)
 #define LINE_JTMS                      PAL_LINE(GPIOA, 13U)
 #define LINE_NJTRST                    PAL_LINE(GPIOB, 4U)
+#define LINE_SUPPLY                    PAL_LINE(GPIOB, 0U)
 
 /*
     I/O ports initial setup, this configuration is established soon after reset
@@ -370,7 +371,7 @@
 /*
  *  GPIOB setup:
  *
- * PB0  - PIN0                         (unused).
+ * PB0  - SUPPLY                       (analog, floating).
  * PB1  - PIN1                         (unused).
  * PB2  - PIN2                         (unused).
  * PB3  - JTDO                         (af0).
@@ -387,7 +388,7 @@
  * PB14 - PIN14                        (unused).
  * PB15 - PIN15                        (unused).
 */
-#define VAL_GPIOB_MODER                (PIN_MODE_INPUT(GPIOB_PIN0) | \
+#define VAL_GPIOB_MODER                (PIN_MODE_ANALOG(GPIOB_SUPPLY) | \
                                         PIN_MODE_INPUT(GPIOB_PIN1) | \
                                         PIN_MODE_INPUT(GPIOB_PIN2) | \
                                         PIN_MODE_ALTERNATE(GPIOB_JTDO) | \
@@ -403,7 +404,7 @@
                                         PIN_MODE_OUTPUT(GPIOB_FIRE2) | \
                                         PIN_MODE_INPUT(GPIOB_PIN14) | \
                                         PIN_MODE_INPUT(GPIOB_PIN15))
-#define VAL_GPIOB_OTYPER               (PIN_OTYPE_PUSHPULL(GPIOB_PIN0) | \
+#define VAL_GPIOB_OTYPER               (PIN_OTYPE_PUSHPULL(GPIOB_SUPPLY) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN1) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN2) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_JTDO) | \
@@ -419,7 +420,7 @@
                                         PIN_OTYPE_PUSHPULL(GPIOB_FIRE2) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN14) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN15))
-#define VAL_GPIOB_OSPEEDR              (PIN_OSPEED_HIGH(GPIOB_PIN0) | \
+#define VAL_GPIOB_OSPEEDR              (PIN_OSPEED_HIGH(GPIOB_SUPPLY) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN1) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN2) | \
                                         PIN_OSPEED_HIGH(GPIOB_JTDO) | \
@@ -435,7 +436,7 @@
                                         PIN_OSPEED_HIGH(GPIOB_FIRE2) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN14) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN15))
-#define VAL_GPIOB_PUPDR                (PIN_PUPD_PULLUP(GPIOB_PIN0) | \
+#define VAL_GPIOB_PUPDR                (PIN_PUPD_FLOATING(GPIOB_SUPPLY) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN1) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN2) | \
                                         PIN_PUPD_PULLUP(GPIOB_JTDO) | \
@@ -451,7 +452,7 @@
                                         PIN_PUPD_PULLUP(GPIOB_FIRE2) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN14) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN15))
-#define VAL_GPIOB_ODR                  (PIN_OD_HIGH(GPIOB_PIN0) | \
+#define VAL_GPIOB_ODR                  (PIN_OD_HIGH(GPIOB_SUPPLY) | \
                                         PIN_OD_HIGH(GPIOB_PIN1) | \
                                         PIN_OD_HIGH(GPIOB_PIN2) | \
                                         PIN_OD_HIGH(GPIOB_JTDO) | \
@@ -467,7 +468,7 @@
                                         PIN_OD_LOW(GPIOB_FIRE2) | \
                                         PIN_OD_HIGH(GPIOB_PIN14) | \
                                         PIN_OD_HIGH(GPIOB_PIN15))
-#define VAL_GPIOB_AFRL                 (PIN_AFIO_AF(GPIOB_PIN0, 0U) | \
+#define VAL_GPIOB_AFRL                 (PIN_AFIO_AF(GPIOB_SUPPLY, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN1, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN2, 0U) | \
                                         PIN_AFIO_AF(GPIOB_JTDO, 0U) | \

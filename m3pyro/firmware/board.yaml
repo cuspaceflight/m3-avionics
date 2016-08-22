@@ -20,3 +20,4 @@ pins:
     CONT2: pa1, analog, floating
     CONT3: pc1, analog, floating
     CONT4: pc3, analog, floating
+    SUPPLY: pb0, analog, floating
