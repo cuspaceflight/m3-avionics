@@ -19,6 +19,7 @@ int main(void) {
       m3pyro_continuity_init();
 
       while (true) {
+          chThdSleep(TIME_INFINITE);
       }
 }
 

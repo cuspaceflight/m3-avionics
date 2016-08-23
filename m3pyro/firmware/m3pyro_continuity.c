@@ -44,11 +44,12 @@ static THD_WORKING_AREA(m3pyro_continuity_thd_wa, 256);
 static THD_FUNCTION(m3pyro_continuity_thd, arg)
 {
     (void)arg;
-    adcStart(&ADCD1, NULL);
 
     while(true) {
         adcsample_t sampbuf[5];
+        adcStart(&ADCD1, NULL);
         adcConvert(&ADCD1, &adc_grp, sampbuf, 1);
+        adcStop(&ADCD1);
 
         uint8_t continuities[4];
         continuities[0] = adc_to_resistance(sampbuf[0]);
