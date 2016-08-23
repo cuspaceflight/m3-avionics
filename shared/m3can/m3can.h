@@ -11,15 +11,22 @@
 #define CAN_ID_M3IMU     (5)
 #define CAN_ID_M3DL      (6)
 
+#define CAN_MSG_ID(x)    (x<<5)
+
 // Fill out known CAN message IDs here, so all boards can know about them
 /* M3RADIO */
 
 
 /* M3PSU */
-#define CAN_MSG_ID_M3PSU_BATT_VOLTAGES      (CAN_ID_M3PSU | 1)
+#define CAN_MSG_ID_M3PSU_BATT_VOLTAGES      (CAN_ID_M3PSU | CAN_MSG_ID(1))
 
 
 /* M3FC */
+#define CAN_MSG_ID_M3FC_MISSION_STATE       (CAN_ID_M3FC | CAN_MSG_ID(32))
+#define CAN_MSG_ID_M3FC_ACCEL               (CAN_ID_M3FC | CAN_MSG_ID(48))
+#define CAN_MSG_ID_M3FC_BARO                (CAN_ID_M3FC | CAN_MSG_ID(49))
+#define CAN_MSG_ID_M3FC_SE_H_V              (CAN_ID_M3FC | CAN_MSG_ID(50))
+#define CAN_MSG_ID_M3FC_SE_A                (CAN_ID_M3FC | CAN_MSG_ID(51))
 
 
 /* M3DL */
@@ -29,11 +36,11 @@
 
 
 /* M3PYRO */
-#define CAN_MSG_ID_M3PYRO_ARM_STATUS        (CAN_ID_M3PYRO | 16)
-#define CAN_MSG_ID_M3PYRO_ARM_COMMAND       (CAN_ID_M3PYRO | 2)
-#define CAN_MSG_ID_M3PYRO_CONTINUITY        (CAN_ID_M3PYRO | 48)
-#define CAN_MSG_ID_M3PYRO_FIRE_COMMAND      (CAN_ID_M3PYRO | 1)
-#define CAN_MSG_ID_M3PYRO_SUPPLY_STATUS     (CAN_ID_M3PYRO | 49)
+#define CAN_MSG_ID_M3PYRO_ARM_STATUS        (CAN_ID_M3PYRO | CAN_MSG_ID(16))
+#define CAN_MSG_ID_M3PYRO_ARM_COMMAND       (CAN_ID_M3PYRO | CAN_MSG_ID(2))
+#define CAN_MSG_ID_M3PYRO_CONTINUITY        (CAN_ID_M3PYRO | CAN_MSG_ID(48))
+#define CAN_MSG_ID_M3PYRO_FIRE_COMMAND      (CAN_ID_M3PYRO | CAN_MSG_ID(1))
+#define CAN_MSG_ID_M3PYRO_SUPPLY_STATUS     (CAN_ID_M3PYRO | CAN_MSG_ID(49))
 
 
 
