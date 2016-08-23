@@ -26,23 +26,23 @@ static const CANConfig cancfg = {
 };
 
 
-void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen){
-  static CANTxFrame txmsg;
-  
-  chDbgAssert(datalen <= 8, "CAN packet >8 bytes");
-  
-  txmsg.IDE = CAN_IDE_STD;
-  if(can_rtr == false){
-    txmsg.RTR = CAN_RTR_DATA;
-  }else{
-    txmsg.RTR = CAN_RTR_REMOTE;
-  }
-  txmsg.DLC = datalen;
-  txmsg.SID = msg_id;
-  
-  memcpy(&txmsg.data8, data, datalen);
-  
-  canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));
+void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
+    static CANTxFrame txmsg;
+
+    chDbgAssert(datalen <= 8, "CAN packet >8 bytes");
+
+    if(can_rtr == false) {
+        txmsg.RTR = CAN_RTR_DATA;
+    } else {
+        txmsg.RTR = CAN_RTR_REMOTE;
+    }
+    txmsg.IDE = CAN_IDE_STD;
+    txmsg.DLC = datalen;
+    txmsg.SID = msg_id;
+
+    memcpy(&txmsg.data8, data, datalen);
+
+    canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));
 }
 
 
@@ -69,9 +69,8 @@ static THD_FUNCTION(can_rx_thd, arg) {
 
 
 void can_init(void){
-  canStart(&CAND1, &cancfg);
-  
-  chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO,
+    canStart(&CAND1, &cancfg);
+    chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO,
                       can_rx_thd, NULL);
 }
 
