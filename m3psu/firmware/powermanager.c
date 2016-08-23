@@ -34,6 +34,7 @@ void PowerManager_init(){
   ltc3887_init(&LTC3887s[5], &I2C_DRIVER, 0x47, "3V3 DL", 3.3f, 50, "5V CAN", 5.0f, 50);
 
   PowerManager_switch_on(11); // Start the CAN transceivers
+  PowerManager_switch_on(10); // Start the DL including base board for USB
 
   // Setup LTC4151
   ltc4151_init(&currentMonitor, &I2C_DRIVER, 0x6F, 0.01f);
