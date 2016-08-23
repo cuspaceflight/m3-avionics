@@ -24,26 +24,26 @@ def unpack_channels():
     
 def process_frame(frame):
     global batt, pyro, channels, charger
-    pid = frame.sid & 0x3f
-    did = frame.sid >> 6
+    pid = frame.sid >> 5
+    did = frame.sid & 0b11111
     if did != 2:
         return
-    if pid == 1:
+    if pid == 56:
         batt[0] = (float(frame.data[0]*2)/100.0)
         batt[1] = (float(frame.data[1]*2)/100.0)
         batt[2] = (frame.data[2] & (1<<2)) != 0
         batt[3] = (frame.data[2] & (1<<1)) != 0
         batt[4] = (frame.data[2] & (1<<0)) != 0
-    elif pid == 10:
+    elif pid == 48:
         ints = frame.as_int16()
         pyro[0:2] = [ (float(b)/1000.0) for b in ints[0:2] ]
         pyro[2] = float(ints[2]) / 10.0
         pyro[3] = "Disabled" if ints[3] == 0 else "Enabled"
-    elif pid >= 3 and pid <= 8:
+    elif pid >= 49 and pid <= 54:
         floats = list(map(float, frame.data))
         channels[(pid-3)*2] = [floats[0]*0.03, floats[1]*0.003, floats[2]*0.02]
         channels[((pid-3)*2) + 1] = [floats[4]*0.03, floats[5]*0.003, floats[6]*0.02]
-    elif pid == 11:
+    elif pid == 55:
         charger[0] = (frame.data[1] << 8) | frame.data[0]
         charger[1] = (frame.data[2] & (1<<2)) != 0
         charger[2] = (frame.data[2] & (1<<1)) != 0
