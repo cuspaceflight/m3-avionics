@@ -5,6 +5,8 @@
 #include "m3pyro_continuity.h"
 
 int main(void) {
+    DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
+
     halInit();
     chSysInit();
 
