@@ -8,13 +8,13 @@
 
 #include "ch.h"
 
-#include "max17435.h"
-#include "pcal9538a.h"
-
 void ChargeController_init(void);
 
 uint8_t ChargeController_enable_charger(void);
 uint8_t ChargeController_disable_charger(void);
+
+void ChargeController_enable_balancing(void);
+void ChargeController_disable_balancing(void);
 
 bool ChargeController_is_charger_overcurrent(void);
 bool ChargeController_is_adapter_present(void);

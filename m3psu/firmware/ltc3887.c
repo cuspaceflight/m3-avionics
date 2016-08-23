@@ -105,6 +105,7 @@
 #define LTC3887_OPER_OFF            0x40 /* Turn off channel */
 
 #define LTC3887_FREQ_425KHZ         0xFB52 /* Switch at 425kHz */
+#define LTC3887_FREQ_575KHZ         0x023F /* Switch at 575kHz */
 
 #define LTC3887_UT_LIMIT_MIN        0xFDDA /* 0xFDDA = -275C (disable UT warning) */
 #define LTC3887_UT_FAULT_IGNORE     0x00 /* Ignore under-temperature faults */
@@ -522,9 +523,9 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
     return ERR_COMMS;
   }
 
-  // set frequency to 425kHz
-  data[0] = (LTC3887_FREQ_425KHZ & 0xff);
-  data[1] = (LTC3887_FREQ_425KHZ >> 8) & 0xff;
+  // set frequency to 575kHz
+  data[0] = (LTC3887_FREQ_575KHZ & 0xff);
+  data[1] = (LTC3887_FREQ_575KHZ >> 8) & 0xff;
   if (ltc3887_global_write(ltc, LTC3887_CMD_FREQENCY_SWITCH, data, 2) != ERR_OK) {
     return ERR_COMMS;
   }

@@ -82,8 +82,23 @@ void can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
         PowerManager_switch_off(data[1]);
       }
     }
+  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_CHARGER){
+    if(datalen >= 1){
+      if(data[0] == 1){
+        ChargeController_enable_charger();
+      }else if(data[0] == 0){
+        ChargeController_disable_charger();
+      }
+    }
+  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_BALANCE){
+    if(datalen >= 1){
+      if(data[0] == 1){
+        ChargeController_enable_balancing();
+      }else if(data[0] == 0){
+        ChargeController_disable_balancing();
+      }
+    }
   }
-  
 }
 
 int main(void) {

@@ -9,6 +9,9 @@
 #include "m3can.h"
 #include "chargecontroller.h"
 
+#include "max17435.h"
+#include "pcal9538a.h"
+
 MAX17435 charger;
 PCAL9538A portEx;
 
@@ -18,6 +21,7 @@ PCAL9538A portEx;
 #define VEXT_ENABLE         (0)
 
 static bool shouldCharge = FALSE;
+static bool shouldBalance = FALSE;
 
 static const ADCConversionGroup adcgrpcfg = {
   FALSE, // circular mode disabled
@@ -34,8 +38,8 @@ static const ADCConversionGroup adcgrpcfg = {
 };
 
 void ChargeController_init(void) {
-  // Setup charger to 8.4V at 0.5A, 10mohm sense resistor
-  max17435_init(&charger, &I2C_DRIVER, 0x09, 8400, 500, 10);
+  // Setup charger to 8.4V at 0.75A, 10mohm sense resistor
+  max17435_init(&charger, &I2C_DRIVER, 0x09, 8400, 750, 10);
 
   // Setup port-expander
   // P0 is enable_vext, P1 is charger_not_overcurrent, P2 is vext_not_ok, P3 is
@@ -89,6 +93,14 @@ uint8_t ChargeController_disable_charger(void) {
   return ERR_OK;
 }
 
+void ChargeController_enable_balancing(void){
+  shouldBalance = TRUE;
+}
+
+void ChargeController_disable_balancing(void){
+  shouldBalance = FALSE;
+}
+
 bool ChargeController_is_charger_overcurrent(void) {
   uint8_t result;
   if (pcal9538a_read_inputs(&portEx, &result) != 0) {
@@ -136,28 +148,9 @@ THD_FUNCTION(chargecontroller_thread, arg) {
 
   msg_t status;
   adcsample_t samplebuf[2];
-  uint8_t can_data[2];
+  uint8_t can_data[3];
 
   while (!chThdShouldTerminateX()) {
-    // Poll total system current
-    uint16_t ma;
-    status = max17435_get_current(&charger, &ma);
-    if(status == ERR_OK){
-      can_data[0] = ma & 0xff;
-      can_data[1] = (ma >> 8) & 0xff;
-    }else{
-      can_data[0] = -1;
-      can_data[1] = -1;
-    }
-    can_data[2] = ChargeController_is_adapter_present() ? 1 : 0;
-    can_data[3] = ChargeController_is_charger_overcurrent() ? 1 : 0;
-    can_send(CAN_MSG_ID_M3PSU_CHARGER_STATUS, false, can_data, 4);
-
-    chThdSleepMilliseconds(1);
-
-    // TODO: balance if charging?
-    // TODO: calc battery level etc?
-
     // Measure battery voltages
     adcAcquireBus(&ADC_DRIVER);
     status = adcConvert(&ADC_DRIVER, &adcgrpcfg, samplebuf, 1);
@@ -171,13 +164,55 @@ THD_FUNCTION(chargecontroller_thread, arg) {
       batt1 *= 2; // BATT1 has a 1/2 divider
 
       batt2 -= batt1; // get batt2 as a cell voltage
-      
+
+      // Balance the batteries
+      if(shouldBalance){
+        float diff = batt2 - batt1;
+        if(diff > 0.05f){ // Batt2 is higher, so bleed it
+          palClearLine(LINE_BLEED_BATT_1);
+          palSetLine(LINE_BLEED_BATT_2);
+        }else if(diff < -0.05f){
+          palSetLine(LINE_BLEED_BATT_1);
+          palClearLine(LINE_BLEED_BATT_2);
+        }else{
+          palClearLine(LINE_BLEED_BATT_1);
+          palClearLine(LINE_BLEED_BATT_2);
+        }
+      }else{
+        palClearLine(LINE_BLEED_BATT_1);
+        palClearLine(LINE_BLEED_BATT_2);
+      }
+
+      // TODO: calc battery level etc?
+
+
       // report voltages in multiples of 0.02v
       can_data[0] = (uint8_t) ((batt1 * 100) / 2);
       can_data[1] = (uint8_t) ((batt2 * 100) / 2);
-      
-      can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, sizeof(can_data));
+      can_data[2] = ((shouldBalance ? 1 : 0) << 2) |
+                    (palReadLine(LINE_BLEED_BATT_1) << 1) |
+                    palReadLine(LINE_BLEED_BATT_2);
+
+      can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, 3);
     }
+
+    chThdSleepMilliseconds(1);
+
+    // Poll total system current
+    uint16_t ma;
+    status = max17435_get_current(&charger, &ma);
+    if(status == ERR_OK){
+      can_data[0] = ma & 0xff;
+      can_data[1] = (ma >> 8) & 0xff;
+    }else{
+      can_data[0] = -1;
+      can_data[1] = -1;
+    }
+    can_data[2] = ((ChargeController_is_adapter_present() ? 1 : 0) << 2) |
+                  ((ChargeController_is_charger_overcurrent() ? 1 : 0) << 1) |
+                  (shouldCharge ? 1 : 0);
+    can_send(CAN_MSG_ID_M3PSU_CHARGER_STATUS, false, can_data, 3);
+
     chThdSleepMilliseconds(100);
   }
 }
