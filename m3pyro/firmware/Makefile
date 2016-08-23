@@ -116,7 +116,7 @@ CSRC = $(STARTUPSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
 	   ../../shared/m3can/m3can.c \
-	   m3pyro_continuity.c \
+	   m3pyro_continuity.c m3pyro_arming.c m3pyro_firing.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
