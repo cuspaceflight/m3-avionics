@@ -17,6 +17,16 @@
 
 /* M3PSU */
 #define CAN_MSG_ID_M3PSU_BATT_VOLTAGES      (CAN_ID_M3PSU | 1)
+#define CAN_MSG_ID_M3PSU_TOGGLE_PYROS       (CAN_ID_M3PSU | 2)
+#define CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12  (CAN_ID_M3PSU | 3)
+#define CAN_MSG_ID_M3PSU_CHANNEL_STATUS_34  (CAN_ID_M3PSU | 4)
+#define CAN_MSG_ID_M3PSU_CHANNEL_STATUS_56  (CAN_ID_M3PSU | 5)
+#define CAN_MSG_ID_M3PSU_CHANNEL_STATUS_78  (CAN_ID_M3PSU | 6)
+#define CAN_MSG_ID_M3PSU_CHANNEL_STATUS_910  (CAN_ID_M3PSU | 7)
+#define CAN_MSG_ID_M3PSU_CHANNEL_STATUS_1112  (CAN_ID_M3PSU | 8)
+#define CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL     (CAN_ID_M3PSU | 9)
+#define CAN_MSG_ID_M3PSU_PYRO_STATUS        (CAN_ID_M3PSU | 10)
+#define CAN_MSG_ID_M3PSU_CHARGER_STATUS     (CAN_ID_M3PSU | 11)
 
 
 /* M3FC */
@@ -39,3 +49,4 @@ void can_init(void);
 void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
 #endif /* _M3CAN_H */
+

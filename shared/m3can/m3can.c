@@ -46,7 +46,7 @@ void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen){
 }
 
 
-static THD_WORKING_AREA(can_rx_wa, 256);
+static THD_WORKING_AREA(can_rx_wa, 512);
 static THD_FUNCTION(can_rx_thd, arg) {
     (void)arg;
 
@@ -71,7 +71,7 @@ static THD_FUNCTION(can_rx_thd, arg) {
 void can_init(void){
   canStart(&CAND1, &cancfg);
   
-  chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO,
+  chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO+10,
                       can_rx_thd, NULL);
 }
 
