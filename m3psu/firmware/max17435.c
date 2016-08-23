@@ -53,7 +53,7 @@ uint8_t max17435_get_current(MAX17435 *max, uint16_t *ma){
     return ERR_COMMS;
   }
 
-  float mv_sense = (float)mv_read / 20; // The read value is 20x the sense
+  float mv_sense = (float)mv_read / 20.0f; // The read value is 20x the sense
   float ohms = (float)max->config.css_resistor_mohms / 1000.0f;
 
   *ma = (uint16_t)(mv_sense / ohms);

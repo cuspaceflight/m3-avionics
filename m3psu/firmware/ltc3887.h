@@ -84,7 +84,8 @@ typedef struct {
   bool other_memory_or_logic_fault:1;
 } ltc3887_fault_status;
 
-uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address, const char *name1, float voltage1, const char *name2, float voltage2);
+uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address, const char *name1, float voltage1, float sense1_mohms,
+                      const char *name2, float voltage2, float sense2_mohms);
 bool ltc3887_is_alerting(LTC3887 *ltc);
 uint8_t ltc3887_clear_faults(LTC3887 *ltc);
 ltc3887_fault_status ltc3887_get_fault_status(LTC3887 *ltc, uint8_t page);

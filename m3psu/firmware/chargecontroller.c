@@ -135,13 +135,26 @@ THD_FUNCTION(chargecontroller_thread, arg) {
   chRegSetThreadName("Charge Monitor");
 
   msg_t status;
-  uint16_t samplebuf[2];
+  adcsample_t samplebuf[2];
   uint8_t can_data[2];
 
   while (!chThdShouldTerminateX()) {
     // Poll total system current
     uint16_t ma;
-    max17435_get_current(&charger, &ma);
+    status = max17435_get_current(&charger, &ma);
+    if(status == ERR_OK){
+      can_data[0] = ma & 0xff;
+      can_data[1] = (ma >> 8) & 0xff;
+    }else{
+      can_data[0] = -1;
+      can_data[1] = -1;
+    }
+    can_data[2] = ChargeController_is_adapter_present() ? 1 : 0;
+    can_data[3] = ChargeController_is_charger_overcurrent() ? 1 : 0;
+    can_send(CAN_MSG_ID_M3PSU_CHARGER_STATUS, false, can_data, 4);
+
+    chThdSleepMilliseconds(1);
+
     // TODO: balance if charging?
     // TODO: calc battery level etc?
 
@@ -161,7 +174,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
       
       // report voltages in multiples of 0.02v
       can_data[0] = (uint8_t) ((batt1 * 100) / 2);
-      can_data[1] = (uint8_t) ((batt1 * 100) / 2);
+      can_data[1] = (uint8_t) ((batt2 * 100) / 2);
       
       can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, sizeof(can_data));
     }
@@ -176,8 +189,8 @@ THD_FUNCTION(charger_watchdog_thread, arg) {
     if (shouldCharge) {
       // Send charge voltage / current every 30 seconds
       // The MAX17435 will stop charging if we don't send for 140 seconds
-      //max17435_set_charge_voltage(&charger, charger.config.charge_voltage_mv);
-      //max17435_set_charge_current(&charger, charger.config.charge_current_ma);
+      max17435_set_charge_voltage(&charger, charger.config.charge_voltage_mv);
+      max17435_set_charge_current(&charger, charger.config.charge_current_ma);
     }
     chThdSleepSeconds(30);
   }

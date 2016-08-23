@@ -22,15 +22,13 @@
 #include "config.h"
 #include "powermanager.h"
 #include "chargecontroller.h"
+#include "smbus.h"
 #include "m3can.h"
-
-static const I2CConfig i2cfg = {OPMODE_SMBUS_HOST, 100000, STD_DUTY_CYCLE};
 
 static THD_WORKING_AREA(waPowerManager, 1024);
 static THD_WORKING_AREA(waChargeController, 1024);
 static THD_WORKING_AREA(waChargerWatchdog, 512);
 //static THD_WORKING_AREA(waPowerAlert, 512);
-
 
 void enable_internal_power(void){
   palClearLine(LINE_EN_INT_PWR);
@@ -66,20 +64,26 @@ void switch_to_internal_power(void){
 }
 
 void can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
-  (void)msg_id;
   (void)rtr;
-  (void)data;
-  (void)datalen;
-  
-  static bool enabled = true;
-  
-  if(enabled){
-    disable_pyros();
-  }else{
-    enable_pyros();
+
+  if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_PYROS){
+    if(datalen >= 1){
+      if(data[0] == 0){
+        disable_pyros();
+      }else if(data[0] == 1){
+        enable_pyros();
+      }
+    }
+  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL){
+    if(datalen >= 2){
+      if(data[0] == 1){
+        PowerManager_switch_on(data[1]);
+      }else if(data[0] == 0){
+        PowerManager_switch_off(data[1]);
+      }
+    }
   }
   
-  enabled = !enabled;
 }
 
 int main(void) {
@@ -87,23 +91,18 @@ int main(void) {
   halInit();
   chSysInit();
 
-  //disable_pyros();
   enable_pyros();
 
   enable_internal_power();
 
   adcStart(&ADC_DRIVER, NULL); // STM32F4 has no ADCConfig
-  i2cStart(&I2C_DRIVER, &i2cfg);
+  smbus_init();
   can_init();
 
   PowerManager_init();
   ChargeController_init();
 
   switch_to_external_power();
-
-  chThdSleepMilliseconds(5000);
-
-  //switch_to_internal_power();
 
 
   //chThdCreateStatic(waPowerAlert, sizeof(waPowerAlert), NORMALPRIO + 3,
@@ -116,5 +115,8 @@ int main(void) {
   chThdCreateStatic(waChargerWatchdog, sizeof(waChargerWatchdog), NORMALPRIO + 1,
                     charger_watchdog_thread, NULL);
 
-  while (true);
+  // All done, go to sleep forever
+  chThdSleep(TIME_INFINITE);
+
+  return 0;
 }

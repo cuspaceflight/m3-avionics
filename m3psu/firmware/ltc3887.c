@@ -24,6 +24,7 @@
 #define LTC3887_CMD_VOUT_MARGIN_HIGH    0x25
 #define LTC3887_CMD_VOUT_MARGIN_LOW     0x26
 #define LTC3887_CMD_FREQENCY_SWITCH     0x33
+#define LTC3887_CMD_IOUT_CAL_GAIN       0x38
 #define LTC3887_CMD_VOUT_OV_FAULT_LIMIT 0x40
 #define LTC3887_CMD_VOUT_UV_FAULT_LIMIT 0x44
 #define LTC3887_CMD_UT_FAULT_LIMIT      0x53
@@ -473,7 +474,8 @@ static uint8_t ltc3887_program_voltage(LTC3887 *ltc, uint8_t channel, float volt
 }
 
 uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
-                     const char *name1, float voltage1, const char *name2, float voltage2) {
+                     const char *name1, float voltage1, float sense1_mohms,
+                     const char *name2, float voltage2, float sense2_mohms) {
 
   // Fill out LTC3887 struct with provided information
   ltc->config.i2c = i2c;
@@ -528,6 +530,23 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
   }
   ltc3887_wait_for_not_busy(ltc);
 
+  // set sense resistor value to 50mOhms
+  uint16_t iout_cal_gain = float_to_L11(sense1_mohms);
+  data[0] = iout_cal_gain & 0xff;
+  data[1] = (iout_cal_gain >> 8) & 0xff;
+  if (ltc3887_paged_write(ltc, LTC3887_CMD_IOUT_CAL_GAIN, PAGE_0, data, 2) != ERR_OK) {
+    return ERR_COMMS;
+  }
+  ltc3887_wait_for_not_busy(ltc);
+
+  iout_cal_gain = float_to_L11(sense2_mohms);
+  data[0] = iout_cal_gain & 0xff;
+  data[1] = (iout_cal_gain >> 8) & 0xff;
+  if (ltc3887_paged_write(ltc, LTC3887_CMD_IOUT_CAL_GAIN, PAGE_1, data, 2) != ERR_OK) {
+    return ERR_COMMS;
+  }
+  ltc3887_wait_for_not_busy(ltc);
+
   // disable temperature sensing and alert
   // See UT_FAULT_LIMIT, UT_FAULT_RESPONSE commands
   data[0] = (LTC3887_UT_LIMIT_MIN & 0xff);
@@ -551,7 +570,7 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
     return ERR_COMMS;
   }
   ltc3887_wait_for_not_busy(ltc);
-  
+
   // Disable Share Clock Control
   // XXX Also disable GPIO Alerts
   data[0] = 0x1D & ~(1 << LTC3887_SHARE_CLK_CONTROL);
@@ -604,12 +623,12 @@ uint8_t ltc3887_poll(LTC3887 *ltc) {
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->iout_1 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
+  ltc->iout_1 = L11_to_float((rxdat[1] << 8) | rxdat[0]);
   if (ltc3887_paged_read(ltc, LTC3887_CMD_READ_IOUT, PAGE_1, rxdat,
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->iout_2 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
+  ltc->iout_2 = L11_to_float((rxdat[1] << 8) | rxdat[0]);
 
   // Read power of both outputs, or calculate it (faster)
 #if LTC3887_READ_CALCULATED_POWER
@@ -617,12 +636,12 @@ uint8_t ltc3887_poll(LTC3887 *ltc) {
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->pout_1 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
+  ltc->pout_1 = L11_to_float((rxdat[1] << 8) | rxdat[0]);
   if (ltc3887_paged_read(ltc, LTC3887_CMD_READ_POUT, PAGE_1, rxdat,
                          sizeof(rxdat)) != ERR_OK) {
     return ERR_COMMS;
   }
-  ltc->pout_2 = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
+  ltc->pout_2 = L11_to_float((rxdat[1] << 8) | rxdat[0]);
 #else
   ltc->pout_1 = ltc->vout_1 * ltc->iout_1;
   ltc->pout_2 = ltc->vout_2 * ltc->iout_2;
@@ -642,7 +661,7 @@ uint8_t ltc3887_turn_on(LTC3887 *ltc, uint8_t channel) {
     return ERR_COMMS;
   }
   ltc3887_wait_for_not_busy(ltc);
-  
+
   return ERR_OK;
 }
 
