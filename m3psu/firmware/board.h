@@ -266,7 +266,7 @@
  * PA7  - BLEED_BATT_2                 (output, pushpull, startlow).
  * PA8  - I2C_SCL                      (opendrain, af4).
  * PA9  - PIN9                         (unused).
- * PA10 - EN_EXT_PWR                   (output, pushpull, starthigh).
+ * PA10 - EN_EXT_PWR                   (output, opendrain, starthigh).
  * PA11 - PIN11                        (unused).
  * PA12 - PIN12                        (unused).
  * PA13 - JTMS                         (af0, pulldown).
@@ -299,7 +299,7 @@
                                         PIN_OTYPE_PUSHPULL(GPIOA_BLEED_BATT_2) | \
                                         PIN_OTYPE_OPENDRAIN(GPIOA_I2C_SCL) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN9) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_EN_EXT_PWR) | \
+                                        PIN_OTYPE_OPENDRAIN(GPIOA_EN_EXT_PWR) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN11) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN12) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_JTMS) | \
@@ -498,7 +498,7 @@
  * PC5  - NSHUTDOWN                    (output, pushpull, startlow).
  * PC6  - PIN6                         (unused).
  * PC7  - PIN7                         (unused).
- * PC8  - EN_INT_PWR                   (output, pushpull, starthigh).
+ * PC8  - EN_INT_PWR                   (output, opendrain, starthigh).
  * PC9  - I2C_SDA                      (opendrain, af4).
  * PC10 - PIN10                        (unused).
  * PC11 - PIN11                        (unused).
@@ -531,7 +531,7 @@
                                         PIN_OTYPE_PUSHPULL(GPIOC_NSHUTDOWN) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN6) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN7) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOC_EN_INT_PWR) | \
+                                        PIN_OTYPE_OPENDRAIN(GPIOC_EN_INT_PWR) | \
                                         PIN_OTYPE_OPENDRAIN(GPIOC_I2C_SDA) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN10) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN11) | \
