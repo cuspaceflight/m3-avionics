@@ -1,0 +1,90 @@
+Bill Of Materials
+=================
+
+Source file: m3imu.xml
+Date: 2016-07-05T01:05:53.791050
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+X1     PART            M3_IMU:cusf_logo_small
+X2     PART            agg:M3_MOUNT
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    SFML-110-02-L-D-LC: 
+      J4     EAST BOT        agg:SFML-110-02-L-D-LC
+      J2     WEST BOT        agg:SFML-110-02-L-D-LC
+
+Vendor Specific BOMs
+--------------------
+  RS
+  ~~
+883-7942,2,,1x--MPU-9250--QFN-24-MPU9250--IC4
+
+
+  Digikey
+  ~~~~~~~
+2,FTMH-112-03-L-DV,1x ADIS16405BMLZ ADIS16405BMLZ U1
+
+
+  Farnell
+  ~~~~~~~
+1414575,2,1x 10n 0402
+2064363,2,1x STM32F405RxTx LQFP-64
+2362088,4,2x 2µ2 0402
+2290363,2,1x GRN 0603-LED
+2072575,2,1x 120 0402
+1295310,2,1x USBLC6-2P6 SOT-666
+2506952,2,1x 26M XTAL-20x16
+2314404,2,1x RED 0603-LED
+2496814,2,1x 1µ 0402
+2362662,2,1x MS5611-01BA03 MS5611
+1849515,2,1x ADIS16405BMLZ ADIS16405BMLZ
+9239111,6,3x 100 0402
+1568023,2,1x MICROUSB MICROUSB_MOLEX_475
+2496771,18,9x 100n 0402
+2448755,2,1x MCP2562 DFN-8-EP-MICROCHIP
+2426952,2,1x 4µ7 0402
+2496790,4,2x 10p 0402
+
+
+  Samtec
+  ~~~~~~
+SFML-110-02-L-D-LC,4,2x J4 J2 SFML-110-02-L-D-LC
+
+
+  DigiKey
+  ~~~~~~~
+2,1428-1019-1-ND,1x MPU-9250 QFN-24-MPU9250 IC4
+
+
+Assembly BOM
+------------
+883-7942             1   MPU-9250        QFN-24-MPU9250  IC4
+FTMH-112-03-L-DV     1   ADIS16405BMLZ   ADIS16405BMLZ   U1
+1414575              1   10n             0402            C14
+2064363              1   STM32F405RxTx   LQFP-64         IC1
+2362088              2   2µ2             0402            C10 C11
+2290363              1   GRN             0603-LED        D3
+2072575              1   120             0402            R5
+1295310              1   USBLC6-2P6      SOT-666         D2
+2506952              1   26M             XTAL-20x16      Y1
+2314404              1   RED             0603-LED        D1
+2496814              1   1µ              0402            C6
+2362662              1   MS5611-01BA03   MS5611          IC3
+1849515              1   ADIS16405BMLZ   ADIS16405BMLZ   U1
+9239111              3   100             0402            R1 R2 R4
+1568023              1   MICROUSB        MICROUSB_MOLEX_47589-0001 J1
+2496771              9   100n            0402            C12 C13 C15 C16 C4 C5 C7 C8 C9
+2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC2
+2426952              1   4µ7             0402            C3
+2496790              2   10p             0402            C1 C2
+SFML-110-02-L-D-LC   2   WEST BOT,EAST BOT SFML-110-02-L-D-LC J2 J4
+1428-1019-1-ND       1   MPU-9250        QFN-24-MPU9250  IC4
+
