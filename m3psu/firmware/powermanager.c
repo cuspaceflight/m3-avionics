@@ -121,8 +121,8 @@ THD_FUNCTION(powermanager_thread, arg){
         can_data[6] = (uint8_t) ((LTC3887s[idx].pout_2 * 100.0f) / 2.0f);;
         can_data[7] = 0;
 
-        can_send(CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12 + idx,
-                 false, can_data, 8);
+        uint8_t base_id = CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12 >> 5;
+        can_send(CAN_ID_M3PSU | (CAN_MSG_ID((base_id + idx))), false, can_data, 8);
       }
       chThdSleepMilliseconds(1);
     }

@@ -59,7 +59,7 @@ def process_frame(frame):
     elif (frame.sid >= m3psu_msg_channel_status_1_2
             and frame.sid <= m3psu_msg_channel_status_11_12):
         floats = list(map(float, frame.data))
-        first_channel_id = (frame.sid >> 5) - (m3psu_msg_channel_status_1_2 >> 5)
+        first_channel_id = 2*((frame.sid >> 5) - (m3psu_msg_channel_status_1_2 >> 5))
         channels[first_channel_id] = [floats[0]*0.03, floats[1]*0.003, floats[2]*0.02]
         channels[first_channel_id + 1] = [floats[4]*0.03, floats[5]*0.003, floats[6]*0.02]
     elif frame.sid == m3psu_msg_charger_status:
