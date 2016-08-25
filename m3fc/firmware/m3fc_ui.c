@@ -3,8 +3,6 @@
 #include "m3fc_ui.h"
 #include "m3fc_status.h"
 
-/*static uint8_t leds_ok_count = 0, leds_warn_count = 0, leds_err_count = 0;*/
-
 static PWMConfig pwm_cfg = {
     .frequency = 80000,
     .period = 20,
@@ -35,9 +33,18 @@ static THD_FUNCTION(leds_thd, arg) {
     chRegSetThreadName("ui_leds");
     palClearLine(LINE_LED_RED);
     while(true) {
-        palClearLine(LINE_LED_YLW);
+        uint8_t status = m3status_get();
+        if(status == M3STATUS_OK) {
+            palSetLine(LINE_LED_GRN);
+        } else if(status == M3STATUS_INITIALISING) {
+            palSetLine(LINE_LED_YLW);
+        } else if(status == M3STATUS_ERROR) {
+            palSetLine(LINE_LED_RED);
+        }
         chThdSleepMilliseconds(300);
+        palClearLine(LINE_LED_GRN);
         palClearLine(LINE_LED_YLW);
+        palClearLine(LINE_LED_RED);
         chThdSleepMilliseconds(300);
         m3status_set_ok(M3FC_COMPONENT_UI_LEDS);
     }
@@ -49,17 +56,11 @@ static THD_FUNCTION(beeper_thd, arg) {
     chRegSetThreadName("ui_beeper");
     pwmStart(&PWMD5, &pwm_cfg);
     while(true) {
+        /* TODO check pyro armed and supply then beep appropriately */
         pwmDisableChannel(&PWMD5, 0);
-        /*pwmEnableChannel(&PWMD5, 0, 10);*/
-        chThdSleepMilliseconds(100);
-        pwmDisableChannel(&PWMD5, 0);
-        chThdSleepMilliseconds(100);
+        chThdSleepMilliseconds(500);
         m3status_set_ok(M3FC_COMPONENT_UI_BEEPER);
     }
-}
-
-void m3fc_ui_beep(uint8_t freq) {
-    (void)freq;
 }
 
 void m3fc_ui_init() {
