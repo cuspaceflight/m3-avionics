@@ -5,7 +5,7 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16
+  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16
 endif
 
 # C specific options here (added to USE_OPT).
@@ -83,7 +83,7 @@ endif
 #
 
 # Define project name here
-PROJECT = m3template
+PROJECT = m3pyro
 
 # Imported source files and paths
 CHIBIOS = ../../shared/ChibiOS
@@ -117,6 +117,7 @@ CSRC = $(STARTUPSRC) \
        $(TESTSRC) \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
+       m3pyro_continuity.c m3pyro_arming.c m3pyro_firing.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -223,7 +224,7 @@ include $(RULESPATH)/rules.mk
 ##############################################################################
 # M3Debug flashing via GDB
 #
-BMP_PORT = $(wildcard /dev/serial/by-id/usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00)
+BMP_PORT = $(wildcard /dev/serial/by-id/*m3debug*-if00)
 JTAG_SCAN = python3 ../../shared/jtag_scan/jtag_scan.py
 flash: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb --batch \

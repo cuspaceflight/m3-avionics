@@ -56,10 +56,7 @@
  *          The value one is not valid, timeouts are rounded up to
  *          this value.
  */
-#define CH_CFG_ST_TIMEDELTA                 2
-
-/* Enable wait-for-interrupt sleep during idle */
-#define CORTEX_ENABLE_WFI_IDLE TRUE
+#define CH_CFG_ST_TIMEDELTA                 0
 
 /** @} */
 
@@ -104,7 +101,7 @@
  *          function becomes the idle thread and must implement an
  *          infinite loop.
  */
-#define CH_CFG_NO_IDLE_THREAD               FALSE
+#define CH_CFG_NO_IDLE_THREAD               TRUE
 
 /** @} */
 
@@ -141,7 +138,7 @@
  *
  * @note    The default is @p TRUE.
  */
-#define CH_CFG_USE_TM                       TRUE
+#define CH_CFG_USE_TM                       FALSE
 
 /**
  * @brief   Threads registry APIs.
@@ -328,7 +325,7 @@
  *
  * @note    The default is @p FALSE.
  */
-#define CH_DBG_STATISTICS                   TRUE
+#define CH_DBG_STATISTICS                   FALSE
 
 /**
  * @brief   Debug option, system state check.

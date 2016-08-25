@@ -13,6 +13,11 @@
 
 #define CAN_MSG_ID(x)    (x<<5)
 
+#define CAN_MSG_ID_VERSION                  CAN_MSG_ID(63)
+#define CAN_MSG_ID_STATUS                   CAN_MSG_ID(0)
+
+extern uint8_t m3can_own_id;
+
 // Fill out known CAN message IDs here, so all boards can know about them
 /* M3RADIO */
 
@@ -36,10 +41,11 @@
 
 
 /* M3PYRO */
-#define CAN_MSG_ID_M3PYRO_ARM_STATUS        (CAN_ID_M3PYRO | CAN_MSG_ID(16))
-#define CAN_MSG_ID_M3PYRO_ARM_COMMAND       (CAN_ID_M3PYRO | CAN_MSG_ID(2))
-#define CAN_MSG_ID_M3PYRO_CONTINUITY        (CAN_ID_M3PYRO | CAN_MSG_ID(48))
 #define CAN_MSG_ID_M3PYRO_FIRE_COMMAND      (CAN_ID_M3PYRO | CAN_MSG_ID(1))
+#define CAN_MSG_ID_M3PYRO_ARM_COMMAND       (CAN_ID_M3PYRO | CAN_MSG_ID(2))
+#define CAN_MSG_ID_M3PYRO_FIRE_STATUS       (CAN_ID_M3PYRO | CAN_MSG_ID(16))
+#define CAN_MSG_ID_M3PYRO_ARM_STATUS        (CAN_ID_M3PYRO | CAN_MSG_ID(17))
+#define CAN_MSG_ID_M3PYRO_CONTINUITY        (CAN_ID_M3PYRO | CAN_MSG_ID(48))
 #define CAN_MSG_ID_M3PYRO_SUPPLY_STATUS     (CAN_ID_M3PYRO | CAN_MSG_ID(49))
 
 
@@ -47,7 +53,7 @@
 // Define this function somewhere else and fill it out
 void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
-void can_init(void);
+void can_init(uint8_t board_id);
 void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
 #endif /* _M3CAN_H */
