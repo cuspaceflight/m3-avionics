@@ -1,8 +1,13 @@
 #include "m3fc_config.h"
 #include "m3can.h"
 #include "m3fc_status.h"
+#include "m3fc_flash.h"
+
+#define M3FC_CONFIG_FLASH (0x080d9400)
 
 struct m3fc_config m3fc_config;
+static bool m3fc_config_load(void);
+static void m3fc_config_save(void) __attribute__((used));
 
 static THD_WORKING_AREA(m3fc_config_reporter_thd_wa, 256);
 static THD_FUNCTION(m3fc_config_reporter_thd, arg) {
@@ -20,9 +25,29 @@ static THD_FUNCTION(m3fc_config_reporter_thd, arg) {
     }
 }
 
+static bool m3fc_config_load()
+{
+    return m3fc_flash_read((uint32_t*)M3FC_CONFIG_FLASH,
+                           (uint32_t*)&m3fc_config, sizeof(m3fc_config)>>2);
+}
+
+static void m3fc_config_save() {
+    /* Write flash */
+    m3fc_flash_write((uint32_t*)&m3fc_config,
+                     (uint32_t*)M3FC_CONFIG_FLASH, sizeof(m3fc_config)>>2);
+}
+
 void m3fc_config_init() {
     m3status_set_init(M3FC_COMPONENT_CFG);
+
+    if(m3fc_config_load()) {
+        m3status_set_ok(M3FC_COMPONENT_CFG);
+    } else {
+        m3status_set_error(M3FC_COMPONENT_CFG, M3FC_ERROR_CFG_READ);
+        return;
+    }
+
     chThdCreateStatic(m3fc_config_reporter_thd_wa,
                       sizeof(m3fc_config_reporter_thd_wa),
-                      NORMALPRIO-10, m3fc_config_reporter_thd, NULL);
+                      NORMALPRIO, m3fc_config_reporter_thd, NULL);
 }

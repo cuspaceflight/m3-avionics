@@ -117,7 +117,7 @@ CSRC = $(STARTUPSRC) \
        $(TESTSRC) \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
-	   m3fc_ui.c m3fc_config.c \
+	   m3fc_ui.c m3fc_config.c m3fc_flash.c \
        ms5611.c adxl345.c main.c \
 	   #m3fc_mission.c m3fc_state_estimation.c \
 

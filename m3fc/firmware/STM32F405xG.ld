@@ -19,7 +19,7 @@
  */
 MEMORY
 {
-    flash : org = 0x08000000, len = 1024k
+    flash : org = 0x08000000, len = 896k    /* 1024k - 128k sector 11 */
     ram0  : org = 0x20000000, len = 128k    /* SRAM1 + SRAM2 */
     ram1  : org = 0x20000000, len = 112k    /* SRAM1 */
     ram2  : org = 0x2001C000, len = 16k     /* SRAM2 */
