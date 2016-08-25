@@ -8,7 +8,7 @@
 #include "m3fc_state_estimation.h"
 
 /* Kalman filter state and covariance storage */
-static float x[3]    = {1180.0f, 0.0f, 0.0f};
+static float x[3]    = {0.0f, 0.0f, 0.0f};
 static float p[3][3] = {{250.0f, 0.0f, 0.0f},
                         {  0.0f, 0.1f, 0.0f},
                         {  0.0f, 0.0f, 0.1f}};
