@@ -34,11 +34,19 @@ static const EXTConfig ext_cfg = {{
 }};
 
 int main(void) {
+    /* Allow debug access during WFI sleep */
+    DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
+
+    /* Turn on the watchdog timer, stopped in debug halt */
+    DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_IWDG_STOP;
+    IWDG->KR = 0x5555;
+    IWDG->PR = 3;
+    IWDG->KR = 0xCCCC;
 
     halInit();
     chSysInit();
 
-    can_init();
+    can_init(CAN_ID_M3FC);
 
     m3fc_ui_init();
     ms5611_init(&SPID1, GPIOC, GPIOC_BARO_CS);
@@ -47,6 +55,10 @@ int main(void) {
     extStart(&EXTD1, &ext_cfg);
 
     while (true) {
+        /* Clear the watchdog timer */
+        IWDG->KR = 0xAAAA;
+
+        chThdSleepMilliseconds(100);
     }
 }
 

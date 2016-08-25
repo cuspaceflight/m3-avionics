@@ -116,7 +116,8 @@ CSRC = $(STARTUPSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
        ../../shared/m3can/m3can.c \
-       m3fc_ui.c m3fc_mission.c m3fc_state_estimation.c \
+       ../../shared/m3status/m3status.c \
+	   m3fc_ui.c m3fc_mission.c m3fc_state_estimation.c \
        ms5611.c adxl345.c main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -198,14 +199,14 @@ CPPWARN = -Wall -Wextra -Wundef
 #
 
 # List all user C define here, like -D_DEBUG=1
-FIRMWAREVERSION := $(shell git describe --abbrev=8 --always)
+GITVERSION := $(shell git describe --abbrev=8 --always)
 UDEFS = -DFIRMWARE_VERSION=\"$(GITVERSION)\"
 
 # Define ASM defines here
 UADEFS =
 
 # List all user directories here
-UINCDIR = ../../shared/m3can/
+UINCDIR = ../../shared/m3can/ ../../shared/m3status/
 
 # List the user directory to look for the libraries here
 ULIBDIR =
