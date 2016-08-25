@@ -115,8 +115,9 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
-	   ../../shared/m3can/m3can.c \
-	   m3pyro_continuity.c m3pyro_arming.c m3pyro_firing.c \
+       ../../shared/m3can/m3can.c \
+       ../../shared/m3status/m3status.c \
+       m3pyro_continuity.c m3pyro_arming.c m3pyro_firing.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -148,8 +149,7 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(CHIBIOS)/os/various \
-		 ../../shared/m3can
+         $(CHIBIOS)/os/various
 
 #
 # Project, sources and paths
@@ -199,13 +199,14 @@ CPPWARN = -Wall -Wextra -Wundef
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+GITVERSION := $(shell git describe --abbrev=8 --always)
+UDEFS = -DFIRMWARE_VERSION=\"$(GITVERSION)\"
 
 # Define ASM defines here
 UADEFS =
 
 # List all user directories here
-UINCDIR =
+UINCDIR = ../../shared/m3can/ ../../shared/m3status/
 
 # List the user directory to look for the libraries here
 ULIBDIR =

@@ -7,12 +7,20 @@
 #include "m3pyro_firing.h"
 
 int main(void) {
+    /* Allow debug access during WFI sleep */
     DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
+
+    /* Turn on the watchdog timer, stopped in debug halt */
+    DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_IWDG_STOP;
+    IWDG->KR = 0x5555;
+    IWDG->PR = 3;
+    IWDG->KR = 0xCCCC;
 
     halInit();
     chSysInit();
 
-    can_init();
+    can_init(CAN_ID_M3PYRO);
+    m3status_set_initialising();
 
     palClearLine(LINE_FIRE1);
     palClearLine(LINE_FIRE2);
@@ -24,7 +32,10 @@ int main(void) {
     m3pyro_firing_init();
 
     while (true) {
-        chThdSleep(TIME_INFINITE);
+        /* Clear the watchdog timer */
+        IWDG->KR = 0xAAAA;
+
+        chThdSleepMilliseconds(100);
     }
 }
 
