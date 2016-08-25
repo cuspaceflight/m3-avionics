@@ -9,6 +9,10 @@
 #include "hal.h"
 #include "m3can.h"
 
+#ifndef FIRMWARE_VERSION
+#error "Please check your Makefile sets FIRMWARE_VERSION"
+#endif
+
 
 static const CANConfig cancfg = {
     .mcr =
@@ -68,8 +72,9 @@ static THD_FUNCTION(can_rx_thd, arg) {
 }
 
 
-void can_init(void){
+void can_init(uint8_t board_id){
     canStart(&CAND1, &cancfg);
+    can_send(board_id | CAN_MSG_ID_VERSION, False, FIRMWARE_VERSION, 8);
     chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO,
                       can_rx_thd, NULL);
 }
