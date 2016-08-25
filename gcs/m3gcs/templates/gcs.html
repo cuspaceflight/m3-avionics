@@ -2,13 +2,44 @@
 
 <head>
 <title>M3 GCS</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link rel="stylesheet" href="static/bootstrap.min.css">
+<link rel="stylesheet" href="static/bootstrap-theme.min.css">
+
+<link rel="stylesheet" href="static/webapp.css">
+
+<script src="static/jquery-3.1.0.min.js"></script>
+<script src="static/bootstrap.min.js"></script>
+
+<script src="static/webapp.js" type="text/javascript" language="javascript"></script>
+
 </head>
 <body>
-bla
+
+{% for name in names %}
+<div class="panel panel-default status-panel" id="header-{{ name }}">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ name }}</h3>
+    </div>
+    <div class="panel-body" id="content-{{ name }}">
+        Panel content
+    </div>
+    <div class="panel-footer">Time since last packet: <span id="lasttime-{{ name }}"></span></div>
+</div>
+{% endfor %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Packet Log</h3>
+    </div>
+    <div class="panel-body">
+        <pre id="log-window"></pre>
+    </div>
+</div>
+
 </body>
 
-{{ names }}
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" language="javascript">
+    {% for packet in packets %}
+        console.log("{{ packet }}");
+    {% endfor %}
+</script>

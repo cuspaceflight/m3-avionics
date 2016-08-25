@@ -1,5 +1,7 @@
+from multiprocessing import Manager
 
-global_state = {}
+state_manager = Manager()
+global_state = state_manager.dict()
 
 def update(parent, name, value):
     if parent not in global_state:
