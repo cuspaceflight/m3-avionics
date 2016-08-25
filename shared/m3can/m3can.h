@@ -14,7 +14,7 @@
 #define CAN_MSG_ID(x)    (x<<5)
 
 #define CAN_MSG_ID_VERSION                  CAN_MSG_ID(63)
-#define CAN_MSG_ID_STATUS                   CAN_MGS_ID(0)
+#define CAN_MSG_ID_STATUS                   CAN_MSG_ID(0)
 
 extern uint8_t m3can_own_id;
 
