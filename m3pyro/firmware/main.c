@@ -20,7 +20,6 @@ int main(void) {
     chSysInit();
 
     can_init(CAN_ID_M3PYRO);
-    m3status_set_initialising();
 
     palClearLine(LINE_FIRE1);
     palClearLine(LINE_FIRE2);

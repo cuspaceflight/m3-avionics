@@ -2,6 +2,7 @@
 #include "hal.h"
 #include "m3can.h"
 #include "m3pyro_continuity.h"
+#include "m3pyro_status.h"
 
 static const ADCConversionGroup adc_grp = {
     .circular = false,
@@ -48,8 +49,14 @@ static THD_FUNCTION(m3pyro_continuity_thd, arg)
     while(true) {
         adcsample_t sampbuf[5];
         adcStart(&ADCD1, NULL);
-        adcConvert(&ADCD1, &adc_grp, sampbuf, 1);
+        msg_t result = adcConvert(&ADCD1, &adc_grp, sampbuf, 1);
         adcStop(&ADCD1);
+
+        if(result != MSG_OK) {
+            m3status_set_error(M3PYRO_COMPONENT_CONTINUITY, M3PYRO_ERROR_ADC);
+            chThdSleepMilliseconds(500);
+            continue;
+        }
 
         uint8_t continuities[4];
         continuities[0] = adc_to_resistance(sampbuf[0]);
@@ -64,12 +71,14 @@ static THD_FUNCTION(m3pyro_continuity_thd, arg)
         can_send(CAN_MSG_ID_M3PYRO_SUPPLY_STATUS, false,
                  &supply, 1);
 
+        m3status_set_ok(M3PYRO_COMPONENT_CONTINUITY);
         chThdSleepMilliseconds(500);
     }
 }
 
 void m3pyro_continuity_init()
 {
+    m3status_set_init(M3PYRO_COMPONENT_CONTINUITY);
     chThdCreateStatic(m3pyro_continuity_thd_wa,
                       sizeof(m3pyro_continuity_thd_wa),
                       NORMALPRIO, m3pyro_continuity_thd, NULL);

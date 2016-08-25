@@ -26,6 +26,7 @@ static THD_FUNCTION(m3pyro_firing_reporter_thd, arg) {
 static THD_WORKING_AREA(m3pyro_firing_thd_wa, 256);
 static THD_FUNCTION(m3pyro_firing_thd, arg) {
     (void)arg;
+    uint8_t status_counter = 0;
 
     while(true) {
         uint8_t fire_state[4] = {fire_ch1, fire_ch2, fire_ch3, fire_ch4};
@@ -42,11 +43,19 @@ static THD_FUNCTION(m3pyro_firing_thd, arg) {
                 palToggleLine(fire_line[i]);
             }
         }
+
+        /* Send status OK every 1s */
+        if(status_counter++ == 100) {
+            m3status_set_ok(M3PYRO_COMPONENT_FIRING);
+            status_counter = 0;
+        }
+
         chThdSleepMilliseconds(10);
     }
 }
 
 void m3pyro_firing_init() {
+    m3status_set_init(M3PYRO_COMPONENT_FIRING);
     chThdCreateStatic(m3pyro_firing_thd_wa, sizeof(m3pyro_firing_thd_wa),
                       HIGHPRIO, m3pyro_firing_thd, NULL);
     chThdCreateStatic(m3pyro_firing_reporter_thd_wa,
@@ -60,5 +69,7 @@ void m3pyro_firing_fire(uint8_t ch1, uint8_t ch2, uint8_t ch3, uint8_t ch4) {
         fire_ch2 = ch2;
         fire_ch3 = ch3;
         fire_ch4 = ch4;
+    } else {
+        fire_ch1 = fire_ch2 = fire_ch3 = fire_ch4 = 0;
     }
 }
