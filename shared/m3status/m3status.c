@@ -2,10 +2,6 @@
 #include "m3status.h"
 #include "m3can.h"
 
-#define M3STATUS_OK                 (0)
-#define M3STATUS_INITIALISING       (1<<0)
-#define M3STATUS_ERROR              (1<<1)
-
 static uint8_t components[256] = {0};
 
 static void m3status_set(uint8_t component, uint8_t status, uint8_t errorcode);
@@ -30,14 +26,7 @@ static void m3status_set(uint8_t component, uint8_t status, uint8_t errorcode)
     components[component] = status;
 
     /* Compute overall status as highest of all components */
-    uint8_t overall_status = 0;
-    int i;
-    for(i=0; i<256; i++) {
-        overall_status |= components[component];
-    }
-    if(overall_status && M3STATUS_ERROR) {
-        overall_status = M3STATUS_ERROR;
-    }
+    uint8_t overall_status = m3status_get();
 
     uint8_t data[4] = {overall_status, component, status, errorcode};
     uint8_t len = 3;
@@ -46,4 +35,20 @@ static void m3status_set(uint8_t component, uint8_t status, uint8_t errorcode)
     }
 
     can_send(m3can_own_id | CAN_MSG_ID_STATUS, false, data, len);
+}
+
+uint8_t m3status_get_component(uint8_t component) {
+    return components[component];
+}
+
+uint8_t m3status_get() {
+    uint8_t overall_status = 0;
+    int i;
+    for(i=0; i<256; i++) {
+        overall_status |= components[component];
+    }
+    if(overall_status && M3STATUS_ERROR) {
+        overall_status = M3STATUS_ERROR;
+    }
+    return overall_status();
 }
