@@ -7,6 +7,12 @@ int main(void) {
     /* Allow debug access during WFI sleep */
     DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
 
+    /* Turn on the watchdog timer, stopped in debug halt */
+    DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_IWDG_STOP;
+    IWDG->KR = 0x5555;
+    IWDG->PR = 3;
+    IWDG->KR = 0xCCCC;
+
     /* Initialise ChibiOS */
     halInit();
     chSysInit();
@@ -15,6 +21,9 @@ int main(void) {
     can_init(CAN_ID_M3TEMPLATE);
 
     while (true) {
+        /* Clear the watchdog timer */
+        IWDG->KR = 0xAAAA;
+
         chThdSleepMilliseconds(100);
     }
 }
