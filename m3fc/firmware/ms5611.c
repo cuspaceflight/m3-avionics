@@ -1,5 +1,6 @@
 #include "ch.h"
 #include "hal.h"
+#include "m3can.h"
 #include "ms5611.h"
 
 #define MS5611_CMD_RESET                0x1E
@@ -158,24 +159,18 @@ static THD_FUNCTION(ms5611_thd, arg) {
 
     MS5611CalData cal_data;
     int32_t temperature, pressure;
+    int loopcount = 0;
     chRegSetThreadName("MS5611");
     spiStart(ms5611_spid, &spi_cfg);
     ms5611_reset();
     ms5611_read_cal(&cal_data);
     while (true) {
         ms5611_read(&cal_data, &temperature, &pressure);
-        CANTxFrame txmsg = {
-            .IDE = CAN_IDE_STD,
-            .RTR = CAN_RTR_DATA,
-            .DLC = 8,
-            .SID = 2,
-            .data32 = {
-                temperature,
-                pressure
-            }
-        };
-        canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));
-        chThdSleepMilliseconds(50);
+        if(loopcount++ == 100) {
+            uint32_t buf[2] = {temperature, pressure};
+            can_send(CAN_MSG_ID_M3FC_BARO, false, (uint8_t*)buf, 8);
+            loopcount = 0;
+        }
     }
 }
 

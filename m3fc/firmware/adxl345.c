@@ -5,6 +5,7 @@
 
 #include "ch.h"
 #include "hal.h"
+#include "m3can.h"
 #include "adxl345.h"
 
 #define ADXL345_REG_DEVID               0x00
@@ -229,7 +230,7 @@ static THD_FUNCTION(adxl345_thd, arg)
     chRegSetThreadName("ADXL345");
     chBSemObjectInit(&adxl345_thd_sem, false);
     spiStart(adxl345_spid, &spi_cfg);
-    if(!adxl345_self_test()) {
+    while(!adxl345_self_test()) {
         /* TODO: Error handling */
     }
     adxl345_configure();
@@ -239,17 +240,7 @@ static THD_FUNCTION(adxl345_thd, arg)
 
         if(loopcount++ == 100) {
             loopcount = 0;
-            CANTxFrame txmsg = {
-                .IDE = CAN_IDE_STD,
-                .RTR = CAN_RTR_DATA,
-                .DLC = 6,
-                .SID = 1,
-                .data16 = {
-                    accels[0], accels[1], accels[2]
-                }
-            };
-
-            canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));
+            can_send(CAN_MSG_ID_M3FC_ACCEL, false, (uint8_t*)accels, 6);
         }
 
         wait_result = chBSemWaitTimeout(&adxl345_thd_sem, MS2ST(100));
