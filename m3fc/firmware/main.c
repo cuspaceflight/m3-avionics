@@ -3,6 +3,7 @@
 
 #include "m3can.h"
 #include "m3fc_ui.h"
+#include "m3fc_config.h"
 #include "ms5611.h"
 #include "adxl345.h"
 
@@ -49,6 +50,7 @@ int main(void) {
     can_init(CAN_ID_M3FC);
 
     m3fc_ui_init();
+    m3fc_config_init();
     ms5611_init(&SPID1, GPIOC, GPIOC_BARO_CS);
     adxl345_init(&SPID2, GPIOA, GPIOA_ACCEL_CS);
 

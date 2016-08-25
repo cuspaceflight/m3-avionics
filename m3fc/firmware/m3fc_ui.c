@@ -1,6 +1,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "m3fc_ui.h"
+#include "m3fc_status.h"
 
 /*static uint8_t leds_ok_count = 0, leds_warn_count = 0, leds_err_count = 0;*/
 
@@ -38,6 +39,7 @@ static THD_FUNCTION(leds_thd, arg) {
         chThdSleepMilliseconds(300);
         palClearLine(LINE_LED_YLW);
         chThdSleepMilliseconds(300);
+        m3status_set_ok(M3FC_COMPONENT_UI_LEDS);
     }
 }
 
@@ -52,6 +54,7 @@ static THD_FUNCTION(beeper_thd, arg) {
         chThdSleepMilliseconds(100);
         pwmDisableChannel(&PWMD5, 0);
         chThdSleepMilliseconds(100);
+        m3status_set_ok(M3FC_COMPONENT_UI_BEEPER);
     }
 }
 
@@ -60,6 +63,8 @@ void m3fc_ui_beep(uint8_t freq) {
 }
 
 void m3fc_ui_init() {
+    m3status_set_init(M3FC_COMPONENT_UI_BEEPER);
+    m3status_set_init(M3FC_COMPONENT_UI_LEDS);
     chThdCreateStatic(leds_thd_wa, sizeof(leds_thd_wa),
                       NORMALPRIO, leds_thd, NULL);
     chThdCreateStatic(beeper_thd_wa, sizeof(beeper_thd_wa),

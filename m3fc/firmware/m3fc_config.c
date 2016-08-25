@@ -9,7 +9,7 @@ static THD_FUNCTION(m3fc_config_reporter_thd, arg) {
     (void)arg;
 
     while(true) {
-        /* Send current config over CAN */
+        /* Send current config over CAN every 5s */
         can_send(CAN_MSG_ID_M3FC_CFG_PROFILE, false,
                  (uint8_t*)&m3fc_config.profile, 8);
         can_send(CAN_MSG_ID_M3FC_CFG_PYROS, false,
