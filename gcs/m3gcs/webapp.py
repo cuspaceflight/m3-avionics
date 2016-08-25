@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, render_template
 
-from . import state, command
+from . import state, command_processor
 from .packets import registered_packets, registered_commands
 
 app = Flask(__name__, static_url_path="")
@@ -20,4 +20,4 @@ def getstate():
 
 @app.route("/command")
 def sendcommand():
-    command.process(request.getjson())
+    command_processor.process(request.getjson())

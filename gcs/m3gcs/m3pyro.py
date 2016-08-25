@@ -2,7 +2,7 @@ from .packets import register_packet, register_command
 
 
 def msg_id(x):
-    return x >> 5
+    return x << 5
 
 
 CAN_ID_M3PYRO = 2
