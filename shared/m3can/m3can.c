@@ -13,6 +13,8 @@
 #error "Please check your Makefile sets FIRMWARE_VERSION"
 #endif
 
+uint8_t m3can_own_id = 0;
+
 
 static const CANConfig cancfg = {
     .mcr =
@@ -72,7 +74,8 @@ static THD_FUNCTION(can_rx_thd, arg) {
 }
 
 
-void can_init(uint8_t board_id){
+void can_init(uint8_t board_id) {
+    m3can_own_id = board_id;
     canStart(&CAND1, &cancfg);
     can_send(board_id | CAN_MSG_ID_VERSION, False, FIRMWARE_VERSION, 8);
     chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO,

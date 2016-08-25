@@ -116,6 +116,7 @@ CSRC = $(STARTUPSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
        ../../shared/m3can/m3can.c \
+       ../../shared/m3status/m3status.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -204,7 +205,7 @@ UDEFS = -DFIRMWARE_VERSION=\"$(GITVERSION)\"
 UADEFS =
 
 # List all user directories here
-UINCDIR = ../../shared/m3can/
+UINCDIR = ../../shared/m3can/ ../../shared/m3status/
 
 # List the user directory to look for the libraries here
 ULIBDIR =
