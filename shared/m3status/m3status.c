@@ -45,10 +45,10 @@ uint8_t m3status_get() {
     uint8_t overall_status = 0;
     int i;
     for(i=0; i<256; i++) {
-        overall_status |= components[component];
+        overall_status |= components[i];
     }
     if(overall_status && M3STATUS_ERROR) {
         overall_status = M3STATUS_ERROR;
     }
-    return overall_status();
+    return overall_status;
 }
