@@ -21,8 +21,8 @@ int main(void) {
     /* Turn on the CAN system and send a packet with our firmware version */
     can_init(CAN_ID_M3TEMPLATE);
 
-    /* Send an "initialising" packet */
-    m3status_set_initialising();
+    /* Inside each thread, do this: */
+    /* m3status_set_init(M3TEMPLATE_COMPONENT_BLA); */
 
     while (true) {
         /* Clear the watchdog timer */
