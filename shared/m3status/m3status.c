@@ -14,7 +14,7 @@ void m3status_set_ok(uint8_t component) {
     m3status_set(component, M3STATUS_OK, 0);
 }
 
-void m3status_set_initialising(uint8_t component) {
+void m3status_set_init(uint8_t component) {
     m3status_set(component, M3STATUS_INITIALISING, 0);
 }
 
