@@ -34,6 +34,10 @@ extern uint8_t m3can_own_id;
 #define CAN_MSG_ID_M3FC_SE_A                (CAN_ID_M3FC | CAN_MSG_ID(51))
 #define CAN_MSG_ID_M3FC_CFG_PROFILE         (CAN_ID_M3FC | CAN_MSG_ID(52))
 #define CAN_MSG_ID_M3FC_CFG_PYROS           (CAN_ID_M3FC | CAN_MSG_ID(53))
+#define CAN_MSG_ID_M3FC_SET_CFG_PROFILE     (CAN_ID_M3FC | CAN_MSG_ID(1))
+#define CAN_MSG_ID_M3FC_SET_CFG_PYROS       (CAN_ID_M3FC | CAN_MSG_ID(2))
+#define CAN_MSG_ID_M3FC_LOAD_CFG            (CAN_ID_M3FC | CAN_MSG_ID(3))
+#define CAN_MSG_ID_M3FC_SAVE_CFG            (CAN_ID_M3FC | CAN_MSG_ID(4))
 
 
 /* M3DL */

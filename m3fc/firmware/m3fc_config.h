@@ -2,6 +2,7 @@
 #define M3FC_CONFIG_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 struct m3fc_config {
 
@@ -43,5 +44,7 @@ struct m3fc_config {
 extern struct m3fc_config m3fc_config;
 
 void m3fc_config_init(void);
+void m3fc_config_save(void);
+bool m3fc_config_load(void);
 
 #endif

@@ -5,4 +5,7 @@
  * the current m3status */
 void m3fc_ui_init(void);
 
+/* Sets whether the beeper should indicate "armed" or "disarmed" */
+void m3fc_ui_set_armed(bool armed);
+
 #endif

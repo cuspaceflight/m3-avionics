@@ -27,6 +27,8 @@ static PWMConfig pwm_cfg = {
     },
 };
 
+static bool m3fc_ui_armed = false;
+
 static THD_WORKING_AREA(leds_thd_wa, 128);
 static THD_FUNCTION(leds_thd, arg) {
     (void)arg;
@@ -53,12 +55,19 @@ static THD_FUNCTION(leds_thd, arg) {
 static THD_WORKING_AREA(beeper_thd_wa, 128);
 static THD_FUNCTION(beeper_thd, arg) {
     (void)arg;
+    int delay = 0;
     chRegSetThreadName("ui_beeper");
     pwmStart(&PWMD5, &pwm_cfg);
     while(true) {
-        /* TODO check pyro armed and supply then beep appropriately */
+        if(m3fc_ui_armed) {
+            delay = 100;
+        } else {
+            delay = 700;
+        }
+        pwmEnableChannel(&PWMD5, 0, 10);
+        chThdSleepMilliseconds(100);
         pwmDisableChannel(&PWMD5, 0);
-        chThdSleepMilliseconds(500);
+        chThdSleepMilliseconds(delay);
         m3status_set_ok(M3FC_COMPONENT_UI_BEEPER);
     }
 }
@@ -70,4 +79,8 @@ void m3fc_ui_init() {
                       NORMALPRIO, leds_thd, NULL);
     chThdCreateStatic(beeper_thd_wa, sizeof(beeper_thd_wa),
                       NORMALPRIO, beeper_thd, NULL);
+}
+
+void m3fc_ui_set_armed(bool armed) {
+    m3fc_ui_armed = armed;
 }
