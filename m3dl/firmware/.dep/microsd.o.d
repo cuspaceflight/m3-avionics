@@ -1,6 +1,4 @@
-build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
- ../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h \
- /usr/lib/gcc/arm-none-eabi/5.4.1/include/stddef.h \
+build/obj/microsd.o: microsd.c \
  /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdint.h \
  /usr/arm-none-eabi/include/stdint.h \
  /usr/arm-none-eabi/include/machine/_default_types.h \
@@ -8,7 +6,34 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
  /usr/arm-none-eabi/include/_newlib_version.h \
  /usr/arm-none-eabi/include/sys/_intsup.h \
  /usr/arm-none-eabi/include/sys/_stdint.h \
- /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdbool.h chconf.h \
+ /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdbool.h microsd.h \
+ /usr/arm-none-eabi/include/stdio.h /usr/arm-none-eabi/include/_ansi.h \
+ /usr/arm-none-eabi/include/newlib.h \
+ /usr/arm-none-eabi/include/sys/config.h \
+ /usr/arm-none-eabi/include/machine/ieeefp.h \
+ /usr/arm-none-eabi/include/sys/cdefs.h \
+ /usr/lib/gcc/arm-none-eabi/5.4.1/include/stddef.h \
+ /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdarg.h \
+ /usr/arm-none-eabi/include/sys/reent.h \
+ /usr/arm-none-eabi/include/_ansi.h \
+ /usr/arm-none-eabi/include/sys/_types.h \
+ /usr/arm-none-eabi/include/machine/_types.h \
+ /usr/arm-none-eabi/include/sys/lock.h \
+ /usr/arm-none-eabi/include/sys/types.h \
+ /usr/arm-none-eabi/include/machine/endian.h \
+ /usr/arm-none-eabi/include/machine/_endian.h \
+ /usr/arm-none-eabi/include/sys/select.h \
+ /usr/arm-none-eabi/include/sys/_sigset.h \
+ /usr/arm-none-eabi/include/sys/_timeval.h \
+ /usr/arm-none-eabi/include/sys/timespec.h \
+ /usr/arm-none-eabi/include/sys/_timespec.h \
+ /usr/arm-none-eabi/include/machine/types.h \
+ /usr/arm-none-eabi/include/sys/stdio.h \
+ /usr/arm-none-eabi/include/string.h \
+ /usr/arm-none-eabi/include/sys/string.h \
+ ../../shared/ChibiOS/ext/fatfs/src/integer.h ffconf.h \
+ ../../shared/ChibiOS/os/rt/include/ch.h \
+ ../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h chconf.h \
  ../../shared/ChibiOS/os/rt/include/chlicense.h \
  ../../shared/ChibiOS/os/rt/include/chsystypes.h \
  ../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore.h \
@@ -42,6 +67,8 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
  ../../shared/ChibiOS/os/rt/include/chdynamic.h \
  ../../shared/ChibiOS/os/rt/include/chqueues.h \
  ../../shared/ChibiOS/os/rt/include/chstreams.h \
+ ../../shared/ChibiOS/ext/fatfs/src/ff.h \
+ ../../shared/ChibiOS/ext/fatfs/src/integer.h ffconf.h \
  ../../shared/ChibiOS/os/hal/include/hal.h \
  ../../shared/ChibiOS/os/hal/osal/rt/osal.h halconf.h mcuconf.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/hal_lld.h \
@@ -90,14 +117,8 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/st_lld.h mcuconf.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
  ../../shared/ChibiOS/os/hal/include/mmc_spi.h \
- ../../shared/ChibiOS/os/hal/include/serial_usb.h LTC2983.h err_handler.h \
- logging.h
-
-../../shared/ChibiOS/os/rt/include/ch.h:
-
-../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h:
-
-/usr/lib/gcc/arm-none-eabi/5.4.1/include/stddef.h:
+ ../../shared/ChibiOS/os/hal/include/serial_usb.h \
+ ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h err_handler.h
 
 /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdint.h:
 
@@ -114,6 +135,66 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
 /usr/arm-none-eabi/include/sys/_stdint.h:
 
 /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdbool.h:
+
+microsd.h:
+
+/usr/arm-none-eabi/include/stdio.h:
+
+/usr/arm-none-eabi/include/_ansi.h:
+
+/usr/arm-none-eabi/include/newlib.h:
+
+/usr/arm-none-eabi/include/sys/config.h:
+
+/usr/arm-none-eabi/include/machine/ieeefp.h:
+
+/usr/arm-none-eabi/include/sys/cdefs.h:
+
+/usr/lib/gcc/arm-none-eabi/5.4.1/include/stddef.h:
+
+/usr/lib/gcc/arm-none-eabi/5.4.1/include/stdarg.h:
+
+/usr/arm-none-eabi/include/sys/reent.h:
+
+/usr/arm-none-eabi/include/_ansi.h:
+
+/usr/arm-none-eabi/include/sys/_types.h:
+
+/usr/arm-none-eabi/include/machine/_types.h:
+
+/usr/arm-none-eabi/include/sys/lock.h:
+
+/usr/arm-none-eabi/include/sys/types.h:
+
+/usr/arm-none-eabi/include/machine/endian.h:
+
+/usr/arm-none-eabi/include/machine/_endian.h:
+
+/usr/arm-none-eabi/include/sys/select.h:
+
+/usr/arm-none-eabi/include/sys/_sigset.h:
+
+/usr/arm-none-eabi/include/sys/_timeval.h:
+
+/usr/arm-none-eabi/include/sys/timespec.h:
+
+/usr/arm-none-eabi/include/sys/_timespec.h:
+
+/usr/arm-none-eabi/include/machine/types.h:
+
+/usr/arm-none-eabi/include/sys/stdio.h:
+
+/usr/arm-none-eabi/include/string.h:
+
+/usr/arm-none-eabi/include/sys/string.h:
+
+../../shared/ChibiOS/ext/fatfs/src/integer.h:
+
+ffconf.h:
+
+../../shared/ChibiOS/os/rt/include/ch.h:
+
+../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h:
 
 chconf.h:
 
@@ -184,6 +265,12 @@ board.h:
 ../../shared/ChibiOS/os/rt/include/chqueues.h:
 
 ../../shared/ChibiOS/os/rt/include/chstreams.h:
+
+../../shared/ChibiOS/ext/fatfs/src/ff.h:
+
+../../shared/ChibiOS/ext/fatfs/src/integer.h:
+
+ffconf.h:
 
 ../../shared/ChibiOS/os/hal/include/hal.h:
 
@@ -289,8 +376,6 @@ mcuconf.h:
 
 ../../shared/ChibiOS/os/hal/include/serial_usb.h:
 
-LTC2983.h:
+../../shared/ChibiOS/os/hal/lib/streams/chprintf.h:
 
 err_handler.h:
-
-logging.h:
