@@ -4,6 +4,9 @@
 #include "m3can.h"
 #include "m3fc_ui.h"
 #include "m3fc_config.h"
+#include "m3fc_status.h"
+#include "m3fc_mission.h"
+#include "m3fc_state_estimation.h"
 #include "ms5611.h"
 #include "adxl345.h"
 
@@ -53,6 +56,9 @@ int main(void) {
     m3fc_config_init();
     ms5611_init(&SPID1, GPIOC, GPIOC_BARO_CS);
     adxl345_init(&SPID2, GPIOA, GPIOA_ACCEL_CS);
+
+    m3fc_state_estimation_init();
+    m3fc_mission_init();
 
     extStart(&EXTD1, &ext_cfg);
 
