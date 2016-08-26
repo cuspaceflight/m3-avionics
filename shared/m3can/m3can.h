@@ -20,6 +20,10 @@ extern uint8_t m3can_own_id;
 
 // Fill out known CAN message IDs here, so all boards can know about them
 /* M3RADIO */
+#define CAN_MSG_ID_M3RADIO_GPS_LATLNG       (CAN_ID_M3RADIO | CAN_MSG_ID(48))
+#define CAN_MSG_ID_M3RADIO_GPS_ALT          (CAN_ID_M3RADIO | CAN_MSG_ID(49))
+#define CAN_MSG_ID_M3RADIO_GPS_TIME         (CAN_ID_M3RADIO | CAN_MSG_ID(50))
+#define CAN_MSG_ID_M3RADIO_GPS_STATUS       (CAN_ID_M3RADIO | CAN_MSG_ID(51))
 
 
 /* M3PSU */

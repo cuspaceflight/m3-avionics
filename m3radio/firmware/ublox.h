@@ -6,6 +6,9 @@
 #ifndef UBLOX_H
 #define UBLOX_H
 
+#include <stdint.h>
+#include "hal.h"
+
 typedef struct __attribute__((packed)) {
     uint32_t i_tow;
     uint16_t year;

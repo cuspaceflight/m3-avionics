@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "ublox.h"
 #include "ch.h"
 #include "hal.h"
@@ -197,6 +198,14 @@ typedef struct __attribute__((packed)) {
     uint8_t ck_a, ck_b;
 } ubx_nav_pvt_t;
 
+static uint16_t ublox_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n);
+static void ublox_checksum(uint8_t *buf);
+static void ublox_rxchar(UARTDriver* uartp, uint16_t c);
+static void ublox_rxerr(UARTDriver* uartdp, uartflags_t e);
+static bool ublox_transmit(uint8_t *buf);
+static void ublox_state_machine(uint8_t c);
+static bool ublox_configure(void);
+
 static UARTConfig uart_cfg = {
     .txend1_cb = NULL,
     .txend2_cb = NULL,
@@ -209,17 +218,10 @@ static UARTConfig uart_cfg = {
     .cr3 = 0,
 };
 
-static uint16_t ublox_fletcher_8(uint8_t *buf, uint8_t n);
-static void ublox_checksum(uint8_t *buf);
-static void ublox_rxchar(UARTDriver* uartp, uint16_t c);
-static void ublox_rxerr(UARTDriver* uartdp, uartflags_t e);
-static bool_t ublox_transmit(uint8_t *buf);
-static void ublox_state_machine(uint8_t c);
-static bool_t ublox_configure(uint8_t *buf, size_t bufsize);
-
 /* Run the Fletcher-8 checksum, initialised to chk, over n bytes of buf */
 static uint16_t ublox_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n)
 {
+    int i;
     uint8_t ck_a = chk, ck_b = chk>>8;
 
     /* Run Fletcher-8 algorithm */
@@ -236,7 +238,7 @@ static uint16_t ublox_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n)
  */
 static void ublox_checksum(uint8_t *buf)
 {
-    uint16_t plen, i;
+    uint16_t plen;
 
     /* Check SYNC bytes are correct */
     if(buf[0] != UBX_SYNC1 && buf[1] != UBX_SYNC2)
@@ -256,7 +258,7 @@ static void ublox_checksum(uint8_t *buf)
  * Message length is determined from the UBX length field.
  * Checksum is added automatically.
  */
-static bool_t ublox_transmit(uint8_t *buf)
+static bool ublox_transmit(uint8_t *buf)
 {
     size_t n;
     systime_t timeout;
@@ -271,12 +273,12 @@ static bool_t ublox_transmit(uint8_t *buf)
 
     /* Transmit message */
     rv = uartSendTimeout(ublox_uartd, &n, buf, timeout);
-    if(rv != RDY_OK) {
+    if(rv != MSG_OK) {
         m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                            M3RADIO_ERROR_UBLOX_TIMEOUT);
     }
 
-    return rv == RDY_OK;
+    return rv == MSG_OK;
 }
 
 static void ublox_rxchar(UARTDriver* uartp, uint16_t c) {
@@ -290,19 +292,28 @@ static void ublox_rxerr(UARTDriver* uartdp, uartflags_t e) {
     m3status_set_error(M3RADIO_COMPONENT_UBLOX, M3RADIO_ERROR_UBLOX_UARTERR);
 }
 
+static void ublox_can_send_pvt(ublox_pvt_t *pvt) {
+    can_send_i32(CAN_MSG_ID_M3RADIO_GPS_LATLNG, pvt->lat, pvt->lon, 2);
+    can_send_i32(CAN_MSG_ID_M3RADIO_GPS_ALT, pvt->height, pvt->h_msl, 2);
+    can_send_u8(CAN_MSG_ID_M3RADIO_GPS_TIME, pvt->year, pvt->year>>8,
+                pvt->month, pvt->day, pvt->hour, pvt->minute, pvt->second,
+                pvt->valid, 8);
+    can_send_u8(CAN_MSG_ID_M3RADIO_GPS_STATUS, pvt->fix_type, pvt->flags,
+                pvt->num_sv, 0, 0, 0, 0, 0, 3);
+}
+
 /* Run new byte b through the UBX decoding state machine. Note that this
  * function preserves static state and processes new messages as appropriate
  * once received.
  */
 static void ublox_state_machine(uint8_t b)
 {
-    size_t i;
     static ubx_state state = STATE_IDLE;
 
     static uint8_t class, id;
     static uint16_t length;
     static uint16_t length_remaining;
-    static char payload[128];
+    static uint8_t payload[128];
     static uint8_t ck_a, ck_b;
     static uint16_t ck;
 
@@ -391,18 +402,12 @@ static void ublox_state_machine(uint8_t b)
                     }
                     break;
                 case UBX_NAV:
-                    if(id == 0x07) {
+                    if(id == UBX_NAV_PVT) {
                         /* PVT */
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt, payload, length);
-                        /*m2status_set_gps_time(*/
-                            /*pvt.year&0xFF, (pvt.year>>8)&0xFF,*/
-                            /*pvt.month, pvt.day, pvt.hour, pvt.minute,*/
-                            /*pvt.second, pvt.valid);*/
-                        /*m2status_set_gps_pos(pvt.lat, pvt.lon);*/
-                        /*m2status_set_gps_alt(pvt.height, pvt.h_msl);*/
-                        /*m2status_set_gps_status(pvt.fix_type,*/
-                                                /*pvt.flags, pvt.num_sv);*/
+
+                        ublox_can_send_pvt(&pvt);
 
                         m3status_set_ok(M3RADIO_COMPONENT_UBLOX);
                     } else {
@@ -411,11 +416,9 @@ static void ublox_state_machine(uint8_t b)
                     }
                     break;
                 case UBX_CFG:
-                    if(id == 0x24) {
+                    if(id == UBX_CFG_NAV5) {
                         /* NAV5 */
                         memcpy(cfg_nav5.payload, payload, length);
-                        /* TODO check that Airborne is set, if not log a
-                         * warning and try to set it again */
                         if(cfg_nav5.dyn_model != 8) {
                             m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                                                M3RADIO_ERROR_UBLOX_FLIGHT_MODE);
@@ -439,13 +442,13 @@ static void ublox_state_machine(uint8_t b)
     }
 }
 
-static bool_t ublox_configure(uint8_t *buf, size_t bufsize)
+static bool ublox_configure(void)
 {
     ubx_cfg_prt_t prt;
     ubx_cfg_nav5_t nav5;
     ubx_cfg_msg_t msg;
     ubx_cfg_rate_t rate;
-    bool_t success = true;
+    bool success = true;
 
     /* Disable NMEA on UART */
     prt.sync1 = UBX_SYNC1;
@@ -470,7 +473,7 @@ static bool_t ublox_configure(uint8_t *buf, size_t bufsize)
     /* must be 0 */
     prt.reserved5 = 0;
 
-    success &= ublox_transmit((uint8_t*)prt);
+    success &= ublox_transmit((uint8_t*)&prt);
 
     /* Set to Airborne <4g dynamic mode */
     nav5.sync1 = UBX_SYNC1;
@@ -541,5 +544,5 @@ void ublox_init(UARTDriver* uartd) {
     m3status_set_init(M3RADIO_COMPONENT_UBLOX);
     ublox_uartd = uartd;
     chThdCreateStatic(ublox_thd_wa, sizeof(ublox_thd_wa), NORMALPRIO,
-                      ublox_thd);
+                      ublox_thd, NULL);
 }

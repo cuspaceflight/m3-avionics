@@ -22,7 +22,11 @@ int main(void) {
     /* Turn on the CAN system and send a packet with our firmware version */
     can_init(CAN_ID_M3RADIO);
 
-    uart_init(UARTD4);
+    /* We'll enable CAN loopback so we can send our own messages over
+     * the radio */
+    can_set_loopback(true);
+
+    ublox_init(UARTD4);
 
     m3radio_status_init();
 
