@@ -21,5 +21,8 @@
 #define M3FC_ERROR_PYROS_PYRO4      (7)
 #define M3FC_ERROR_CFG_CHK_PROFILE  (8)
 #define M3FC_ERROR_CFG_CHK_PYROS    (9)
+#define M3FC_ERROR_ACCEL_BAD_ID     (10)
+#define M3FC_ERROR_ACCEL_SELFTEST   (11)
+#define M3FC_ERROR_ACCEL_TIMEOUT    (12)
 
 #endif

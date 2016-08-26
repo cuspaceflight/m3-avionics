@@ -36,6 +36,7 @@
 #define ADXL345_READ                    (1<<7)
 #define ADXL345_MULTIBYTE               (1<<6)
 
+static void adxl345_check_id(void);
 static void adxl345_read_u8(uint8_t adr, uint8_t* reg);
 static void adxl345_write_u8(uint8_t adr, uint8_t val);
 static void adxl345_read_accel(int16_t accels[3]);
@@ -172,6 +173,13 @@ static bool adxl345_self_test()
     );
 }
 
+static void adxl345_check_id()
+{
+    uint8_t devid;
+    adxl345_read_u8(ADXL345_REG_DEVID, &devid);
+    return devid == 0xE5;
+}
+
 /*
  * Initialise the ADXL345 device.
  * Sets registers for 800Hz operation in high power mode,
@@ -179,13 +187,6 @@ static bool adxl345_self_test()
  */
 static void adxl345_configure()
 {
-    /* Read device ID */
-    uint8_t devid;
-    adxl345_read_u8(ADXL345_REG_DEVID, &devid);
-    if(devid != 0xE5) {
-        /* TODO error handling */
-    }
-
     /* Set 800Hz ODR and disable low powder mode */
     adxl345_write_u8(ADXL345_REG_BWRATE, ADXL345_BWRATE_RATE_800HZ);
 
@@ -230,9 +231,17 @@ static THD_FUNCTION(adxl345_thd, arg)
     chRegSetThreadName("ADXL345");
     chBSemObjectInit(&adxl345_thd_sem, false);
     spiStart(adxl345_spid, &spi_cfg);
-    while(!adxl345_self_test()) {
-        /* TODO: Error handling */
+
+    while(!adxl345_check_id()) {
+        m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_BAD_ID);
+        chThdSleepMilliseconds(1000);
     }
+
+    while(!adxl345_self_test()) {
+        m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_SELFTEST);
+        chThdSleepMilliseconds(1000);
+    }
+
     adxl345_configure();
 
     while(true) {
@@ -246,13 +255,17 @@ static THD_FUNCTION(adxl345_thd, arg)
         wait_result = chBSemWaitTimeout(&adxl345_thd_sem, MS2ST(100));
 
         if(wait_result == MSG_TIMEOUT) {
-            /* TODO: Error handling */
+            m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_TIMEOUT);
+        } else {
+            m3status_set_ok(M3FC_COMPONENT_ACCEL);
         }
     }
 }
 
 void adxl345_init(SPIDriver* spid, ioportid_t ssport, uint16_t sspad)
 {
+    m3status_set_init(M3FC_COMPONENT_ACCEL);
+
     spi_cfg.ssport = ssport;
     spi_cfg.sspad  = sspad;
     adxl345_spid   = spid;

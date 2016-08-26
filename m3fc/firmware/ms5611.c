@@ -171,10 +171,13 @@ static THD_FUNCTION(ms5611_thd, arg) {
             can_send(CAN_MSG_ID_M3FC_BARO, false, (uint8_t*)buf, 8);
             loopcount = 0;
         }
+        m3status_set_ok(M3FC_COMPONENT_BARO);
     }
 }
 
 void ms5611_init(SPIDriver* spid, ioportid_t ssport, uint16_t sspad) {
+    m3status_set_init(M3FC_COMPONENT_BARO);
+
     spi_cfg.ssport = ssport;
     spi_cfg.sspad  = sspad;
     ms5611_spid    = spid;
