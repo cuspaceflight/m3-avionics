@@ -1,0 +1,13 @@
+../../../m3radio/pcb/m3radio.xml
+../../../m3fc/pcb/m3fc.xml
+../../../m3psu/pcb/Li-Ion-Charger-Board/Li-Ion-Charger-Board.xml
+../../../m3psu/pcb/DCDC-Board2/DCDC-Board2.xml
+../../../m3psu/pcb/PSU-MC-Board/PSU-MC-Board.xml
+../../../m3dl/pressure/pressure.xml
+../../../m3dl/strain_1-3/strain_1-3.xml
+../../../m3dl/strain_4-6/strain_4-6.xml
+../../../m3dl/temperature/temperature.xml
+../../../m3dl/base/base.xml
+../../../m3dl/main/main.xml
+../../../m3dl/breakout/breakout.xml
+../../../m3imu/pcb/m3imu.xml

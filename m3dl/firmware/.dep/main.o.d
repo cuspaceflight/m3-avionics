@@ -90,7 +90,8 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/st_lld.h mcuconf.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
  ../../shared/ChibiOS/os/hal/include/mmc_spi.h \
- ../../shared/ChibiOS/os/hal/include/serial_usb.h LTC2983.h err_handler.h
+ ../../shared/ChibiOS/os/hal/include/serial_usb.h LTC2983.h err_handler.h \
+ logging.h
 
 ../../shared/ChibiOS/os/rt/include/ch.h:
 
@@ -291,3 +292,5 @@ mcuconf.h:
 LTC2983.h:
 
 err_handler.h:
+
+logging.h:
