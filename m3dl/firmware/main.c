@@ -4,8 +4,10 @@
 
 #include "ch.h"
 #include "hal.h"
+
 #include "LTC2983.h"
 #include "err_handler.h"
+#include "logging.h"
 
 /* Interrupt Configuration */
 static const EXTConfig extcfg = {
@@ -65,9 +67,29 @@ int main(void) {
   /* LTC2983 Init */
   ltc2983_init();	
 
+  /* Datalogging Init */
+  logging_init();
+
   /* Init Heartbeat */
   chThdCreateStatic(hbt_wa, sizeof(hbt_wa), NORMALPRIO, hbt_thd, NULL);
 
+
+  /* SD Card Test */
+	
+  uint16_t ID;
+  bool RTR;
+  uint8_t len;
+  uint8_t data[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+  ID = 0x1423;
+  RTR = TRUE;
+  len = 0x01;
+  
+  log_can(ID, RTR, len, data);
+  
+  
+  chThdSleepMilliseconds(5000);
+    
+  disable_logging();
  
   while (true) {
       /* Do nothing */

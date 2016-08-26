@@ -1,5 +1,6 @@
-build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
- ../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h \
+build/obj/chprintf.o: ../../shared/ChibiOS/os/hal/lib/streams/chprintf.c \
+ ../../shared/ChibiOS/os/hal/include/hal.h \
+ ../../shared/ChibiOS/os/hal/osal/rt/osal.h \
  /usr/lib/gcc/arm-none-eabi/5.4.1/include/stddef.h \
  /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdint.h \
  /usr/arm-none-eabi/include/stdint.h \
@@ -8,7 +9,9 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
  /usr/arm-none-eabi/include/_newlib_version.h \
  /usr/arm-none-eabi/include/sys/_intsup.h \
  /usr/arm-none-eabi/include/sys/_stdint.h \
- /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdbool.h chconf.h \
+ /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdbool.h \
+ ../../shared/ChibiOS/os/rt/include/ch.h \
+ ../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h chconf.h \
  ../../shared/ChibiOS/os/rt/include/chlicense.h \
  ../../shared/ChibiOS/os/rt/include/chsystypes.h \
  ../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore.h \
@@ -41,9 +44,7 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
  ../../shared/ChibiOS/os/rt/include/chmempools.h \
  ../../shared/ChibiOS/os/rt/include/chdynamic.h \
  ../../shared/ChibiOS/os/rt/include/chqueues.h \
- ../../shared/ChibiOS/os/rt/include/chstreams.h \
- ../../shared/ChibiOS/os/hal/include/hal.h \
- ../../shared/ChibiOS/os/hal/osal/rt/osal.h halconf.h mcuconf.h \
+ ../../shared/ChibiOS/os/rt/include/chstreams.h halconf.h mcuconf.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/hal_lld.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
  ../../shared/ChibiOS/os/hal/ports/common/ARMCMx/nvic.h \
@@ -90,12 +91,14 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/st_lld.h mcuconf.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
  ../../shared/ChibiOS/os/hal/include/mmc_spi.h \
- ../../shared/ChibiOS/os/hal/include/serial_usb.h LTC2983.h err_handler.h \
- logging.h
+ ../../shared/ChibiOS/os/hal/include/serial_usb.h \
+ ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h \
+ /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdarg.h \
+ ../../shared/ChibiOS/os/hal/lib/streams/memstreams.h
 
-../../shared/ChibiOS/os/rt/include/ch.h:
+../../shared/ChibiOS/os/hal/include/hal.h:
 
-../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h:
+../../shared/ChibiOS/os/hal/osal/rt/osal.h:
 
 /usr/lib/gcc/arm-none-eabi/5.4.1/include/stddef.h:
 
@@ -114,6 +117,10 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
 /usr/arm-none-eabi/include/sys/_stdint.h:
 
 /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdbool.h:
+
+../../shared/ChibiOS/os/rt/include/ch.h:
+
+../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h:
 
 chconf.h:
 
@@ -184,10 +191,6 @@ board.h:
 ../../shared/ChibiOS/os/rt/include/chqueues.h:
 
 ../../shared/ChibiOS/os/rt/include/chstreams.h:
-
-../../shared/ChibiOS/os/hal/include/hal.h:
-
-../../shared/ChibiOS/os/hal/osal/rt/osal.h:
 
 halconf.h:
 
@@ -289,8 +292,8 @@ mcuconf.h:
 
 ../../shared/ChibiOS/os/hal/include/serial_usb.h:
 
-LTC2983.h:
+../../shared/ChibiOS/os/hal/lib/streams/chprintf.h:
 
-err_handler.h:
+/usr/lib/gcc/arm-none-eabi/5.4.1/include/stdarg.h:
 
-logging.h:
+../../shared/ChibiOS/os/hal/lib/streams/memstreams.h:

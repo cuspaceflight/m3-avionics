@@ -128,7 +128,7 @@ def main():
         print("Press enter to view received packets, or type a command")
         print("to send:")
         print("arm|disarm")
-        print("fire <channel> <mode: 0=off 1=on 2=pulsed>")
+        print("fire <channel> <mode: 0=off 1=ematch 2=talon 3=metron>")
         print("Ctrl-C to quit")
         print()
 
@@ -137,7 +137,7 @@ def main():
             try:
                 frame = rxq.get_nowait()
                 if frame.sid == m3pyro_msg_fire_status:
-                    status_map = {0: "Off", 1: "E-match", 2: "Talon", 3: "Metron"}
+                    status_map = {0: "Off", 1: "Ematch", 2: "Talon", 3: "Metron"}
                     statuses = [status_map[d] for d in frame.data[:4]]
                     print("Fire Status: {} {} {} {}".format(*statuses))
                 elif frame.sid == m3pyro_msg_arm_status:

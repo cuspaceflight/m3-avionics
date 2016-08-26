@@ -18,19 +18,19 @@ static volatile uint8_t channel_fire_state[4] = {0};
 static virtual_timer_t channel_timers[4];
 
 static void disable_channel(void* arg) {
-    uint8_t* channel_state = (uint8_t*)arg;
-    *channel_state = FIRE_OFF;
+    uint8_t channel_state = (uint32_t) arg;
+    channel_fire_state[channel_state] = FIRE_OFF;
 }
 
 static void set_timer(int channel, int fire_time_ms) {
     chSysLock();
-    if(chVTIsArmedI(&channel_timers[channel])) {
-        chVTDoResetI(&channel_timers[channel]);
+    //if(chVTIsArmedI(&channel_timers[*channel_state])) {
+    //    chVTDoResetI(&channel_timers[*channel_state]);
+    //}
+    if(!chVTIsArmedI(&channel_timers[channel])) {
+       chVTDoSetI(&channel_timers[channel], MS2ST(fire_time_ms),
+               disable_channel, (void *)channel);
     }
-
-    chVTDoSetI(&channel_timers[channel], MS2ST(fire_time_ms),
-               disable_channel, &channel);
-
     chSysUnlock();
 }
 
