@@ -1,4 +1,5 @@
 #include "m3can.h"
+#include "m3fc_status.h"
 #include "m3fc_config.h"
 #include "m3fc_ui.h"
 

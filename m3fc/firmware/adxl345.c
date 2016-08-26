@@ -6,6 +6,9 @@
 #include "ch.h"
 #include "hal.h"
 #include "m3can.h"
+#include "m3fc_config.h"
+#include "m3fc_status.h"
+#include "m3fc_state_estimation.h"
 #include "adxl345.h"
 
 #define ADXL345_REG_DEVID               0x00
@@ -36,12 +39,13 @@
 #define ADXL345_READ                    (1<<7)
 #define ADXL345_MULTIBYTE               (1<<6)
 
-static void adxl345_check_id(void);
+static bool adxl345_check_id(void);
 static void adxl345_read_u8(uint8_t adr, uint8_t* reg);
 static void adxl345_write_u8(uint8_t adr, uint8_t val);
 static void adxl345_read_accel(int16_t accels[3]);
 static void adxl345_configure(void);
 static bool adxl345_self_test(void);
+static float adxl345_accels_to_up(int16_t accels[3]);
 
 static SPIDriver* adxl345_spid;
 static binary_semaphore_t adxl345_thd_sem;
@@ -173,7 +177,7 @@ static bool adxl345_self_test()
     );
 }
 
-static void adxl345_check_id()
+static bool adxl345_check_id()
 {
     uint8_t devid;
     adxl345_read_u8(ADXL345_REG_DEVID, &devid);
@@ -203,6 +207,35 @@ static void adxl345_configure()
 
     /* Discard some samples to allow settling */
     chThdSleepMilliseconds(30);
+}
+
+static float adxl345_accels_to_up(int16_t accels[3]) {
+    float accel;
+
+    /* Pick acceleration axis based on configuration */
+    if(m3fc_config.profile.accel_axis == 1) {
+        accel = (float)accels[0];
+    } else if(m3fc_config.profile.accel_axis == 2) {
+        accel = -(float)accels[0];
+    } else if(m3fc_config.profile.accel_axis == 3) {
+        accel = (float)accels[1];
+    } else if(m3fc_config.profile.accel_axis == 4) {
+        accel = -(float)accels[1];
+    } else if(m3fc_config.profile.accel_axis == 5) {
+        accel = (float)accels[2];
+    } else if(m3fc_config.profile.accel_axis == 6) {
+        accel = -(float)accels[2];
+    } else {
+        m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_AXIS);
+    }
+
+    /* Convert to m/s (*3.9 to mg, /1000 to g, *9.81 to m/s/s) */
+    accel *= ((3.9f / 1000.0f) * 9.80665f);
+
+    /* Remove static acceleration */
+    accel -= 9.8066f;
+
+    return accel;
 }
 
 /* ISR triggered by the EXTI peripheral when DRDY gets asserted.
@@ -246,6 +279,9 @@ static THD_FUNCTION(adxl345_thd, arg)
 
     while(true) {
         adxl345_read_accel(accels);
+
+        float accel = adxl345_accels_to_up(accels);
+        m3fc_state_estimation_new_accel(accel);
 
         if(loopcount++ == 100) {
             loopcount = 0;

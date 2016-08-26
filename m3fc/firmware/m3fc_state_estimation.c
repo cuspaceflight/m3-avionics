@@ -1,10 +1,13 @@
 /*
  * State estimation and sensor fusion
- * M2FC
- * 2014 Adam Greig, Cambridge University Spaceflight
+ * M3FC
+ * 2014, 2016 Adam Greig, Cambridge University Spaceflight
  */
 
+#include "ch.h"
 #include <math.h>
+#include "m3can.h"
+#include "m3fc_status.h"
 #include "m3fc_state_estimation.h"
 
 /* Kalman filter state and covariance storage */
@@ -12,37 +15,37 @@ static float x[3]    = {0.0f, 0.0f, 0.0f};
 static float p[3][3] = {{250.0f, 0.0f, 0.0f},
                         {  0.0f, 0.1f, 0.0f},
                         {  0.0f, 0.0f, 0.1f}};
-static uint32_t t_clk = 0;
+static systime_t t_clk;
 
 /* Lock to protect the global shared Kalman state */
-static BinarySemaphore kalman_lock;
+static binary_semaphore_t kalman_bsem;
 
 /* Constants from the US Standard Atmosphere 1976 */
-const float Rs = 8.31432f;
-const float g0 = 9.80665f;
-const float M = 0.0289644f;
-const float Lb[7] = {
+static const float Rs = 8.31432f;
+static const float g0 = 9.80665f;
+static const float M = 0.0289644f;
+static const float Lb[7] = {
     -0.0065f, 0.0f, 0.001, 0.0028f, 0.0f, -0.0028f, -0.002f};
-const float Pb[7] = {
+static const float Pb[7] = {
     101325.0f, 22632.10f, 5474.89f, 868.02f, 110.91f, 66.94f, 3.96f};
-const float Tb[7] = {
+static const float Tb[7] = {
     288.15f, 216.65, 216.65, 228.65, 270.65, 270.65, 214.65};
-const float Hb[7] = {
+static const float Hb[7] = {
     0.0f, 11000.0f, 20000.0f, 32000.0f, 47000.0f, 51000.0f, 71000.0f};
 
-volatile uint8_t state_estimation_trust_barometer;
+volatile bool state_estimation_trust_barometer;
 
 /* Functions to convert pressures to altitudes via the
  * US Standard Atmosphere
  */
-float state_estimation_pressure_to_altitude(float pressure);
-float state_estimation_p2a_nonzero_lapse(float p, int b);
-float state_estimation_p2a_zero_lapse(float p, int b);
+static float m3fc_state_estimation_pressure_to_altitude(float pressure);
+static float m3fc_state_estimation_p2a_nonzero_lapse(float p, int b);
+static float m3fc_state_estimation_p2a_zero_lapse(float p, int b);
 
-/* Generic accelerometer Kalman filter update, used by both the high-g and
- * low-g public functions.
+/* Internal accelerometer update function, might be used by multiple
+ * accelerometers. Called from state_estimation_new_accel.
  */
-void state_estimation_update_accel(float accel, float r);
+static void m3fc_state_estimation_update_accel(float accel, float r);
 
 
 /*
@@ -124,20 +127,22 @@ void state_estimation_update_accel(float accel, float r);
  *
  * It's not pretty but it is what it is.
  */
-state_estimate_t state_estimation_get_state()
+state_estimate_t m3fc_state_estimation_get_state()
 {
     float q, dt, dt2, dt3, dt4, dt5, dt6, dt2_2;
-    /*static uint8_t sbp_counter = 0;*/
+    static int can_counter = 0;
     state_estimate_t x_out;
 
-    /* TODO Determine this q-value */
+    /* TODO Determine best q-value */
     q = 500.0;
 
     /* Acquire lock */
-    chBSemWait(&kalman_lock);
+    chBSemWait(&kalman_bsem);
 
     /* Find elapsed time */
-    dt = time_seconds_since(&t_clk);
+    dt = (float)(ST2US(chVTTimeElapsedSinceX(t_clk))) / 1e6f;
+    t_clk = chVTGetSystemTimeX();
+
     dt2 = dt * dt;
     dt3 = dt * dt2;
     dt4 = dt * dt3;
@@ -196,21 +201,26 @@ state_estimate_t state_estimation_get_state()
     x_out.a = x[2];
 
     /* Release lock */
-    chBSemSignal(&kalman_lock);
+    chBSemSignal(&kalman_bsem);
 
-    /* Log the newly predicted state */
-    log_f(M2T_CH_SE_T_H, dt, x_out.h);
-    log_f(M2T_CH_SE_V_A, x_out.v, x_out.a);
-    m2status_set_se_pred(dt, x_out.h, x_out.v, x_out.a);
-    m2status_stateestimation_status(STATUS_OK);
-
-    /*
-    sbp_counter++;
-    if(sbp_counter == 100) {
-        SBP_SEND(0x22, x_out);
-        sbp_counter = 0;
+    /* Send the newly predicted state and variances */
+    if(can_counter++ >= 20) {
+        float buf[2];
+        buf[0] = dt;
+        buf[1] = x[0];
+        can_send(CAN_MSG_ID_M3FC_SE_T_H, false, (uint8_t*)buf, 8);
+        buf[0] = x[1];
+        buf[1] = x[2];
+        can_send(CAN_MSG_ID_M3FC_SE_V_A, false, (uint8_t*)buf, 8);
+        buf[0] = p[0][0];
+        can_send(CAN_MSG_ID_M3FC_SE_VAR_H, false, (uint8_t*)buf, 4);
+        buf[0] = p[1][1];
+        buf[1] = p[2][2];
+        can_send(CAN_MSG_ID_M3FC_SE_VAR_V_A, false, (uint8_t*)buf, 8);
+        can_counter = 0;
     }
-    */
+
+    m3status_set_ok(M3FC_COMPONENT_SE);
 
     return x_out;
 }
@@ -218,11 +228,12 @@ state_estimate_t state_estimation_get_state()
 /*
  * Initialises the state estimation's shared variables.
  */
-void state_estimation_init()
+void m3fc_state_estimation_init()
 {
-    state_estimation_trust_barometer = 0;
-    chBSemInit(&kalman_lock, FALSE);
-    m2status_stateestimation_status(STATUS_OK);
+    m3status_set_init(M3FC_COMPONENT_SE);
+    state_estimation_trust_barometer = true;
+    t_clk = chVTGetSystemTime();
+    chBSemObjectInit(&kalman_bsem, false);
 }
 
 /* We run a Kalman update step with a new pressure reading.
@@ -254,7 +265,7 @@ void state_estimation_init()
  *           [P10 - K1 P00    P11 - K1 P01    P12 - K1 P02]
  *           [P20 - K2 P00    P21 - K2 P01    P22 - K2 P02]
  */
-void state_estimation_new_pressure(float pressure)
+void m3fc_state_estimation_new_pressure(float pressure)
 {
     /* Around 6.5Pa resolution on the barometer. */
     float baro_res = 6.5f;
@@ -270,19 +281,21 @@ void state_estimation_new_pressure(float pressure)
      * Run the same conversion for pressure + sensor resolution to get an idea
      * of the current noise variance in altitude terms for the filter.
      */
-    h = state_estimation_pressure_to_altitude(pressure);
-    hd = state_estimation_pressure_to_altitude(pressure + baro_res);
+    h = m3fc_state_estimation_pressure_to_altitude(pressure);
+    hd = m3fc_state_estimation_pressure_to_altitude(pressure + baro_res);
 
     /* If there was an error (couldn't find suitable altitude band) for this
      * pressure, just don't use it. It's probably wrong. */
-    if(h == -9999.0f || hd == -9999.0f)
+    if(h == -9999.0f || hd == -9999.0f) {
+        m3status_set_error(M3FC_COMPONENT_SE, M3FC_ERROR_SE_PRESSURE);
         return;
+    }
 
     /* TODO: validate choice of r */
     r = (h - hd) * (h - hd);
 
     /* Acquire lock */
-    chBSemWait(&kalman_lock);
+    chBSemWait(&kalman_bsem);
 
     /* Measurement residual */
     y = h - x[0];
@@ -311,15 +324,11 @@ void state_estimation_new_pressure(float pressure)
     p[2][1] -= k[2] * p[0][1];
     p[2][2] -= k[2] * p[0][2];
 
-    /* Log new pressure reading and the consequent new state altitude */
-    log_f(M2T_CH_SE_PRESSURE, pressure, x[0]);
-    m2status_set_se_pressure(pressure, x[0]);
-
     /* Release lock */
-    chBSemSignal(&kalman_lock);
+    chBSemSignal(&kalman_bsem);
 }
 
-float state_estimation_pressure_to_altitude(float pressure)
+static float m3fc_state_estimation_pressure_to_altitude(float pressure)
 {
     int b;
     /* For each level of the US Standard Atmosphere 1976, check if the pressure
@@ -327,14 +336,14 @@ float state_estimation_pressure_to_altitude(float pressure)
      * rate at that level.
      */
     if(pressure > Pb[0]) {
-        return state_estimation_p2a_nonzero_lapse(pressure, 0);
+        return m3fc_state_estimation_p2a_nonzero_lapse(pressure, 0);
     }
     for(b = 0; b < 6; b++) {
         if(pressure <= Pb[b] && pressure > Pb[b+1]) {
             if(Lb[b] == 0.0f) {
-                return state_estimation_p2a_zero_lapse(pressure, b);
+                return m3fc_state_estimation_p2a_zero_lapse(pressure, b);
             } else {
-                return state_estimation_p2a_nonzero_lapse(pressure, b);
+                return m3fc_state_estimation_p2a_nonzero_lapse(pressure, b);
             }
         }
     }
@@ -350,7 +359,7 @@ float state_estimation_pressure_to_altitude(float pressure)
  * Reverses the standard equation for non-zero lapse regions,
  * P = Pb (Tb / (Tb + Lb(h - hb)))^(M g0 / R* Lb)
  */
-float state_estimation_p2a_nonzero_lapse(float pressure, int b)
+static float m3fc_state_estimation_p2a_nonzero_lapse(float pressure, int b)
 {
     float lb = Lb[b];
     float hb = Hb[b];
@@ -364,7 +373,7 @@ float state_estimation_p2a_nonzero_lapse(float pressure, int b)
  * Reverses the standard equation for zero-lapse regions,
  * P = Pb exp( -g0 M (h-hb) / R* Tb)
  */
-float state_estimation_p2a_zero_lapse(float pressure, int b)
+static float m3fc_state_estimation_p2a_zero_lapse(float pressure, int b)
 {
     float hb = Hb[b];
     float pb = Pb[b];
@@ -373,7 +382,7 @@ float state_estimation_p2a_zero_lapse(float pressure, int b)
     return hb + (Rs * tb)/(g0 * M) * (logf(pressure) - logf(pb));
 }
 
-/* Update the state estimate with a new low-g accel reading.
+/* Update the state estimate with a new ADXL345 accel reading.
  * Readings near clipping (16g) are ignored.
  * The sensor noise is based on the datasheet RMS value at our sampling rate.
  *
@@ -384,23 +393,25 @@ float state_estimation_p2a_zero_lapse(float pressure, int b)
  * 12.09mg and 24.12mg noise, which is 0.1186 m/s/s and 0.2365 m/s/s
  * acceleration rms respectively.
  *
- * In theory these should be squared to find a variance, but in practice...
+ * In theory these should be squared to find a variance, but in practice
+ * we prefer to be quite cautious and so let's not put too much trust in these
+ * and just use the RMS as a variance instead.
  *
  */
-void state_estimation_new_accel(float accel)
+void m3fc_state_estimation_new_accel(float accel)
 {
-    if(fabsf(accel) > 150.0f) {
+    if(fabsf(accel) > 155.0f) {
         /* The low-g accelerometer is limited to +-16g, so
-         * we'll just discard anything above 150m/s/s (15.3g).
+         * we'll just discard anything above 155m/s/s (15.8g).
          */
         return;
     }
 
-    state_estimation_update_accel(accel, 0.2365f);
+    m3fc_state_estimation_update_accel(accel, 0.1186f);
 }
 
 /* Run the Kalman update for a single acceleration value.
- * Called internally from the hg and lg functions after
+ * Called internally from the new_accel functions after
  * preprocessing.
  *
  * z = [accel]
@@ -422,12 +433,12 @@ void state_estimation_new_accel(float accel)
  *           [P10 - K1 P20    P11 - K1 P21    P12 - K1 P22]
  *           [P20 - K2 P20    P21 - K2 P21    P22 - K2 P22]
  */
-void state_estimation_update_accel(float a, float r)
+static void m3fc_state_estimation_update_accel(float a, float r)
 {
     float y, s_inv, k[3];
 
     /* Acquire lock */
-    chBSemWait(&kalman_lock);
+    chBSemWait(&kalman_bsem);
 
     /* Measurement residual */
     y = a - x[2];
@@ -456,11 +467,7 @@ void state_estimation_update_accel(float a, float r)
     p[2][1] -= k[2] * p[2][1];
     p[2][2] -= k[2] * p[2][2];
 
-    /* Log new acceleration value the consequent new state acceleration */
-    log_f(M2T_CH_SE_ACCEL, a, x[2]);
-    m2status_set_se_accel(a, x[2]);
-
     /* Release lock */
-    chBSemSignal(&kalman_lock);
+    chBSemSignal(&kalman_bsem);
 }
 

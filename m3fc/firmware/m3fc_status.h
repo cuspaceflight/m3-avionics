@@ -24,5 +24,7 @@
 #define M3FC_ERROR_ACCEL_BAD_ID     (10)
 #define M3FC_ERROR_ACCEL_SELFTEST   (11)
 #define M3FC_ERROR_ACCEL_TIMEOUT    (12)
+#define M3FC_ERROR_ACCEL_AXIS       (13)
+#define M3FC_ERROR_SE_PRESSURE      (14)
 
 #endif

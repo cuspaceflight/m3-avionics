@@ -1,11 +1,11 @@
 /*
  * State estimation and sensor fusion
- * M2FC
- * 2014 Adam Greig, Cambridge University Spaceflight
+ * M3FC
+ * 2014, 2016 Adam Greig, Cambridge University Spaceflight
  */
 
-#ifndef STATE_ESTIMATION_H
-#define STATE_ESTIMATION_H
+#ifndef M3FC_STATE_ESTIMATION_H
+#define M3FC_STATE_ESTIMATION_H
 
 #include <stdint.h>
 
@@ -15,19 +15,19 @@ typedef struct { float h; float v; float a; } state_estimate_t;
  * transonic regime. Set by the mission control thread and read by
  * the barometer thread when it goes to update the state estimate.
  */
-extern volatile uint8_t state_estimation_trust_barometer;
+extern volatile bool m3fc_state_estimation_trust_barometer;
 
 /* Update with a new pressure reading (in Pascals) */
-void state_estimation_new_pressure(float pressure);
+void m3fc_state_estimation_new_pressure(float pressure);
 
-/* Update with a new low-g accelerometer reading (in m/s) */
-void state_estimation_new_accel(float lg_accel);
+/* Update with a new accelerometer reading (in m/s/s) */
+void m3fc_state_estimation_new_accel(float accel);
 
 /* Compute and return the latest state estimate */
-state_estimate_t state_estimation_get_state(void);
+state_estimate_t m3fc_state_estimation_get_state(void);
 
 /* Initialise state estimation. Must be called before
  * update or prediction steps above are called. */
-void state_estimation_init(void);
+void m3fc_state_estimation_init(void);
 
-#endif /* STATE_ESTIMATION_H */
+#endif

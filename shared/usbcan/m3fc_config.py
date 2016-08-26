@@ -13,8 +13,8 @@ from usbcan import CANFrame, CANRX, run
 
 m3fc_id = 1
 msg_id = lambda x: x<<5
-m3fc_msg_cfg_profile = m3fc_id | msg_id(52)
-m3fc_msg_cfg_pyros = m3fc_id | msg_id(53)
+m3fc_msg_cfg_profile = m3fc_id | msg_id(54)
+m3fc_msg_cfg_pyros = m3fc_id | msg_id(55)
 m3fc_msg_set_cfg_profile = m3fc_id | msg_id(1)
 m3fc_msg_set_cfg_pyros = m3fc_id | msg_id(2)
 m3fc_msg_save_cfg = m3fc_id | msg_id(4)
