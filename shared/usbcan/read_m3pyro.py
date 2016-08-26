@@ -1,3 +1,4 @@
+
 import os
 import glob
 import time
@@ -136,7 +137,7 @@ def main():
             try:
                 frame = rxq.get_nowait()
                 if frame.sid == m3pyro_msg_fire_status:
-                    status_map = {0: "Off", 1: "Firing", 2: "Pulsed Firing"}
+                    status_map = {0: "Off", 1: "E-match", 2: "Talon", 3: "Metron"}
                     statuses = [status_map[d] for d in frame.data[:4]]
                     print("Fire Status: {} {} {} {}".format(*statuses))
                 elif frame.sid == m3pyro_msg_arm_status:
