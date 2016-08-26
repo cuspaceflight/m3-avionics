@@ -117,7 +117,8 @@ CSRC = $(STARTUPSRC) \
        $(TESTSRC) \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
-       ublox.c m3radio_status.c m3radio_can.c m3radio_gps_ant.c \
+       ublox.c si4460.c \
+	   m3radio_status.c m3radio_can.c m3radio_gps_ant.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
