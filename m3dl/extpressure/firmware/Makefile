@@ -60,18 +60,13 @@ endif
 # Stack size to be allocated to the Cortex-M process stack. This stack is
 # the stack used by the main() thread.
 ifeq ($(USE_PROCESS_STACKSIZE),)
-  USE_PROCESS_STACKSIZE = 0x400
+  USE_PROCESS_STACKSIZE = 0x200
 endif
 
 # Stack size to the allocated to the Cortex-M main/exceptions stack. This
 # stack is used for processing interrupts and exceptions.
 ifeq ($(USE_EXCEPTIONS_STACKSIZE),)
   USE_EXCEPTIONS_STACKSIZE = 0x400
-endif
-
-# Enables the use of FPU on Cortex-M4 (no, softfp, hard).
-ifeq ($(USE_FPU),)
-  USE_FPU = hard
 endif
 
 #
@@ -83,19 +78,19 @@ endif
 #
 
 # Define project name here
-PROJECT = m3template
+PROJECT = extpressurefw
 
 # Imported source files and paths
-CHIBIOS = ../../shared/ChibiOS
+CHIBIOS = ../../../shared/ChibiOS/
 # Startup files.
-include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
+include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f0xx.mk
 # HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
-include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/ports/STM32/STM32F0xx/platform.mk
 include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
-include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v6m.mk
 # Other files (optional).
 include $(CHIBIOS)/test/rt/test.mk
 
@@ -103,7 +98,7 @@ BOARDSRC=board.c
 BOARDINC=.
 
 # Define linker script file here
-LDSCRIPT= STM32F405xG.ld
+LDSCRIPT= STM32F051x8.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -115,9 +110,7 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
-       ../../shared/m3can/m3can.c \
-       ../../shared/m3status/m3status.c \
-       main.c
+       main.c sp100.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -158,7 +151,7 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
 # Compiler settings
 #
 
-MCU  = cortex-m4
+MCU  = cortex-m0
 
 #TRGT = arm-elf-
 TRGT = arm-none-eabi-
@@ -184,7 +177,7 @@ AOPT =
 TOPT = -mthumb -DTHUMB
 
 # Define C warning options here
-CWARN = -Wall -Wextra -Werror -Wundef -Wstrict-prototypes
+CWARN = -Wall -Wextra -Wundef -Wstrict-prototypes
 
 # Define C++ warning options here
 CPPWARN = -Wall -Wextra -Wundef
@@ -198,14 +191,13 @@ CPPWARN = -Wall -Wextra -Wundef
 #
 
 # List all user C define here, like -D_DEBUG=1
-GITVERSION := $(shell git describe --abbrev=8 --always)
-UDEFS = -DFIRMWARE_VERSION=\"$(GITVERSION)\"
+UDEFS =
 
 # Define ASM defines here
 UADEFS =
 
 # List all user directories here
-UINCDIR = ../../shared/m3can/ ../../shared/m3status/
+UINCDIR =
 
 # List the user directory to look for the libraries here
 ULIBDIR =
@@ -221,24 +213,30 @@ RULESPATH = $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC
 include $(RULESPATH)/rules.mk
 
 ##############################################################################
-# M3Debug flashing via GDB
+# Black Magic Probe flashing via GDB
 #
-BMP_PORT = $(wildcard /dev/serial/by-id/usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00)
-JTAG_SCAN = python3 ../../shared/jtag_scan/jtag_scan.py
-flash: build/$(PROJECT).elf $(OUTFILES)
+flash: build/$(PROJECT).elf
 	arm-none-eabi-gdb --batch \
-		              -ex 'target extended-remote $(BMP_PORT)' \
+		              -ex 'target extended-remote /dev/ttyACM0' \
 					  -ex 'monitor version' \
-					  -ex 'monitor jtag_scan' \
-					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
+					  -ex 'monitor swdp_scan' \
+					  -ex 'attach 1' \
 					  -ex 'load' \
 					  -ex 'compare-sections' build/$(PROJECT).elf
 
-debug: build/$(PROJECT).elf $(OUTFILES)
-	arm-none-eabi-gdb -ex 'target extended-remote $(BMP_PORT)' \
-		              -ex 'monitor jtag_scan' \
-					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
+debug: build/$(PROJECT).elf
+	arm-none-eabi-gdb -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'monitor swdp_scan' \
+					  -ex 'attach 1' \
 					  -ex "file build/$(PROJECT).elf"
+power:
+	arm-none-eabi-gdb --batch \
+	                  -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'monitor tpwr enable'
+unpower:
+	arm-none-eabi-gdb --batch \
+		              -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'monitor tpwr disable'
 
 #
 # End BMP flashing

@@ -5,12 +5,12 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16
+  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16
 endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT =
+  USE_COPT = 
 endif
 
 # C++ specific options here (added to USE_OPT).
@@ -25,7 +25,7 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT =
+  USE_LDOPT = 
 endif
 
 # Enable this if you want link time optimizations (LTO)
@@ -83,7 +83,7 @@ endif
 #
 
 # Define project name here
-PROJECT = m3imu
+PROJECT = m3pyro
 
 # Imported source files and paths
 CHIBIOS = ../../shared/ChibiOS
@@ -115,6 +115,9 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
+       ../../shared/m3can/m3can.c \
+       ../../shared/m3status/m3status.c \
+       m3pyro_continuity.c m3pyro_arming.c m3pyro_firing.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -196,13 +199,14 @@ CPPWARN = -Wall -Wextra -Wundef
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+GITVERSION := $(shell git describe --abbrev=8 --always)
+UDEFS = -DFIRMWARE_VERSION=\"$(GITVERSION)\"
 
 # Define ASM defines here
 UADEFS =
 
 # List all user directories here
-UINCDIR =
+UINCDIR = ../../shared/m3can/ ../../shared/m3status/
 
 # List the user directory to look for the libraries here
 ULIBDIR =
@@ -220,7 +224,7 @@ include $(RULESPATH)/rules.mk
 ##############################################################################
 # M3Debug flashing via GDB
 #
-BMP_PORT = $(wildcard /dev/serial/by-id/usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00)
+BMP_PORT = $(wildcard /dev/serial/by-id/*m3debug*-if00)
 JTAG_SCAN = python3 ../../shared/jtag_scan/jtag_scan.py
 flash: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb --batch \
