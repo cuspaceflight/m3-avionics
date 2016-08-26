@@ -4,6 +4,27 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define M3FC_CONFIG_POSITION_DART (1)
+#define M3FC_CONFIG_POSITION_CORE (2)
+
+#define M3FC_CONFIG_ACCEL_AXIS_X  (1)
+#define M3FC_CONFIG_ACCEL_AXIS_NX (2)
+#define M3FC_CONFIG_ACCEL_AXIS_Y  (3)
+#define M3FC_CONFIG_ACCEL_AXIS_NY (4)
+#define M3FC_CONFIG_ACCEL_AXIS_Z  (5)
+#define M3FC_CONFIG_ACCEL_AXIS_NZ (6)
+
+#define M3FC_CONFIG_PYRO_USAGE_NONE   (0)
+#define M3FC_CONFIG_PYRO_USAGE_DROGUE (1)
+#define M3FC_CONFIG_PYRO_USAGE_MAIN   (2)
+#define M3FC_CONFIG_PYRO_USAGE_DART   (3)
+
+#define M3FC_CONFIG_PYRO_TYPE_NONE   (0)
+#define M3FC_CONFIG_PYRO_TYPE_EMATCH (1)
+#define M3FC_CONFIG_PYRO_TYPE_TALON  (2)
+#define M3FC_CONFIG_PYRO_TYPE_METRON (3)
+
+
 struct m3fc_config {
 
     struct {

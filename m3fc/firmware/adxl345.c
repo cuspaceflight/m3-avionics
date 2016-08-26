@@ -213,17 +213,17 @@ static float adxl345_accels_to_up(int16_t accels[3]) {
     float accel;
 
     /* Pick acceleration axis based on configuration */
-    if(m3fc_config.profile.accel_axis == 1) {
+    if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_X) {
         accel = (float)accels[0];
-    } else if(m3fc_config.profile.accel_axis == 2) {
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NX) {
         accel = -(float)accels[0];
-    } else if(m3fc_config.profile.accel_axis == 3) {
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_Y) {
         accel = (float)accels[1];
-    } else if(m3fc_config.profile.accel_axis == 4) {
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NY) {
         accel = -(float)accels[1];
-    } else if(m3fc_config.profile.accel_axis == 5) {
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_Z) {
         accel = (float)accels[2];
-    } else if(m3fc_config.profile.accel_axis == 6) {
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NZ) {
         accel = -(float)accels[2];
     } else {
         m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_AXIS);

@@ -25,6 +25,7 @@ typedef struct instance_data instance_data_t;
 typedef state_t state_func_t(instance_data_t *data);
 
 static void m3fc_mission_send_state(state_t state, instance_data_t *data);
+static void m3fc_mission_fire_pyro(int pyro_usage);
 static void m3fc_mission_fire_drogue_pyro(void);
 static void m3fc_mission_fire_main_pyro(void);
 static void m3fc_mission_fire_dart_pyro(void);
@@ -188,13 +189,33 @@ static void m3fc_mission_send_state(state_t state, instance_data_t *data) {
     can_send(CAN_MSG_ID_M3FC_MISSION_STATE, false, buf, 5);
 }
 
+static void m3fc_mission_fire_pyro(int usage) {
+    uint8_t channels[4] = {0};
+    if(m3fc_config.pyros.pyro_1_usage == usage) {
+        channels[0] = m3fc_config.pyros.pyro_1_type;
+    }
+    if(m3fc_config.pyros.pyro_2_usage == usage) {
+        channels[1] = m3fc_config.pyros.pyro_2_type;
+    }
+    if(m3fc_config.pyros.pyro_3_usage == usage) {
+        channels[2] = m3fc_config.pyros.pyro_3_type;
+    }
+    if(m3fc_config.pyros.pyro_4_usage == usage) {
+        channels[3] = m3fc_config.pyros.pyro_4_type;
+    }
+    can_send(CAN_MSG_ID_M3PYRO_FIRE_COMMAND, false, channels, 4);
+}
+
 static void m3fc_mission_fire_drogue_pyro() {
+    m3fc_mission_fire_pyro(M3FC_CONFIG_PYRO_USAGE_DROGUE);
 }
 
 static void m3fc_mission_fire_main_pyro() {
+    m3fc_mission_fire_pyro(M3FC_CONFIG_PYRO_USAGE_MAIN);
 }
 
 static void m3fc_mission_fire_dart_pyro() {
+    m3fc_mission_fire_pyro(M3FC_CONFIG_PYRO_USAGE_DART);
 }
 
 static THD_WORKING_AREA(mission_thread_wa, 512);
