@@ -7,13 +7,13 @@
 struct m3fc_config {
 
     struct {
-        /* M3FC position. 1=dart 2=core */
+        /* M3FC position. 1=dart 2=core 3=left booster 4=right booster*/
         uint8_t m3fc_position;
 
         /* Accelerometer "up" axis. 1=X 2=-X 3=Y 4=-Y 5=Z 6=-Z */
         uint8_t accel_axis;
 
-        /* Ignition detection acceleration threshold, in m/s */
+        /* Ignition detection acceleration threshold, in m/s/s */
         uint8_t ignition_accel;
 
         /* Burnout detection timeout, in 0.1s since launch */
