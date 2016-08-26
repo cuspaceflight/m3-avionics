@@ -18,6 +18,7 @@ def getstate():
     return jsonify(state.global_state)
 
 
-@app.route("/command")
+@app.route("/command", methods=["POST"])
 def sendcommand():
-    command_processor.process(request.getjson())
+    command_processor.process(request.form['parent'], request.form['name'], request.form['arg'])
+    return ""

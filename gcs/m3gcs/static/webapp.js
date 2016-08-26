@@ -22,6 +22,10 @@ function stateUpdate(name, state){
     lastTimes[state.id] = new Date().getTime(); // Update the last packet time
 }
 
+function canCommand(parent, name, arg){
+    $.post("/command", {parent:parent, name:name, arg:arg});
+}
+
 $(document).ready(function(){
     setInterval(function(){
         var now = new Date().getTime();
@@ -37,4 +41,8 @@ $(document).ready(function(){
             $("#lasttime-" + name).text(secdiff);
         }
     }, 1000);
+    
+    setInterval(function(){
+        //state = $.ajax("/state").responseText;
+    }, 100);
 });
