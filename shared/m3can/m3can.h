@@ -64,6 +64,15 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 void can_init(uint8_t board_id);
 void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
+/* Type specific can_send functions */
+void can_send_u8(uint16_t msg_id, uint8_t d0, uint8_t d1, uint8_t d2,
+                 uint8_t d3, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
+                 size_t n);
+void can_send_u16(uint16_t msg_id, uint16_t d0, uint16_t d1, uint16_t d2,
+                  uint16_t d3, size_t n);
+void can_send_u32(uint16_t msg_id, uint32_t d0, uint32_t d1, size_t n);
+void can_send_f32(uint16_t msg_id, float d0, float d1, size_t n);
+
 /* Whether to process all sent messages as though they were also received */
 void can_set_loopback(bool enabled);
 
