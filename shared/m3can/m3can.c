@@ -15,6 +15,8 @@
 
 uint8_t m3can_own_id = 0;
 
+static volatile bool can_loopback_enabled;
+
 
 static const CANConfig cancfg = {
     .mcr =
@@ -49,6 +51,10 @@ void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
     memcpy(&txmsg.data8, data, datalen);
 
     canTransmit(&CAND1, CAN_ANY_MAILBOX, &txmsg, MS2ST(100));
+
+    if(can_loopback_enabled) {
+        can_recv(msg_id, can_rtr, data, datalen);
+    }
 }
 
 
@@ -71,6 +77,10 @@ static THD_FUNCTION(can_rx_thd, arg) {
             can_recv(rxmsg.SID, rxmsg.RTR, rxmsg.data8, rxmsg.DLC);
         }
     }
+}
+
+void can_set_loopback(bool enabled) {
+    can_loopback_enabled = enabled;
 }
 
 
