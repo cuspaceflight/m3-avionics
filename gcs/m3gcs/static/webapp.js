@@ -8,7 +8,7 @@ function setStatus(name, status){
     $("#header-" + name + " h3").text(name + namestrs[status.status]);
 }
 
-var packettypes = {};
+var packettypes = new Array();
 var lastTimes = {};
 
 // state should contain at least 2 field:
@@ -25,10 +25,16 @@ function stateUpdate(name, state){
 $(document).ready(function(){
     setInterval(function(){
         var now = new Date().getTime();
-        for(idx in names){
-            var name = names[idx];
-            var secdiff = (now - lastTimes[name])/1000;
-            $("#lasttime-" + name).text(secdiff + "s");
+        for(idx in packettypes){
+            var name = packettypes[idx][0];
+            var canid = packettypes[idx][1];
+            if(lastTimes[canid]){
+                var secdiff = ((now - lastTimes[canid])/1000) + "s ago";
+            }else{
+                var secdiff = "never"
+            }
+            $("#lasttime-" + canid).text(secdiff);
+            $("#lasttime-" + name).text(secdiff);
         }
     }, 1000);
 });

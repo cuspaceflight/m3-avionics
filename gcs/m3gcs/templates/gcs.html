@@ -21,9 +21,27 @@
         <h3 class="panel-title">{{ name }}</h3>
     </div>
     <div class="panel-body" id="content-{{ name }}">
-        Panel content
+        <div id="display-{{ name }}">
+            
+        </div>
+        <div id="controls-{{ name }}">
+            {% for command in commands[name] %}
+                <div class="btn-group">
+                <button type="button" class="btn btn-default" disabled>{{ command }}</button>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                {% for arg in commands[name][command][1] %}
+                    <li><a href="javascript:canCommand('{{ name }}', '{{ command }}', '{{ arg }}')">{{ arg }}</a></li>
+                {% endfor %}
+                </ul>
+                </div>
+            {% endfor %}
+        </div>
+        
     </div>
-    <div class="panel-footer">Time since last packet: <span id="lasttime-{{ name }}"></span></div>
+    <div class="panel-footer">Last packet heard: <span id="lasttime-{{ name }}"></span></div>
 </div>
 {% endfor %}
 
@@ -39,7 +57,9 @@
 </body>
 
 <script type="text/javascript" language="javascript">
-    {% for packet in packets %}
-        console.log("{{ packet }}");
+    {% for name in packets %}
+    {% for packetid in packets[name] %}
+        packettypes.push({ 0:"{{ name }}", 1:{{ packetid }} });
+    {% endfor %}
     {% endfor %}
 </script>
