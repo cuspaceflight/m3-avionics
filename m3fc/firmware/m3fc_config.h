@@ -33,7 +33,7 @@ struct m3fc_config {
     } __attribute__((packed)) profile;
 
     struct {
-        /* Pyro channel usage. 0=NONE 1=DROGUE 2=MAIN 3=DART_SEP 4=BOOSTER_SEP */
+        /* Pyro channel usage. 0=NONE 1=DROGUE 2=MAIN 3=DART_SEP */
         uint8_t pyro_1_usage, pyro_2_usage, pyro_3_usage, pyro_4_usage;
 
         /* Pyro channel type, 0=NONE 1=EMATCH 2=TALON 3=METRON */

@@ -71,10 +71,10 @@ static bool m3fc_config_check_profile() {
 
 static bool m3fc_config_check_pyros() {
     bool ok = true;
-    ok &= m3fc_config.pyros.pyro_1_usage <= 4;
-    ok &= m3fc_config.pyros.pyro_2_usage <= 4;
-    ok &= m3fc_config.pyros.pyro_3_usage <= 4;
-    ok &= m3fc_config.pyros.pyro_4_usage <= 4;
+    ok &= m3fc_config.pyros.pyro_1_usage <= 3;
+    ok &= m3fc_config.pyros.pyro_2_usage <= 3;
+    ok &= m3fc_config.pyros.pyro_3_usage <= 3;
+    ok &= m3fc_config.pyros.pyro_4_usage <= 3;
     if(m3fc_config.pyros.pyro_1_usage > 0) {
         ok &= m3fc_config.pyros.pyro_1_type >= 1;
         ok &= m3fc_config.pyros.pyro_1_type <= 3;
