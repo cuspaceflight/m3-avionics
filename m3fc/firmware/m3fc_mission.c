@@ -73,6 +73,18 @@ static state_t do_state_pad(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
 
+    /* While on the pad, check if pyro is armed and supply good, otherwise
+     * it's an error for the mission control */
+    if(m3fc_status_pyro_armed && m3fc_status_pyro_supply_good) {
+        if(m3status_get_component(M3FC_COMPONENT_MC) != M3STATUS_OK) {
+            m3status_set_ok(M3FC_COMPONENT_MC);
+        }
+    } else {
+        if(m3status_get_component(M3FC_COMPONENT_MC) != M3STATUS_ERROR) {
+            m3status_set_error(M3FC_COMPONENT_MC, M3FC_ERROR_MC_PYRO_ARM);
+        }
+    }
+
     if(data->state.a > m3fc_config.profile.ignition_accel)
         return STATE_IGNITION;
     else

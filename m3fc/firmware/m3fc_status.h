@@ -1,5 +1,6 @@
 #ifndef M3FC_STATUS_H
 #define M3FC_STATUS_H
+#include <stdbool.h>
 #include "m3status.h"
 
 #define M3FC_COMPONENT_MC           (1)
@@ -26,5 +27,9 @@
 #define M3FC_ERROR_ACCEL_TIMEOUT    (12)
 #define M3FC_ERROR_ACCEL_AXIS       (13)
 #define M3FC_ERROR_SE_PRESSURE      (14)
+#define M3FC_ERROR_MC_PYRO_ARM      (15)
+
+extern volatile bool m3fc_status_pyro_armed;
+extern volatile bool m3fc_status_pyro_supply_good;
 
 #endif

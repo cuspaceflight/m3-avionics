@@ -9,9 +9,15 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
 
     if(msg_id == CAN_MSG_ID_M3PYRO_SUPPLY_STATUS) {
         if(data[0] > 40) {
-            m3fc_ui_set_armed(true);
+            m3fc_status_pyro_supply_good = true;
         } else {
-            m3fc_ui_set_armed(false);
+            m3fc_status_pyro_supply_good = false;
+        }
+    } else if(msg_id == CAN_MSG_ID_M3PYRO_ARM_STATUS) {
+        if(data[0]) {
+            m3fc_status_pyro_armed = true;
+        } else {
+            m3fc_status_pyro_armed = false;
         }
     } else if(msg_id == CAN_MSG_ID_M3PYRO_CONTINUITY) {
         uint8_t pyro1_r = data[0];
