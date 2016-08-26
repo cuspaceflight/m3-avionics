@@ -79,6 +79,27 @@ void can_send_u32(uint16_t msg_id, uint32_t d0, uint32_t d1, size_t n)
     can_send(msg_id, false, buf, n<<2);
 }
 
+void can_send_i8(int16_t msg_id, int8_t d0, int8_t d1, int8_t d2,
+                 int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7,
+                 size_t n)
+{
+    uint8_t buf[8] = {d0, d1, d2, d3, d4, d5, d6, d7};
+    can_send(msg_id, false, buf, n);
+}
+
+void can_send_i16(int16_t msg_id, int16_t d0, int16_t d1, int16_t d2,
+                  int16_t d3, size_t n)
+{
+    uint8_t buf[8] = {d0, d0>>8, d1, d1>>8, d2, d2>>8, d3, d3>>8};
+    can_send(msg_id, false, buf, n<<1);
+}
+
+void can_send_i32(int16_t msg_id, int32_t d0, int32_t d1, size_t n)
+{
+    uint8_t buf[8] = {d0, d0>>8, d0>>16, d0>>24, d1, d1>>8, d1>>16, d1>>24};
+    can_send(msg_id, false, buf, n<<2);
+}
+
 void can_send_f32(uint16_t msg_id, float d0, float d1, size_t n)
 {
     float buf[2] = {d0, d1};
