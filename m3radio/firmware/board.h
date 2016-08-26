@@ -261,7 +261,7 @@
  *
  * PA0  - GPS_RX                       (af8).
  * PA1  - GPS_TX                       (af8).
- * PA2  - GPS_RESET_N                  ().
+ * PA2  - GPS_RESET_N                  (output, starthigh).
  * PA3  - PIN3                         (unused).
  * PA4  - PIN4                         (unused).
  * PA5  - LED_RED                      (output, startlow).
@@ -278,7 +278,7 @@
 */
 #define VAL_GPIOA_MODER                (PIN_MODE_ALTERNATE(GPIOA_GPS_RX) | \
                                         PIN_MODE_ALTERNATE(GPIOA_GPS_TX) | \
-                                        PIN_MODE_INPUT(GPIOA_GPS_RESET_N) | \
+                                        PIN_MODE_OUTPUT(GPIOA_GPS_RESET_N) | \
                                         PIN_MODE_INPUT(GPIOA_PIN3) | \
                                         PIN_MODE_INPUT(GPIOA_PIN4) | \
                                         PIN_MODE_OUTPUT(GPIOA_LED_RED) | \

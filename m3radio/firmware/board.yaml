@@ -15,7 +15,7 @@ pins:
 
     GPS_RX: pa0, af8
     GPS_TX: pa1, af8
-    GPS_RESET_N: pa2
+    GPS_RESET_N: pa2, output, starthigh
     ANT_FLAG_N: pc14
     ANT_EN_N: pc15, output, starthigh
 
