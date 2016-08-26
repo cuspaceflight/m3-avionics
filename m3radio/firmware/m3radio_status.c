@@ -12,7 +12,7 @@ static THD_FUNCTION(m3radio_status_thd, arg) {
             chThdSleepMilliseconds(100);
             palClearLine(LINE_LED_GRN);
             chThdSleepMilliseconds(400);
-        } else if(status == M3STATUS_INIT()) {
+        } else if(status == M3STATUS_INITIALISING) {
             palSetLine(LINE_LED_GRN);
             palSetLine(LINE_LED_RED);
             chThdSleepMilliseconds(100);
@@ -27,5 +27,5 @@ static THD_FUNCTION(m3radio_status_thd, arg) {
 
 void m3radio_status_init() {
     chThdCreateStatic(m3radio_status_thd_wa, sizeof(m3radio_status_thd_wa),
-                      NORMALPRIO, m3radio_status_thd_wa);
+                      NORMALPRIO, m3radio_status_thd, NULL);
 }

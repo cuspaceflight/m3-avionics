@@ -26,7 +26,7 @@ int main(void) {
      * the radio */
     can_set_loopback(true);
 
-    ublox_init(UARTD4);
+    ublox_init(&UARTD4);
 
     m3radio_status_init();
 
