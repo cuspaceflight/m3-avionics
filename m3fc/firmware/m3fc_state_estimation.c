@@ -33,7 +33,7 @@ static const float Tb[7] = {
 static const float Hb[7] = {
     0.0f, 11000.0f, 20000.0f, 32000.0f, 47000.0f, 51000.0f, 71000.0f};
 
-volatile bool state_estimation_trust_barometer;
+volatile bool m3fc_state_estimation_trust_barometer;
 
 /* Functions to convert pressures to altitudes via the
  * US Standard Atmosphere
@@ -231,7 +231,7 @@ state_estimate_t m3fc_state_estimation_get_state()
 void m3fc_state_estimation_init()
 {
     m3status_set_init(M3FC_COMPONENT_SE);
-    state_estimation_trust_barometer = true;
+    m3fc_state_estimation_trust_barometer = true;
     t_clk = chVTGetSystemTime();
     chBSemObjectInit(&kalman_bsem, false);
 }
@@ -274,7 +274,7 @@ void m3fc_state_estimation_new_pressure(float pressure)
     float h, hd;
 
     /* Discard data when mission control believes we are transonic. */
-    if(!state_estimation_trust_barometer)
+    if(!m3fc_state_estimation_trust_barometer)
         return;
 
     /* Convert pressure reading into an altitude.

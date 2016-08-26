@@ -64,4 +64,7 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 void can_init(uint8_t board_id);
 void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
+/* Whether to process all sent messages as though they were also received */
+void can_set_loopback(bool enabled);
+
 #endif /* _M3CAN_H */
