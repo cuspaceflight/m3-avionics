@@ -2,6 +2,7 @@
 #include "hal.h"
 #include "m3can.h"
 #include "m3radio_status.h"
+#include "ublox.h"
 
 int main(void) {
 
@@ -20,6 +21,8 @@ int main(void) {
 
     /* Turn on the CAN system and send a packet with our firmware version */
     can_init(CAN_ID_M3RADIO);
+
+    uart_init(UARTD4);
 
     m3radio_status_init();
 

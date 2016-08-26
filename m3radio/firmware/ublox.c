@@ -3,18 +3,6 @@
  * 2014, 2016 Adam Greig, Cambridge University Spaceflight
  */
 
-/*
- * TODO
- *
- * * Read large buffers up to the number of bytes available from the ublox
- * * Run each new byte through a decoding state machine
- * * SM calls various functions to deal with each type of received message
- * * * Either ACK/NAK, PVT, or perhaps also CFG-NAV5
- * * Should poll the device's NAV5 at least once to ensure flight mode
- * * PVT updates get sent to central dispatch
- * * ACKs are OK but receiving a NAK is cause for sadness and logs
- */
-
 #include <stdlib.h>
 #include <string.h>
 #include "ublox.h"
@@ -42,6 +30,7 @@
 #define NMEA_CLASS 0xF0
 
 /* Selection of UBX IDs */
+#define UBX_CFG_PRT  0x00
 #define UBX_CFG_MSG  0x01
 #define UBX_CFG_NAV5 0x24
 #define UBX_CFG_RATE 0x08
@@ -70,11 +59,7 @@ typedef enum {
  * Notably includes changing dynamic mode to "Airborne 4G".
  */
 typedef struct __attribute__((packed)) {
-    union {
-        uint8_t data;
-        uint8_t sync1;
-    };
-    uint8_t sync2, class, id;
+    uint8_t sync1, sync2, class, id;
     uint16_t length;
     union {
         uint8_t payload[36];
@@ -95,7 +80,7 @@ typedef struct __attribute__((packed)) {
             uint8_t utc_standard;
             uint8_t reserved3;
             uint32_t reserved4;
-        };
+        } __attribute__((packed));
     };
     uint8_t ck_a, ck_b;
 } ubx_cfg_nav5_t;
@@ -105,11 +90,7 @@ typedef struct __attribute__((packed)) {
  * to the current port.
  */
 typedef struct __attribute__((packed)) {
-    union {
-        uint8_t data;
-        uint8_t sync1;
-    };
-    uint8_t sync2, class, id;
+    uint8_t sync1, sync2, class, id;
     uint16_t length;
     union {
         uint8_t payload[3];
@@ -117,17 +98,40 @@ typedef struct __attribute__((packed)) {
             uint8_t msg_class;
             uint8_t msg_id;
             uint8_t rate;
-        };
+        } __attribute__((packed));
     };
     uint8_t ck_a, ck_b;
 } ubx_cfg_msg_t;
 
+
+/* UBX-CFG-PRT
+ * Change port settings including protocols.
+ */
 typedef struct __attribute__((packed)) {
+    uint8_t sync1, sync2, class, id;
+    uint16_t length;
     union {
-        uint8_t data;
-        uint8_t sync1;
+        uint8_t payload[20];
+        struct {
+            uint8_t port_id;
+            uint8_t reserved0;
+            uint16_t tx_ready;
+            uint32_t mode;
+            uint32_t baud_rate;
+            uint16_t in_proto_mask;
+            uint16_t out_proto_mask;
+            uint16_t flags;
+            uint16_t reserved5;
+        } __attribute__((packed));
     };
-    uint8_t sync2, class, id;
+    uint8_t ck_a, ck_b;
+} ubx_cfg_prt_t;
+
+/* UBX-CFG-RATE
+ * Change solution rate
+ */
+typedef struct __attribute__((packed)) {
+    uint8_t sync1, sync2, class, id;
     uint16_t length;
     union {
         uint8_t payload[6];
@@ -135,7 +139,7 @@ typedef struct __attribute__((packed)) {
             uint16_t meas_rate;
             uint16_t nav_rate;
             uint16_t time_ref;
-        };
+        } __attribute__((packed));
     };
     uint8_t ck_a, ck_b;
 } ubx_cfg_rate_t;
@@ -143,12 +147,8 @@ typedef struct __attribute__((packed)) {
 /* UBX-ACK
  * ACK/NAK messages after trying to set a config.
  */
-typedef struct {
-    union {
-        uint8_t data;
-        uint8_t sync1;
-    };
-    uint8_t sync2, class, id;
+typedef struct __attribute__((packed)) {
+    uint8_t sync1, sync2, class, id;
     uint16_t length;
     union {
         uint8_t payload[2];
@@ -164,12 +164,8 @@ typedef struct {
  * Contains fix quality, position and time information.
  * Everything you want in one message.
  */
-typedef struct {
-    union {
-        uint8_t data;
-        uint8_t sync1;
-    };
-    uint8_t sync2, class, id;
+typedef struct __attribute__((packed)) {
+    uint8_t sync1, sync2, class, id;
     uint16_t length;
     union {
         uint8_t payload[92];
@@ -201,7 +197,7 @@ typedef struct {
     uint8_t ck_a, ck_b;
 } ubx_nav_pvt_t;
 
-static UARTConfig uart_config = {
+static UARTConfig uart_cfg = {
     .txend1_cb = NULL,
     .txend2_cb = NULL,
     .rxend_cb = NULL,
@@ -213,13 +209,34 @@ static UARTConfig uart_config = {
     .cr3 = 0,
 };
 
+static uint16_t ublox_fletcher_8(uint8_t *buf, uint8_t n);
+static void ublox_checksum(uint8_t *buf);
+static void ublox_rxchar(UARTDriver* uartp, uint16_t c);
+static void ublox_rxerr(UARTDriver* uartdp, uartflags_t e);
+static bool_t ublox_transmit(uint8_t *buf);
+static void ublox_state_machine(uint8_t c);
+static bool_t ublox_configure(uint8_t *buf, size_t bufsize);
+
+/* Run the Fletcher-8 checksum, initialised to chk, over n bytes of buf */
+static uint16_t ublox_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n)
+{
+    uint8_t ck_a = chk, ck_b = chk>>8;
+
+    /* Run Fletcher-8 algorithm */
+    for(i=0; i<n; i++) {
+        ck_a += buf[i];
+        ck_b += ck_a;
+    }
+
+    return (ck_b<<8) | (ck_a);
+}
+
 /* Computes the Fletcher-8 checksum over buf, using its length fields
  * to determine how much to read, returning the new checksum.
  */
 static void ublox_checksum(uint8_t *buf)
 {
     uint16_t plen, i;
-    uint8_t ck_a = 0x00, ck_b = 0x00;
 
     /* Check SYNC bytes are correct */
     if(buf[0] != UBX_SYNC1 && buf[1] != UBX_SYNC2)
@@ -228,15 +245,11 @@ static void ublox_checksum(uint8_t *buf)
     /* Extract payload length */
     plen = ((uint16_t*)buf)[2];
 
-    /* Run Fletcher-8 algorithm */
-    for(i=2; i<plen+6; i++) {
-        ck_a += buf[i];
-        ck_b += ck_a;
-    }
+    uint16_t ck = ublox_fletcher_8(0, &buf[2], plen+4);
 
     /* Write new checksum to the buffer */
-    buf[plen+6] = ck_a;
-    buf[plen+7] = ck_b;
+    buf[plen+6] = ck;
+    buf[plen+7] = ck >> 8;
 }
 
 /* Transmit a UBX message over the UART.
@@ -254,43 +267,34 @@ static bool_t ublox_transmit(uint8_t *buf)
 
     /* Determine length and thus suitable timeout in systicks (ms) */
     n = 8 + ((uint16_t*)buf)[2];
-    timeout = n / 100 + 10;
+    timeout = MS2ST(n*2);
 
     /* Transmit message */
-    rv = i2cMasterTransmitTimeout(&I2CD1, UBLOX_I2C_ADDR, buf, n,
-                                  NULL, 0, timeout);
-    if(rv != RDY_OK)
-        m2status_gps_status(STATUS_ERR_WRITING);
+    rv = uartSendTimeout(ublox_uartd, &n, buf, timeout);
+    if(rv != RDY_OK) {
+        m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                           M3RADIO_ERROR_UBLOX_TIMEOUT);
+    }
+
     return rv == RDY_OK;
 }
 
-/* Attempt to read one or more messages from the uBlox.
- * Returns 0 if no messages were read, else returns the number of bytes
- * read. Will read at most bufsize bytes into buf.
- */
-static size_t ublox_receive(uint8_t *buf, size_t bufsize)
-{
-    /*uint16_t bytes_available;*/
-    /*uint8_t bytes_available_addr = UBLOX_I2C_BYTES_AVAIL;*/
-    /*systime_t timeout;*/
-    (void)bufsize;
-    msg_t rv;
-
-    rv = i2cMasterReceiveTimeout(&I2CD1, UBLOX_I2C_ADDR, buf, 64, 1000);
-
-    if(rv == RDY_OK) {
-        return 64;
-    } else {
-        m2status_gps_status(STATUS_ERR_READING);
-        return 0;
-    }
+static void ublox_rxchar(UARTDriver* uartp, uint16_t c) {
+    (void)uartp;
+    ublox_state_machine(c);
 }
 
-/* Run the first `num_new_bytes` bytes in `buf` through the UBX decoding state
- * machine. Note that this function preserves static state and dispatches new
- * messages as appropriate once received.
+static void ublox_rxerr(UARTDriver* uartdp, uartflags_t e) {
+    (void)uartdp;
+    (void)e;
+    m3status_set_error(M3RADIO_COMPONENT_UBLOX, M3RADIO_ERROR_UBLOX_UARTERR);
+}
+
+/* Run new byte b through the UBX decoding state machine. Note that this
+ * function preserves static state and processes new messages as appropriate
+ * once received.
  */
-static void ublox_state_machine(uint8_t *buf, size_t num_new_bytes)
+static void ublox_state_machine(uint8_t b)
 {
     size_t i;
     static ubx_state state = STATE_IDLE;
@@ -300,134 +304,173 @@ static void ublox_state_machine(uint8_t *buf, size_t num_new_bytes)
     static uint16_t length_remaining;
     static char payload[128];
     static uint8_t ck_a, ck_b;
+    static uint16_t ck;
 
     ubx_cfg_nav5_t cfg_nav5;
     ubx_nav_pvt_t nav_pvt;
     ublox_pvt_t pvt;
 
-    for(i = 0; i < num_new_bytes; i++) {
-        uint8_t b = buf[i];
+    switch(state) {
+        case STATE_IDLE:
+            if(b == UBX_SYNC1)
+                state = STATE_SYNC1;
+            break;
 
-        switch(state) {
-            case STATE_IDLE:
-                if(b == UBX_SYNC1)
-                    state = STATE_SYNC1;
-                break;
-
-            case STATE_SYNC1:
-                if(b == UBX_SYNC2)
-                    state = STATE_SYNC2;
-                else
-                    state = STATE_IDLE;
-                break;
-
-            case STATE_SYNC2:
-                class = b;
-                state = STATE_CLASS;
-                break;
-
-            case STATE_CLASS:
-                id = b;
-                state = STATE_ID;
-                break;
-
-            case STATE_ID:
-                length = (uint16_t)b;
-                state = STATE_L1;
-                break;
-
-            case STATE_L1:
-                length |= (uint16_t)b << 8;
-                if(length >= 128) {
-                    state = STATE_IDLE;
-                }
-                length_remaining = length;
-                state = STATE_PAYLOAD;
-                break;
-
-            case STATE_PAYLOAD:
-                if(length_remaining)
-                    payload[length - length_remaining--] = b;
-                else
-                    state = STATE_PAYLOAD_DONE;
-                break;
-
-            case STATE_PAYLOAD_DONE:
-                ck_a = b;
-                state = STATE_CK_A;
-                break;
-
-            case STATE_CK_A:
-                ck_b = b;
-                /* TODO check checksum */
-                (void)ck_a;
-                (void)ck_b;
-
+        case STATE_SYNC1:
+            if(b == UBX_SYNC2)
+                state = STATE_SYNC2;
+            else
                 state = STATE_IDLE;
-                switch(class) {
-                    case UBX_ACK:
-                        if(id == 0x00) {
-                            /* NAK */
-                            m2status_gps_status(STATUS_ERR);
-                        } else if(id == 0x01) {
-                            /* ACK */
-                            /* No need to do anything */
-                        } else {
-                            m2status_gps_status(STATUS_ERR);
-                        }
-                        break;
-                    case UBX_NAV:
-                        if(id == 0x07) {
-                            /* PVT */
-                            memcpy(nav_pvt.payload, payload, length);
-                            memcpy(&pvt, payload, length);
-                            m2status_set_gps_time(
-                                pvt.year&0xFF, (pvt.year>>8)&0xFF,
-                                pvt.month, pvt.day, pvt.hour, pvt.minute,
-                                pvt.second, pvt.valid);
-                            m2status_set_gps_pos(pvt.lat, pvt.lon);
-                            m2status_set_gps_alt(pvt.height, pvt.h_msl);
-                            m2status_set_gps_status(pvt.fix_type,
-                                                    pvt.flags, pvt.num_sv);
+            break;
 
-                            m2status_gps_status(STATUS_OK);
-                        } else {
-                            m2status_gps_status(STATUS_ERR);
-                        }
-                        break;
-                    case UBX_CFG:
-                        if(id == 0x24) {
-                            /* NAV5 */
-                            memcpy(cfg_nav5.payload, payload, length);
-                            /* TODO check that Airborne is set, if not log a
-                             * warning and try to set it again */
-                            if(cfg_nav5.dyn_model != 8) {
-                                m2status_gps_status(STATUS_ERR_SELFTEST_FAIL);
-                            }
-                        } else {
-                            m2status_gps_status(STATUS_ERR);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                break;
+        case STATE_SYNC2:
+            class = b;
+            state = STATE_CLASS;
+            break;
 
-            default:
+        case STATE_CLASS:
+            id = b;
+            state = STATE_ID;
+            break;
+
+        case STATE_ID:
+            length = (uint16_t)b;
+            state = STATE_L1;
+            break;
+
+        case STATE_L1:
+            length |= (uint16_t)b << 8;
+            if(length >= 128) {
+                m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                                   M3RADIO_ERROR_UBLOX_DECODE);
                 state = STATE_IDLE;
-                /* TODO sad */
-                break;
+            }
+            length_remaining = length;
+            state = STATE_PAYLOAD;
+            break;
 
-        }
+        case STATE_PAYLOAD:
+            if(length_remaining)
+                payload[length - length_remaining--] = b;
+            else
+                state = STATE_PAYLOAD_DONE;
+            break;
+
+        case STATE_PAYLOAD_DONE:
+            ck_a = b;
+            state = STATE_CK_A;
+            break;
+
+        case STATE_CK_A:
+            ck_b = b;
+            state = STATE_IDLE;
+
+            /* verify checksum */
+            ck = ublox_fletcher_8(0, &class, 1);
+            ck = ublox_fletcher_8(ck, &id, 1);
+            ck = ublox_fletcher_8(ck, (uint8_t*)&length, 2);
+            ck = ublox_fletcher_8(ck, payload, length);
+            if(ck_a != (ck&0xFF) || ck_b != (ck>>8)) {
+                m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                                   M3RADIO_ERROR_UBLOX_CHECKSUM);
+                break;
+            }
+
+            switch(class) {
+                case UBX_ACK:
+                    if(id == 0x00) {
+                        /* NAK */
+                        m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                                           M3RADIO_ERROR_UBLOX_NAK);
+                    } else if(id == 0x01) {
+                        /* ACK */
+                        /* No need to do anything */
+                    } else {
+                        m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                                           M3RADIO_ERROR_UBLOX_DECODE);
+                    }
+                    break;
+                case UBX_NAV:
+                    if(id == 0x07) {
+                        /* PVT */
+                        memcpy(nav_pvt.payload, payload, length);
+                        memcpy(&pvt, payload, length);
+                        /*m2status_set_gps_time(*/
+                            /*pvt.year&0xFF, (pvt.year>>8)&0xFF,*/
+                            /*pvt.month, pvt.day, pvt.hour, pvt.minute,*/
+                            /*pvt.second, pvt.valid);*/
+                        /*m2status_set_gps_pos(pvt.lat, pvt.lon);*/
+                        /*m2status_set_gps_alt(pvt.height, pvt.h_msl);*/
+                        /*m2status_set_gps_status(pvt.fix_type,*/
+                                                /*pvt.flags, pvt.num_sv);*/
+
+                        m3status_set_ok(M3RADIO_COMPONENT_UBLOX);
+                    } else {
+                        m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                                           M3RADIO_ERROR_UBLOX_DECODE);
+                    }
+                    break;
+                case UBX_CFG:
+                    if(id == 0x24) {
+                        /* NAV5 */
+                        memcpy(cfg_nav5.payload, payload, length);
+                        /* TODO check that Airborne is set, if not log a
+                         * warning and try to set it again */
+                        if(cfg_nav5.dyn_model != 8) {
+                            m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                                               M3RADIO_ERROR_UBLOX_FLIGHT_MODE);
+                        }
+                    } else {
+                        m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                                           M3RADIO_ERROR_UBLOX_DECODE);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        default:
+            state = STATE_IDLE;
+            m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                               M3RADIO_ERROR_UBLOX_DECODE);
+            break;
+
     }
 }
 
-static bool_t ublox_init(uint8_t *buf, size_t bufsize)
+static bool_t ublox_configure(uint8_t *buf, size_t bufsize)
 {
+    ubx_cfg_prt_t prt;
     ubx_cfg_nav5_t nav5;
     ubx_cfg_msg_t msg;
     ubx_cfg_rate_t rate;
-    bool_t success = TRUE;
+    bool_t success = true;
+
+    /* Disable NMEA on UART */
+    prt.sync1 = UBX_SYNC1;
+    prt.sync2 = UBX_SYNC2;
+    prt.class = UBX_CFG;
+    prt.id = UBX_CFG_PRT;
+    prt.length = 20;
+    /* Program UART1 */
+    prt.port_id = 1;
+    /* Don't use TXReady GPIO */
+    prt.tx_ready = 0;
+    /* 8 bits, no polarity, 1 stop bit */
+    prt.mode = (1<<4) | (3<<6) | (4<<9);
+    /* 9600 baud */
+    prt.baud_rate = 9600;
+    /* only receive UBX protocol */
+    prt.in_proto_mask = (1<<0);
+    /* only send UBX protocol */
+    prt.out_proto_mask = (1<<0);
+    /* no weird timeout */
+    prt.flags = 0;
+    /* must be 0 */
+    prt.reserved5 = 0;
+
+    success &= ublox_transmit((uint8_t*)prt);
 
     /* Set to Airborne <4g dynamic mode */
     nav5.sync1 = UBX_SYNC1;
@@ -441,56 +484,20 @@ static bool_t ublox_init(uint8_t *buf, size_t bufsize)
     nav5.reserved3 = 0;
     nav5.reserved4 = 0;
 
-    success &= ublox_transmit(&nav5.data);
-    if(!success) return FALSE;
+    success &= ublox_transmit((uint8_t*)&nav5);
+    if(!success) return false;
 
-    /* Disable NMEA messages to I2C */
+    /* Enable NAV UBX messages */
     msg.sync1 = UBX_SYNC1;
     msg.sync2 = UBX_SYNC2;
     msg.class = UBX_CFG;
     msg.id = UBX_CFG_MSG;
     msg.length = 3;
 
-    msg.msg_class = NMEA_CLASS;
-    msg.msg_id    = NMEA_GGA;
-    msg.rate      = 0;
-    success &= ublox_transmit(&msg.data);
-    if(!success) return FALSE;
-
-    msg.msg_class = NMEA_CLASS;
-    msg.msg_id    = NMEA_GLL;
-    msg.rate      = 0;
-    success &= ublox_transmit(&msg.data);
-    if(!success) return FALSE;
-
-    msg.msg_class = NMEA_CLASS;
-    msg.msg_id    = NMEA_GSA;
-    msg.rate      = 0;
-    success &= ublox_transmit(&msg.data);
-    if(!success) return FALSE;
-
-    msg.msg_class = NMEA_CLASS;
-    msg.msg_id    = NMEA_GSV;
-    msg.rate      = 0;
-    success &= ublox_transmit(&msg.data);
-    if(!success) return FALSE;
-
-    msg.msg_class = NMEA_CLASS;
-    msg.msg_id    = NMEA_RMC;
-    msg.rate      = 0;
-    success &= ublox_transmit(&msg.data);
-    if(!success) return FALSE;
-
-    msg.msg_class = NMEA_CLASS;
-    msg.msg_id    = NMEA_VTG;
-    msg.rate      = 0;
-    success &= ublox_transmit(&msg.data);
-    if(!success) return FALSE;
-
     msg.msg_class = UBX_NAV;
     msg.msg_id    = UBX_NAV_PVT;
     msg.rate      = 1;
-    success &= ublox_transmit(&msg.data);
+    success &= ublox_transmit((uint8_t*)&msg);
     if(!success) return FALSE;
 
     /* Set solution rate to 10Hz */
@@ -503,52 +510,36 @@ static bool_t ublox_init(uint8_t *buf, size_t bufsize)
     rate.meas_rate = 100;
     rate.nav_rate = 1;
     rate.time_ref = 0;
-    success &= ublox_transmit(&rate.data);
+    success &= ublox_transmit((uint8_t*)&rate);
     if(!success) return FALSE;
-
-    /* Clear the current I2C buffer */
-    /*
-    while(ublox_receive(buf, bufsize));
-    */
-    (void)buf;
-    (void)bufsize;
 
     return success;
 }
 
-msg_t ublox_thread(void* arg)
-{
+static THD_WORKING_AREA(ublox_thd_wa, 512);
+static THD_FUNCTION(ublox_thd, arg) {
     (void)arg;
-    const int bufsize = 512;
-    uint8_t buf[bufsize];
-    uint8_t n_rx;
-
-    m2status_gps_status(STATUS_WAIT);
-    chRegSetThreadName("uBlox");
-
     /* We'll reset the uBlox so it's in a known state */
-    palClearPad(GPIOB, GPIOB_GPS_RESET);
+    palClearLine(LINE_GPS_RESET_N);
     chThdSleepMilliseconds(100);
-    palSetPad(GPIOB, GPIOB_GPS_RESET);
+    palSetLine(LINE_GPS_RESET_N);
     chThdSleepMilliseconds(500);
 
-    i2cStart(&I2CD1, &i2cconfig);
+    uartStart(ublox_uartd, &uart_cfg);
 
-    if(!ublox_init(buf, bufsize)) {
-        m2status_gps_status(STATUS_ERR_INITIALISING);
-        while(1) chThdSleepMilliseconds(100);
+    while(!ublox_configure()) {
+        m3status_set_error(M3RADIO_COMPONENT_UBLOX, M3RADIO_ERROR_UBLOX_CFG);
+        chThdSleepMilliseconds(1000);
     }
 
-    i2cStart(&I2CD1, &i2cconfig);
-    while(TRUE) {
-        n_rx = ublox_receive(buf, bufsize);
-        ublox_state_machine(buf, n_rx);
-        chThdSleepMilliseconds(10);
+    while(true) {
+        chThdSleepMilliseconds(1000);
     }
 }
 
 void ublox_init(UARTDriver* uartd) {
     m3status_set_init(M3RADIO_COMPONENT_UBLOX);
     ublox_uartd = uartd;
-    chThdCreateStatic
+    chThdCreateStatic(ublox_thd_wa, sizeof(ublox_thd_wa), NORMALPRIO,
+                      ublox_thd);
 }
