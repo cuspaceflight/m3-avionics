@@ -7,7 +7,7 @@
 struct m3fc_config {
 
     struct {
-        /* M3FC position. 1=dart 2=core 3=left booster 4=right booster*/
+        /* M3FC position. 1=dart 2=core */
         uint8_t m3fc_position;
 
         /* Accelerometer "up" axis. 1=X 2=-X 3=Y 4=-Y 5=Z 6=-Z */
@@ -46,5 +46,6 @@ extern struct m3fc_config m3fc_config;
 void m3fc_config_init(void);
 void m3fc_config_save(void);
 bool m3fc_config_load(void);
+bool m3fc_config_check(void);
 
 #endif

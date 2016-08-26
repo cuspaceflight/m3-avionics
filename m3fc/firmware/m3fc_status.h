@@ -19,5 +19,7 @@
 #define M3FC_ERROR_PYROS_PYRO2      (5)
 #define M3FC_ERROR_PYROS_PYRO3      (6)
 #define M3FC_ERROR_PYROS_PYRO4      (7)
+#define M3FC_ERROR_CFG_CHK_PROFILE  (8)
+#define M3FC_ERROR_CFG_CHK_PYROS    (9)
 
 #endif

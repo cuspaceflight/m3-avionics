@@ -46,6 +46,7 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
         m3fc_config.profile.main_altitude   = data[5];
         m3fc_config.profile.main_timeout    = data[6];
         m3fc_config.profile.land_timeout    = data[7];
+        m3fc_config_check();
     } else if(msg_id == CAN_MSG_ID_M3FC_SET_CFG_PYROS) {
         m3fc_config.pyros.pyro_1_usage      = data[0];
         m3fc_config.pyros.pyro_1_type       = data[1];
@@ -55,9 +56,13 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
         m3fc_config.pyros.pyro_3_type       = data[5];
         m3fc_config.pyros.pyro_4_usage      = data[6];
         m3fc_config.pyros.pyro_4_type       = data[7];
+        m3fc_config_check();
     } else if(msg_id == CAN_MSG_ID_M3FC_LOAD_CFG) {
         m3fc_config_load();
+        m3fc_config_check();
     } else if(msg_id == CAN_MSG_ID_M3FC_SAVE_CFG) {
         m3fc_config_save();
+        m3fc_config_load();
+        m3fc_config_check();
     }
 }
