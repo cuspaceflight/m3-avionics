@@ -46,6 +46,11 @@ build/obj/microsd.o: microsd.c \
  ../../shared/ChibiOS/os/ext/CMSIS/include/core_cmSimd.h \
  ../../shared/ChibiOS/os/ext/CMSIS/ST/STM32F4xx/system_stm32f4xx.h \
  ../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore_v7m.h \
+ ../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore_timer.h \
+ ../../shared/ChibiOS/os/hal/include/st.h \
+ ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/st_lld.h mcuconf.h \
+ ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
+ ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/stm32_tim.h \
  ../../shared/ChibiOS/os/rt/include/chdebug.h \
  ../../shared/ChibiOS/os/rt/include/chtm.h \
  ../../shared/ChibiOS/os/rt/include/chstats.h \
@@ -96,7 +101,6 @@ build/obj/microsd.o: microsd.c \
  ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/ext_lld_isr.h \
  ../../shared/ChibiOS/os/hal/include/gpt.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/gpt_lld.h \
- ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/stm32_tim.h \
  ../../shared/ChibiOS/os/hal/include/i2c.h \
  ../../shared/ChibiOS/os/hal/include/i2s.h \
  ../../shared/ChibiOS/os/hal/include/icu.h \
@@ -104,6 +108,9 @@ build/obj/microsd.o: microsd.c \
  ../../shared/ChibiOS/os/hal/include/mii.h \
  ../../shared/ChibiOS/os/hal/include/pwm.h \
  ../../shared/ChibiOS/os/hal/include/rtc.h \
+ /usr/arm-none-eabi/include/time.h \
+ /usr/arm-none-eabi/include/machine/time.h \
+ ../../shared/ChibiOS/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h \
  ../../shared/ChibiOS/os/hal/include/serial.h \
  ../../shared/ChibiOS/os/hal/include/sdc.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/LLD/SDIOv1/sdc_lld.h \
@@ -114,8 +121,6 @@ build/obj/microsd.o: microsd.c \
  ../../shared/ChibiOS/os/hal/include/usb.h \
  ../../shared/ChibiOS/os/hal/include/wdg.h \
  ../../shared/ChibiOS/os/hal/include/st.h \
- ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/st_lld.h mcuconf.h \
- ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
  ../../shared/ChibiOS/os/hal/include/mmc_spi.h \
  ../../shared/ChibiOS/os/hal/include/serial_usb.h \
  ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h err_handler.h
@@ -224,6 +229,18 @@ board.h:
 
 ../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore_v7m.h:
 
+../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore_timer.h:
+
+../../shared/ChibiOS/os/hal/include/st.h:
+
+../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/st_lld.h:
+
+mcuconf.h:
+
+../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h:
+
+../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/stm32_tim.h:
+
 ../../shared/ChibiOS/os/rt/include/chdebug.h:
 
 ../../shared/ChibiOS/os/rt/include/chtm.h:
@@ -330,8 +347,6 @@ mcuconf.h:
 
 ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/gpt_lld.h:
 
-../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/stm32_tim.h:
-
 ../../shared/ChibiOS/os/hal/include/i2c.h:
 
 ../../shared/ChibiOS/os/hal/include/i2s.h:
@@ -345,6 +360,12 @@ mcuconf.h:
 ../../shared/ChibiOS/os/hal/include/pwm.h:
 
 ../../shared/ChibiOS/os/hal/include/rtc.h:
+
+/usr/arm-none-eabi/include/time.h:
+
+/usr/arm-none-eabi/include/machine/time.h:
+
+../../shared/ChibiOS/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h:
 
 ../../shared/ChibiOS/os/hal/include/serial.h:
 
@@ -365,12 +386,6 @@ mcuconf.h:
 ../../shared/ChibiOS/os/hal/include/wdg.h:
 
 ../../shared/ChibiOS/os/hal/include/st.h:
-
-../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/st_lld.h:
-
-mcuconf.h:
-
-../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h:
 
 ../../shared/ChibiOS/os/hal/include/mmc_spi.h:
 

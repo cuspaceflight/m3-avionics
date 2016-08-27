@@ -220,7 +220,8 @@ ULIBS =
 RULESPATH = $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC
 include $(RULESPATH)/rules.mk
 
-##############################################################################
+##############################################################################
+
 # M3Debug flashing via GDB
 #
 BMP_PORT = $(wildcard /dev/serial/by-id/usb-Black_Sphere_Technologies_Black_Magic_Probe_*-if00)
