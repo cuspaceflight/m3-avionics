@@ -8,7 +8,7 @@ function setStatus(name, status){
     $("#header-" + name + " h3").text(name + namestrs[status.status]);
 }
 
-var packettypes = new Array();
+var packettypes = {};
 var lastTimes = {};
 
 // state should contain at least 2 field:
@@ -26,49 +26,86 @@ function canCommand(parent, name, arg){
     $.post("/command", {parent:parent, name:name, arg:arg});
 }
 
-$(document).ready(function(){
-    setInterval(function(){
-        var now = new Date().getTime();
-        for(idx in packettypes){
-            var name = packettypes[idx][0];
-            var canid = packettypes[idx][1];
+function updateLastHeard(){
+    var now = new Date().getTime()/1000;
+    for(name in packettypes){
+        var lowest = -1;
+        for(cidx in packettypes[name]){
+            var canid = packettypes[name][cidx];
             if(lastTimes[canid]){
-                var secdiff = ((now - lastTimes[canid])/1000) + "s ago";
+                var secdiff = Math.floor(10*(now - lastTimes[canid]))/10;
+                if((lowest == -1) || (secdiff < lowest)){
+                    lowest = secdiff;
+                }
+                secdiff += "s";
             }else{
                 var secdiff = "never"
             }
             $("#lasttime-" + canid).text(secdiff);
-            $("#lasttime-" + name).text(secdiff);
         }
-    }, 1000);
-    
+        if(lowest == -1){
+            lowest = "never";
+        }else{
+            lowest += "s";
+        }
+        $("#lasttime-" + name).text(lowest);
+    }
+}
+
+$(document).ready(function(){
     setInterval(function(){
-        $.getJSON("/state", function(js){
-            for(idx in js){
-                var names = Object.keys(js[idx]);
-                names.sort();
-                var sorted = [];
-                for(id in names){
-                    var name = names[id]
-                    if(name == "Status"){
-                        var reasonidx = js[idx][name].indexOf(":");
-                        var reason = "not implemented";
-                        var status = "";
-                        if(reasonidx == -1){
-                            status = js[idx][name];
-                        }else{
-                            status = js[idx][name].substring(0,reasonidx);
-                            reason = js[idx][name].substring(reasonidx+2);
+        $.ajax({
+            dataType: "json",
+            url: "/state",
+            success: function(js){
+                var toflash = new Array();
+                for(idx in js['lasttimes']){
+                    for(can_id in js['lasttimes'][idx]){
+                        if(lastTimes[can_id] < js['lasttimes'][idx][can_id]){
+                            // blink the datapoints which updated this time
+                            toflash.push("#lasttime-" + can_id);
                         }
-                        setStatus(idx, {status: status.toLowerCase().trim(), reason: reason});
+                        lastTimes[can_id] = js['lasttimes'][idx][can_id];
                     }
-                    sorted.push("<tr><td>" + name + "</td><td>" + js[idx][name].replace(/\n/g, "<br />") + "</tr>");
                 }
-                $("#display-" + idx).html(
-                    "<table class='table table-condensed'>" +
-                    sorted.join("\n") +
-                    "</table>");
+                var state = js['state'];
+                for(idx in state){
+                    var names = Object.keys(state[idx]);
+                    names.sort();
+                    var sorted = [];
+                    for(id in names){
+                        var name = names[id]
+                        if(name == "Status"){
+                            var reasonidx = state[idx][name].indexOf(":");
+                            var reason = "not implemented";
+                            var status = "";
+                            if(reasonidx == -1){
+                                status = state[idx][name];
+                            }else{
+                                status = state[idx][name].substring(0,reasonidx);
+                                reason = state[idx][name].substring(reasonidx+2);
+                            }
+                            setStatus(idx, {status: status.toLowerCase().trim(), reason: reason});
+                        }
+                        sorted.push("<tr><td>" + name + "</td>" +
+                            "<td>" + state[idx][name].replace(/\n/g, "<br />") + "</td>" +
+                            "<td id='lasttime-" + packettypes[idx][name] + "'></td>" +
+                            "</td></tr>");
+                    }
+                    $("#display-" + idx).html(
+                        "<table class='table table-condensed'>" +
+                        sorted.join("\n") +
+                        "</table>");
+                }
+
+                for(idx in toflash){
+                    var el = $(toflash[idx]);
+                    el.fadeOut().fadeIn();
+                }
+
+                updateLastHeard();
+
             }
         });
-    }, 100);
+    }, 200);
 });

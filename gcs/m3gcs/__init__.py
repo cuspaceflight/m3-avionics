@@ -24,7 +24,7 @@ def run():
         args.port = os.path.realpath(port[0])
     
     shared_mgr = multiprocessing.Manager()
-    global_state = shared_mgr.dict({c:{} for c in registered_packets.keys()})
+    global_state = shared_mgr.dict({c:{"data":{}, "time":{}} for c in registered_packets.keys()})
 
     command_processor.run(port=args.port, state=global_state)
     webapp.run(state=global_state)

@@ -15,10 +15,14 @@ def index():
 
 @app.route("/state")
 def getstate():
-    tmp = {}
+    state = {}
+    lasttimes = {}
+    print(wa_state)
     for k in wa_state.keys():
-        tmp[k] = wa_state.get(k)
-    return jsonify(tmp)
+        s = wa_state.get(k)
+        state[k] = s['data']
+        lasttimes[k] = s['time']
+    return jsonify({"state":state, "lasttimes":lasttimes})
 
 
 @app.route("/command", methods=["POST"])
@@ -30,5 +34,4 @@ def sendcommand():
 def run(state):
     global wa_state
     wa_state = state
-    #app.run(debug=True)
     app.run()

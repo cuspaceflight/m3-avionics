@@ -91,12 +91,6 @@ def run(port, txq, rxq):
         except Empty:
             pass
 
-        #try:
         buf = ser.read(64)
         for frame in rx.process(buf):
             rxq.put(frame)
-        #except TypeError as e:
-        #    print("Serial port disconnected. (?)")
-        #    ser.close()
-        #    ser.open()
-        #    pass

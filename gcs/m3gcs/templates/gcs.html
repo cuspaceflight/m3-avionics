@@ -66,8 +66,9 @@
 
 <script type="text/javascript" language="javascript">
     {% for name in packets %}
-    {% for packetid in packets[name] %}
-        packettypes.push({ 0:"{{ name }}", 1:{{ packetid }} });
-    {% endfor %}
+        packettypes["{{ name }}"] = {};
+        {% for packetid in packets[name] %}
+            packettypes["{{ name }}"]["{{ packets[name][packetid][0] }}"] = {{ packetid }};
+        {% endfor %}
     {% endfor %}
 </script>
