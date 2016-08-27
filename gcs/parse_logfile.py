@@ -2,7 +2,7 @@ import sys
 from m3gcs.command_processor import find_processor
 
 if len(sys.argv) != 2:
-    print("Pass a single argument, logfile to parse")
+    print("Usage: {} <logfile.bin>".format(sys.argv[0]))
     sys.exit(1)
 
 with open(sys.argv[1], 'rb') as f:
