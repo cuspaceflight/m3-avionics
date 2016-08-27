@@ -21,7 +21,9 @@ static THD_FUNCTION(m3fc_config_reporter_thd, arg) {
         can_send(CAN_MSG_ID_M3FC_CFG_PYROS, false,
                  (uint8_t*)&m3fc_config.pyros, 8);
 
-        m3status_set_ok(M3FC_COMPONENT_CFG);
+        if(m3fc_config_check()) {
+            m3status_set_ok(M3FC_COMPONENT_CFG);
+        }
         chThdSleepMilliseconds(5000);
     }
 }
@@ -39,14 +41,8 @@ void m3fc_config_save() {
 void m3fc_config_init() {
     m3status_set_init(M3FC_COMPONENT_CFG);
 
-    if(m3fc_config_load()) {
-        m3status_set_ok(M3FC_COMPONENT_CFG);
-    } else {
+    if(!m3fc_config_load()) {
         m3status_set_error(M3FC_COMPONENT_CFG, M3FC_ERROR_CFG_READ);
-        return;
-    }
-
-    if(!m3fc_config_check()) {
         return;
     }
 

@@ -56,12 +56,12 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
         m3fc_config_check();
     } else if(msg_id == CAN_MSG_ID_M3FC_SET_CFG_PYROS) {
         m3fc_config.pyros.pyro_1_usage      = data[0];
-        m3fc_config.pyros.pyro_1_type       = data[1];
-        m3fc_config.pyros.pyro_2_usage      = data[2];
-        m3fc_config.pyros.pyro_2_type       = data[3];
-        m3fc_config.pyros.pyro_3_usage      = data[4];
-        m3fc_config.pyros.pyro_3_type       = data[5];
-        m3fc_config.pyros.pyro_4_usage      = data[6];
+        m3fc_config.pyros.pyro_2_usage      = data[1];
+        m3fc_config.pyros.pyro_3_usage      = data[2];
+        m3fc_config.pyros.pyro_4_usage      = data[3];
+        m3fc_config.pyros.pyro_1_type       = data[4];
+        m3fc_config.pyros.pyro_2_type       = data[5];
+        m3fc_config.pyros.pyro_3_type       = data[6];
         m3fc_config.pyros.pyro_4_type       = data[7];
         m3fc_config_check();
     } else if(msg_id == CAN_MSG_ID_M3FC_LOAD_CFG) {
