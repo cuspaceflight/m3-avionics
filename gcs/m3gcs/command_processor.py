@@ -2,9 +2,8 @@ import json
 import multiprocessing
 from queue import Queue, Empty
 
-from . import usbcan
+from . import usbcan, update_state
 from .packets import registered_packets, registered_commands
-from . import state
 
 txq = multiprocessing.Queue()
 rxq = multiprocessing.Queue()
@@ -22,16 +21,20 @@ def packet_process(rxq):
     while True:
         try:
             frame = rxq.get_nowait()
-            parent, processor = find_procesor(frame.sid)
-            if parent is not None:
+            res = find_processor(frame.sid)
+            if res is not None:
+                parent, processor = res
                 print(processor[1](frame.data))
-                state.update(parent, processor[0], processor[1](frame.data))
+                update_state(parent, processor[0], processor[1](frame.data))
             else:
-                print("No handler found for SID: {:b}".format(sid))
+                print("No handler found for SID: {:b}".format(frame.sid))
         except Empty:
             pass
 
-def run(port):
+def run(port, state):
+    global global_state
+    global_state = state
+    
     usbcan_runner = multiprocessing.Process(target=usbcan.run, args=(port, txq, rxq))
     usbcan_runner.start()
     

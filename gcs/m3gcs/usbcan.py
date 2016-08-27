@@ -93,5 +93,4 @@ def run(port, txq, rxq):
 
         buf = ser.read(1)
         for frame in rx.process(buf):
-            print(frame)
             rxq.put(frame)

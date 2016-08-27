@@ -27,6 +27,11 @@ function canCommand(parent, name, arg){
 }
 
 $(document).ready(function(){
+    state = $.ajax("/state", {}, function(){
+        console.log(state);
+        console.log(JSON.parse(state));
+    });
+
     setInterval(function(){
         var now = new Date().getTime();
         for(idx in packettypes){
@@ -44,5 +49,6 @@ $(document).ready(function(){
     
     setInterval(function(){
         //state = $.ajax("/state").responseText;
+        //console.log(JSON.parse(state));
     }, 100);
 });

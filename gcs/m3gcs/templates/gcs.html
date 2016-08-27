@@ -22,12 +22,10 @@
     </div>
     <div class="panel-body" id="content-{{ name }}">
         <div id="display-{{ name }}">
-            {% for datapoint in packets[name] %}
-                {{ datapoint.html }}
-            {% endfor %}
+            
         </div>
         <div id="controls-{{ name }}">
-            {% for command in commands[name] %}
+            {% for command in (commands[name] | sort) %}
                 <div class="btn-group">
                 <button type="button" class="btn btn-default" disabled>{{ command }}</button>
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

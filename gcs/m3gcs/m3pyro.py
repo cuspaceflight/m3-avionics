@@ -5,7 +5,8 @@ def msg_id(x):
     return x << 5
 
 
-CAN_ID_M3PYRO = 2
+CAN_ID_M3PYRO = 3
+CAN_MSG_ID_M3PYRO_STATUS = (CAN_ID_M3PYRO | msg_id(0))
 CAN_MSG_ID_M3PYRO_FIRE_COMMAND = (CAN_ID_M3PYRO | msg_id(1))
 CAN_MSG_ID_M3PYRO_ARM_COMMAND = (CAN_ID_M3PYRO | msg_id(2))
 CAN_MSG_ID_M3PYRO_FIRE_STATUS = (CAN_ID_M3PYRO | msg_id(16))
@@ -13,6 +14,12 @@ CAN_MSG_ID_M3PYRO_ARM_STATUS = (CAN_ID_M3PYRO | msg_id(17))
 CAN_MSG_ID_M3PYRO_CONTINUITY = (CAN_ID_M3PYRO | msg_id(48))
 CAN_MSG_ID_M3PYRO_SUPPLY_STATUS = (CAN_ID_M3PYRO | msg_id(49))
 
+
+@register_packet("m3pyro", CAN_MSG_ID_M3PYRO_STATUS, "Status")
+def status(data):
+    status_map = {0: "Good", 1: "Init", 2: "Error"}
+    return "Status: {}".format(
+        status_map.get(data[0], "Unknown"))
 
 @register_packet("m3pyro", CAN_MSG_ID_M3PYRO_FIRE_STATUS, "Fire Status")
 def fire_status(data):
