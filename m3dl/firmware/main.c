@@ -91,12 +91,15 @@ int main(void) {
 
     /* Turn on the CAN system and send a packet with our firmware version */
     can_init(CAN_ID_M3DL);
-
-
+    
+    /* Enable CAN Feedback */
+    can_set_loopback(TRUE);
+    
     uint8_t data[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
 
     while (true) {
     
+    /* SD Card Test */
     log_can(0x123, false, 8, data);
     
     /* Clear the watchdog timer */
