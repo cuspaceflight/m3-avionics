@@ -17,7 +17,7 @@ void err(uint8_t arg) {
  *	0x01 = ltc2983_write_reg - SPI TX
  *             buffer overflow [LTC2893.c]
  *
- *      0x02 = ltc2983_setup - Init interupt 
+ *  0x02 = ltc2983_setup - Init interupt 
  *	       triggered but cmd status does  
  *	       not have DONE flag set [LTC2893.c]
  *

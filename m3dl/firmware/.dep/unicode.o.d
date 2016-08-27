@@ -24,6 +24,11 @@ build/obj/unicode.o: ../../shared/ChibiOS/ext/fatfs/src/option/unicode.c \
  ../../shared/ChibiOS/os/ext/CMSIS/include/core_cmSimd.h \
  ../../shared/ChibiOS/os/ext/CMSIS/ST/STM32F4xx/system_stm32f4xx.h \
  ../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore_v7m.h \
+ ../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore_timer.h \
+ ../../shared/ChibiOS/os/hal/include/st.h \
+ ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/st_lld.h mcuconf.h \
+ ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
+ ../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/stm32_tim.h \
  ../../shared/ChibiOS/os/rt/include/chdebug.h \
  ../../shared/ChibiOS/os/rt/include/chtm.h \
  ../../shared/ChibiOS/os/rt/include/chstats.h \
@@ -102,6 +107,18 @@ board.h:
 ../../shared/ChibiOS/os/ext/CMSIS/ST/STM32F4xx/system_stm32f4xx.h:
 
 ../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore_v7m.h:
+
+../../shared/ChibiOS/os/rt/ports/ARMCMx/chcore_timer.h:
+
+../../shared/ChibiOS/os/hal/include/st.h:
+
+../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/st_lld.h:
+
+mcuconf.h:
+
+../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_registry.h:
+
+../../shared/ChibiOS/os/hal/ports/STM32/LLD/TIMv1/stm32_tim.h:
 
 ../../shared/ChibiOS/os/rt/include/chdebug.h:
 
