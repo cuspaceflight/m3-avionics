@@ -8,6 +8,7 @@ def msg_id(x):
 
 
 CAN_ID_M3FC = 1
+CAN_MSG_ID_M3FC_STATUS = CAN_ID_M3FC | msg_id(0)
 CAN_MSG_ID_M3FC_MISSION_STATE = CAN_ID_M3FC | msg_id(32)
 CAN_MSG_ID_M3FC_ACCEL = CAN_ID_M3FC | msg_id(48)
 CAN_MSG_ID_M3FC_BARO = CAN_ID_M3FC | msg_id(49)
@@ -21,6 +22,32 @@ CAN_MSG_ID_M3FC_SET_CFG_PROFILE = CAN_ID_M3FC | msg_id(1)
 CAN_MSG_ID_M3FC_SET_CFG_PYROS = CAN_ID_M3FC | msg_id(2)
 CAN_MSG_ID_M3FC_LOAD_CFG = CAN_ID_M3FC | msg_id(3)
 CAN_MSG_ID_M3FC_SAVE_CFG = CAN_ID_M3FC | msg_id(4)
+
+
+@register_packet("m3fc", CAN_MSG_ID_M3FC_STATUS, "Status")
+def status(data):
+    # The string must start with 'OK:' 'INIT:' or 'ERROR:' as the web
+    # interface watches for these and applies special treatment (colours)
+    statuses = ["OK", "INIT", "ERROR"]
+    components = ["Unknown", "Microcontroller", "State estimation", "Config",
+                  "Beeper", "LEDs", "Accelerometer", "Barometer", "Flash",
+                  "Pyros"]
+    component_errors = ["Unknown",
+                        "CRC", "Write", # Flash errors
+                        "Read", # Config errors
+                        "Pyro1", "Pyro2", "Pyro3", "Pyro4", # Pyro errors
+                        "Profile", "Pyros", # More config errors
+                        "Bad ID", "Selftest", "Timeout", "Axis", # Accel err
+                        "Pressure", # State estimator error
+                        "Pyro Arm"] # Microcontroller error
+    
+    overall, comp, comp_state, comp_error = struct.unpack("BBBB",
+        bytes(data[:4]))
+    string = "{}: ".format(statuses[overall])
+    string += "{} {}".format(components[comp], statuses[comp_state])
+    if comp_state == 2: # Component is in error
+        string += " ({})".format(component_errors[comp_error])
+    return string
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_MISSION_STATE, "Mission State")
