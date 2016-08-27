@@ -47,7 +47,7 @@ uint8_t m3status_get() {
     for(i=0; i<256; i++) {
         overall_status |= components[i];
     }
-    if(overall_status && M3STATUS_ERROR) {
+    if(overall_status & M3STATUS_ERROR) {
         overall_status = M3STATUS_ERROR;
     }
     return overall_status;
