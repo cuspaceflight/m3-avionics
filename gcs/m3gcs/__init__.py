@@ -16,12 +16,14 @@ from . import webapp
 
 from . import m3pyro
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--port", help="Path to serial port on m3debug or radio",
-                    default="/dev/serial/by-id/*m3debug*-if02")
-args = parser.parse_args()
 
 def run():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", help="Path to serial port on m3debug or "
+                                       "radio",
+                        default="/dev/serial/by-id/*m3debug*-if02")
+    args = parser.parse_args()
+
     if "*" in args.port:
         port = glob.glob(args.port)
         if len(port) == 0:
