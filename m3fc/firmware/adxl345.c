@@ -226,7 +226,9 @@ static float adxl345_accels_to_up(int16_t accels[3]) {
     } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NZ) {
         accel = -(float)accels[2];
     } else {
-        m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_AXIS);
+        if(m3status_get_component(M3FC_COMPONENT_ACCEL) != M3STATUS_ERROR) {
+            m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_AXIS);
+        }
     }
 
     /* Convert to m/s (*3.9 to mg, /1000 to g, *9.81 to m/s/s) */
@@ -293,7 +295,9 @@ static THD_FUNCTION(adxl345_thd, arg)
         if(wait_result == MSG_TIMEOUT) {
             m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_TIMEOUT);
         } else {
-            m3status_set_ok(M3FC_COMPONENT_ACCEL);
+            if(m3status_get_component(M3FC_COMPONENT_ACCEL) != M3STATUS_OK) {
+                m3status_set_ok(M3FC_COMPONENT_ACCEL);
+            }
         }
     }
 }

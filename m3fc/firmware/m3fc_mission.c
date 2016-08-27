@@ -234,7 +234,7 @@ static THD_WORKING_AREA(mission_thread_wa, 512);
 static THD_FUNCTION(mission_thread, arg) {
     (void)arg;
     int can_counter = 0;
-    state_t cur_state = STATE_PAD;
+    state_t cur_state = STATE_INIT;
     state_t new_state;
     instance_data_t data;
     data.t_launch = 0;
