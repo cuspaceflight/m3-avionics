@@ -169,7 +169,8 @@ THD_FUNCTION(datalogging_thread, arg) {
     microsd_close_file(&file);
 }
 
-/* Initialise memory management structures used to keep the data temporarily
+/* 
+ * Initialise memory management structures used to keep the data temporarily
  * in memory.
  */
 static void mem_init(void)
@@ -177,7 +178,8 @@ static void mem_init(void)
     chMBObjectInit(&log_mailbox, (msg_t*)mailbox_buffer, LOG_MEMPOOL_ITEMS);
     chPoolObjectInit(&log_mempool, sizeof(DLPacket), NULL);
 
-    /* Fill the memory pool with statically allocated bits of memory
+    /* 
+     * Fill the memory pool with statically allocated bits of memory
      * ie. prevent dynamic core memory allocation (which cannot be freed), we
      * just want the "bookkeeping" that memory pools provide
      */
@@ -185,7 +187,7 @@ static void mem_init(void)
 }
 
 /* ------------------------------------------------------------------------- */
-/* 				LOGGING CAN PACKET 			     */
+/* 				         LOGGING CAN PACKET   		                         */
 /* ------------------------------------------------------------------------- */
 
 
@@ -201,7 +203,8 @@ void log_can(uint16_t ID, bool RTR, uint8_t len, uint8_t* data)
 
 
 
-/* Allocate and post a formatted packet containing metadata + data to mailbox.
+/* 
+ * Allocate and post a formatted packet containing metadata + data to mailbox.
  * Use counter arrays to determine if this data should be sampled to radio.
  * (it's called _log because log conflicts with a library function)
  */

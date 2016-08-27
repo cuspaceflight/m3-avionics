@@ -116,8 +116,7 @@ build/obj/fatfs_diskio.o: \
  ../../shared/ChibiOS/os/hal/include/st.h \
  ../../shared/ChibiOS/os/hal/include/mmc_spi.h \
  ../../shared/ChibiOS/os/hal/include/serial_usb.h ffconf.h \
- ../../shared/ChibiOS/ext/fatfs/src/diskio.h \
- ../../shared/ChibiOS/ext/fatfs/src/integer.h
+ ../../shared/fatfs/src/diskio.h ../../shared/fatfs/src/integer.h
 
 ../../shared/ChibiOS/os/hal/include/hal.h:
 
@@ -365,6 +364,6 @@ mcuconf.h:
 
 ffconf.h:
 
-../../shared/ChibiOS/ext/fatfs/src/diskio.h:
+../../shared/fatfs/src/diskio.h:
 
-../../shared/ChibiOS/ext/fatfs/src/integer.h:
+../../shared/fatfs/src/integer.h:

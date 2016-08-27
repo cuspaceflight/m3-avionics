@@ -1,6 +1,6 @@
-build/obj/unicode.o: ../../shared/ChibiOS/ext/fatfs/src/option/unicode.c \
- ../../shared/ChibiOS/ext/fatfs/src/option/../ff.h \
- ../../shared/ChibiOS/ext/fatfs/src/option/../integer.h ffconf.h \
+build/obj/unicode.o: ../../shared/fatfs/src/option/unicode.c \
+ ../../shared/fatfs/src/option/../ff.h \
+ ../../shared/fatfs/src/option/../integer.h ffconf.h \
  ../../shared/ChibiOS/os/rt/include/ch.h \
  ../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h \
  /usr/lib/gcc/arm-none-eabi/5.4.1/include/stddef.h \
@@ -50,11 +50,11 @@ build/obj/unicode.o: ../../shared/ChibiOS/ext/fatfs/src/option/unicode.c \
  ../../shared/ChibiOS/os/rt/include/chdynamic.h \
  ../../shared/ChibiOS/os/rt/include/chqueues.h \
  ../../shared/ChibiOS/os/rt/include/chstreams.h \
- ../../shared/ChibiOS/ext/fatfs/src/option/ccsbcs.c
+ ../../shared/fatfs/src/option/ccsbcs.c
 
-../../shared/ChibiOS/ext/fatfs/src/option/../ff.h:
+../../shared/fatfs/src/option/../ff.h:
 
-../../shared/ChibiOS/ext/fatfs/src/option/../integer.h:
+../../shared/fatfs/src/option/../integer.h:
 
 ffconf.h:
 
@@ -162,4 +162,4 @@ mcuconf.h:
 
 ../../shared/ChibiOS/os/rt/include/chstreams.h:
 
-../../shared/ChibiOS/ext/fatfs/src/option/ccsbcs.c:
+../../shared/fatfs/src/option/ccsbcs.c:

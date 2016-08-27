@@ -1,5 +1,5 @@
 /*
- *  Martlet 3 Data Logger
+ *  Martlet 3 Datalogger
  */
 
 #include "ch.h"
@@ -54,9 +54,10 @@ static THD_FUNCTION(hbt_thd, arg) {
   }
 }
 
-
+/* Function called on CAN packet reception */
 void can_recv(uint16_t ID, bool RTR, uint8_t* data, uint8_t len) {
 
+    /* Log incoming CAN packet */
     log_can(ID, RTR, len, data);
 }
 
@@ -94,19 +95,16 @@ int main(void) {
     
     /* Enable CAN Feedback */
     can_set_loopback(TRUE);
-    
-    uint8_t data[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+  
 
+    /* Main Loop */
     while (true) {
-    
-    /* SD Card Test */
-    log_can(0x123, false, 8, data);
     
     /* Clear the watchdog timer */
     IWDG->KR = 0xAAAA;
 
     /* Do nothing */
-    chThdSleepMilliseconds(1);
+    chThdSleepMilliseconds(100);
 
     }
 

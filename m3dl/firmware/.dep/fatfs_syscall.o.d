@@ -116,8 +116,7 @@ build/obj/fatfs_syscall.o: \
  ../../shared/ChibiOS/os/hal/include/st.h \
  ../../shared/ChibiOS/os/hal/include/mmc_spi.h \
  ../../shared/ChibiOS/os/hal/include/serial_usb.h \
- ../../shared/ChibiOS/ext/fatfs/src/ff.h \
- ../../shared/ChibiOS/ext/fatfs/src/integer.h ffconf.h
+ ../../shared/fatfs/src/ff.h ../../shared/fatfs/src/integer.h ffconf.h
 
 ../../shared/ChibiOS/os/hal/include/hal.h:
 
@@ -363,8 +362,8 @@ mcuconf.h:
 
 ../../shared/ChibiOS/os/hal/include/serial_usb.h:
 
-../../shared/ChibiOS/ext/fatfs/src/ff.h:
+../../shared/fatfs/src/ff.h:
 
-../../shared/ChibiOS/ext/fatfs/src/integer.h:
+../../shared/fatfs/src/integer.h:
 
 ffconf.h:

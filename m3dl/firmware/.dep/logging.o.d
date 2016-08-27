@@ -119,11 +119,10 @@ build/obj/logging.o: logging.c \
  ../../shared/ChibiOS/os/hal/include/serial_usb.h microsd.h \
  /usr/arm-none-eabi/include/stdio.h \
  /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdarg.h \
- /usr/arm-none-eabi/include/sys/stdio.h \
- ../../shared/ChibiOS/ext/fatfs/src/integer.h ffconf.h \
- ../../shared/ChibiOS/ext/fatfs/src/ff.h \
- ../../shared/ChibiOS/ext/fatfs/src/integer.h ffconf.h logging.h \
- ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h err_handler.h
+ /usr/arm-none-eabi/include/sys/stdio.h ../../shared/fatfs/src/integer.h \
+ ffconf.h ../../shared/fatfs/src/ff.h ../../shared/fatfs/src/integer.h \
+ ffconf.h logging.h ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h \
+ err_handler.h
 
 /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdint.h:
 
@@ -381,13 +380,13 @@ microsd.h:
 
 /usr/arm-none-eabi/include/sys/stdio.h:
 
-../../shared/ChibiOS/ext/fatfs/src/integer.h:
+../../shared/fatfs/src/integer.h:
 
 ffconf.h:
 
-../../shared/ChibiOS/ext/fatfs/src/ff.h:
+../../shared/fatfs/src/ff.h:
 
-../../shared/ChibiOS/ext/fatfs/src/integer.h:
+../../shared/fatfs/src/integer.h:
 
 ffconf.h:
 

@@ -30,9 +30,8 @@ build/obj/microsd.o: microsd.c \
  /usr/arm-none-eabi/include/machine/types.h \
  /usr/arm-none-eabi/include/sys/stdio.h \
  /usr/arm-none-eabi/include/string.h \
- /usr/arm-none-eabi/include/sys/string.h \
- ../../shared/ChibiOS/ext/fatfs/src/integer.h ffconf.h \
- ../../shared/ChibiOS/os/rt/include/ch.h \
+ /usr/arm-none-eabi/include/sys/string.h ../../shared/fatfs/src/integer.h \
+ ffconf.h ../../shared/ChibiOS/os/rt/include/ch.h \
  ../../shared/ChibiOS/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h chconf.h \
  ../../shared/ChibiOS/os/rt/include/chlicense.h \
  ../../shared/ChibiOS/os/rt/include/chsystypes.h \
@@ -72,8 +71,7 @@ build/obj/microsd.o: microsd.c \
  ../../shared/ChibiOS/os/rt/include/chdynamic.h \
  ../../shared/ChibiOS/os/rt/include/chqueues.h \
  ../../shared/ChibiOS/os/rt/include/chstreams.h \
- ../../shared/ChibiOS/ext/fatfs/src/ff.h \
- ../../shared/ChibiOS/ext/fatfs/src/integer.h ffconf.h \
+ ../../shared/fatfs/src/ff.h ../../shared/fatfs/src/integer.h ffconf.h \
  ../../shared/ChibiOS/os/hal/include/hal.h \
  ../../shared/ChibiOS/os/hal/osal/rt/osal.h halconf.h mcuconf.h \
  ../../shared/ChibiOS/os/hal/ports/STM32/STM32F4xx/hal_lld.h \
@@ -193,7 +191,7 @@ microsd.h:
 
 /usr/arm-none-eabi/include/sys/string.h:
 
-../../shared/ChibiOS/ext/fatfs/src/integer.h:
+../../shared/fatfs/src/integer.h:
 
 ffconf.h:
 
@@ -283,9 +281,9 @@ mcuconf.h:
 
 ../../shared/ChibiOS/os/rt/include/chstreams.h:
 
-../../shared/ChibiOS/ext/fatfs/src/ff.h:
+../../shared/fatfs/src/ff.h:
 
-../../shared/ChibiOS/ext/fatfs/src/integer.h:
+../../shared/fatfs/src/integer.h:
 
 ffconf.h:
 
