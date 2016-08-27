@@ -14,7 +14,7 @@ def update_state(parent, name, logstring):
 from . import command_processor
 from . import webapp
 
-from . import m3pyro
+from . import m3pyro, m3fc
 
 
 def run():
