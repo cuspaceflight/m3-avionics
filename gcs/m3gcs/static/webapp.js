@@ -1,9 +1,9 @@
 // status should contain 2 fields:
-//  status: 'good', 'init' or 'error'
+//  status: 'ok', 'init' or 'error'
 //  reason: if status=='error', why
 function setStatus(name, status){
-    var statuses = {good: "panel-success", error: "panel-danger", init: "panel-warning"};
-    var namestrs = {good: ": OK", error: ": " + status.reason, init: ": Init"};
+    var statuses = {ok: "panel-success", error: "panel-danger", init: "panel-warning"};
+    var namestrs = {ok: ": OK", error: ": " + status.reason, init: ": Init"};
     $("#header-" + name).removeClass("panel-default panel-danger panel-warning panel-success").addClass(statuses[status.status]);
     $("#header-" + name + " h3").text(name + namestrs[status.status]);
 }
@@ -27,11 +27,6 @@ function canCommand(parent, name, arg){
 }
 
 $(document).ready(function(){
-    state = $.ajax("/state", {}, function(){
-        console.log(state);
-        console.log(JSON.parse(state));
-    });
-
     setInterval(function(){
         var now = new Date().getTime();
         for(idx in packettypes){
@@ -48,7 +43,32 @@ $(document).ready(function(){
     }, 1000);
     
     setInterval(function(){
-        //state = $.ajax("/state").responseText;
-        //console.log(JSON.parse(state));
+        $.getJSON("/state", function(js){
+            for(idx in js){
+                var names = Object.keys(js[idx]);
+                names.sort();
+                var sorted = [];
+                for(id in names){
+                    var name = names[id]
+                    if(name == "Status"){
+                        var reasonidx = js[idx][name].indexOf(":");
+                        var reason = "not implemented";
+                        var status = "";
+                        if(reasonidx == -1){
+                            status = js[idx][name];
+                        }else{
+                            status = js[idx][name].substring(0,reasonidx);
+                            reason = js[idx][name].substring(reasonidx+2);
+                        }
+                        setStatus(idx, {status: status.toLowerCase().trim(), reason: reason});
+                    }
+                    sorted.push("<tr><td>" + name + "</td><td>" + js[idx][name].replace(/\n/g, "<br />") + "</tr>");
+                }
+                $("#display-" + idx).html(
+                    "<table class='table table-condensed'>" +
+                    sorted.join("\n") +
+                    "</table>");
+            }
+        });
     }, 100);
 });

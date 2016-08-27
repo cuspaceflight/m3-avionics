@@ -5,7 +5,7 @@ from .packets import registered_packets, registered_commands
 
 app = Flask(__name__, static_url_path="/static")
 
-global_state = None
+wa_state = None
 
 @app.route("/")
 def index():
@@ -16,8 +16,8 @@ def index():
 @app.route("/state")
 def getstate():
     tmp = {}
-    for k in global_state.keys():
-        tmp[k] = global_state[k]
+    for k in wa_state.keys():
+        tmp[k] = wa_state.get(k)
     return jsonify(tmp)
 
 
@@ -28,6 +28,7 @@ def sendcommand():
 
 
 def run(state):
-    global global_state
-    global_state = state
-    app.run(debug=True)
+    global wa_state
+    wa_state = state
+    #app.run(debug=True)
+    app.run()

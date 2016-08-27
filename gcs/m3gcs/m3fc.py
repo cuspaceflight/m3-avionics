@@ -53,7 +53,7 @@ def status(data):
 @register_packet("m3fc", CAN_MSG_ID_M3FC_MISSION_STATE, "Mission State")
 def mission_state(data):
     # 5 bytes total. 4 bytes met, 1 byte can_state
-    met, can_state = struct.unpack("IB", data[:5])
+    met, can_state = struct.unpack("IB", bytes(data[:5]))
     states = ["Init", "Pad", "Ignition", "Powered Ascent", "Burnout",
               "Free Ascent", "Apogee", "Drogue Ascent",
               "Release Main", "Main Descent", "Land", "Landed"]
@@ -65,7 +65,7 @@ def accel(data):
     # 6 bytes, 3 int16_ts for 3 accelerations
     # 3.9 MSB per milli-g
     factor = 3.9 / 1000.0 * 9.80665
-    accel1, accel2, accel3 = struct.unpack("hhh", data[0:6])
+    accel1, accel2, accel3 = struct.unpack("hhh", bytes(data[0:6]))
     accel1, accel2, accel3 = accel1*factor, accel2*factor, accel3*factor
     return "{: 3.1f} m/s/s {: 3.1f} m/s/s {: 3.1f} m/s/s".format(accel1,
         accel2, accel3)
@@ -75,7 +75,7 @@ def accel(data):
 def baro(data):
     # 8 bytes: 4 bytes of temperature in centidegrees celcius,
     # 4 bytes of pressure in Pascals
-    temperature, pressure = struct.unpack("ii", data)
+    temperature, pressure = struct.unpack("ii", bytes(data))
     return "Temperature: {: 4.1f}'C, Pressure: {: 6.0f} Pa".format(
         temperature / 100.0, pressure)
 
@@ -83,25 +83,25 @@ def baro(data):
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SE_T_H, "State Estimate T,H")
 def se_t_h(data):
     # 8 bytes, 2 float32s
-    dt, h = struct.unpack("ff", data)
+    dt, h = struct.unpack("ff", bytes(data))
     return "dt: {: 6.4f} s, altitude: {: 5.0f} m".format(dt, h)
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SE_V_A, "State Estimate V,A")
 def se_v_a(data):
-    v, a = struct.unpack("ff", data)
+    v, a = struct.unpack("ff", bytes(data))
     return "velocity: {: 6.1f} m/s, acceleration: {: 5.1f} m/s/s".format(v, a)
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SE_VAR_H, "State Estimate var(H)")
 def se_var_h(data):
-    (var_h,) = struct.unpack("f", data[0:4])
+    (var_h,) = struct.unpack("f", bytes(data[0:4]))
     return "SD(altitude): {: 7.3f} m^2".format(sqrt(var_h))
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SE_VAR_V_A,
     "State Estimate var(V),var(A)")
 def se_var_v_var_a(data):
-    var_v, var_a = struct.unpack("ff", data)
+    var_v, var_a = struct.unpack("ff", bytes(data))
     return "SD(velocity): {: 6.3f} m^2, SD_acceleration: {: 5.3f} m^2".format(
         sqrt(var_v), sqrt(var_a))
 
