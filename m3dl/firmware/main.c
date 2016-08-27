@@ -8,6 +8,7 @@
 #include "LTC2983.h"
 #include "err_handler.h"
 #include "logging.h"
+#include "m3can.h"
 
 /* Interrupt Configuration */
 static const EXTConfig extcfg = {
@@ -54,48 +55,56 @@ static THD_FUNCTION(hbt_thd, arg) {
 }
 
 
-/* Application entry point */
-int main(void) {
+void can_recv(uint16_t ID, bool RTR, uint8_t* data, uint8_t len) {
 
-  /* System Init */
-  halInit();
-  chSysInit();
-
-  /* Interrupt Init*/
-  extStart(&EXTD1, &extcfg);
-
-  /* LTC2983 Init */
-  ltc2983_init();	
-
-  /* Datalogging Init */
-  logging_init();
-
-  /* Init Heartbeat */
-  chThdCreateStatic(hbt_wa, sizeof(hbt_wa), NORMALPRIO, hbt_thd, NULL);
-
-
-  /* SD Card Test */
-	
-  uint16_t ID;
-  bool RTR;
-  uint8_t len;
-  uint8_t data[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
-  ID = 0x1423;
-  RTR = TRUE;
-  len = 0x01;
-  
-  log_can(ID, RTR, len, data);
-  
-  
-  chThdSleepMilliseconds(5000);
-    
-  disable_logging();
- 
-  while (true) {
-      /* Do nothing */
-  }
-
+    log_can(ID, RTR, len, data);
 }
 
 
+/* Application entry point */
+int main(void) {
 
+    /* Allow debug access during WFI sleep */
+    DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
+
+    /* Turn on the watchdog timer, stopped in debug halt */
+    DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_IWDG_STOP;
+    IWDG->KR = 0x5555;
+    IWDG->PR = 3;
+    IWDG->KR = 0xCCCC;
+
+    /* Initialise ChibiOS */
+    halInit();
+    chSysInit();
+
+    /* Interrupt Init */
+    extStart(&EXTD1, &extcfg);
+
+    /* LTC2983 Init */
+    ltc2983_init();	
+
+    /* Datalogging Init */
+    logging_init();
+
+    /* Init Heartbeat */
+    chThdCreateStatic(hbt_wa, sizeof(hbt_wa), NORMALPRIO, hbt_thd, NULL);
+
+    /* Turn on the CAN system and send a packet with our firmware version */
+    can_init(CAN_ID_M3DL);
+
+
+    uint8_t data[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+
+    while (true) {
+    
+    log_can(0x123, false, 8, data);
+    
+    /* Clear the watchdog timer */
+    IWDG->KR = 0xAAAA;
+
+    /* Do nothing */
+    chThdSleepMilliseconds(1);
+
+    }
+
+}

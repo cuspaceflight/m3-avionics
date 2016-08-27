@@ -44,6 +44,8 @@ static bool microsd_card_init(FATFS* fs)
 
 static void microsd_card_try_init(FATFS* fs)
 {
+    uint8_t garbage = 1;
+    (void) garbage;
     while(!microsd_card_init(fs)) {
         microsd_card_deinit();
         chThdSleepMilliseconds(200);
