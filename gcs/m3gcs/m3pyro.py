@@ -17,13 +17,13 @@ CAN_MSG_ID_M3PYRO_SUPPLY_STATUS = (CAN_ID_M3PYRO | msg_id(49))
 
 @register_packet("m3pyro", CAN_MSG_ID_M3PYRO_STATUS, "Status")
 def status(data):
-    status_map = {0: "Good", 1: "Init", 2: "Error"}
-    return "Status: {}".format(
+    status_map = {0: "OK", 1: "Init", 2: "Error"}
+    return "{}".format(
         status_map.get(data[0], "Unknown"))
 
 @register_packet("m3pyro", CAN_MSG_ID_M3PYRO_FIRE_STATUS, "Fire Status")
 def fire_status(data):
-    status_map = {0: "Off", 1: "Firing", 2: "Pulsed Firing"}
+    status_map = {0: "Off", 1: "EMatch", 2: "Talon", 3: "Metron"}
     return "Ch1: {}, Ch2: {}, Ch3: {}, Ch4: {}".format(
         *[status_map.get(x, "Unknown") for x in data[:4]])
 
@@ -46,30 +46,30 @@ def supply_status(data):
     return "{:.1f}V".format(float(data[0])/10)
 
 
-@register_command("m3pyro", "Fire Ch1", ("Off", "Fire", "Pulsed Fire"))
+@register_command("m3pyro", "Fire Ch1", ("Off", "EMatch", "Talon", "Metron"))
 def fire_ch1(data):
-    command_map = {"Off": 0, "Fire": 1, "Pulsed Fire": 2}
+    command_map = {"Off": 0, "EMatch": 1, "Talon": 2, "Metron": 3}
     data = [command_map.get(data, 0), 0, 0, 0]
     return CAN_MSG_ID_M3PYRO_FIRE_COMMAND, data
 
 
-@register_command("m3pyro", "Fire Ch2", ("Off", "Fire", "Pulsed Fire"))
+@register_command("m3pyro", "Fire Ch2", ("Off", "EMatch", "Talon", "Metron"))
 def fire_ch2(data):
-    command_map = {"Off": 0, "Fire": 1, "Pulsed Fire": 2}
+    command_map = {"Off": 0, "EMatch": 1, "Talon": 2, "Metron": 3}
     data = [0, command_map.get(data, 0), 0, 0]
     return CAN_MSG_ID_M3PYRO_FIRE_COMMAND, data
 
 
-@register_command("m3pyro", "Fire Ch3", ("Off", "Fire", "Pulsed Fire"))
+@register_command("m3pyro", "Fire Ch3", ("Off", "EMatch", "Talon", "Metron"))
 def fire_ch3(data):
-    command_map = {"Off": 0, "Fire": 1, "Pulsed Fire": 2}
+    command_map = {"Off": 0, "EMatch": 1, "Talon": 2, "Metron": 3}
     data = [0, 0, command_map.get(data, 0), 0]
     return CAN_MSG_ID_M3PYRO_FIRE_COMMAND, data
 
 
-@register_command("m3pyro", "Fire Ch4", ("Off", "Fire", "Pulsed Fire"))
+@register_command("m3pyro", "Fire Ch4", ("Off", "EMatch", "Talon", "Metron"))
 def fire_ch4(data):
-    command_map = {"Off": 0, "Fire": 1, "Pulsed Fire": 2}
+    command_map = {"Off": 0, "EMatch": 1, "Talon": 2, "Metron": 3}
     data = [0, 0, 0, command_map.get(data, 0)]
     return CAN_MSG_ID_M3PYRO_FIRE_COMMAND, data
 
