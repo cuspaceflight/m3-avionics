@@ -57,7 +57,7 @@ static THD_FUNCTION(beeper_thd, arg) {
     chRegSetThreadName("ui_beeper");
     pwmStart(&PWMD5, &pwm_cfg);
     while(true) {
-        if(m3fc_status_pyro_armed) {
+        if(m3fc_status_pyro_supply_good) {
             delay = 100;
         } else {
             delay = 700;
