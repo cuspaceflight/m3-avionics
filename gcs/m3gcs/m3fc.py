@@ -109,8 +109,9 @@ def se_var_v_var_a(data):
 @register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_PROFILE, "Profile config")
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SET_CFG_PROFILE, "Set profile config")
 def cfg_profile(data):
-    position = ["unset", "dart", "core"][data[0]]
-    accel_axis = ["unset", "X", "-X" "Y", "-Y", "Z", "-Z"][data[1]]
+    position = {1: "dart", 2: "core"}.get(data[0], "unset")
+    accel_axis = {1:"X", 2:"-X", 3:"Y", 4:"-Y", 5:"Z", 6:"-Z"}.get(data[1],
+        "unset")
     ignition_accel, burnout_timeout, apogee_timeout = data[2:5]
     main_altitude, main_timeout, land_timeout = data[5:8]
     return ("Position: {}, ".format(position) +
@@ -126,16 +127,18 @@ def cfg_profile(data):
 @register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_PYROS, "Pyros config")
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SET_CFG_PYROS, "Set pyro config")
 def cfg_pyros(data):
-    pyro_1_usage, pyro_2_usage, pyro_3_usage, pyro_4_usage = data[:4]
-    pyro_1_type, pyro_2_type, pyro_3_type, pyro_4_type = data[4:]
-    usages = ["None", "Drogue", "Main", "Dart Separation"]
-    types = ["None", "E-match", "Talon", "Metron"]
+    usages = {0:"None", 1:"Drogue", 2:"Main", 3:"Dart Separation"}
+    types = {0:"None", 1:"E-match", 2:"Talon", 3:"Metron"}
+    pyro_1_usage, pyro_2_usage, pyro_3_usage, pyro_4_usage = [
+        usages.get(x, "Unset") for x in data[:4]]
+    pyro_1_type, pyro_2_type, pyro_3_type, pyro_4_type = [
+        types.get(x, "Unset") for x in data[4:]]
 
     return ("(usage/type) Pyro1: {}/{}, Pyro2: {}/{}, Pyro3: {}/{}, "
-          "Pyro4: {}/{}".format(usages[pyro_1_usage], types[pyro_1_type],
-                                usages[pyro_2_usage], types[pyro_2_type],
-                                usages[pyro_3_usage], types[pyro_3_type],
-                                usages[pyro_4_usage], types[pyro_4_type]))
+          "Pyro4: {}/{}".format(pyro_1_usage, pyro_1_type,
+                                pyro_2_usage, pyro_2_type,
+                                pyro_3_usage, pyro_3_type,
+                                pyro_4_usage, pyro_4_type))
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_LOAD_CFG, "Load config")
