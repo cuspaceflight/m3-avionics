@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys
 from m3gcs.command_processor import find_processor
 

@@ -8,6 +8,7 @@ def msg_id(x):
 
 
 CAN_ID_M3FC = 1
+CAN_MSG_ID_M3FC_STATUS = CAN_ID_M3FC | msg_id(0)
 CAN_MSG_ID_M3FC_MISSION_STATE = CAN_ID_M3FC | msg_id(32)
 CAN_MSG_ID_M3FC_ACCEL = CAN_ID_M3FC | msg_id(48)
 CAN_MSG_ID_M3FC_BARO = CAN_ID_M3FC | msg_id(49)
@@ -21,6 +22,32 @@ CAN_MSG_ID_M3FC_SET_CFG_PROFILE = CAN_ID_M3FC | msg_id(1)
 CAN_MSG_ID_M3FC_SET_CFG_PYROS = CAN_ID_M3FC | msg_id(2)
 CAN_MSG_ID_M3FC_LOAD_CFG = CAN_ID_M3FC | msg_id(3)
 CAN_MSG_ID_M3FC_SAVE_CFG = CAN_ID_M3FC | msg_id(4)
+
+
+@register_packet("m3fc", CAN_MSG_ID_M3FC_STATUS, "Status")
+def status(data):
+    # The string must start with 'OK:' 'INIT:' or 'ERROR:' as the web
+    # interface watches for these and applies special treatment (colours)
+    statuses = ["OK", "INIT", "ERROR"]
+    components = ["Unknown", "Microcontroller", "State estimation", "Config",
+                  "Beeper", "LEDs", "Accelerometer", "Barometer", "Flash",
+                  "Pyros"]
+    component_errors = ["Unknown",
+                        "CRC", "Write", # Flash errors
+                        "Read", # Config errors
+                        "Pyro1", "Pyro2", "Pyro3", "Pyro4", # Pyro errors
+                        "Profile", "Pyros", # More config errors
+                        "Bad ID", "Selftest", "Timeout", "Axis", # Accel err
+                        "Pressure", # State estimator error
+                        "Pyro Arm"] # Microcontroller error
+    
+    overall, comp, comp_state, comp_error = struct.unpack("BBBB",
+        bytes(data[:4]))
+    string = "{}: ".format(statuses[overall])
+    string += "{} {}".format(components[comp], statuses[comp_state])
+    if comp_state == 2: # Component is in error
+        string += " ({})".format(component_errors[comp_error])
+    return string
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_MISSION_STATE, "Mission State")
@@ -82,8 +109,9 @@ def se_var_v_var_a(data):
 @register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_PROFILE, "Profile config")
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SET_CFG_PROFILE, "Set profile config")
 def cfg_profile(data):
-    position = ["unset", "dart", "core"][data[0]]
-    accel_axis = ["unset", "X", "-X" "Y", "-Y", "Z", "-Z"][data[1]]
+    position = {1: "dart", 2: "core"}.get(data[0], "unset")
+    accel_axis = {1:"X", 2:"-X", 3:"Y", 4:"-Y", 5:"Z", 6:"-Z"}.get(data[1],
+        "unset")
     ignition_accel, burnout_timeout, apogee_timeout = data[2:5]
     main_altitude, main_timeout, land_timeout = data[5:8]
     return ("Position: {}, ".format(position) +
@@ -99,16 +127,18 @@ def cfg_profile(data):
 @register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_PYROS, "Pyros config")
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SET_CFG_PYROS, "Set pyro config")
 def cfg_pyros(data):
-    pyro_1_usage, pyro_2_usage, pyro_3_usage, pyro_4_usage = data[:4]
-    pyro_1_type, pyro_2_type, pyro_3_type, pyro_4_type = data[4:]
-    usages = ["None", "Drogue", "Main", "Dart Separation"]
-    types = ["None", "E-match", "Talon", "Metron"]
+    usages = {0:"None", 1:"Drogue", 2:"Main", 3:"Dart Separation"}
+    types = {0:"None", 1:"E-match", 2:"Talon", 3:"Metron"}
+    pyro_1_usage, pyro_2_usage, pyro_3_usage, pyro_4_usage = [
+        usages.get(x, "Unset") for x in data[:4]]
+    pyro_1_type, pyro_2_type, pyro_3_type, pyro_4_type = [
+        types.get(x, "Unset") for x in data[4:]]
 
     return ("(usage/type) Pyro1: {}/{}, Pyro2: {}/{}, Pyro3: {}/{}, "
-          "Pyro4: {}/{}".format(usages[pyro_1_usage], types[pyro_1_type],
-                                usages[pyro_2_usage], types[pyro_2_type],
-                                usages[pyro_3_usage], types[pyro_3_type],
-                                usages[pyro_4_usage], types[pyro_4_type]))
+          "Pyro4: {}/{}".format(pyro_1_usage, pyro_1_type,
+                                pyro_2_usage, pyro_2_type,
+                                pyro_3_usage, pyro_3_type,
+                                pyro_4_usage, pyro_4_type))
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_LOAD_CFG, "Load config")
