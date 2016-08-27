@@ -34,7 +34,7 @@ typedef struct __attribute__((packed)) {
     uint32_t reserved4;
 } ublox_pvt_t;
 
-/* Call to start ublox processing thread on specified UART */
-void ublox_init(UARTDriver* uartd);
+/* Call to start ublox processing thread on specified Serial port */
+void ublox_init(SerialDriver* seriald);
 
 #endif /* UBLOX_H */

@@ -31,7 +31,7 @@ int main(void) {
     m3radio_status_init();
 
     m3radio_gps_ant_init();
-    ublox_init(&UARTD4);
+    ublox_init(&SD4);
 
     si4460_init(&SPID2, GPIOB, GPIOB_RADIO_CS);
 

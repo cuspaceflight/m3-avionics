@@ -18,6 +18,7 @@ static THD_FUNCTION(si4460_thd, arg) {
     (void)arg;
 
     spiStart(si4460_spid, &spi_cfg);
+    m3status_set_ok(M3RADIO_COMPONENT_SI4460);
 }
 
 void si4460_init(SPIDriver* spid, ioportid_t ssport, uint32_t sspad)

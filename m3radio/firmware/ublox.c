@@ -43,14 +43,13 @@
 #define NMEA_RMC 0x04
 #define NMEA_VTG 0x05
 
-UARTDriver* ublox_uartd;
+SerialDriver* ublox_seriald;
 
 /* UBX Decoding State Machine States */
 typedef enum {
     STATE_IDLE = 0, STATE_SYNC1, STATE_SYNC2,
     STATE_CLASS, STATE_ID, STATE_L1, STATE_L2,
-    STATE_PAYLOAD, STATE_PAYLOAD_DONE, STATE_CK_A,
-    NUM_STATES
+    STATE_PAYLOAD, STATE_CK_A, NUM_STATES
 } ubx_state;
 
 /* Structs for various UBX messages */
@@ -200,18 +199,11 @@ typedef struct __attribute__((packed)) {
 
 static uint16_t ublox_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n);
 static void ublox_checksum(uint8_t *buf);
-static void ublox_rxchar(UARTDriver* uartp, uint16_t c);
-static void ublox_rxerr(UARTDriver* uartdp, uartflags_t e);
 static bool ublox_transmit(uint8_t *buf);
 static void ublox_state_machine(uint8_t c);
 static bool ublox_configure(void);
 
-static UARTConfig uart_cfg = {
-    .txend1_cb = NULL,
-    .txend2_cb = NULL,
-    .rxend_cb = NULL,
-    .rxchar_cb = ublox_rxchar,
-    .rxerr_cb = ublox_rxerr,
+static SerialConfig serial_cfg = {
     .speed = 9600,
     .cr1 = 0,
     .cr2 = 0,
@@ -222,7 +214,7 @@ static UARTConfig uart_cfg = {
 static uint16_t ublox_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n)
 {
     int i;
-    uint8_t ck_a = chk, ck_b = chk>>8;
+    uint8_t ck_a = chk & 0xff, ck_b = chk>>8;
 
     /* Run Fletcher-8 algorithm */
     for(i=0; i<n; i++) {
@@ -254,15 +246,14 @@ static void ublox_checksum(uint8_t *buf)
     buf[plen+7] = ck >> 8;
 }
 
-/* Transmit a UBX message over the UART.
+/* Transmit a UBX message over the Serial.
  * Message length is determined from the UBX length field.
  * Checksum is added automatically.
  */
 static bool ublox_transmit(uint8_t *buf)
 {
-    size_t n;
+    size_t n, nwritten;
     systime_t timeout;
-    msg_t rv;
 
     /* Add checksum to outgoing message */
     ublox_checksum(buf);
@@ -272,24 +263,13 @@ static bool ublox_transmit(uint8_t *buf)
     timeout = MS2ST(n*2);
 
     /* Transmit message */
-    rv = uartSendTimeout(ublox_uartd, &n, buf, timeout);
-    if(rv != MSG_OK) {
+    nwritten = sdWriteTimeout(ublox_seriald, buf, n, timeout);
+    if(nwritten != n) {
         m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                            M3RADIO_ERROR_UBLOX_TIMEOUT);
     }
 
-    return rv == MSG_OK;
-}
-
-static void ublox_rxchar(UARTDriver* uartp, uint16_t c) {
-    (void)uartp;
-    ublox_state_machine(c);
-}
-
-static void ublox_rxerr(UARTDriver* uartdp, uartflags_t e) {
-    (void)uartdp;
-    (void)e;
-    m3status_set_error(M3RADIO_COMPONENT_UBLOX, M3RADIO_ERROR_UBLOX_UARTERR);
+    return nwritten == n;
 }
 
 static void ublox_can_send_pvt(ublox_pvt_t *pvt) {
@@ -306,8 +286,11 @@ static void ublox_can_send_pvt(ublox_pvt_t *pvt) {
  * function preserves static state and processes new messages as appropriate
  * once received.
  */
+uint8_t rxbuf[255] = {0};
+uint8_t rxbufidx = 0;
 static void ublox_state_machine(uint8_t b)
 {
+    rxbuf[rxbufidx++] = b;
     static ubx_state state = STATE_IDLE;
 
     static uint8_t class, id;
@@ -361,15 +344,12 @@ static void ublox_state_machine(uint8_t b)
             break;
 
         case STATE_PAYLOAD:
-            if(length_remaining)
+            if(length_remaining) {
                 payload[length - length_remaining--] = b;
-            else
-                state = STATE_PAYLOAD_DONE;
-            break;
-
-        case STATE_PAYLOAD_DONE:
-            ck_a = b;
-            state = STATE_CK_A;
+            } else {
+                ck_a = b;
+                state = STATE_CK_A;
+            }
             break;
 
         case STATE_CK_A:
@@ -528,7 +508,7 @@ static THD_FUNCTION(ublox_thd, arg) {
     palSetLine(LINE_GPS_RESET_N);
     chThdSleepMilliseconds(500);
 
-    uartStart(ublox_uartd, &uart_cfg);
+    sdStart(ublox_seriald, &serial_cfg);
 
     while(!ublox_configure()) {
         m3status_set_error(M3RADIO_COMPONENT_UBLOX, M3RADIO_ERROR_UBLOX_CFG);
@@ -536,13 +516,13 @@ static THD_FUNCTION(ublox_thd, arg) {
     }
 
     while(true) {
-        chThdSleepMilliseconds(1000);
+        ublox_state_machine(sdGet(ublox_seriald));
     }
 }
 
-void ublox_init(UARTDriver* uartd) {
+void ublox_init(SerialDriver* seriald) {
     m3status_set_init(M3RADIO_COMPONENT_UBLOX);
-    ublox_uartd = uartd;
+    ublox_seriald = seriald;
     chThdCreateStatic(ublox_thd_wa, sizeof(ublox_thd_wa), NORMALPRIO,
                       ublox_thd, NULL);
 }
