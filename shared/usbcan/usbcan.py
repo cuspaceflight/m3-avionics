@@ -91,7 +91,7 @@ def run(port, txq, rxq):
         except Empty:
             pass
 
-        buf = ser.read(4096)
+        buf = ser.read(1)
         for frame in rx.process(buf):
             rxq.put(frame)
 
