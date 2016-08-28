@@ -221,6 +221,10 @@ def main():
     runner = multiprocessing.Process(target=run, args=(port, txq, rxq))
     runner.start()
 
+    if args.flash:
+        print("Saving new config to flash")
+        txq.put(CANFrame(sid=m3fc_msg_save_cfg, rtr=False, dlc=0, data=[]))
+
     if not args.init:
         read_config(rxq)
 
