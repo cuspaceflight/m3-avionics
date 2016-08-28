@@ -1,0 +1,32 @@
+name: M3FC
+lsefreq: 0
+hsefreq: 26000000
+voltage: 3.3
+mcutype: STM32F405xx
+default: input, pushpull, starthigh, pullup, highspeed
+pins:
+    BEEPER: pa0, af2, startlow
+
+    LED_RED: pa1, output, startlow
+    LED_YLW: pa2, output, startlow
+    LED_GRN: pa3, output, startlow
+
+    BARO_CS: pc4, output
+    BARO_SCLK: pa5, af5
+    BARO_SDO: pa6, af5
+    BARO_SDI: pa7, af5
+
+    ACCEL_INT: pa11
+    ACCEL_CS: pa12, output
+    ACCEL_SCLK: pb13, af5
+    ACCEL_SDO: pb14, af5
+    ACCEL_SDI: pb15, af5
+
+    CAN_RX: pb8, af9
+    CAN_TX: pb9, af9
+
+    JTMS: pa13, af0, pulldown
+    JTCK: pa14, af0, pulldown
+    JTDI: pa15, af0, pullup
+    JTDO: pb3, af0
+    NJTRST: pb4, af0, pullup

@@ -30,8 +30,16 @@ extern uint8_t m3can_own_id;
 #define CAN_MSG_ID_M3FC_MISSION_STATE       (CAN_ID_M3FC | CAN_MSG_ID(32))
 #define CAN_MSG_ID_M3FC_ACCEL               (CAN_ID_M3FC | CAN_MSG_ID(48))
 #define CAN_MSG_ID_M3FC_BARO                (CAN_ID_M3FC | CAN_MSG_ID(49))
-#define CAN_MSG_ID_M3FC_SE_H_V              (CAN_ID_M3FC | CAN_MSG_ID(50))
-#define CAN_MSG_ID_M3FC_SE_A                (CAN_ID_M3FC | CAN_MSG_ID(51))
+#define CAN_MSG_ID_M3FC_SE_T_H              (CAN_ID_M3FC | CAN_MSG_ID(50))
+#define CAN_MSG_ID_M3FC_SE_V_A              (CAN_ID_M3FC | CAN_MSG_ID(51))
+#define CAN_MSG_ID_M3FC_SE_VAR_H            (CAN_ID_M3FC | CAN_MSG_ID(52))
+#define CAN_MSG_ID_M3FC_SE_VAR_V_A          (CAN_ID_M3FC | CAN_MSG_ID(53))
+#define CAN_MSG_ID_M3FC_CFG_PROFILE         (CAN_ID_M3FC | CAN_MSG_ID(54))
+#define CAN_MSG_ID_M3FC_CFG_PYROS           (CAN_ID_M3FC | CAN_MSG_ID(55))
+#define CAN_MSG_ID_M3FC_SET_CFG_PROFILE     (CAN_ID_M3FC | CAN_MSG_ID(1))
+#define CAN_MSG_ID_M3FC_SET_CFG_PYROS       (CAN_ID_M3FC | CAN_MSG_ID(2))
+#define CAN_MSG_ID_M3FC_LOAD_CFG            (CAN_ID_M3FC | CAN_MSG_ID(3))
+#define CAN_MSG_ID_M3FC_SAVE_CFG            (CAN_ID_M3FC | CAN_MSG_ID(4))
 
 
 /* M3DL */
@@ -55,5 +63,23 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
 void can_init(uint8_t board_id);
 void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
+
+/* Type specific can_send functions */
+void can_send_u8(uint16_t msg_id, uint8_t d0, uint8_t d1, uint8_t d2,
+                 uint8_t d3, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
+                 size_t n);
+void can_send_u16(uint16_t msg_id, uint16_t d0, uint16_t d1, uint16_t d2,
+                  uint16_t d3, size_t n);
+void can_send_u32(uint16_t msg_id, uint32_t d0, uint32_t d1, size_t n);
+void can_send_i8(int16_t msg_id, int8_t d0, int8_t d1, int8_t d2,
+                 int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7,
+                 size_t n);
+void can_send_i16(int16_t msg_id, int16_t d0, int16_t d1, int16_t d2,
+                  int16_t d3, size_t n);
+void can_send_i32(int16_t msg_id, int32_t d0, int32_t d1, size_t n);
+void can_send_f32(uint16_t msg_id, float d0, float d1, size_t n);
+
+/* Whether to process all sent messages as though they were also received */
+void can_set_loopback(bool enabled);
 
 #endif /* _M3CAN_H */

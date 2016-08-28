@@ -1,7 +1,7 @@
 [submodule "agg-kicad"]
 	path = agg-kicad
 	url = https://github.com/adamgreig/agg-kicad.git
-[submodule "ChibiOS"]
+[submodule "shared/ChibiOS"]
 	path = shared/ChibiOS
 	url = https://github.com/ChibiOS/ChibiOS.git
 [submodule "shared/gen-board.h"]
