@@ -61,7 +61,7 @@ def mission_state(data):
     # 5 bytes total. 4 bytes met, 1 byte can_state
     met, can_state = struct.unpack("IB", bytes(data[:5]))
     states = ["Init", "Pad", "Ignition", "Powered Ascent", "Burnout",
-              "Free Ascent", "Apogee", "Drogue Ascent",
+              "Free Ascent", "Apogee", "Drogue Descent",
               "Release Main", "Main Descent", "Land", "Landed"]
     return "MET: {: 9.3f} s, State: {}".format(met/1000.0, states[can_state])
 
