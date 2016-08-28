@@ -49,6 +49,7 @@ def packet_process(rxq, state):
                         update_state(state, frame.sid, parent, processor[0], processor[1](frame.data))
                     except Exception as e:
                         errors.append(e)
+                        print(e)
                 else:
                     print("No handler found for SID: {:b}".format(frame.sid))
                     #pass
