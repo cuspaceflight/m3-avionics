@@ -97,7 +97,7 @@ def pyro_status(data):
     # 1bit pyro enable line measurement
     voltage, current, power, pyro = struct.unpack("HHHB", bytes(data[:7]))
     string = "{: 5.3f}V {: 6.3f}A {: 7.3f}W".format(voltage/1000.0,
-        current/1000000.0, power/10000.0)
+        current/1000000.0, power/100000.0)
     if pyro == 1:
         string += ", pyro enabled"
     elif pyro == 0:

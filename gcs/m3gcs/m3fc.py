@@ -31,7 +31,7 @@ def status(data):
     statuses = ["OK", "INIT", "ERROR"]
     components = ["Unknown", "Microcontroller", "State estimation", "Config",
                   "Beeper", "LEDs", "Accelerometer", "Barometer", "Flash",
-                  "Pyros"]
+                  "Pyros", "Mock"]
     component_errors = ["Unknown",
                         "CRC", "Write", # Flash errors
                         "Read", # Config errors
@@ -39,7 +39,8 @@ def status(data):
                         "Profile", "Pyros", # More config errors
                         "Bad ID", "Selftest", "Timeout", "Axis", # Accel err
                         "Pressure", # State estimator error
-                        "Pyro Arm"] # Microcontroller error
+                        "Pyro Arm", # Microcontroller error
+                        "Mock Enabled"] # Mock enabled
     
     overall, comp, comp_state, comp_error = struct.unpack("BBBB",
         bytes(data[:4]))
