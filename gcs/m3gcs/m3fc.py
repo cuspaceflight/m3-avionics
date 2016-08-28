@@ -23,7 +23,7 @@ CAN_MSG_ID_M3FC_SET_CFG_PYROS = CAN_ID_M3FC | msg_id(2)
 CAN_MSG_ID_M3FC_LOAD_CFG = CAN_ID_M3FC | msg_id(3)
 CAN_MSG_ID_M3FC_SAVE_CFG = CAN_ID_M3FC | msg_id(4)
 
-components = ["Unknown", "Microcontroller", "State estimation", "Config",
+components = ["Unknown", "Mission Control", "State estimation", "Config",
               "Beeper", "LEDs", "Accelerometer", "Barometer", "Flash",
               "Pyros", "Mock"]
 component_errors = ["Unknown",
