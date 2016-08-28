@@ -26,7 +26,7 @@ CAN_MSG_ID_M3PSU_TOGGLE_BALANCE = CAN_ID_M3PSU | msg_id(19)
     "Battery Voltages")
 def batt_volts(data):
     # 3 bytes
-    batt1, batt2, state = struct.unpack("BBB", data[:3])
+    batt1, batt2, state = struct.unpack("BBB", bytes(data[:3]))
     batt1 *= 0.02
     batt2 *= 0.02
 
@@ -71,10 +71,10 @@ def toggle_pyros(data):
 def channel_status(data):
     # 8 bytes: voltage/0.03V, current/0.003A, power/0.02W, blank,
     # voltage/0.03V, current/0.003A, power/0.02W, blank
-    voltage, current, power = struct.unpack("BBBx", data[:4])
+    voltage, current, power = struct.unpack("BBBx", bytes(data[:4]))
     string = "{: 5.3f}V {: 6.3f}A {: 5.2f}W".format(voltage * 0.03,
         current * 0.003, power * 0.02)
-    voltage, current, power = struct.unpack("BBBx", data[4:])
+    voltage, current, power = struct.unpack("BBBx", bytes(data[4:]))
     string += ", {: 5.3f}V {: 6.3f}A {: 5.2f}W".format(voltage * 0.03,
         current * 0.003, power * 0.02)
     return string
@@ -95,7 +95,7 @@ def toggle_channel(data):
 def pyro_status(data):
     # 7 bytes: 16bit voltage (mV), 16bit current (uA), 16bit power (0.1mW)
     # 1bit pyro enable line measurement
-    voltage, current, power, pyro = struct.unpack("HHHB", data[:7])
+    voltage, current, power, pyro = struct.unpack("HHHB", bytes(data[:7]))
     string = "{: 5.3f}V {: 6.3f}A {: 7.3f}W".format(voltage/1000.0,
         current/1000000.0, power/10000.0)
     if pyro == 1:
@@ -109,7 +109,7 @@ def pyro_status(data):
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_CHARGER_STATUS, "Charger Status")
 def charger_status(data):
     # 3 bytes. First two are charge current in mA, last is status bits
-    current, state = struct.unpack("HB", data[:3])
+    current, state = struct.unpack("HB", bytes(data[:3]))
     should_charge = bool(state & 1)
     is_charging = bool(state & 4)
     overcurrent = bool(state & 2)
