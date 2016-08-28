@@ -33,8 +33,12 @@ void PowerManager_init(){
   ltc3887_init(&LTC3887s[4], &I2C_DRIVER, 0x46, "5V Cameras", 5.0f, 50, "3V3 AUX 1", 3.3f, 50);
   ltc3887_init(&LTC3887s[5], &I2C_DRIVER, 0x47, "3V3 DL", 3.3f, 50, "5V CAN", 5.0f, 50);
 
-  PowerManager_switch_on(11); // Start the CAN transceivers
+  PowerManager_switch_on(2); // Start the Flight Computer
+  PowerManager_switch_on(4); // Start the Radio
+  PowerManager_switch_on(7);
+  PowerManager_switch_on(6); // Start the Pyro
   PowerManager_switch_on(10); // Start the DL including base board for USB
+  PowerManager_switch_on(11); // Start the CAN transceivers
 
   // Setup LTC4151
   ltc4151_init(&currentMonitor, &I2C_DRIVER, 0x6F, 0.01f);
@@ -130,10 +134,10 @@ THD_FUNCTION(powermanager_thread, arg){
 
     // Voltage as multiple of 0.001V
     voltage = (uint16_t) (currentMonitor.voltage_v * 1000.0f);
-    // Current as multiple of 0.001mA
-    current = (uint16_t) (currentMonitor.current_ma * 1000.0f);
-    // Power as multiple of 0.1mW
-    power = (uint16_t) (currentMonitor.power_mw * 10.0f);
+    // Current as multiple of 1mA
+    current = (uint16_t) (currentMonitor.current_ma);
+    // Power as multiple of 1mW
+    power = (uint16_t) (currentMonitor.power_mw);
 
     can_data[0] = voltage & 0xff;
     can_data[1] = (voltage >> 8) & 0xff;
