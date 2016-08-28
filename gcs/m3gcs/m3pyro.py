@@ -1,4 +1,5 @@
 from .packets import register_packet, register_command
+import struct
 
 
 def msg_id(x):
@@ -36,8 +37,9 @@ def arm_status(data):
 
 @register_packet("m3pyro", CAN_MSG_ID_M3PYRO_CONTINUITY, "Continuity")
 def continuity(data):
-    resistances = ["{:.1f}Ω".format(float(d)/10) if d != 255 else "HI"
-                   for d in data[:4]]
+    #resistances = ["{:.1f}Ω".format(float(d)/10) if d != 255 else "HI"
+    #               for d in data[:4]]
+    resistances = ["{:d}".format(d) for d in struct.unpack("HHHH", bytes(data))]
     return "Ch1: {}, Ch2: {}, Ch3: {}, Ch4: {}".format(*resistances)
 
 
