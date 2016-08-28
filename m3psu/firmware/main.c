@@ -110,7 +110,6 @@ int main(void) {
 
   enable_internal_power();
 
-  adcStart(&ADC_DRIVER, NULL); // STM32F4 has no ADCConfig
   smbus_init();
   can_init();
 

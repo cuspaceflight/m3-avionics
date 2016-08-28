@@ -101,7 +101,19 @@ void ChargeController_disable_balancing(void){
   shouldBalance = FALSE;
 }
 
+static bool is_charger_enabled(void){
+  uint8_t enabled;
+  pcal9538a_read_output_bit(&portEx, CHARGER_ENABLE, &enabled);
+  if (enabled == 0){
+    return FALSE;
+  }
+  return TRUE;
+}
+
 bool ChargeController_is_charger_overcurrent(void) {
+  if(!is_charger_enabled()){
+    return FALSE;
+  }
   uint8_t result;
   if (pcal9538a_read_inputs(&portEx, &result) != 0) {
     return TRUE; // TODO: what to do if we fail to read status??
@@ -110,6 +122,9 @@ bool ChargeController_is_charger_overcurrent(void) {
 }
 
 bool ChargeController_is_adapter_present(void) {
+  if(!is_charger_enabled()){
+    return FALSE;
+  }
   uint8_t result;
   if (pcal9538a_read_inputs(&portEx, &result) != 0) {
     return FALSE; // TODO: what to do if we fail to read status??
@@ -152,9 +167,11 @@ THD_FUNCTION(chargecontroller_thread, arg) {
 
   while (!chThdShouldTerminateX()) {
     // Measure battery voltages
+    adcStart(&ADC_DRIVER, NULL);
     adcAcquireBus(&ADC_DRIVER);
     status = adcConvert(&ADC_DRIVER, &adcgrpcfg, samplebuf, 1);
     adcReleaseBus(&ADC_DRIVER);
+    adcStop(&ADC_DRIVER);
     if(status == MSG_OK){
       // BATT2 is samplebuf[0], BATT1 is samplebuf[1]
       float batt2 = ((float)samplebuf[0] * 3.3f) / 4096.0f;
