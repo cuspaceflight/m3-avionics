@@ -157,20 +157,20 @@ def toggle_balance_cmd(data):
     data = [{"Off":0, "On":1}[data]]
     return CAN_MSG_ID_M3PSU_TOGGLE_BALANCE, data
 
-@register_command("m3psu", "Channel 1", ("1 Off", "1 On"))
-@register_command("m3psu", "Channel 2", ("2 Off", "2 On"))
-@register_command("m3psu", "Channel 3", ("3 Off", "3 On"))
-@register_command("m3psu", "Channel 4", ("4 Off", "4 On"))
-@register_command("m3psu", "Channel 5", ("5 Off", "5 On"))
-@register_command("m3psu", "Channel 6", ("6 Off", "6 On"))
-@register_command("m3psu", "Channel 7", ("7 Off", "7 On"))
-@register_command("m3psu", "Channel 8", ("8 Off", "8 On"))
-@register_command("m3psu", "Channel 9", ("9 Off", "9 On"))
-@register_command("m3psu", "Channel 10", ("10 Off", "10 On"))
-@register_command("m3psu", "Channel 11", ("11 Off", "11 On"))
-@register_command("m3psu", "Channel 12", ("12 Off", "12 On"))
+@register_command("m3psu", "5V IMU", ("1 Off", "1 On"))
+@register_command("m3psu", "5V AUX 2", ("2 Off", "2 On"))
+@register_command("m3psu", "3V3 FC", ("3 Off", "3 On"))
+@register_command("m3psu", "3V3 IMU", ("4 Off", "4 On"))
+@register_command("m3psu", "5V Radio", ("5 Off", "5 On"))
+@register_command("m3psu", "5V AUX 1", ("6 Off", "6 On"))
+@register_command("m3psu", "3V3 Pyro", ("7 Off", "7 On"))
+@register_command("m3psu", "3V3 Radio", ("8 Off", "8 On"))
+@register_command("m3psu", "5V Cameras", ("9 Off", "9 On"))
+@register_command("m3psu", "3V3 AUX 1", ("10 Off", "10 On"))
+@register_command("m3psu", "3V3 DL", ("11 Off", "11 On"))
+@register_command("m3psu", "5V CAN", ("12 Off", "12 On"))
 def toggle_channel_cmd(data):
-    channel, operation = data.split(" ")
-    data = [{"Off":0, "On":1}[operation], channel]
+    [channel, operation] = data.split(" ")
+    data = [{"Off":0, "On":1}[operation], int(channel)-1]
     return CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL, data
 

@@ -68,10 +68,10 @@ def fire(data):
 @register_command("m3pyro", "Fire Ch4", ("4 Off", "4 EMatch", "4 Talon",
     "4 Metron"))
 def fire_ch_cmd(data):
-    channel, operation = data.split(" ")
+    [channel, operation] = data.split(" ")
     command_map = {"Off": 0, "EMatch": 1, "Talon": 2, "Metron": 3}
     data = [0, 0, 0, 0]
-    data[channel] = command_map[operation]
+    data[int(channel)-1] = int(command_map[operation])
     return CAN_MSG_ID_M3PYRO_FIRE_COMMAND, data
 
 @register_command("m3pyro", "Arm", ("Disarm", "Arm"))

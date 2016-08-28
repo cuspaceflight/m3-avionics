@@ -17,7 +17,6 @@ def index():
 def getstate():
     state = {}
     lasttimes = {}
-    print(wa_state)
     for k in wa_state.keys():
         s = wa_state.get(k)
         state[k] = s['data']
