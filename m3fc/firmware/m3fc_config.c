@@ -3,7 +3,7 @@
 #include "m3fc_status.h"
 #include "m3fc_flash.h"
 
-#define M3FC_CONFIG_FLASH (0x080d9400)
+#define M3FC_CONFIG_FLASH (0x080d9500)
 
 struct m3fc_config m3fc_config;
 
