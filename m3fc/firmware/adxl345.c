@@ -9,6 +9,7 @@
 #include "m3fc_config.h"
 #include "m3fc_status.h"
 #include "m3fc_state_estimation.h"
+#include "m3fc_mock.h"
 #include "adxl345.h"
 
 #define ADXL345_REG_DEVID               0x00
@@ -281,6 +282,9 @@ static THD_FUNCTION(adxl345_thd, arg)
 
     while(true) {
         adxl345_read_accel(accels);
+        if(m3fc_mock_get_enabled()) {
+            m3fc_mock_get_accel(accels);
+        }
 
         float accel = adxl345_accels_to_up(accels);
         m3fc_state_estimation_new_accel(accel);

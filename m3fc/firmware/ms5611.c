@@ -3,6 +3,7 @@
 #include "m3can.h"
 #include "m3fc_status.h"
 #include "m3fc_state_estimation.h"
+#include "m3fc_mock.h"
 #include "ms5611.h"
 
 #define MS5611_CMD_RESET                0x1E
@@ -168,6 +169,11 @@ static THD_FUNCTION(ms5611_thd, arg) {
     ms5611_read_cal(&cal_data);
     while (true) {
         ms5611_read(&cal_data, &temperature, &pressure);
+
+        if(m3fc_mock_get_enabled()) {
+            m3fc_mock_get_baro(&pressure, &temperature);
+        }
+
         m3fc_state_estimation_new_pressure((float)pressure);
         if(loopcount++ == 100) {
             uint32_t buf[2] = {temperature, pressure};

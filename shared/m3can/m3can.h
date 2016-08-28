@@ -40,6 +40,9 @@ extern uint8_t m3can_own_id;
 #define CAN_MSG_ID_M3FC_SET_CFG_PYROS       (CAN_ID_M3FC | CAN_MSG_ID(2))
 #define CAN_MSG_ID_M3FC_LOAD_CFG            (CAN_ID_M3FC | CAN_MSG_ID(3))
 #define CAN_MSG_ID_M3FC_SAVE_CFG            (CAN_ID_M3FC | CAN_MSG_ID(4))
+#define CAN_MSG_ID_M3FC_MOCK_ENABLE         (CAN_ID_M3FC | CAN_MSG_ID(5))
+#define CAN_MSG_ID_M3FC_MOCK_ACCEL          (CAN_ID_M3FC | CAN_MSG_ID(6))
+#define CAN_MSG_ID_M3FC_MOCK_BARO           (CAN_ID_M3FC | CAN_MSG_ID(7))
 
 
 /* M3DL */
