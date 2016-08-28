@@ -6,6 +6,7 @@ import serial
 import binascii
 import argparse
 import multiprocessing
+import os
 from queue import Empty
 
 
@@ -80,21 +81,38 @@ def ppp_pad(buf):
     return struct.pack("{}B".format(len(out)), *out)
 
 
+def logfilename():
+    idx = 0
+    while os.path.exists("logfile_{}.txt".format(idx)):
+        idx += 1
+    return "logfile_{}.txt".format(idx)
+
+
+def log(f, frame):
+    f.write(str(frame) + "\n")
+
+
 def run(port, txq, rxq):
     ser = serial.Serial(port, timeout=0.1)
     rx = CANRX()
 
-    try:
-        while True:
-            try:
-                frame = txq.get_nowait()
-                ser.write(ppp_pad(frame.to_bytes()))
-            except Empty:
-                pass
+    logname = logfilename()
 
-            buf = ser.read(64)
-            for frame in rx.process(buf):
-                rxq.put(frame)
-    except KeyboardInterrupt:
-        ser.close()
-        return
+    print("Logging to {}".format(logname))
+
+    with open(logname, "w") as f:
+        try:
+            while True:
+                try:
+                    frame = txq.get_nowait()
+                    ser.write(ppp_pad(frame.to_bytes()))
+                except Empty:
+                    pass
+
+                buf = ser.read(64)
+                for frame in rx.process(buf):
+                    log(f, frame)
+                    rxq.put(frame)
+        except KeyboardInterrupt:
+            ser.close()
+

@@ -23,31 +23,36 @@ CAN_MSG_ID_M3FC_SET_CFG_PYROS = CAN_ID_M3FC | msg_id(2)
 CAN_MSG_ID_M3FC_LOAD_CFG = CAN_ID_M3FC | msg_id(3)
 CAN_MSG_ID_M3FC_SAVE_CFG = CAN_ID_M3FC | msg_id(4)
 
+components = ["Unknown", "Microcontroller", "State estimation", "Config",
+              "Beeper", "LEDs", "Accelerometer", "Barometer", "Flash",
+              "Pyros", "Mock"]
+component_errors = ["Unknown",
+                    "CRC", "Write", # Flash errors
+                    "Read", # Config errors
+                    "Pyro1", "Pyro2", "Pyro3", "Pyro4", # Pyro errors
+                    "Profile", "Pyros", # More config errors
+                    "Bad ID", "Selftest", "Timeout", "Axis", # Accel err
+                    "Pressure", # State estimator error
+                    "Pyro Arm", # Microcontroller error
+                    "Mock Enabled"] # Mock enabled
+
+compstatus = {k:{"state":0, "reason":"Unknown"} for k in components}
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_STATUS, "Status")
 def status(data):
+    global compstatus
     # The string must start with 'OK:' 'INIT:' or 'ERROR:' as the web
     # interface watches for these and applies special treatment (colours)
     statuses = ["OK", "INIT", "ERROR"]
-    components = ["Unknown", "Microcontroller", "State estimation", "Config",
-                  "Beeper", "LEDs", "Accelerometer", "Barometer", "Flash",
-                  "Pyros", "Mock"]
-    component_errors = ["Unknown",
-                        "CRC", "Write", # Flash errors
-                        "Read", # Config errors
-                        "Pyro1", "Pyro2", "Pyro3", "Pyro4", # Pyro errors
-                        "Profile", "Pyros", # More config errors
-                        "Bad ID", "Selftest", "Timeout", "Axis", # Accel err
-                        "Pressure", # State estimator error
-                        "Pyro Arm", # Microcontroller error
-                        "Mock Enabled"] # Mock enabled
     
     overall, comp, comp_state, comp_error = struct.unpack("BBBB",
         bytes(data[:4]))
     string = "{}: ".format(statuses[overall])
-    string += "{} {}".format(components[comp], statuses[comp_state])
-    if comp_state == 2: # Component is in error
-        string += " ({})".format(component_errors[comp_error])
+    compstatus[components[comp]]['state'] = comp_state
+    compstatus[components[comp]]['reason'] = component_errors[comp_error]
+    for k in components[1:]:
+        if compstatus[k]['state'] == 2: # Component is in error
+            string += "\n{}: {}".format(k, compstatus[k]['reason'])
     return string
 
 
