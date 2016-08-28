@@ -92,10 +92,10 @@
 #define GPIOC_PIN0                     0U
 #define GPIOC_PIN1                     1U
 #define GPIOC_PIN2                     2U
-#define GPIOC_RADIO_SDN                3U
+#define GPIOC_PIN3                     3U
 #define GPIOC_PIN4                     4U
 #define GPIOC_PIN5                     5U
-#define GPIOC_PIN6                     6U
+#define GPIOC_RADIO_SDN                6U
 #define GPIOC_PIN7                     7U
 #define GPIOC_PIN8                     8U
 #define GPIOC_PIN9                     9U
@@ -231,7 +231,7 @@
 #define LINE_RADIO_IRQ_N               PAL_LINE(GPIOA, 11U)
 #define LINE_RADIO_SCLK                PAL_LINE(GPIOB, 13U)
 #define LINE_RADIO_SDI                 PAL_LINE(GPIOB, 15U)
-#define LINE_RADIO_SDN                 PAL_LINE(GPIOC, 3U)
+#define LINE_RADIO_SDN                 PAL_LINE(GPIOC, 6U)
 #define LINE_RADIO_SDO                 PAL_LINE(GPIOB, 14U)
 
 /*
@@ -496,10 +496,10 @@
  * PC0  - PIN0                         (unused).
  * PC1  - PIN1                         (unused).
  * PC2  - PIN2                         (unused).
- * PC3  - RADIO_SDN                    (output, starthigh).
+ * PC3  - PIN3                         (unused).
  * PC4  - PIN4                         (unused).
  * PC5  - PIN5                         (unused).
- * PC6  - PIN6                         (unused).
+ * PC6  - RADIO_SDN                    (output, starthigh).
  * PC7  - PIN7                         (unused).
  * PC8  - PIN8                         (unused).
  * PC9  - PIN9                         (unused).
@@ -513,10 +513,10 @@
 #define VAL_GPIOC_MODER                (PIN_MODE_INPUT(GPIOC_PIN0) | \
                                         PIN_MODE_INPUT(GPIOC_PIN1) | \
                                         PIN_MODE_INPUT(GPIOC_PIN2) | \
-                                        PIN_MODE_OUTPUT(GPIOC_RADIO_SDN) | \
+                                        PIN_MODE_INPUT(GPIOC_PIN3) | \
                                         PIN_MODE_INPUT(GPIOC_PIN4) | \
                                         PIN_MODE_INPUT(GPIOC_PIN5) | \
-                                        PIN_MODE_INPUT(GPIOC_PIN6) | \
+                                        PIN_MODE_OUTPUT(GPIOC_RADIO_SDN) | \
                                         PIN_MODE_INPUT(GPIOC_PIN7) | \
                                         PIN_MODE_INPUT(GPIOC_PIN8) | \
                                         PIN_MODE_INPUT(GPIOC_PIN9) | \
@@ -529,10 +529,10 @@
 #define VAL_GPIOC_OTYPER               (PIN_OTYPE_PUSHPULL(GPIOC_PIN0) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN1) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN2) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOC_RADIO_SDN) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOC_PIN3) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN4) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN5) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOC_PIN6) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOC_RADIO_SDN) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN7) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN8) | \
                                         PIN_OTYPE_PUSHPULL(GPIOC_PIN9) | \
@@ -545,10 +545,10 @@
 #define VAL_GPIOC_OSPEEDR              (PIN_OSPEED_HIGH(GPIOC_PIN0) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN1) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN2) | \
-                                        PIN_OSPEED_HIGH(GPIOC_RADIO_SDN) | \
+                                        PIN_OSPEED_HIGH(GPIOC_PIN3) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN4) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN5) | \
-                                        PIN_OSPEED_HIGH(GPIOC_PIN6) | \
+                                        PIN_OSPEED_HIGH(GPIOC_RADIO_SDN) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN7) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN8) | \
                                         PIN_OSPEED_HIGH(GPIOC_PIN9) | \
@@ -561,10 +561,10 @@
 #define VAL_GPIOC_PUPDR                (PIN_PUPD_PULLUP(GPIOC_PIN0) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN1) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN2) | \
-                                        PIN_PUPD_PULLUP(GPIOC_RADIO_SDN) | \
+                                        PIN_PUPD_PULLUP(GPIOC_PIN3) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN4) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN5) | \
-                                        PIN_PUPD_PULLUP(GPIOC_PIN6) | \
+                                        PIN_PUPD_PULLUP(GPIOC_RADIO_SDN) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN7) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN8) | \
                                         PIN_PUPD_PULLUP(GPIOC_PIN9) | \
@@ -577,10 +577,10 @@
 #define VAL_GPIOC_ODR                  (PIN_OD_HIGH(GPIOC_PIN0) | \
                                         PIN_OD_HIGH(GPIOC_PIN1) | \
                                         PIN_OD_HIGH(GPIOC_PIN2) | \
-                                        PIN_OD_HIGH(GPIOC_RADIO_SDN) | \
+                                        PIN_OD_HIGH(GPIOC_PIN3) | \
                                         PIN_OD_HIGH(GPIOC_PIN4) | \
                                         PIN_OD_HIGH(GPIOC_PIN5) | \
-                                        PIN_OD_HIGH(GPIOC_PIN6) | \
+                                        PIN_OD_HIGH(GPIOC_RADIO_SDN) | \
                                         PIN_OD_HIGH(GPIOC_PIN7) | \
                                         PIN_OD_HIGH(GPIOC_PIN8) | \
                                         PIN_OD_HIGH(GPIOC_PIN9) | \
@@ -593,10 +593,10 @@
 #define VAL_GPIOC_AFRL                 (PIN_AFIO_AF(GPIOC_PIN0, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN1, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN2, 0U) | \
-                                        PIN_AFIO_AF(GPIOC_RADIO_SDN, 0U) | \
+                                        PIN_AFIO_AF(GPIOC_PIN3, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN4, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN5, 0U) | \
-                                        PIN_AFIO_AF(GPIOC_PIN6, 0U) | \
+                                        PIN_AFIO_AF(GPIOC_RADIO_SDN, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN7, 0U))
 #define VAL_GPIOC_AFRH                 (PIN_AFIO_AF(GPIOC_PIN8, 0U) | \
                                         PIN_AFIO_AF(GPIOC_PIN9, 0U) | \

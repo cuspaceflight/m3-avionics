@@ -15,6 +15,7 @@
 #define M3RADIO_ERROR_UBLOX_DECODE      (5)
 #define M3RADIO_ERROR_UBLOX_FLIGHT_MODE (6)
 #define M3RADIO_ERROR_UBLOX_NAK         (7)
+#define M3RADIO_ERROR_SI4460_CFG        (8)
 
 void m3radio_status_init(void);
 

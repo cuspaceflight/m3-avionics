@@ -28,4 +28,4 @@ pins:
     RADIO_SCLK: pb13, af5
     RADIO_SDO: pb14, af5
     RADIO_SDI: pb15, af5
-    RADIO_SDN: pc3, output, starthigh
+    RADIO_SDN: pc6, output, starthigh
