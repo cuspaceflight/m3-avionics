@@ -52,6 +52,17 @@
 <div class="col-md-4">
     <div class="panel panel-default">
         <div class="panel-heading">
+            <h3 class="panel-title">Map</h3>
+        </div>
+        <div class="panel-body">
+            <div id="map"></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
             <h3 class="panel-title">Packet Log</h3>
         </div>
         <div class="panel-body">
@@ -72,3 +83,5 @@
         {% endfor %}
     {% endfor %}
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOoCcFecjYczBz8WZKv25QdeCFXiKBLMo&callback=mapInit" async defer></script>

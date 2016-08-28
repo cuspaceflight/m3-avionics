@@ -1,3 +1,23 @@
+var map;
+var marker;
+function mapInit(){
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: {lat:55.7163992, lng:-4.8039792},
+        zoom: 16,
+    });
+    
+    marker = new google.maps.Marker({
+        position: {lat:0, lng:0},
+        map: map,
+        title: "Rocket"
+    });
+}
+
+function moveMarker(lat,lng){
+    marker.setPosition({lat:lat, lng:lng});
+}
+
+
 // status should contain 2 fields:
 //  status: 'ok', 'init' or 'error'
 //  reason: if status=='error', why
@@ -96,6 +116,14 @@ $(document).ready(function(){
                         "<table class='table table-condensed'>" +
                         sorted.join("\n") +
                         "</table>");
+                    if(idx == "m3radio"){
+                        try{
+                            var latlng = state[idx]['GPS Lat/Long'].split(" ");
+                            moveMarker(parseFloat(latlng[0]), parseFloat(latlng[1]));
+                        }catch{
+                            
+                        }
+                    }
                 }
 
                 for(idx in toflash){
