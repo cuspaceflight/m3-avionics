@@ -1,3 +1,4 @@
+import atexit
 from datetime import datetime
 import json
 import multiprocessing
@@ -24,8 +25,19 @@ def process(parent, name, arg):
     can_id, data = registered_commands[parent][name][0](arg)
     txq.put(usbcan.CANFrame(can_id, False, len(data), data))
 
+errors = []
+
+@atexit.register
+def report_errors():
+    if errors:
+        print("Errors seen during execution:")
+        print("--------------------")
+        for e in errors:
+            print(e)
+            print("--------------------")
+
 def packet_process(rxq, state):
-    errors = []
+    global errors
     while True:
         try:
             frame = rxq.get_nowait()
@@ -42,13 +54,6 @@ def packet_process(rxq, state):
                 #pass
         except Empty:
             pass
-        except KeyboardInterrupt:
-            if errors:
-                print("Errors seen during execution:")
-                print("--------------------")
-                for e in errors:
-                    print(e)
-                    print("--------------------")
 
 def run(port, state):
     usbcan_runner = multiprocessing.Process(target=usbcan.run, args=(port, txq, rxq))

@@ -17,7 +17,7 @@
 
 <div class="row">
 
-{% for name in names %}
+{% for name in (names | sort) %}
 <div class="col-md-4">
     <div class="panel panel-default status-panel" id="header-{{ name }}">
         <div class="panel-heading">
