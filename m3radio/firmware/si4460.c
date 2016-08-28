@@ -5,6 +5,9 @@
 #include "m3can.h"
 #include "ezradiopro.h"
 
+binary_semaphore_t si4460_tx_sem;
+uint8_t si4460_tx_buf[12];
+
 /* XXX Get correct CR1 settings for Si4460 */
 static SPIDriver* si4460_spid;
 static SPIConfig spi_cfg = {
@@ -80,7 +83,7 @@ static void si4460_send_command(uint8_t* txbuf, size_t txn,
 
 static void si4460_power_up(bool tcxo, uint32_t xo_freq)
 {
-    uint8_t buf[7] = {EZRP_POWER_UP, 0, tcxo,
+    uint8_t buf[7] = {EZRP_POWER_UP, 1, tcxo,
                       xo_freq>>24, xo_freq>>16, xo_freq>>8, xo_freq};
     si4460_read_cmd_buf(NULL, 0);
     si4460_send_command(buf, sizeof(buf), NULL, 0);
@@ -245,13 +248,19 @@ static bool si4460_configure() {
     (void)chip_status;
 
     chip_status = si4460_get_chip_status(0);
+    struct si4460_part_info part_info = si4460_part_info();
+    chip_status = si4460_get_chip_status(0);
+
+    chThdSleepMilliseconds(100);
 
     /* Power up with TCXO and 26MHz frequency */
     si4460_power_up(true, 26000000);
 
+    chThdSleepMilliseconds(100);
+
     chip_status = si4460_get_chip_status(0);
 
-    struct si4460_part_info part_info = si4460_part_info();
+    part_info = si4460_part_info();
     chip_status = si4460_get_chip_status(0);
     struct si4460_func_info func_info = si4460_func_info();
     chip_status = si4460_get_chip_status(0);
@@ -262,6 +271,7 @@ static bool si4460_configure() {
 
     /* Enable mysterious reserved bit and fast mode */
     si4460_set_property(EZRP_PROP_GLOBAL, EZRP_PROP_GLOBAL_CONFIG, (1<<6)|(1<<5));
+    chip_status = si4460_get_chip_status(0);
     si4460_set_property(EZRP_PROP_GLOBAL, EZRP_PROP_GLOBAL_XO_TUNE, 0x00);
     chip_status = si4460_get_chip_status(0);
 
@@ -350,29 +360,46 @@ static THD_FUNCTION(si4460_thd, arg) {
 
     while(true) {
         /*struct si4460_int_status int_status = si4460_get_int_status(0, 0, 0);*/
-        struct si4460_part_info part_info = si4460_part_info();
-        struct si4460_chip_status chip_status = si4460_get_chip_status(0);
+        /*struct si4460_part_info part_info = si4460_part_info();*/
+        /*struct si4460_chip_status chip_status = si4460_get_chip_status(0);*/
         /*(void)int_status;*/
-        (void)part_info;
-        (void)chip_status;
+        /*(void)part_info;*/
+        /*(void)chip_status;*/
         uint8_t state = EZRP_STATE_TX, channel;
         si4460_request_device_state(&state, &channel);
-        uint8_t buf[27] = {22, '3', 'a', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                           11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-                           22, 23, 24};
-        si4460_write_tx_fifo(buf, 27);
+#if 1
+        si4460_write_tx_fifo(si4460_tx_buf, 12);
         while(state == EZRP_STATE_TX) {
             si4460_request_device_state(&state, &channel);
         }
         si4460_start_tx(0, EZRP_STATE_READY << 4, 5, 0, 0);
+        chBSemWaitTimeout(&si4460_tx_sem, MS2ST(100));
         m3status_set_ok(M3RADIO_COMPONENT_SI4460);
-        chThdSleepMilliseconds(100);
+#endif
+#if 0
+        si4460_start_rx(0, 0, 0, 0, 8, 8);
+        uint8_t buf[128];
+        while(true) {
+            struct si4460_modem_status modem_status = si4460_get_modem_status(0xFF);
+            si4460_request_device_state(&state, &channel);
+            chip_status = si4460_get_chip_status(0xFF);
+            struct si4460_int_status int_status = si4460_get_int_status(0xFF,0xFF,0xFF);
+            si4460_read_rx_fifo(buf, 128);
+            (void)modem_status;
+            (void)buf;
+            (void)int_status;
+        }
+#endif
+        /*m3status_set_ok(M3RADIO_COMPONENT_SI4460);*/
+        /*chThdSleepMilliseconds(100);*/
     }
 }
 
 void si4460_init(SPIDriver* spid, ioportid_t ssport, uint32_t sspad)
 {
     m3status_set_init(M3RADIO_COMPONENT_SI4460);
+
+    chBSemObjectInit(&si4460_tx_sem, false);
 
     spi_cfg.ssport = ssport;
     spi_cfg.sspad = sspad;
