@@ -84,13 +84,17 @@ def run(port, txq, rxq):
     ser = serial.Serial(port, timeout=0.1)
     rx = CANRX()
 
-    while True:
-        try:
-            frame = txq.get_nowait()
-            ser.write(ppp_pad(frame.to_bytes()))
-        except Empty:
-            pass
+    try:
+        while True:
+            try:
+                frame = txq.get_nowait()
+                ser.write(ppp_pad(frame.to_bytes()))
+            except Empty:
+                pass
 
-        buf = ser.read(64)
-        for frame in rx.process(buf):
-            rxq.put(frame)
+            buf = ser.read(64)
+            for frame in rx.process(buf):
+                rxq.put(frame)
+    except KeyboardInterrupt:
+        ser.close()
+        return

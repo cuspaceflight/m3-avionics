@@ -38,22 +38,24 @@ def report_errors():
 
 def packet_process(rxq, state):
     global errors
-    while True:
-        try:
-            frame = rxq.get_nowait()
-            res = find_processor(frame.sid)
-            if res is not None:
-                parent, processor = res
-                try:
-                    update_state(state, frame.sid, parent, processor[0], processor[1](frame.data))
-                except Exception as e:
-                    errors.append(e)
-                    print(e)
-            else:
-                print("No handler found for SID: {:b}".format(frame.sid))
-                #pass
-        except Empty:
-            pass
+    try:
+        while True:
+            try:
+                frame = rxq.get_nowait()
+                res = find_processor(frame.sid)
+                if res is not None:
+                    parent, processor = res
+                    try:
+                        update_state(state, frame.sid, parent, processor[0], processor[1](frame.data))
+                    except Exception as e:
+                        errors.append(e)
+                else:
+                    print("No handler found for SID: {:b}".format(frame.sid))
+                    #pass
+            except Empty:
+                pass
+    except KeyboardInterrupt:
+        return
 
 def run(port, state):
     usbcan_runner = multiprocessing.Process(target=usbcan.run, args=(port, txq, rxq))
