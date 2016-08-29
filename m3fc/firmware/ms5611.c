@@ -178,9 +178,9 @@ static THD_FUNCTION(ms5611_thd, arg) {
         if(loopcount++ == 100) {
             uint32_t buf[2] = {temperature, pressure};
             can_send(CAN_MSG_ID_M3FC_BARO, false, (uint8_t*)buf, 8);
+            m3status_set_ok(M3FC_COMPONENT_BARO);
             loopcount = 0;
         }
-        m3status_set_ok(M3FC_COMPONENT_BARO);
     }
 }
 
