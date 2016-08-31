@@ -69,4 +69,11 @@ void m3fc_config_save(void);
 bool m3fc_config_load(void);
 bool m3fc_config_check(void);
 
+/* CAN packet handling routines */
+void m3fc_config_handle_set_profile(uint8_t* data, uint8_t datalen);
+void m3fc_config_handle_set_pyros(uint8_t* data, uint8_t datalen);
+void m3fc_config_handle_load(uint8_t* data, uint8_t datalen);
+void m3fc_config_handle_save(uint8_t* data, uint8_t datalen);
+
+
 #endif
