@@ -215,7 +215,6 @@ state_estimate_t m3fc_state_estimation_get_state()
     buf[0] = p[1][1];
     buf[1] = p[2][2];
     can_send(CAN_MSG_ID_M3FC_SE_VAR_V_A, false, (uint8_t*)buf, 8);
-    can_counter = 0;
 
     m3status_set_ok(M3FC_COMPONENT_SE);
 

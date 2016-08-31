@@ -130,7 +130,7 @@ static THD_FUNCTION(can_rx_thd, arg) {
         }
 
         /* Send our git ID every 5 seconds */
-        if(ST2MS(chVTGetTimeElapsedSinceX(time_last_id)) > 5000) {
+        if(ST2MS(chVTTimeElapsedSinceX(time_last_id)) > 5000) {
             m3can_send_git_version();
             time_last_id = chVTGetSystemTimeX();
         }
@@ -151,6 +151,6 @@ void can_init(uint8_t board_id) {
 }
 
 static void m3can_send_git_version(void) {
-    can_send(board_id | CAN_MSG_ID_VERSION, false,
+    can_send(m3can_own_id | CAN_MSG_ID_VERSION, false,
              (uint8_t*)FIRMWARE_VERSION, 8);
 }

@@ -9,9 +9,11 @@
 #define PYRO_SUPPLY_THRESHOLD       (40)
 #define PYRO_CONT_THRESHOLD         (100)
 
-static volatile bool pyro_armed = false;
-static volatile bool pyro_supply_good = false;
-static volatile bool pyro_cont_ok = false;
+volatile bool m3fc_mission_pyro_armed = false;
+volatile bool m3fc_mission_pyro_supply_good = false;
+volatile bool m3fc_mission_pyro_cont_ok = false;
+
+static volatile bool m3fc_mission_armed = false;
 
 typedef enum {
     STATE_INIT = 0, STATE_PAD, STATE_IGNITION, STATE_POWERED_ASCENT,
@@ -69,9 +71,7 @@ static state_t do_state_init(instance_data_t *data) {
 
     m3fc_mission_check_pyros();
 
-    /* TODO: Instead of 30 seconds, receive a CAN command starting
-     * the mission controller */
-    if(ST2S(chVTGetSystemTimeX()) < 30) {
+    if(!m3fc_mission_armed) {
         return STATE_INIT;
     } else {
         m3status_set_ok(M3FC_COMPONENT_MC);
@@ -275,11 +275,11 @@ void m3fc_mission_init() {
 }
 
 static void m3fc_mission_check_pyros(void) {
-    if(!pyro_supply_good) {
+    if(!m3fc_mission_pyro_supply_good) {
         m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_MC_PYRO_SUPPLY);
-    } else if(!pyro_armed) {
+    } else if(!m3fc_mission_pyro_armed) {
         m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_MC_PYRO_ARM);
-    } else if(!pyro_cont_ok) {
+    } else if(!m3fc_mission_pyro_cont_ok) {
         m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_MC_PYRO_CONT);
     } else {
         m3status_set_ok(M3FC_COMPONENT_MC_PYRO);
@@ -293,9 +293,9 @@ void m3fc_mission_handle_pyro_supply(uint8_t* data, uint8_t datalen){
     }
 
     if(data[0] > PYRO_SUPPLY_THRESHOLD) {
-        pyro_supply_good = true;
+        m3fc_mission_pyro_supply_good = true;
     } else {
-        pyro_supply_good = false;
+        m3fc_mission_pyro_supply_good = false;
     }
 }
 
@@ -306,9 +306,9 @@ void m3fc_mission_handle_pyro_arm(uint8_t* data, uint8_t datalen){
     }
 
     if(data[0]) {
-        pyro_armed = true;
+        m3fc_mission_pyro_armed = true;
     } else {
-        pyro_armed = false;
+        m3fc_mission_pyro_armed = false;
     }
 }
 
@@ -324,8 +324,15 @@ void m3fc_mission_handle_pyro_continuity(uint8_t* data, uint8_t datalen){
         (m3fc_config.pyros.pyro_3_usage && data[2] > PYRO_CONT_THRESHOLD) ||
         (m3fc_config.pyros.pyro_4_usage && data[3] > PYRO_CONT_THRESHOLD))
     {
-        pyro_cont_ok = false;
+        m3fc_mission_pyro_cont_ok = false;
     } else {
-        pyro_cont_ok = true;
+        m3fc_mission_pyro_cont_ok = true;
     }
+}
+
+void m3fc_mission_handle_arm(uint8_t* data, uint8_t datalen) {
+    (void)data;
+    (void)datalen;
+
+    m3fc_mission_armed = true;
 }

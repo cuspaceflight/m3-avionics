@@ -24,7 +24,7 @@ static void m3status_set(uint8_t component, uint8_t status, uint8_t errorcode)
     chDbgAssert(m3can_own_id != 0, "m3can_init() hasn't been called");
 
     /* Check if we should transmit the new status */
-    bool transit_status = false;
+    bool transmit_status = false;
     if(components[component] != status) {
         /* Transmit if status has changed since last time */
         transmit_status = true;
