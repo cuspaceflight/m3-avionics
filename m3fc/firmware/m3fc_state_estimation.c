@@ -130,7 +130,6 @@ static void m3fc_state_estimation_update_accel(float accel, float r);
 state_estimate_t m3fc_state_estimation_get_state()
 {
     float q, dt, dt2, dt3, dt4, dt5, dt6, dt2_2;
-    static int can_counter = 0;
     state_estimate_t x_out;
 
     /* TODO Determine best q-value */
@@ -204,21 +203,19 @@ state_estimate_t m3fc_state_estimation_get_state()
     chBSemSignal(&kalman_bsem);
 
     /* Send the newly predicted state and variances */
-    if(can_counter++ >= 20) {
-        float buf[2];
-        buf[0] = dt;
-        buf[1] = x[0];
-        can_send(CAN_MSG_ID_M3FC_SE_T_H, false, (uint8_t*)buf, 8);
-        buf[0] = x[1];
-        buf[1] = x[2];
-        can_send(CAN_MSG_ID_M3FC_SE_V_A, false, (uint8_t*)buf, 8);
-        buf[0] = p[0][0];
-        can_send(CAN_MSG_ID_M3FC_SE_VAR_H, false, (uint8_t*)buf, 4);
-        buf[0] = p[1][1];
-        buf[1] = p[2][2];
-        can_send(CAN_MSG_ID_M3FC_SE_VAR_V_A, false, (uint8_t*)buf, 8);
-        can_counter = 0;
-    }
+    float buf[2];
+    buf[0] = dt;
+    buf[1] = x[0];
+    can_send(CAN_MSG_ID_M3FC_SE_T_H, false, (uint8_t*)buf, 8);
+    buf[0] = x[1];
+    buf[1] = x[2];
+    can_send(CAN_MSG_ID_M3FC_SE_V_A, false, (uint8_t*)buf, 8);
+    buf[0] = p[0][0];
+    can_send(CAN_MSG_ID_M3FC_SE_VAR_H, false, (uint8_t*)buf, 4);
+    buf[0] = p[1][1];
+    buf[1] = p[2][2];
+    can_send(CAN_MSG_ID_M3FC_SE_VAR_V_A, false, (uint8_t*)buf, 8);
+    can_counter = 0;
 
     m3status_set_ok(M3FC_COMPONENT_SE);
 

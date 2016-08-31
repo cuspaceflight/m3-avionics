@@ -6,6 +6,13 @@
 #include "m3fc_config.h"
 #include "m3fc_state_estimation.h"
 
+#define PYRO_SUPPLY_THRESHOLD       (40)
+#define PYRO_CONT_THRESHOLD         (100)
+
+static volatile bool pyro_armed = false;
+static volatile bool pyro_supply_good = false;
+static volatile bool pyro_cont_ok = false;
+
 typedef enum {
     STATE_INIT = 0, STATE_PAD, STATE_IGNITION, STATE_POWERED_ASCENT,
     STATE_BURNOUT, STATE_FREE_ASCENT, STATE_APOGEE, STATE_DROGUE_DESCENT,
@@ -29,6 +36,7 @@ static void m3fc_mission_fire_pyro(int pyro_usage);
 static void m3fc_mission_fire_drogue_pyro(void);
 static void m3fc_mission_fire_main_pyro(void);
 static void m3fc_mission_fire_dart_pyro(void);
+static void m3fc_mission_check_pyros(void);
 
 state_t run_state(state_t cur_state, instance_data_t *data);
 static state_t do_state_init(instance_data_t *data);
@@ -59,6 +67,8 @@ static state_t do_state_init(instance_data_t *data) {
     m3fc_state_estimation_trust_barometer = true;
     data->h_ground = data->state.h;
 
+    m3fc_mission_check_pyros();
+
     /* TODO: Instead of 30 seconds, receive a CAN command starting
      * the mission controller */
     if(ST2S(chVTGetSystemTimeX()) < 30) {
@@ -73,17 +83,7 @@ static state_t do_state_pad(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
 
-    /* While on the pad, check if pyro is armed and supply good, otherwise
-     * it's an error for the mission control */
-    if(m3fc_status_pyro_armed && m3fc_status_pyro_supply_good) {
-        if(m3status_get_component(M3FC_COMPONENT_MC) != M3STATUS_OK) {
-            m3status_set_ok(M3FC_COMPONENT_MC);
-        }
-    } else {
-        if(m3status_get_component(M3FC_COMPONENT_MC) != M3STATUS_ERROR) {
-            m3status_set_error(M3FC_COMPONENT_MC, M3FC_ERROR_MC_PYRO_ARM);
-        }
-    }
+    m3fc_mission_check_pyros();
 
     if(data->state.a > m3fc_config.profile.ignition_accel)
         return STATE_IGNITION;
@@ -269,6 +269,63 @@ static THD_FUNCTION(mission_thread, arg) {
 
 void m3fc_mission_init() {
     m3status_set_init(M3FC_COMPONENT_MC);
+    m3status_set_init(M3FC_COMPONENT_MC_PYRO);
     chThdCreateStatic(mission_thread_wa, sizeof(mission_thread_wa),
                       NORMALPRIO+5, mission_thread, NULL);
+}
+
+static void m3fc_mission_check_pyros(void) {
+    if(!pyro_supply_good) {
+        m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_MC_PYRO_SUPPLY);
+    } else if(!pyro_armed) {
+        m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_MC_PYRO_ARM);
+    } else if(!pyro_cont_ok) {
+        m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_MC_PYRO_CONT);
+    } else {
+        m3status_set_ok(M3FC_COMPONENT_MC_PYRO);
+    }
+}
+
+void m3fc_mission_handle_pyro_supply(uint8_t* data, uint8_t datalen){
+    if(datalen != 1) {
+        m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_CAN_BAD_COMMAND);
+        return;
+    }
+
+    if(data[0] > PYRO_SUPPLY_THRESHOLD) {
+        pyro_supply_good = true;
+    } else {
+        pyro_supply_good = false;
+    }
+}
+
+void m3fc_mission_handle_pyro_arm(uint8_t* data, uint8_t datalen){
+    if(datalen != 1) {
+        m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_CAN_BAD_COMMAND);
+        return;
+    }
+
+    if(data[0]) {
+        pyro_armed = true;
+    } else {
+        pyro_armed = false;
+    }
+}
+
+void m3fc_mission_handle_pyro_continuity(uint8_t* data, uint8_t datalen){
+    if(datalen != 4) {
+        m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_CAN_BAD_COMMAND);
+        return;
+    }
+
+    if(
+        (m3fc_config.pyros.pyro_1_usage && data[0] > PYRO_CONT_THRESHOLD) ||
+        (m3fc_config.pyros.pyro_2_usage && data[1] > PYRO_CONT_THRESHOLD) ||
+        (m3fc_config.pyros.pyro_3_usage && data[2] > PYRO_CONT_THRESHOLD) ||
+        (m3fc_config.pyros.pyro_4_usage && data[3] > PYRO_CONT_THRESHOLD))
+    {
+        pyro_cont_ok = false;
+    } else {
+        pyro_cont_ok = true;
+    }
 }
