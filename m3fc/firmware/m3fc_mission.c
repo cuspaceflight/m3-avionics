@@ -13,6 +13,8 @@ volatile bool m3fc_mission_pyro_armed = false;
 volatile bool m3fc_mission_pyro_supply_good = false;
 volatile bool m3fc_mission_pyro_cont_ok = false;
 
+static volatile bool m3fc_mission_armed = false;
+
 typedef enum {
     STATE_INIT = 0, STATE_PAD, STATE_IGNITION, STATE_POWERED_ASCENT,
     STATE_BURNOUT, STATE_FREE_ASCENT, STATE_APOGEE, STATE_DROGUE_DESCENT,
@@ -69,9 +71,7 @@ static state_t do_state_init(instance_data_t *data) {
 
     m3fc_mission_check_pyros();
 
-    /* TODO: Instead of 30 seconds, receive a CAN command starting
-     * the mission controller */
-    if(ST2S(chVTGetSystemTimeX()) < 30) {
+    if(!m3fc_mission_armed) {
         return STATE_INIT;
     } else {
         m3status_set_ok(M3FC_COMPONENT_MC);
@@ -328,4 +328,11 @@ void m3fc_mission_handle_pyro_continuity(uint8_t* data, uint8_t datalen){
     } else {
         m3fc_mission_pyro_cont_ok = true;
     }
+}
+
+void m3fc_mission_handle_arm(uint8_t* data, uint8_t datalen) {
+    (void)data;
+    (void)datalen;
+
+    m3fc_mission_armed = true;
 }
