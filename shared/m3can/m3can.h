@@ -61,13 +61,26 @@ extern uint8_t m3can_own_id;
 
 
 
-// Define this function somewhere else and fill it out
+/* Define this function somewhere else and implement it */
 void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
+/* Call can_init early during startup, setting your board ID from the list
+ * above.
+ */
 void can_init(uint8_t board_id);
+
+/* Call can_send to transmit a packet.
+ * msg_id should be from the list above
+ * can_rtr is the "remote transmission request", set to indicate you're asking
+ *         for data rather than sending it
+ * data[] and datalen are the data (and number of bytes of it) to send.
+ */
 void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
-/* Type specific can_send functions */
+/* Type specific can_send functions. In each case 'n' refers to the number of
+ * values transmitted, not the number of corresponding bytes, so e.g. should be
+ * 0 or 1 for send_u32. 
+ */
 void can_send_u8(uint16_t msg_id, uint8_t d0, uint8_t d1, uint8_t d2,
                  uint8_t d3, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7,
                  size_t n);
@@ -82,7 +95,11 @@ void can_send_i16(int16_t msg_id, int16_t d0, int16_t d1, int16_t d2,
 void can_send_i32(int16_t msg_id, int32_t d0, int32_t d1, size_t n);
 void can_send_f32(uint16_t msg_id, float d0, float d1, size_t n);
 
-/* Whether to process all sent messages as though they were also received */
+/* Enable processing all sent messages (via can_send) as though they were also
+ * received (in can_recv).
+ * Useful for boards like datalogger and radio which want to receive their own
+ * packets for storage/transmission.
+ */
 void can_set_loopback(bool enabled);
 
 #endif /* _M3CAN_H */
