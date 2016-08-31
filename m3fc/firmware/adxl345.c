@@ -261,7 +261,6 @@ static THD_FUNCTION(adxl345_thd, arg)
 {
     (void)arg;
     int16_t accels[3];
-    int loopcount = 0;
     msg_t wait_result;
 
     chRegSetThreadName("ADXL345");
@@ -282,6 +281,10 @@ static THD_FUNCTION(adxl345_thd, arg)
 
     while(true) {
         adxl345_read_accel(accels);
+
+        /* If we're doing hardware-in-the-loop mocking, discard the just-read
+         * value and use the latest mock value instead.
+         */
         if(m3fc_mock_get_enabled()) {
             m3fc_mock_get_accel(accels);
         }
@@ -289,19 +292,14 @@ static THD_FUNCTION(adxl345_thd, arg)
         float accel = adxl345_accels_to_up(accels);
         m3fc_state_estimation_new_accel(accel);
 
-        if(loopcount++ == 100) {
-            loopcount = 0;
-            can_send(CAN_MSG_ID_M3FC_ACCEL, false, (uint8_t*)accels, 6);
-        }
+        can_send(CAN_MSG_ID_M3FC_ACCEL, false, (uint8_t*)accels, 6);
 
         wait_result = chBSemWaitTimeout(&adxl345_thd_sem, MS2ST(100));
 
         if(wait_result == MSG_TIMEOUT) {
             m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_TIMEOUT);
         } else {
-            if(m3status_get_component(M3FC_COMPONENT_ACCEL) != M3STATUS_OK) {
-                m3status_set_ok(M3FC_COMPONENT_ACCEL);
-            }
+            m3status_set_ok(M3FC_COMPONENT_ACCEL);
         }
     }
 }

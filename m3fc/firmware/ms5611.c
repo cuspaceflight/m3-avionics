@@ -162,7 +162,6 @@ static THD_FUNCTION(ms5611_thd, arg) {
 
     MS5611CalData cal_data;
     int32_t temperature, pressure;
-    int loopcount = 0;
     chRegSetThreadName("MS5611");
     spiStart(ms5611_spid, &spi_cfg);
     ms5611_reset();
@@ -170,17 +169,16 @@ static THD_FUNCTION(ms5611_thd, arg) {
     while (true) {
         ms5611_read(&cal_data, &temperature, &pressure);
 
+        /* If we're doing hardware-in-the-loop mocking, discard the just-read
+         * value and use the latest mock value instead.
+         */
         if(m3fc_mock_get_enabled()) {
             m3fc_mock_get_baro(&pressure, &temperature);
         }
 
         m3fc_state_estimation_new_pressure((float)pressure);
-        if(loopcount++ == 100) {
-            uint32_t buf[2] = {temperature, pressure};
-            can_send(CAN_MSG_ID_M3FC_BARO, false, (uint8_t*)buf, 8);
-            m3status_set_ok(M3FC_COMPONENT_BARO);
-            loopcount = 0;
-        }
+        can_send_i32(CAN_MSG_ID_M3FC_BARO, temperature, pressure, 2);
+        m3status_set_ok(M3FC_COMPONENT_BARO);
     }
 }
 
