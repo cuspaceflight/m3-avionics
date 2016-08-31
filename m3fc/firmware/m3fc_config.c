@@ -141,11 +141,15 @@ void m3fc_config_handle_set_pyros(uint8_t* data, uint8_t datalen) {
 }
 
 void m3fc_config_handle_load(uint8_t* data, uint8_t datalen) {
+    (void)data;
+    (void)datalen;
     m3fc_config_load();
     m3fc_config_check();
 }
 
 void m3fc_config_handle_save(uint8_t* data, uint8_t datalen) {
+    (void)data;
+    (void)datalen;
     m3fc_config_save();
     m3fc_config_load();
     m3fc_config_check();

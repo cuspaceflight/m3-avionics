@@ -3,6 +3,7 @@
 #include "m3fc_config.h"
 #include "m3fc_ui.h"
 #include "m3fc_mock.h"
+#include "m3fc_mission.h"
 
 void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
     (void)can_rtr;
