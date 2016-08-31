@@ -1,4 +1,4 @@
-from .packets import register_packet
+from .packets import register_packet, register_command
 import struct
 from math import sqrt
 
@@ -22,6 +22,10 @@ CAN_MSG_ID_M3FC_SET_CFG_PROFILE = CAN_ID_M3FC | msg_id(1)
 CAN_MSG_ID_M3FC_SET_CFG_PYROS = CAN_ID_M3FC | msg_id(2)
 CAN_MSG_ID_M3FC_LOAD_CFG = CAN_ID_M3FC | msg_id(3)
 CAN_MSG_ID_M3FC_SAVE_CFG = CAN_ID_M3FC | msg_id(4)
+CAN_MSG_ID_M3FC_MOCK_ENABLE = CAN_ID_M3FC | msg_id(5)
+CAN_MSG_ID_M3FC_MOCK_ACCEL = CAN_ID_M3FC | msg_id(6)
+CAN_MSG_ID_M3FC_MOCK_BARO = CAN_ID_M3FC | msg_id(7)
+CAN_MSG_ID_M3FC_ARM = CAN_ID_M3FC | msg_id(8)
 
 components = {
     1: "Mission Control",
@@ -75,6 +79,7 @@ def mission_state(data):
     return "MET: {: 9.3f} s, State: {}".format(met/1000.0, states[can_state])
 
 
+@register_packet("m3fc", CAN_MSG_ID_M3FC_MOCK_ACCEL, "Mock Accelerometer")
 @register_packet("m3fc", CAN_MSG_ID_M3FC_ACCEL, "Acceleration")
 def accel(data):
     # 6 bytes, 3 int16_ts for 3 accelerations
@@ -86,6 +91,7 @@ def accel(data):
         accel1, accel2, accel3)
 
 
+@register_packet("m3fc", CAN_MSG_ID_M3FC_MOCK_BARO, "Mock Barometer")
 @register_packet("m3fc", CAN_MSG_ID_M3FC_BARO, "Barometer")
 def baro(data):
     # 8 bytes: 4 bytes of temperature in centidegrees celcius,
@@ -165,3 +171,18 @@ def load_config(data):
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SAVE_CFG, "Save config")
 def save_config(data):
     return "Save config to flash"
+
+
+@register_packet("m3fc", CAN_MSG_ID_M3FC_MOCK_ENABLE, "Mock Enable")
+def mock_enable(data):
+    return "Mock Enabled"
+
+
+@register_packet("m3fc", CAN_MSG_ID_M3FC_ARM, "Arm")
+def arm(data):
+    return "Armed"
+
+
+@register_command("m3fc", "Arm", ["Arm"])
+def arm_cmd(data):
+    return CAN_MSG_ID_M3FC_ARM, []
