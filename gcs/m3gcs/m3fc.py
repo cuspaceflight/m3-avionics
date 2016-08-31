@@ -1,4 +1,4 @@
-from .packets import register_packet, register_command
+from .packets import register_packet
 import struct
 from math import sqrt
 
@@ -23,20 +23,29 @@ CAN_MSG_ID_M3FC_SET_CFG_PYROS = CAN_ID_M3FC | msg_id(2)
 CAN_MSG_ID_M3FC_LOAD_CFG = CAN_ID_M3FC | msg_id(3)
 CAN_MSG_ID_M3FC_SAVE_CFG = CAN_ID_M3FC | msg_id(4)
 
-components = ["Unknown", "Mission Control", "State estimation", "Config",
-              "Beeper", "LEDs", "Accelerometer", "Barometer", "Flash",
-              "Pyros", "Mock"]
-component_errors = ["Unknown",
-                    "CRC", "Write", # Flash errors
-                    "Read", # Config errors
-                    "Pyro1", "Pyro2", "Pyro3", "Pyro4", # Pyro errors
-                    "Profile", "Pyros", # More config errors
-                    "Bad ID", "Selftest", "Timeout", "Axis", # Accel err
-                    "Pressure", # State estimator error
-                    "Pyro Arm", # Microcontroller error
-                    "Mock Enabled"] # Mock enabled
+components = {
+    1: "Mission Control",
+    2: "State Estimation",
+    3: "Configuration",
+    4: "Beeper",
+    5: "LEDs",
+    6: "Accelerometer",
+    7: "Barometer",
+    8: "Flash",
+    9: "Pyros",
+    10: "Mock"
+}
 
-compstatus = {k:{"state":0, "reason":"Unknown"} for k in components}
+component_errors = {
+    1: "Flash CRC", 2: "Flash Write",
+    3: "Config Read", 8: "Config Check Profile", 9: "Config Check Pyros",
+    10: "Accel Bad ID", 11: "Accel Self Test", 12: "Accel Timeout",
+    13: "Accel Axis", 14: "SE Pressure", 15: "Pyro Arm", 4: "Pyro Continuity",
+    5: "Pyro Supply", 16: "Mock Enabled", 17: "CAN Bad Command"
+}
+
+compstatus = {k: {"state": 0, "reason": "Unknown"} for k in components}
+
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_STATUS, "Status")
 def status(data):
@@ -44,14 +53,14 @@ def status(data):
     # The string must start with 'OK:' 'INIT:' or 'ERROR:' as the web
     # interface watches for these and applies special treatment (colours)
     statuses = ["OK", "INIT", "ERROR"]
-    
-    overall, comp, comp_state, comp_error = struct.unpack("BBBB",
-        bytes(data[:4]))
+    overall, comp, comp_state, comp_error = struct.unpack(
+        "BBBB", bytes(data[:4]))
     string = "{}: ".format(statuses[overall])
-    compstatus[components[comp]]['state'] = comp_state
-    compstatus[components[comp]]['reason'] = component_errors[comp_error]
+    if comp in compstatus:
+        compstatus[comp]['state'] = comp_state
+        compstatus[comp]['reason'] = component_errors[comp_error]
     for k in components[1:]:
-        if compstatus[k]['state'] == 2: # Component is in error
+        if compstatus[k]['state'] == 2:  # Component is in error
             string += "\n{}: {}".format(k, compstatus[k]['reason'])
     return string
 
@@ -73,9 +82,9 @@ def accel(data):
     factor = 3.9 / 1000.0 * 9.80665
     accel1, accel2, accel3 = struct.unpack("hhh", bytes(data[0:6]))
     accel1, accel2, accel3 = accel1*factor, accel2*factor, accel3*factor
-    return "{: 3.1f} m/s/s {: 3.1f} m/s/s {: 3.1f} m/s/s".format(accel1,
-        accel2, accel3)
-    
+    return "{: 3.1f} m/s/s {: 3.1f} m/s/s {: 3.1f} m/s/s".format(
+        accel1, accel2, accel3)
+
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_BARO, "Barometer")
 def baro(data):
@@ -92,6 +101,7 @@ def se_t_h(data):
     dt, h = struct.unpack("ff", bytes(data))
     return "dt: {: 6.4f} s, altitude: {: 5.0f} m".format(dt, h)
 
+
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SE_V_A, "State Estimate V,A")
 def se_v_a(data):
     v, a = struct.unpack("ff", bytes(data))
@@ -101,23 +111,23 @@ def se_v_a(data):
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SE_VAR_H, "State Estimate var(H)")
 def se_var_h(data):
     (var_h,) = struct.unpack("f", bytes(data[0:4]))
-    return "SD(altitude): {: 7.3f} m^2".format(sqrt(var_h))
+    return "SD(altitude): {: 7.3f} m".format(sqrt(var_h))
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SE_VAR_V_A,
-    "State Estimate var(V),var(A)")
+                 "State Estimate var(V),var(A)")
 def se_var_v_var_a(data):
     var_v, var_a = struct.unpack("ff", bytes(data))
-    return "SD(velocity): {: 6.3f} m^2, SD_acceleration: {: 5.3f} m^2".format(
-        sqrt(var_v), sqrt(var_a))
+    return ("SD(velocity): {: 6.3f} m/s, SD_acceleration: {: 5.3f} m/s/s"
+            .format(sqrt(var_v), sqrt(var_a)))
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_PROFILE, "Profile config")
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SET_CFG_PROFILE, "Set profile config")
 def cfg_profile(data):
     position = {1: "dart", 2: "core"}.get(data[0], "unset")
-    accel_axis = {1:"X", 2:"-X", 3:"Y", 4:"-Y", 5:"Z", 6:"-Z"}.get(data[1],
-        "unset")
+    accel_axis = {1: "X", 2: "-X", 3: "Y", 4: "-Y", 5: "Z", 6: "-Z"}.get(
+        data[1], "unset")
     ignition_accel, burnout_timeout, apogee_timeout = data[2:5]
     main_altitude, main_timeout, land_timeout = data[5:8]
     return ("Position: {}, ".format(position) +
@@ -128,29 +138,30 @@ def cfg_profile(data):
             "Main altitude: {: 4d} m, ".format(main_altitude*10) +
             "Main timeout: {: 3d} s, ".format(main_timeout) +
             "Land timeout: {: 4d} s".format(land_timeout*10))
-            
+
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_PYROS, "Pyros config")
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SET_CFG_PYROS, "Set pyro config")
 def cfg_pyros(data):
-    usages = {0:"None", 1:"Drogue", 2:"Main", 3:"Dart Separation"}
-    types = {0:"None", 1:"E-match", 2:"Talon", 3:"Metron"}
+    usages = {0: "None", 1: "Drogue", 2: "Main", 3: "Dart Separation"}
+    types = {0: "None", 1: "E-match", 2: "Talon", 3: "Metron"}
     pyro_1_usage, pyro_2_usage, pyro_3_usage, pyro_4_usage = [
         usages.get(x, "Unset") for x in data[:4]]
     pyro_1_type, pyro_2_type, pyro_3_type, pyro_4_type = [
         types.get(x, "Unset") for x in data[4:]]
 
     return ("(usage/type) Pyro1: {}/{}, Pyro2: {}/{}, Pyro3: {}/{}, "
-          "Pyro4: {}/{}".format(pyro_1_usage, pyro_1_type,
-                                pyro_2_usage, pyro_2_type,
-                                pyro_3_usage, pyro_3_type,
-                                pyro_4_usage, pyro_4_type))
+            "Pyro4: {}/{}".format(pyro_1_usage, pyro_1_type,
+                                  pyro_2_usage, pyro_2_type,
+                                  pyro_3_usage, pyro_3_type,
+                                  pyro_4_usage, pyro_4_type))
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_LOAD_CFG, "Load config")
 def load_config(data):
     return "Load config from flash"
+
+
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SAVE_CFG, "Save config")
 def save_config(data):
     return "Save config to flash"
-
