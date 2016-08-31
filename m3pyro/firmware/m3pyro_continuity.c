@@ -25,15 +25,15 @@ static const ADCConversionGroup adc_grp = {
             ADC_SQR3_SQ5_N(ADC_CHANNEL_IN8),
 };
 
-/* 12bit ADC reading of PYRO_CONTINUITY into 0.1ohm/LSB uint8t */
-static uint8_t adc_to_resistance(adcsample_t reading) {
+/* 12bit ADC reading of PYRO_CONTINUITY into 1ohm/LSB uint8t */
+/*static uint8_t adc_to_resistance(adcsample_t reading) {
     float r = (1000.0f * (float)reading) / (4096.0f - (float)reading);
-    if(r > 25.0f) {
+    if(r > 250.0f) {
         return 255;
     } else {
-        return (uint8_t)(r * 10);
+        return (uint8_t)r;
     }
-}
+}*/
 
 /* 12bit ADC reading of PYRO_SI into a 100mV/LSB uint8_t */
 static uint8_t adc_to_voltage(adcsample_t reading) {
@@ -58,13 +58,25 @@ static THD_FUNCTION(m3pyro_continuity_thd, arg)
             continue;
         }
 
-        uint8_t continuities[4];
-        continuities[0] = adc_to_resistance(sampbuf[0]);
-        continuities[1] = adc_to_resistance(sampbuf[1]);
-        continuities[2] = adc_to_resistance(sampbuf[2]);
-        continuities[3] = adc_to_resistance(sampbuf[3]);
+        //uint8_t continuities[4];
+        //continuities[0] = adc_to_resistance(sampbuf[0]);
+        //continuities[1] = adc_to_resistance(sampbuf[1]);
+        //continuities[2] = adc_to_resistance(sampbuf[2]);
+        //continuities[3] = adc_to_resistance(sampbuf[3]);
+        //can_send(CAN_MSG_ID_M3PYRO_CONTINUITY, false,
+        //         continuities, sizeof(continuities));
+
+        uint8_t raw_readings[8];
+	raw_readings[0] = (sampbuf[0] & 0xff);
+        raw_readings[1] = (sampbuf[0] >> 8) & 0xff;
+	raw_readings[2] = (sampbuf[1] & 0xff);
+        raw_readings[3] = (sampbuf[1] >> 8) & 0xff;
+	raw_readings[4] = (sampbuf[2] & 0xff);
+        raw_readings[5] = (sampbuf[2] >> 8) & 0xff;
+	raw_readings[6] = (sampbuf[3] & 0xff);
+        raw_readings[7] = (sampbuf[3] >> 8) & 0xff;
         can_send(CAN_MSG_ID_M3PYRO_CONTINUITY, false,
-                 continuities, sizeof(continuities));
+                 raw_readings, sizeof(raw_readings));
 
         uint8_t supply;
         supply = adc_to_voltage(sampbuf[4]);
