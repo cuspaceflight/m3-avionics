@@ -76,9 +76,12 @@ def status(data):
         compstatus[comp]['reason'] = component_errors[comp_error]
 
     # List all components we believe to be in error
+    errors = ""
     for k in components:
         if compstatus[k]['state'] == 2:
-            string += "\n{}: {}".format(components[k], compstatus[k]['reason'])
+            errors += "\n{}: {}".format(components[k], compstatus[k]['reason'])
+    if errors:
+        string += "\nErrors:" + errors
     return string
 
 
