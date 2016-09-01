@@ -41,6 +41,7 @@ components = {
 }
 
 component_errors = {
+    0: "No Error",
     1: "Flash CRC", 2: "Flash Write",
     3: "Config Read", 8: "Config Check Profile", 9: "Config Check Pyros",
     10: "Accel Bad ID", 11: "Accel Self Test", 12: "Accel Timeout",
@@ -56,16 +57,28 @@ def status(data):
     global compstatus
     # The string must start with 'OK:' 'INIT:' or 'ERROR:' as the web
     # interface watches for these and applies special treatment (colours)
-    statuses = ["OK", "INIT", "ERROR"]
+    statuses = {0: "OK", 1: "INIT", 2: "ERROR"}
     overall, comp, comp_state, comp_error = struct.unpack(
         "BBBB", bytes(data[:4]))
-    string = "{}: ".format(statuses[overall])
+
+    # Display the state (and error) of the component that sent the message
+    string = "{} ({} {}".format(statuses.get(overall, "Unknown"),
+                                components.get(comp, "Unknown"),
+                                statuses.get(comp_state, "Unknown"))
+    if comp_error != 0:
+        string += " {})".format(component_errors.get(comp_error, "Unknown"))
+    else:
+        string += ")"
+
+    # Update our perception of the overall state
     if comp in compstatus:
         compstatus[comp]['state'] = comp_state
         compstatus[comp]['reason'] = component_errors[comp_error]
-    for k in components[1:]:
-        if compstatus[k]['state'] == 2:  # Component is in error
-            string += "\n{}: {}".format(k, compstatus[k]['reason'])
+
+    # List all components we believe to be in error
+    for k in components:
+        if compstatus[k]['state'] == 2:
+            string += "\n{}: {}".format(components[k], compstatus[k]['reason'])
     return string
 
 
