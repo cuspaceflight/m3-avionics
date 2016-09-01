@@ -16,6 +16,7 @@
 uint8_t m3can_own_id = 0;
 
 static volatile bool can_loopback_enabled;
+static void m3can_send_git_version(void);
 
 
 static const CANConfig cancfg = {
@@ -113,6 +114,7 @@ static THD_FUNCTION(can_rx_thd, arg) {
 
     event_listener_t el;
     CANRxFrame rxmsg;
+    systime_t time_last_id = 0;
 
     chEvtRegister(&CAND1.rxfull_event, &el, 0);
 
@@ -121,9 +123,16 @@ static THD_FUNCTION(can_rx_thd, arg) {
             continue;
         }
 
+        /* Handle all pending frames */
         while(canReceive(&CAND1, CAN_ANY_MAILBOX, &rxmsg,
                          TIME_IMMEDIATE) == MSG_OK) {
             can_recv(rxmsg.SID, rxmsg.RTR, rxmsg.data8, rxmsg.DLC);
+        }
+
+        /* Send our git ID every 5 seconds */
+        if(ST2MS(chVTTimeElapsedSinceX(time_last_id)) > 5000) {
+            m3can_send_git_version();
+            time_last_id = chVTGetSystemTimeX();
         }
     }
 }
@@ -136,9 +145,12 @@ void can_set_loopback(bool enabled) {
 void can_init(uint8_t board_id) {
     m3can_own_id = board_id;
     canStart(&CAND1, &cancfg);
-    can_send(board_id | CAN_MSG_ID_VERSION, false,
-             (uint8_t*)FIRMWARE_VERSION, 8);
+    m3can_send_git_version();
     chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO,
                       can_rx_thd, NULL);
 }
 
+static void m3can_send_git_version(void) {
+    can_send(m3can_own_id | CAN_MSG_ID_VERSION, false,
+             (uint8_t*)FIRMWARE_VERSION, 8);
+}

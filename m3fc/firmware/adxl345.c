@@ -9,6 +9,7 @@
 #include "m3fc_config.h"
 #include "m3fc_status.h"
 #include "m3fc_state_estimation.h"
+#include "m3fc_mock.h"
 #include "adxl345.h"
 
 #define ADXL345_REG_DEVID               0x00
@@ -45,7 +46,7 @@ static void adxl345_write_u8(uint8_t adr, uint8_t val);
 static void adxl345_read_accel(int16_t accels[3]);
 static void adxl345_configure(void);
 static bool adxl345_self_test(void);
-static float adxl345_accels_to_up(int16_t accels[3]);
+static void adxl345_accels_to_mss(int16_t accels[3], float faccels[3]);
 
 static SPIDriver* adxl345_spid;
 static binary_semaphore_t adxl345_thd_sem;
@@ -209,35 +210,11 @@ static void adxl345_configure()
     chThdSleepMilliseconds(30);
 }
 
-static float adxl345_accels_to_up(int16_t accels[3]) {
-    float accel;
-
-    /* Pick acceleration axis based on configuration */
-    if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_X) {
-        accel = (float)accels[0];
-    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NX) {
-        accel = -(float)accels[0];
-    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_Y) {
-        accel = (float)accels[1];
-    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NY) {
-        accel = -(float)accels[1];
-    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_Z) {
-        accel = (float)accels[2];
-    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NZ) {
-        accel = -(float)accels[2];
-    } else {
-        if(m3status_get_component(M3FC_COMPONENT_ACCEL) != M3STATUS_ERROR) {
-            m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_AXIS);
-        }
+static void adxl345_accels_to_mss(int16_t accels[3], float faccels[3]) {
+    int i;
+    for(i=0; i<3; i++) {
+        faccels[i] = accels[i] * ((3.9f / 1000.0f) * 9.80665f);
     }
-
-    /* Convert to m/s (*3.9 to mg, /1000 to g, *9.81 to m/s/s) */
-    accel *= ((3.9f / 1000.0f) * 9.80665f);
-
-    /* Remove static acceleration */
-    accel -= 9.8066f;
-
-    return accel;
 }
 
 /* ISR triggered by the EXTI peripheral when DRDY gets asserted.
@@ -260,7 +237,7 @@ static THD_FUNCTION(adxl345_thd, arg)
 {
     (void)arg;
     int16_t accels[3];
-    int loopcount = 0;
+    float faccels[3];
     msg_t wait_result;
 
     chRegSetThreadName("ADXL345");
@@ -282,22 +259,32 @@ static THD_FUNCTION(adxl345_thd, arg)
     while(true) {
         adxl345_read_accel(accels);
 
-        float accel = adxl345_accels_to_up(accels);
-        m3fc_state_estimation_new_accel(accel);
-
-        if(loopcount++ == 100) {
-            loopcount = 0;
-            can_send(CAN_MSG_ID_M3FC_ACCEL, false, (uint8_t*)accels, 6);
+        /* If we're doing hardware-in-the-loop mocking, discard the just-read
+         * value and use the latest mock value instead.
+         */
+        if(m3fc_mock_get_enabled()) {
+            m3fc_mock_get_accel(accels);
         }
+
+        /* Convert int16 readings to m/s/s accelerations */
+        adxl345_accels_to_mss(accels, faccels);
+
+        /* Submit readings to state estimation.
+         * Maximum reading is 16G = 156.96m/s/s.
+         * RMS noise is around 1.1LSB at 100Hz ODR, increases by sqrt(2) each
+         * time the ODR doubles, so we have 1.1LSB * sqrt(2)^3 = 3.1LSB,
+         * scale is 3.9mg/LSB giving 12.09mg or 0.1186m/s/s.
+         */
+        m3fc_state_estimation_new_accels(faccels, 156.96f, 0.1186f);
+
+        can_send(CAN_MSG_ID_M3FC_ACCEL, false, (uint8_t*)accels, 6);
 
         wait_result = chBSemWaitTimeout(&adxl345_thd_sem, MS2ST(100));
 
         if(wait_result == MSG_TIMEOUT) {
             m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_TIMEOUT);
         } else {
-            if(m3status_get_component(M3FC_COMPONENT_ACCEL) != M3STATUS_OK) {
-                m3status_set_ok(M3FC_COMPONENT_ACCEL);
-            }
+            m3status_set_ok(M3FC_COMPONENT_ACCEL);
         }
     }
 }
