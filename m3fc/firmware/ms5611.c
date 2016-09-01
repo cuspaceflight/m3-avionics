@@ -176,7 +176,8 @@ static THD_FUNCTION(ms5611_thd, arg) {
             m3fc_mock_get_baro(&pressure, &temperature);
         }
 
-        m3fc_state_estimation_new_pressure((float)pressure);
+        /* Submit new reading. Error band is +-2.5mbar = 250Pa */
+        m3fc_state_estimation_new_pressure((float)pressure, 250.0f);
         can_send_i32(CAN_MSG_ID_M3FC_BARO, temperature, pressure, 2);
         m3status_set_ok(M3FC_COMPONENT_BARO);
     }

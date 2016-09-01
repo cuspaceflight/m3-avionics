@@ -17,11 +17,12 @@ typedef struct { float h; float v; float a; } state_estimate_t;
  */
 extern volatile bool m3fc_state_estimation_trust_barometer;
 
-/* Update with a new pressure reading (in Pascals) */
-void m3fc_state_estimation_new_pressure(float pressure);
+/* Update with a new pressure reading (in Pascals) and associated RMS noise */
+void m3fc_state_estimation_new_pressure(float pressure, float rms);
 
-/* Update with a new accelerometer reading (in m/s/s) */
-void m3fc_state_estimation_new_accel(float accel);
+/* Update with new accelerometer readings (in m/s/s on x, y, z) and
+ * associated maximum value and RMS noise */
+void m3fc_state_estimation_new_accels(float accels[3], float max, float rms);
 
 /* Compute and return the latest state estimate */
 state_estimate_t m3fc_state_estimation_get_state(void);

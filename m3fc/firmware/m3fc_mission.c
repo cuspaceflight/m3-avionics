@@ -85,7 +85,8 @@ static state_t do_state_pad(instance_data_t *data)
 
     m3fc_mission_check_pyros();
 
-    if(data->state.a > m3fc_config.profile.ignition_accel)
+    if(data->state.a > m3fc_config.profile.ignition_accel &&
+       data->state.h > data->h_ground + 10.0f)
         return STATE_IGNITION;
     else
         return STATE_PAD;
