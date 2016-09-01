@@ -71,6 +71,7 @@ static state_t do_state_init(instance_data_t *data) {
 
     m3fc_mission_check_pyros();
 
+    /* We only proceed to the pad state after receiving an ARM command. */
     if(!m3fc_mission_armed) {
         return STATE_INIT;
     } else {
@@ -85,11 +86,17 @@ static state_t do_state_pad(instance_data_t *data)
 
     m3fc_mission_check_pyros();
 
+    /* Detect ignition when the acceleration exceeds the threshold and we're
+     * 10m above our ground altitude, which should be small enough to not
+     * change the required acceleration threshold too much.
+     */
     if(data->state.a > m3fc_config.profile.ignition_accel &&
        data->state.h > data->h_ground + 10.0f)
+    {
         return STATE_IGNITION;
-    else
+    } else {
         return STATE_PAD;
+    }
 }
 
 static state_t do_state_ignition(instance_data_t *data)
@@ -97,6 +104,10 @@ static state_t do_state_ignition(instance_data_t *data)
     m3fc_state_estimation_trust_barometer = false;
     data->t_launch = chVTGetSystemTimeX();
 
+    /* After ignition we proceed immediately to powered ascent
+     * (the purpose of this state is to disable barometer and log the launch
+     * time)
+     */
     return STATE_POWERED_ASCENT;
 }
 
@@ -104,33 +115,58 @@ static state_t do_state_powered_ascent(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = false;
 
-    if(data->state.a < 0.0f)
+    /* We detect burnout as either negative acceleration (we've started to slow
+     * down due to drag) or configured timeout since launch.
+     */
+    if(data->state.a < 0.0f) {
         return STATE_BURNOUT;
-    else if(ST2MS(chVTTimeElapsedSinceX(data->t_launch))
-            > m3fc_config.profile.burnout_timeout * 100)
+    } else if(ST2MS(chVTTimeElapsedSinceX(data->t_launch))
+              > m3fc_config.profile.burnout_timeout * 100)
+    {
         return STATE_BURNOUT;
-    else
+    } else {
         return STATE_POWERED_ASCENT;
+    }
 }
 
 static state_t do_state_burnout(instance_data_t *data)
 {
     (void)data;
-    m3fc_state_estimation_trust_barometer = false;
-    m3fc_mission_fire_dart_pyro();
-    return STATE_FREE_ASCENT;
+    m3fc_state_estimation_trust_barometer = true;
+
+    if(data->state.h > (data->h_ground + 20.0f) &&
+       ST2MS(chVTTimeElapsedSinceX(data->t_launch)) > 200)
+    {
+        /* If we're at least 20m above launch altitude, and it's been at least
+         * 200ms since we detected launch, consider it a successful burn.
+         */
+        m3fc_mission_fire_dart_pyro();
+        return STATE_FREE_ASCENT;
+    } else {
+        /* But if not, it was probably a false detection, so return to pad and
+         * hope to God we got this right.
+         */
+        return STATE_PAD;
+    }
 }
 
 static state_t do_state_free_ascent(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
-    if(data->state.v < 0.0f)
+
+    /* We detect apogee as negative velocity (we've started to fall) or the
+     * configured timeout since launch.
+     * We hope that we're still mostly upright for accelerometer purposes...
+     */
+    if(data->state.v < 0.0f) {
         return STATE_APOGEE;
-    else if(ST2MS(chVTTimeElapsedSinceX(data->t_launch))
-            > m3fc_config.profile.apogee_timeout * 1000)
+    } else if(ST2MS(chVTTimeElapsedSinceX(data->t_launch))
+              > m3fc_config.profile.apogee_timeout * 1000)
+    {
         return STATE_APOGEE;
-    else
+    } else {
         return STATE_FREE_ASCENT;
+    }
 }
 
 static state_t do_state_apogee(instance_data_t *data)
@@ -138,19 +174,27 @@ static state_t do_state_apogee(instance_data_t *data)
     m3fc_state_estimation_trust_barometer = true;
     data->t_apogee = chVTGetSystemTimeX();
     m3fc_mission_fire_drogue_pyro();
+
+    /* After apogee we fire the drogue and immediately enter drogue descent. */
     return STATE_DROGUE_DESCENT;
 }
 
 static state_t do_state_drogue_descent(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
-    if((data->state.h - data->h_ground) < m3fc_config.profile.main_altitude)
+
+    /* We detect time to release the main based either on the configured
+     * altitude above ground or on the configured timeout since apogee.
+     */
+    if((data->state.h - data->h_ground) < m3fc_config.profile.main_altitude) {
         return STATE_RELEASE_MAIN;
-    else if(ST2MS(chVTTimeElapsedSinceX(data->t_apogee))
-            > m3fc_config.profile.main_timeout * 1000)
+    } else if(ST2MS(chVTTimeElapsedSinceX(data->t_apogee))
+              > m3fc_config.profile.main_timeout * 1000)
+    {
         return STATE_RELEASE_MAIN;
-    else
+    } else {
         return STATE_DROGUE_DESCENT;
+    }
 }
 
 static state_t do_state_release_main(instance_data_t *data)
@@ -158,25 +202,38 @@ static state_t do_state_release_main(instance_data_t *data)
     (void)data;
     m3fc_state_estimation_trust_barometer = true;
     m3fc_mission_fire_main_pyro();
+
+    /* At main release we fire the main and move directly into main descent. */
     return STATE_MAIN_DESCENT;
 }
 
 static state_t do_state_main_descent(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
+
+    /* Landing is detected based on the configured timeout (probably) or on the
+     * velocity being suitably small.
+     */
     if(ST2MS(chVTTimeElapsedSinceX(data->t_launch))
        > m3fc_config.profile.land_timeout * 10000)
+    {
         return STATE_LAND;
-    else if(fabsf(data->state.v) < 0.5f)
+    } else if(fabsf(data->state.v) < 0.5f) {
         return STATE_LAND;
-    else
+    } else {
         return STATE_MAIN_DESCENT;
+    }
 }
 
 static state_t do_state_land(instance_data_t *data)
 {
     (void)data;
     m3fc_state_estimation_trust_barometer = true;
+
+    /* In the future we might want to trigger events on landing, like disabling
+     * cameras and entering power saving modes, but for now we just proceed
+     * directly to landed.
+     */
     return STATE_LANDED;
 }
 
@@ -184,6 +241,8 @@ static state_t do_state_landed(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
     (void)data;
+
+    /* Not much to do now. */
     return STATE_LANDED;
 }
 
