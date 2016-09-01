@@ -1,0 +1,24 @@
+name: extpressure
+lsefreq: 0
+hsefreq: 0
+voltage: 3.3
+mcutype: STM32F0xxxx
+default: input, pushpull, starthigh, pullup, highspeed
+pins:
+  SWDIO: PA13, AF0
+  SWCLK: PA14, AF0, pulldown
+
+  SCLK: PA5, AF0
+  MISO: PA6, AF0
+  MOSI: PA7, AF0
+
+  CS1: PA15, output, floating
+  CS2: PB1, output, floating
+  CS3: PB3, output, floating
+  CS4: PA3, output, floating
+
+  TX: PA9, AF1
+  RX: PA10, AF1
+
+  LED_RED: PB6, output, startlow, floating
+  LED_GRN: PA4, output, startlow, floating

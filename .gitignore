@@ -5,10 +5,8 @@
 _autosave*
 
 # Firmware related ignores
-*.elf
-*.bin
-*.o
 build/
+.dep/
 
 *~
 *.d

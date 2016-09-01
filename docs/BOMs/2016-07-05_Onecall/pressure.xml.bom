@@ -1,0 +1,46 @@
+Bill Of Materials
+=================
+
+Source file: pressure.xml
+Date: 2016-07-05T01:05:52.319126
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J2     EAST TOP        agg:TFML-110-02-L-D
+J4     EAST BOT        agg:SFML-110-02-L-D-LC
+J1     WEST TOP        agg:TFML-110-02-L-D
+J3     WEST BOT        agg:SFML-110-02-L-D-LC
+J5     SOUTH TOP       agg:TFML-110-02-L-D
+J6     SOUTH BOT       agg:SFML-110-02-L-D-LC
+
+Inconsistent Order Codes
+------------------------
+
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+2059366,10,5x 3.74K R_0603
+9733108,2,1x PRESSURE Connector_Molex_Pi
+1813443,10,5x 1n C_0603
+2464412,2,1x NCP380 DFN-6-EP-ONSEMI
+2346884,4,2x 1u 0402-L
+2502502,2,1x 110k 0402-L
+2368169,12,6x ESD_DIODE 0402
+
+
+Assembly BOM
+------------
+2059366              5   3.74K           R_0603          R1 R2 R3 R4 R5
+9733108              1   PRESSURE        Connector_Molex_PicoBlade_53048-1010 J7
+1813443              5   1n              C_0603          C1 C2 C3 C4 C5
+2464412              1   NCP380          DFN-6-EP-ONSEMI IC1
+2346884              2   1u              0402-L          C6 C8
+2502502              1   110k            0402-L          R7
+2368169              6   ESD_DIODE       0402            D1 D2 D3 D4 D5 D6
+

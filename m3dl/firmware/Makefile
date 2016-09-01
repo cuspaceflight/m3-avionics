@@ -5,7 +5,7 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16
+  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16
 endif
 
 # C specific options here (added to USE_OPT).
@@ -71,7 +71,7 @@ endif
 
 # Enables the use of FPU on Cortex-M4 (no, softfp, hard).
 ifeq ($(USE_FPU),)
-  USE_FPU = no
+  USE_FPU = hard
 endif
 
 #
@@ -98,6 +98,8 @@ include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # Other files (optional).
 include $(CHIBIOS)/test/rt/test.mk
+include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
+
 
 BOARDSRC=board.c
 BOARDINC=.
@@ -115,7 +117,12 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
-       main.c LTC2983.c err_handler.c
+       $(FATFSSRC) \
+       $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+       $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+       ../../shared/m3can/m3can.c \
+       ../../shared/m3status/m3status.c \
+       main.c LTC2983.c err_handler.c logging.c microsd.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -146,7 +153,11 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(CHIBIOS)/os/various
+         $(CHIBIOS)/os/various \
+	     $(CHIBIOS)/os/various/fatfs_bindings \
+	     $(CHIBIOS)/ext/fatfs/src \
+         $(CHIBIOS)/os/hal/lib/streams \
+         $(FATFSINC)
 
 #
 # Project, sources and paths
@@ -196,13 +207,14 @@ CPPWARN = -Wall -Wextra -Wundef
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+GITVERSION := $(shell git describe --abbrev=8 --always)
+UDEFS = -DFIRMWARE_VERSION=\"$(GITVERSION)\"
 
 # Define ASM defines here
 UADEFS =
 
 # List all user directories here
-UINCDIR =
+UINCDIR = ../../shared/m3can/ ../../shared/m3status/
 
 # List the user directory to look for the libraries here
 ULIBDIR =
