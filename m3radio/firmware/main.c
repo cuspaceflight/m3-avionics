@@ -33,7 +33,19 @@ int main(void) {
     m3radio_gps_ant_init();
     ublox_init(&SD4);
 
-    si4460_init(&SPID2, GPIOB, GPIOB_RADIO_CS);
+    struct si4460_config si4460_cfg = {
+        .spid = &SPID2,
+        .ssport = GPIOB,
+        .sspad = GPIOB_RADIO_CS,
+        .sdn = true,
+        .sdnline = LINE_RADIO_SDN,
+        .tcxo = true,
+        .xo_freq = 26000000,
+        .centre_freq = 869500000,
+        .data_rate = 1000,
+        .deviation = 24000,
+    };
+    si4460_init(&si4460_cfg);
 
     while (true) {
         /* Clear the watchdog timer */
