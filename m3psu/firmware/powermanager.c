@@ -8,6 +8,7 @@
 #include "config.h"
 #include "error.h"
 #include "m3can.h"
+#include "m3status.h"
 #include "powermanager.h"
 
 #define NUM_LTC3887s    6
@@ -19,19 +20,48 @@ void PowerManager_init(){
 
   // TODO: register IRQ for ~ALERT line
 
+  for(int i=0; i<6; i++){
+    m3status_set_init(M3STATUS_COMPONENT_DCDC1 + i);
+  }
+  m3status_set_init(M3STATUS_COMPONENT_PYRO_MON);
+
   // Wait for LTC3887s to boot up
   chThdSleepMilliseconds(500);
 
   // Setup all LTC3887s
   // Board 1
-  ltc3887_init(&LTC3887s[0], &I2C_DRIVER, 0x44, "5V IMU", 5.0f, 50, "5V AUX 2", 5.0f, 50);
-  ltc3887_init(&LTC3887s[1], &I2C_DRIVER, 0x45, "3V3 FC", 3.3f, 50, "3V3 IMU", 3.3f, 50);
+  if(ltc3887_init(&LTC3887s[0], &I2C_DRIVER, 0x44, "5V IMU", 5.0f, 50, "5V AUX 2", 5.0f, 50) == ERR_OK){
+    m3status_set_ok(M3STATUS_COMPONENT_DCDC1);
+  }else{
+    m3status_set_error(M3STATUS_COMPONENT_DCDC1, M3STATUS_DCDC_ERROR_INIT);
+  }
+  if(ltc3887_init(&LTC3887s[1], &I2C_DRIVER, 0x45, "3V3 FC", 3.3f, 50, "3V3 IMU", 3.3f, 50) == ERR_OK){
+    m3status_set_ok(M3STATUS_COMPONENT_DCDC2);
+  }else{
+    m3status_set_error(M3STATUS_COMPONENT_DCDC2, M3STATUS_DCDC_ERROR_INIT);
+  }
   // Board 2
-  ltc3887_init(&LTC3887s[2], &I2C_DRIVER, 0x42, "5V Radio", 5.0f, 50, "5V AUX 1", 5.0f, 50);
-  ltc3887_init(&LTC3887s[3], &I2C_DRIVER, 0x43, "3V3 Pyro", 3.3f, 50, "3V3 Radio", 3.3f, 50);
+  if(ltc3887_init(&LTC3887s[2], &I2C_DRIVER, 0x42, "5V Radio", 5.0f, 50, "5V AUX 1", 5.0f, 50) == ERR_OK){
+    m3status_set_ok(M3STATUS_COMPONENT_DCDC3);
+  }else{
+    m3status_set_error(M3STATUS_COMPONENT_DCDC3, M3STATUS_DCDC_ERROR_INIT);
+  }
+  if(ltc3887_init(&LTC3887s[3], &I2C_DRIVER, 0x43, "3V3 Pyro", 3.3f, 50, "3V3 Radio", 3.3f, 50) == ERR_OK){
+    m3status_set_ok(M3STATUS_COMPONENT_DCDC4);
+  }else{
+    m3status_set_error(M3STATUS_COMPONENT_DCDC4, M3STATUS_DCDC_ERROR_INIT);
+  }
   // Board 3
-  ltc3887_init(&LTC3887s[4], &I2C_DRIVER, 0x46, "5V Cameras", 5.0f, 50, "3V3 AUX 1", 3.3f, 50);
-  ltc3887_init(&LTC3887s[5], &I2C_DRIVER, 0x47, "3V3 DL", 3.3f, 50, "5V CAN", 5.0f, 50);
+  if(ltc3887_init(&LTC3887s[4], &I2C_DRIVER, 0x46, "5V Cameras", 5.0f, 50, "3V3 AUX 1", 3.3f, 50) == ERR_OK){
+    m3status_set_ok(M3STATUS_COMPONENT_DCDC5);
+  }else{
+    m3status_set_error(M3STATUS_COMPONENT_DCDC5, M3STATUS_DCDC_ERROR_INIT);
+  }
+  if(ltc3887_init(&LTC3887s[5], &I2C_DRIVER, 0x47, "3V3 DL", 3.3f, 50, "5V CAN", 5.0f, 50) == ERR_OK){
+    m3status_set_ok(M3STATUS_COMPONENT_DCDC6);
+  }else{
+    m3status_set_error(M3STATUS_COMPONENT_DCDC6, M3STATUS_DCDC_ERROR_INIT);
+  }
 
   PowerManager_switch_on(2); // Start the Flight Computer
   PowerManager_switch_on(4); // Start the Radio
@@ -41,7 +71,11 @@ void PowerManager_init(){
   PowerManager_switch_on(11); // Start the CAN transceivers
 
   // Setup LTC4151
-  ltc4151_init(&currentMonitor, &I2C_DRIVER, 0x6F, 0.01f);
+  if(ltc4151_init(&currentMonitor, &I2C_DRIVER, 0x6F, 0.01f) == ERR_OK){
+    m3status_set_ok(M3STATUS_COMPONENT_PYRO_MON);
+  }else{
+    m3status_set_error(M3STATUS_COMPONENT_PYRO_MON, M3STATUS_PYRO_MON_ERROR_INIT);
+  }
 
   ltc4151_poll(&currentMonitor);
 
@@ -78,12 +112,14 @@ THD_FUNCTION(powermanager_alert, arg){
         // Channel 0 faulting?
         fault_status = ltc3887_get_fault_status(&LTC3887s[idx], 0);
         if(ltc3887_is_faulting(&fault_status)){
-          // TODO: act on alert status;
+          // TODO: more detailed error codes?
+          m3status_set_error(M3STATUS_COMPONENT_DCDC1 + idx, M3STATUS_DCDC_ERROR_CH1_ALERT);
         }
         // Channel 1 faulting?
         fault_status = ltc3887_get_fault_status(&LTC3887s[idx], 1);
         if(ltc3887_is_faulting(&fault_status)){
-          // TODO: act on alert status;
+          // TODO: more detailed error codes?
+          m3status_set_error(M3STATUS_COMPONENT_DCDC1 + idx, M3STATUS_DCDC_ERROR_CH2_ALERT);
         }
       }
     }
@@ -127,27 +163,37 @@ THD_FUNCTION(powermanager_thread, arg){
 
         uint8_t base_id = CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12 >> 5;
         can_send(CAN_ID_M3PSU | (CAN_MSG_ID((base_id + idx))), false, can_data, 8);
+
+        m3status_set_ok(M3STATUS_COMPONENT_DCDC1 + idx);
+
+      }else{
+        m3status_set_err(M3STATUS_COMPONENT_DCDC1 + idx, M3STATUS_DCDC_ERROR_COMMS);
       }
       chThdSleepMilliseconds(1);
     }
-    ltc4151_poll(&currentMonitor);
+    if(ltc4151_poll(&currentMonitor) == ERR_OK){
+      // Voltage as multiple of 0.001V
+      voltage = (uint16_t) (currentMonitor.voltage_v * 1000.0f);
+      // Current as multiple of 1mA
+      current = (uint16_t) (currentMonitor.current_ma);
+      // Power as multiple of 1mW
+      power = (uint16_t) (currentMonitor.power_mw);
 
-    // Voltage as multiple of 0.001V
-    voltage = (uint16_t) (currentMonitor.voltage_v * 1000.0f);
-    // Current as multiple of 1mA
-    current = (uint16_t) (currentMonitor.current_ma);
-    // Power as multiple of 1mW
-    power = (uint16_t) (currentMonitor.power_mw);
+      can_data[0] = voltage & 0xff;
+      can_data[1] = (voltage >> 8) & 0xff;
+      can_data[2] = current & 0xff;
+      can_data[3] = (current >> 8) & 0xff;
+      can_data[4] = power & 0xff;
+      can_data[5] = (power >> 8) & 0xff;
+      can_data[6] = palReadLine(LINE_EN_PYRO);
+      can_data[7] = 0;
 
-    can_data[0] = voltage & 0xff;
-    can_data[1] = (voltage >> 8) & 0xff;
-    can_data[2] = current & 0xff;
-    can_data[3] = (current >> 8) & 0xff;
-    can_data[4] = power & 0xff;
-    can_data[5] = (power >> 8) & 0xff;
-    can_data[6] = palReadLine(LINE_EN_PYRO);
-    can_data[7] = 0;
-    can_send(CAN_MSG_ID_M3PSU_PYRO_STATUS, false, can_data, 8);
+      can_send(CAN_MSG_ID_M3PSU_PYRO_STATUS, false, can_data, 8);
+
+      m3status_set_ok(M3STATUS_COMPONENT_PYRO_MON);
+    }else{
+      m3status_set_error(M3STATUS_COMPONENT_PYRO_MON, M3STATUS_PYRO_MON_ERROR_COMMS);
+    }
 
     chThdSleepMilliseconds(500);
   }

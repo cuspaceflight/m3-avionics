@@ -99,10 +99,7 @@ uint8_t smbus_read_word(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddre
 uint8_t smbus_write_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint8_t *data, uint8_t datalen){
   static uint8_t txdat[64] __attribute__((section("DATA_RAM")));
 
-  // TODO: find actual debug-assert command, use that instead
-  if(datalen > 62){
-    return ERR_COMMS;
-  }
+  chDbgAssert(datalen <= 62, "datalen > 62");
 
   txdat[0] = byteaddress;
   txdat[1] = datalen;
@@ -124,10 +121,8 @@ uint8_t smbus_read_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddr
   static uint8_t cmd[64] __attribute__((section("DATA_RAM")));
   static uint8_t recv[64] __attribute__((section("DATA_RAM")));
 
-  // TODO: find actual debug-assert command, use that instead
-  if(txdatlen > 62 || datalen > 63){
-    return ERR_COMMS;
-  }
+  chDbgAssert(txdatlen <= 62, "txdatalen > 62");
+  chDbgAssert(datalen <= 63, "datalen > 63");
 
   cmd[0] = byteaddress;
   cmd[1] = txdatlen;

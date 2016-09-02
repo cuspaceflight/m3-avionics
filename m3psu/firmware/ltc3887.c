@@ -127,10 +127,7 @@ static int8_t l16_exp;
 uint8_t ltc3887_paged_write(LTC3887 *ltc, uint8_t command_code, uint8_t page, uint8_t *data, uint8_t datalen) {
   uint8_t txdat[62];
 
-  // TODO: find actual debug-assert command, use that instead
-  if(datalen > 60){
-    return ERR_COMMS;
-  }
+  chDbgAssert(datalen <= 60, "datalen > 60");
 
   txdat[0] = page;
   txdat[1] = command_code;
@@ -417,8 +414,7 @@ ltc3887_busy_status ltc3887_chip_busy_status(LTC3887 *ltc) {
     return CALCULATIONS_PENDING;
   }
   if (!output_not_in_transition) {
-    //return OUTPUT_IN_TRANSITION;
-    return NOT_BUSY;
+    return OUTPUT_IN_TRANSITION;
   }
   return NOT_BUSY;
 }
@@ -581,17 +577,7 @@ uint8_t ltc3887_init(LTC3887 *ltc, I2CDriver *i2c, i2caddr_t address,
   }
   ltc3887_wait_for_not_busy(ltc);
 
-  // XXX Set TON_MAX_FAULT_LIMIT to 3 seconds
-  uint16_t ton_max_fault_limit = float_to_L11(3000.0f);
-  data[0] = ton_max_fault_limit & 0xff;
-  data[1] = (ton_max_fault_limit >> 8) & 0xff;
-  if (ltc3887_global_write(ltc, LTC3887_CMD_TON_MAX_FAULT_LIMIT, data, 2) != ERR_OK) {
-    return ERR_COMMS;
-  }
-  ltc3887_wait_for_not_busy(ltc);
-  //
-
-  // XXX Ignore GPIO (since nothing can pull it down externally anyway)
+  // Ignore GPIO (since nothing can pull it down externally anyway)
   data[0] = 0x00;
   if (ltc3887_global_write(ltc, LTC3887_CMD_MFR_GPIO_RESPONSE, data, 1) != ERR_OK) {
     return ERR_COMMS;

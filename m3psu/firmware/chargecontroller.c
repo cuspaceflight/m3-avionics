@@ -7,6 +7,7 @@
 #include "config.h"
 #include "error.h"
 #include "m3can.h"
+#include "m3status.h"
 #include "chargecontroller.h"
 
 #include "max17435.h"
@@ -38,8 +39,16 @@ static const ADCConversionGroup adcgrpcfg = {
 };
 
 void ChargeController_init(void) {
+
+  m3status_set_init(M3STATUS_COMPONENT_CHARGER);
+  m3status_set_init(M3STATUS_COMPONENT_ADC);
+
   // Setup charger to 8.4V at 0.75A, 10mohm sense resistor
-  max17435_init(&charger, &I2C_DRIVER, 0x09, 8400, 750, 10);
+  if(max17435_init(&charger, &I2C_DRIVER, 0x09, 8400, 750, 10) == ERR_OK){
+    m3status_set_ok(M3STATUS_COMPONENT_CHARGER);
+  }else{
+    m3status_set_error(M3STATUS_COMPONENT_CHARGER, M3STATUS_CHARGER_ERROR_INIT);
+  }
 
   // Setup port-expander
   // P0 is enable_vext, P1 is charger_not_overcurrent, P2 is vext_not_ok, P3 is
@@ -172,6 +181,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
     status = adcConvert(&ADC_DRIVER, &adcgrpcfg, samplebuf, 1);
     adcReleaseBus(&ADC_DRIVER);
     adcStop(&ADC_DRIVER);
+
     if(status == MSG_OK){
       // BATT2 is samplebuf[0], BATT1 is samplebuf[1]
       float batt2 = ((float)samplebuf[0] * 3.3f) / 4096.0f;
@@ -181,6 +191,8 @@ THD_FUNCTION(chargecontroller_thread, arg) {
       batt1 *= 2; // BATT1 has a 1/2 divider
 
       batt2 -= batt1; // get batt2 as a cell voltage
+
+      m3status_set_ok(M3STATUS_COMPONENT_ADC);
 
       // Balance the batteries
       if(shouldBalance){
@@ -211,6 +223,8 @@ THD_FUNCTION(chargecontroller_thread, arg) {
                     palReadLine(LINE_BLEED_BATT_2);
 
       can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, 3);
+    }else{
+      m3status_set_error(M3STATUS_COMPONENT_ADC, M3STATUS_ADC_ERROR_READ);
     }
 
     chThdSleepMilliseconds(1);
@@ -219,9 +233,13 @@ THD_FUNCTION(chargecontroller_thread, arg) {
     uint16_t ma;
     status = max17435_get_current(&charger, &ma);
     if(status == ERR_OK){
+      m3status_set_ok(M3STATUS_COMPONENT_CHARGER);
       can_data[0] = ma & 0xff;
       can_data[1] = (ma >> 8) & 0xff;
     }else{
+      if(is_charger_enabled()){
+        m3status_set_error(M3STATUS_COMPONENT_CHARGER, M3STATUS_CHARGER_ERROR_READ);
+      }
       can_data[0] = -1;
       can_data[1] = -1;
     }
