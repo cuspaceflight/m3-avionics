@@ -1,8 +1,15 @@
+/*
+ *  LTC2983 Temperature Sensor Driver
+ *   (Assuming TEMP 2 - 5 Connected)
+ */
+
 #include "ch.h"
 #include "hal.h"
 #include "LTC2983.h"
 #include <string.h>
 #include "err_handler.h"
+
+binary_semaphore_t temp_ready_sem;
 
 /* Function Prototypes */
 static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data);
@@ -22,8 +29,13 @@ static const SPIConfig hs_spicfg = {
 /* TEMP INT Callback */
 void temp_ready(EXTDriver *extp, expchannel_t channel) {
 
-    (void)extp;
-    (void)channel;
+	(void)extp;
+	(void)channel;
+
+	/* Signal Semaphore */
+	chSysLockFromISR();
+	chBSemSignalI(&temp_ready_sem);
+	chSysUnlockFromISR();
 
 }
 
@@ -31,44 +43,85 @@ void temp_ready(EXTDriver *extp, expchannel_t channel) {
 static THD_WORKING_AREA(ltc2983_wa, 256);
 static THD_FUNCTION(ltc2983_thd, arg) {
 	
-    /* Set Thread Name & Start SPI */
-    (void)arg;
-    chRegSetThreadName("LTC2983");
-    spiStart(&SPID1, &hs_spicfg);
+	/* Set Thread Name & Start SPI */
+	(void)arg;
+	chRegSetThreadName("LTC2983");
+	spiStart(&SPID1, &hs_spicfg);
 
-    /* 
-     * Sleep until LTC2983 power up fires
-     * interrupt taking TEMP_INT HIGH  
-     */
- 
-    chThdSleepMilliseconds(200);	
+	/* 
+	 * Sleep until LTC2983 power up fires
+	 * interrupt taking TEMP_INT HIGH  
+	 */
 
-    /* Call ltc2983_setup function */
+	chBSemWaitTimeout(&temp_ready_sem, MS2ST(200));
+ 	
 
-     ltc2983_setup();
+	/* Call ltc2983_setup function */
+	ltc2983_setup();
 
-    /* 
-     * Enter while loop that continually starts
-     * a multi-channel conversion and sleeps until
-     * completion is signalled by the LTC2983 
-     * taking the TEMP_INT pin high  
-     */
+	/* 
+	 * Enter while loop that continually starts
+	 * a multi-channel conversion and sleeps until
+	 * completion is signalled by the LTC2983 
+	 * taking the TEMP_INT pin high  
+	 */
 
-    while(TRUE) {
-        /* Do Nothing */
-	palSetPad(GPIOC, GPIOC_LED2_RED);
-        chThdSleepMilliseconds(500);
-	palClearPad(GPIOC, GPIOC_LED2_RED);
-        chThdSleepMilliseconds(500);
-    }
+	while(TRUE) {
+
+	/* Initiate Conversion */
+	uint8_t cmd_init = 0x80;
+
+	ltc2983_write_reg(0x000, 1, &cmd_init);
+
+	/* Wait for Conversion to Complete */
+	chBSemWait(&temp_ready_sem);
+
+	/* Read the Results */	
+
+	static uint32_t temp_results[9];
+
+
+	/* Read CH4 -> Temp 2 */	
+	ltc2983_read_reg(0x01C, 4, (uint8_t *)(temp_results));
+
+	/* Read CH6 -> Temp 3 */	
+	ltc2983_read_reg(0x024, 4, (uint8_t *)(temp_results + 1));
+
+	/* Read CH8 -> Temp 4 */	
+	ltc2983_read_reg(0x02C, 4, (uint8_t *)(temp_results + 2));
+
+	/* Read CH10 -> Temp 5 */	
+	ltc2983_read_reg(0x034, 4, (uint8_t *)(temp_results + 3));
+
+
+	/*
+	 * LOG THE RESULTS TO SD CARD
+	 */
+
+	/*
+	 * CHECK FOR VALIDITY AND CONVERT
+	 * TO SIGNED 16 BIT INTEGER
+	 */
+
+	/*
+	 * BROADCAST OVER CAN BUS
+	 */
+
+	}
   
 }
 
 /* Entry Point */
 void ltc2983_init(void) {
-    /* Create LTC2983 Thread */
-    chThdCreateStatic(ltc2983_wa, sizeof(ltc2983_wa),
+    
+        /* Init Temp Ready Semaphore */
+        chBSemObjectInit(&temp_ready_sem, FALSE);
+
+        /* Create LTC2983 Thread */
+        chThdCreateStatic(ltc2983_wa, sizeof(ltc2983_wa),
                       NORMALPRIO, ltc2983_thd, NULL);
+
+	
 }
 
 
@@ -76,7 +129,7 @@ void ltc2983_init(void) {
 static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data) {
 	
 	/* Setup TX Buffer */
-	uint8_t txbuf[83];
+	static uint8_t txbuf[83];
 
 	/* Check Data Length */
 	if (len > 80){
@@ -143,7 +196,7 @@ static void ltc2983_setup(void) {
 	
 
 	/* Buffer to Hold Sensor Config Data */
-	uint8_t sensor_config[80];
+	static uint8_t sensor_config[80];
 
 	/* Loop Pointer */
 	uint8_t i;
@@ -183,6 +236,25 @@ static void ltc2983_setup(void) {
 	 */
 
 	ltc2983_write_reg(0x200, 80, sensor_config);
+
+	
+	/* 
+	 * Populate multiple conversion channel
+	 * bit mask and write to 0x0F5 to 0x0F7
+	 */
+
+	uint8_t conversion_mask[3];
+
+	/* Assumes CH4 CH6 CH8 CH10 Connected */
+
+	/* 0x0F5 = 0 0 0 0 CH20 CH19 CH18 CH17 */	
+	conversion_mask[0] = 0x00;
+	/* 0x0F6 = CH16 CH15 CH14 CH13 CH12 CH11 CH10 CH9 */
+	conversion_mask[1] = 0x02;
+	/* 0x0F7 = CH8 CH7 CH6 CH5 CH4 CH3 CH2 CH1 */
+	conversion_mask[2] = 0xA8;
+
+	ltc2983_write_reg(0x0F5, 3, conversion_mask);
 
 }
 

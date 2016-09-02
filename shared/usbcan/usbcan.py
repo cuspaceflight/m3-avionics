@@ -25,9 +25,10 @@ class CANFrame:
         self.data = data
 
     def to_bytes(self):
-        return (
-            struct.pack("<HBB", self.sid, self.rtr, self.dlc) +
-            struct.pack("{}B".format(self.dlc), *self.data))
+        out = struct.pack("<HBB", self.sid, self.rtr, self.dlc)
+        if self.dlc > 0:
+            out += struct.pack("{}B".format(self.dlc), *self.data)
+        return out
 
     def __str__(self):
         return "ID={} RTR={} DLC={} DATA={}".format(

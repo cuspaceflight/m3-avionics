@@ -56,7 +56,10 @@
  *          The value one is not valid, timeouts are rounded up to
  *          this value.
  */
-#define CH_CFG_ST_TIMEDELTA                 0
+#define CH_CFG_ST_TIMEDELTA                 2
+
+/* Enable wait-for-interrupt sleep during idle */
+#define CORTEX_ENABLE_WFI_IDLE TRUE
 
 /** @} */
 
@@ -79,7 +82,7 @@
  * @note    The round robin preemption is not supported in tickless mode and
  *          must be set to zero in that case.
  */
-#define CH_CFG_TIME_QUANTUM                 100
+#define CH_CFG_TIME_QUANTUM                 0
 
 /**
  * @brief   Managed RAM size.
@@ -101,7 +104,7 @@
  *          function becomes the idle thread and must implement an
  *          infinite loop.
  */
-#define CH_CFG_NO_IDLE_THREAD               TRUE
+#define CH_CFG_NO_IDLE_THREAD               FALSE
 
 /** @} */
 
@@ -395,7 +398,7 @@
  * @note    This debug option is not currently compatible with the
  *          tickless mode.
  */
-#define CH_DBG_THREADS_PROFILING            TRUE
+#define CH_DBG_THREADS_PROFILING            FALSE
 
 /** @} */
 

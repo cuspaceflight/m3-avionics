@@ -1,0 +1,102 @@
+Bill Of Materials
+=================
+
+Source file: Li-Ion-Charger-Board.xml
+Date: 2016-07-05T01:05:51.838030
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J6     NORTH BOT       agg:SFML-105-02-L-D-LC
+J3     TAP             agg:SIL-254P-01
+J7     BAT+            agg:SIL-254P-01
+J8     BAT-            agg:SIL-254P-01
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    TFML-110-02-L-D: 
+      J1     WEST TOP        agg:TFML-110-02-L-D
+      J4     EAST TOP        agg:TFML-110-02-L-D
+    SFML-110-02-L-D-LC: 
+      J2     WEST BOT        agg:SFML-110-02-L-D-LC
+      J5     EAST BOT        agg:SFML-110-02-L-D-LC
+  Power
+  ~~~~~
+    0.125W: 
+      R16    10              agg:0402
+      R17    10m             agg:0603
+
+Vendor Specific BOMs
+--------------------
+  Samtec
+  ~~~~~~
+TFML-110-02-L-D,4,2x J1 J4 TFML-110-02-L-D
+SFML-110-02-L-D-LC,4,2x J2 J5 SFML-110-02-L-D-LC
+
+
+  Power
+  ~~~~~
+0.125W,4,2x R16 R17 0603,0402
+0.1W,2,1x R14 0603
+
+
+  Farnell
+  ~~~~~~~
+2447096,8,4x 10k 0402
+2309887,2,1x 4µ7 SRP5030T
+2218855,8,4x 1µ 0402
+2447120,2,1x 1k 0402
+2331559,2,1x 6k2 0402
+1738824,4,2x 10 0402
+1735538,4,2x 47µ 1210
+2498598,4,2x NFET SOT-883-B
+2447201,2,1x 5k1 0402
+2447110,2,1x 150k 0402
+2364059,2,1x PFET PowerPAK-1212-8
+1458762,2,1x 2M 0402
+2210793,4,2x 10n 0402
+2447198,2,1x 56k 0402
+2098274,2,1x NFET2 PowerFLAT-5x6
+2471947,2,1x PFET PowerPAK-SO-8
+2496811,4,2x 100n 0402
+2447160,6,3x 33k 0402
+2503038,4,2x 10m 0603
+2422226,2,1x SiZ340DT PowerPair-3x3
+2516688,2,1x MAX17435 QFN-24-EP-MAX
+2428172,2,1x PCAL9538A QFN-16-EP-NXP
+
+
+Assembly BOM
+------------
+TFML-110-02-L-D      2   WEST TOP,EAST TOP TFML-110-02-L-D J1 J4
+SFML-110-02-L-D-LC   2   WEST BOT,EAST BOT SFML-110-02-L-D-LC J2 J5
+0.125W               2   10,10m          0603,0402       R16 R17
+0.1W                 1   10m             0603            R14
+2447096              4   10k             0402            R2 R3 R5 R8
+2309887              1   4µ7             SRP5030T        L1
+2218855              4   1µ              0402            C1 C2 C3 C8
+2447120              1   1k              0402            R15
+2331559              1   6k2             0402            R4
+1738824              2   10              0402            R1 R16
+1735538              2   47µ             1210            C7 C9
+2498598              2   NFET            SOT-883-B       Q1 Q3
+2447201              1   5k1             0402            R13
+2447110              1   150k            0402            R11
+2364059              1   PFET            PowerPAK-1212-8 Q2
+1458762              1   2M              0402            R10
+2210793              2   10n             0402            C4 C5
+2447198              1   56k             0402            R7
+2098274              1   NFET2           PowerFLAT-5x6   Q4
+2471947              1   PFET            PowerPAK-SO-8   Q5
+2496811              2   100n            0402            C10 C6
+2447160              3   33k             0402            R12 R6 R9
+2503038              2   10m             0603            R14 R17
+2422226              1   SiZ340DT        PowerPair-3x3   Q6
+2516688              1   MAX17435        QFN-24-EP-MAX   IC1
+2428172              1   PCAL9538A       QFN-16-EP-NXP   IC2
+
