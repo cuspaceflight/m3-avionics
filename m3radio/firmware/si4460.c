@@ -327,8 +327,8 @@ static void si4460_send_command(uint8_t* txbuf, size_t txn,
  * The set frequency is F = (1 + INTE + FRAC/2^19)*(XO_FREQ/2)
  */
 static void si4460_set_freq(uint32_t f, uint32_t xo) {
-    int inte = (f / (xo / 2)) - 1;
-    int frac = ((f << 19) / (xo / 2)) - ((inte + 1) << 19);
+    uint32_t inte = (f / (xo / 2)) - 1;
+    uint32_t frac = (((uint64_t)f << 19) / (xo / 2)) - ((inte + 1) << 19);
 
     si4460_set_property(EZRP_PROP_FREQ_CONTROL, EZRP_PROP_FREQ_CONTROL_INTE,
         inte);
@@ -343,7 +343,7 @@ static void si4460_set_freq(uint32_t f, uint32_t xo) {
 /* Compute and set the required modem configuration for the desired frequency
  * deviation. */
 static void si4460_set_dev(uint32_t d, uint32_t xo) {
-    uint32_t freq_dev = (d<<20)/xo;
+    uint32_t freq_dev = ((uint64_t)d<<20)/xo;
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_FREQ_DEV0,
         (uint8_t)(freq_dev>>16));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_FREQ_DEV1,
@@ -387,9 +387,6 @@ static bool si4460_configure() {
         /* Tune adjustment to zero for TCXO */
         si4460_set_property(EZRP_PROP_GLOBAL, EZRP_PROP_GLOBAL_XO_TUNE, 0x00);
     }
-
-    /* Set centre frequency */
-    si4460_set_freq(si4460_config->centre_freq, si4460_config->xo_freq);
 
     /* Preamble config *******************************************************/
     /* 5 bytes preamble, require 20 bits RX, wait a long time before deciding
@@ -478,28 +475,25 @@ static bool si4460_configure() {
 
     /* Non-infinite packet lengths, little endian packet length field,
      * one byte packet length field, packet length not placed in rx FIFO,
-     * field 2 is the variable length field
+     * no variable length fields.
      */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_LEN,
         EZRP_PKT_LEN_INFINITE_LEN_NORMAL        |
         EZRP_PKT_LEN_ENDIAN_LITTLE              |
         EZRP_PKT_LEN_SIZE_ONE_BYTE              |
         EZRP_PKT_LEN_IN_FIFO_CUT_OUT            |
-        EZRP_PKT_LEN_DST_FIELD(2));
+        EZRP_PKT_LEN_DST_FIELD(0));
 
-    /* Use field 1 as containing the length byte */
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_LEN_FIELD_SOURCE, 1);
-
-    /* We'll send lengths that just include data, not length or CRC */
+    /* No need to adjust lengths */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_LEN_ADJUST, 0);
 
     /* Set FIFO thresholds to 0 bytes. Don't really care. */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_TX_THRESHOLD, 0);
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_RX_THRESHOLD, 0);
 
-    /* Field 1 length to 1 byte, i.e. the packet length byte */
+    /* Field 1 length to 60 bytes, i.e. the entire fixed size radio packet */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_1_LENGTH0, 0);
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_1_LENGTH1, 1);
+    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_1_LENGTH1, 60);
 
     /* No 4FSK, load fresh PN seed, enable whitening, disable Manchester */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_1_CONFIG,
@@ -508,33 +502,10 @@ static bool si4460_configure() {
         EZRP_PKT_FIELD_CONFIG_WHITEN_ENABLE |
         EZRP_PKT_FIELD_CONFIG_MANCH_DISABLE);
 
-    /* Seed CRC at field 1, don't transmit it yet, don't check it yet,
-     * do enable CRC for this field. */
+    /* Seed CRC at field 1, transmit it, check it, enable CRC. */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_1_CRC_CONFIG,
         EZRP_PKT_FIELD_CRC_CONFIG_CRC_START_CONTINUE    |
         EZRP_PKT_FIELD_CRC_CONFIG_ALT_CRC_START_LOAD    |
-        EZRP_PKT_FIELD_CRC_CONFIG_SEND_CRC_OFF          |
-        EZRP_PKT_FIELD_CRC_CONFIG_SEND_ALT_CRC_OFF      |
-        EZRP_PKT_FIELD_CRC_CONFIG_CHECK_CRC_OFF         |
-        EZRP_PKT_FIELD_CRC_CONFIG_CHECK_ALT_CRC_OFF     |
-        EZRP_PKT_FIELD_CRC_CONFIG_CRC_ENABLE_ON         |
-        EZRP_PKT_FIELD_CRC_CONFIG_ALT_CRC_ENABLE_OFF);
-
-    /* Set field two to maximum expected length of the field, which is 60
-     * = 5 12-byte full-size CAN packets
-     * (and fits inside the 64b RX FIFO)
-     */
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_2_LENGTH0, 0);
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_2_LENGTH1, 60);
-
-    /* No 4FSK, enable whitening, disable Manchester */
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_2_CONFIG,
-        EZRP_PKT_FIELD_CONFIG_4FSK_DISABLE  |
-        EZRP_PKT_FIELD_CONFIG_WHITEN_ENABLE |
-        EZRP_PKT_FIELD_CONFIG_MANCH_DISABLE);
-
-    /* Send CRC, check CRC, enable CRC */
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_2_CRC_CONFIG,
         EZRP_PKT_FIELD_CRC_CONFIG_SEND_CRC_ON           |
         EZRP_PKT_FIELD_CRC_CONFIG_SEND_ALT_CRC_OFF      |
         EZRP_PKT_FIELD_CRC_CONFIG_CHECK_CRC_ON          |
@@ -542,9 +513,9 @@ static bool si4460_configure() {
         EZRP_PKT_FIELD_CRC_CONFIG_CRC_ENABLE_ON         |
         EZRP_PKT_FIELD_CRC_CONFIG_ALT_CRC_ENABLE_OFF);
 
-    /* Set field three length to zero to symbol the end of the payload */
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_3_LENGTH0, 0);
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_3_LENGTH1, 0);
+    /* Set field two to zero length to stop packet processing here. */
+    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_2_LENGTH0, 0);
+    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_2_LENGTH1, 0);
 
     /* Modem config *********************************************************/
     /* 2GFSK from FIFO */
@@ -577,6 +548,9 @@ static bool si4460_configure() {
                         (uint8_t)(si4460_config->xo_freq>>8));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_TX_NCO_MODE3,
                         (uint8_t)(si4460_config->xo_freq>>0));
+
+    /* Set centre frequency */
+    si4460_set_freq(si4460_config->centre_freq, si4460_config->xo_freq);
 
     /* Freq dev */
     si4460_set_dev(si4460_config->deviation, si4460_config->xo_freq);
@@ -640,7 +614,9 @@ static THD_FUNCTION(si4460_thd, arg) {
         chThdSleepMilliseconds(1000);
     }
 
-    uint8_t packet[10] = {9, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+    uint8_t packet[60];
+    int i;
+    for(i=0; i<60; i++) packet[i] = i;
 
     while(true) {
         uint8_t state = EZRP_STATE_TX, channel;
@@ -650,11 +626,11 @@ static THD_FUNCTION(si4460_thd, arg) {
         while(state == EZRP_STATE_TX) {
             si4460_request_device_state(&state, &channel);
         }
-        si4460_write_tx_fifo(packet, 10);
+        si4460_write_tx_fifo(packet, 60);
         si4460_start_tx(0, EZRP_START_TX_TXCOMPLETE_STATE(EZRP_STATE_READY),
                         0, 0, 0);
         m3status_set_ok(M3RADIO_COMPONENT_SI4460);
-        chThdSleepMilliseconds(500);
+        chThdSleepMilliseconds(1000);
     }
 }
 
