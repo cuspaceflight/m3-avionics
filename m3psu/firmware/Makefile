@@ -116,7 +116,7 @@ CSRC = $(STARTUPSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
        ../../shared/m3can/m3can.c \
-       main.c chargecontroller.c ltc3887.c ltc4151.c max17435.c pcal9538a.c powermanager.c smbus.c
+       main.c chargecontroller.c ltc3887.c ltc4151.c max17435.c pcal9538a.c powermanager.c smbus.c m3status.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -198,7 +198,8 @@ CPPWARN = -Wall -Wextra -Wundef
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+GITVERSION := $(shell git describe --abbrev=8 --always)
+UDEFS = -DFIRMWARE_VERSION=\"$(GITVERSION)\"
 
 # Define ASM defines here
 UADEFS =

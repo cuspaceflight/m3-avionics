@@ -111,7 +111,7 @@ int main(void) {
   enable_internal_power();
 
   smbus_init();
-  can_init();
+  can_init(CAN_ID_M3PSU);
 
   PowerManager_init();
   ChargeController_init();

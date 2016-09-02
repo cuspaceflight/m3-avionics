@@ -19,8 +19,8 @@ LTC4151 currentMonitor;
 void PowerManager_init(){
 
   // TODO: register IRQ for ~ALERT line
-
-  for(int i=0; i<6; i++){
+  int i = 0;
+  for(i=0; i<6; i++){
     m3status_set_init(M3STATUS_COMPONENT_DCDC1 + i);
   }
   m3status_set_init(M3STATUS_COMPONENT_PYRO_MON);
@@ -167,7 +167,7 @@ THD_FUNCTION(powermanager_thread, arg){
         m3status_set_ok(M3STATUS_COMPONENT_DCDC1 + idx);
 
       }else{
-        m3status_set_err(M3STATUS_COMPONENT_DCDC1 + idx, M3STATUS_DCDC_ERROR_COMMS);
+        m3status_set_error(M3STATUS_COMPONENT_DCDC1 + idx, M3STATUS_DCDC_ERROR_COMMS);
       }
       chThdSleepMilliseconds(1);
     }
