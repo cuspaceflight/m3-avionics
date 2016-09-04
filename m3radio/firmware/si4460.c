@@ -11,7 +11,6 @@
 binary_semaphore_t si4460_tx_sem;
 uint8_t si4460_tx_buf[60];
 
-/* TODO: Can we run with BR0 and BR1 instead, a bit quicker? */
 static SPIConfig spi_cfg = {
     .end_cb = NULL,
     .ssport = 0,
@@ -30,6 +29,18 @@ struct si4460_config* si4460_config;
  */
 static const uint32_t data_rate = 2000;
 static const uint32_t deviation = 1000;
+
+/* For now we'll use these fixed filters. In theory it should be relatively
+ * straightforward to compute a suitable filter for a given RX bandwidth (it's
+ * just a raised cosine filter) and do so at runtime. Makes good use of the FPU
+ * and all that.
+ */
+static const int16_t rx_wb_filter[14] = {
+    0, 3, 12, 22, 23, 5, -34, -72, -75, -11, 127, 304, 452, 511
+};
+static const int16_t rx_nb_filter[14] = {
+    0, 3, 12, 22, 23, 5, -34, -72, -75, -11, 127, 304, 452, 511
+};
 
 /******************************************************************************
  * Store result of larger commands
@@ -164,10 +175,13 @@ static struct si4460_ph_status si4460_get_ph_status(uint8_t ph_clr_pend)
 static bool si4460_configure(void);
 static void si4460_set_freq(uint32_t f, uint32_t xo);
 static void si4460_set_deviation(uint32_t d, uint32_t xo);
-static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg);
+static bool si4460_set_decimation(struct si4460_dec_cfg dec_cfg);
+static bool si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
+                           uint16_t bcr_gain, uint8_t crfast, uint8_t crslow);
+static bool si4460_set_filter(uint8_t filter_num, const int16_t coeffs[14]);
 static void si4460_send_command(uint8_t* txbuf, size_t txn,
                                 uint8_t* rxbuf, size_t rxn);
-static void si4460_dump_config(void);
+static void si4460_dump_params(void);
 /*****************************************************************************/
 
 
@@ -407,7 +421,7 @@ static void si4460_set_deviation(uint32_t d, uint32_t xo) {
 }
 
 /* Compute and set the RX decimators */
-static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg) {
+static bool si4460_set_decimation(struct si4460_dec_cfg dec_cfg) {
     uint8_t cfg0 = 0, cfg1 = 0, cfg2 = 0;
 
     if(dec_cfg.chflt_lopw) {
@@ -457,7 +471,7 @@ static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg) {
     } else if(dec_cfg.ndec0 == 128) {
         cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC0_128;
     } else {
-        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+        return false;
     }
 
     if(dec_cfg.ndec1 == 1) {
@@ -469,7 +483,7 @@ static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg) {
     } else if(dec_cfg.ndec1 == 8) {
         cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC1_8;
     } else {
-        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+        return false;
     }
 
     if(dec_cfg.ndec2 == 1) {
@@ -481,7 +495,7 @@ static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg) {
     } else if(dec_cfg.ndec2 == 8) {
         cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC2_8;
     } else {
-        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+        return false;
     }
 
     if(dec_cfg.ndec3 == 1) {
@@ -493,7 +507,7 @@ static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg) {
     } else if(dec_cfg.ndec3 == 8) {
         cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC3_8;
     } else {
-        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+        return false;
     }
 
     if(dec_cfg.ndec2gain == 0) {
@@ -503,7 +517,7 @@ static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg) {
     } else if(dec_cfg.ndec2gain == 24) {
         cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC2GAIN_GAIN24;
     } else {
-        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+        return false;
     }
 
     if(dec_cfg.ndec2agc) {
@@ -518,11 +532,13 @@ static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg) {
                         EZRP_PROP_MODEM_DECIMATION_CFG1, cfg1);
     si4460_set_property(EZRP_PROP_MODEM,
                         EZRP_PROP_MODEM_DECIMATION_CFG2, cfg2);
+
+    return true;
 }
 
 /* Set the two BCR registers based on the clock, the decimation, the data rate.
  */
-static void si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
+static bool si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
                            uint16_t bcr_gain, uint8_t crfast, uint8_t crslow)
 {
     /*
@@ -539,7 +555,7 @@ static void si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
      * Again the documentation implies this is really 64x the offset value and
      * there's some rubbish with fractional offsets, but it seems safe to
      * ignore that. Maybe think of the accumulator as having 6 fractional bits.
-     * (PS: Why 25 bits? Who knows? Just fits the default values.)
+     * (PS: Why 25 bits? Who knows? It's what makes sense of the defaults.)
      */
     float nco_freq = (float)xo_freq;
     if(dec_cfg.dwn2) nco_freq /= 2.0f;
@@ -552,7 +568,7 @@ static void si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
     uint32_t bcr_offset = (1<<25) / bcr_osr;
 
     if(bcr_osr >= (1<<12) || bcr_offset >= (1<<22)) {
-        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+        return false;
     }
 
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_OSR0,
@@ -571,21 +587,8 @@ static void si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_GAIN1,
         (uint8_t)(bcr_gain >> 0));
 
-    uint8_t osr0 = si4460_get_property(
-        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_OSR0);
-    uint8_t osr1 = si4460_get_property(
-        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_OSR1);
-    uint8_t offset0 = si4460_get_property(
-        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_NCO_OFFSET0);
-    uint8_t offset1 = si4460_get_property(
-        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_NCO_OFFSET1);
-    uint8_t offset2 = si4460_get_property(
-        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_NCO_OFFSET2);
-    (void)osr0; (void)osr1;
-    (void)offset0; (void)offset1; (void)offset2;
-
     if(crfast >= (1<<3) || crslow >= (1<<3)) {
-        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+        return false;
     }
 
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_GEAR,
@@ -607,9 +610,57 @@ static void si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
         EZRP_MODEM_BCR_MISC0_ADCRST_DISABLED                |
         EZRP_MODEM_BCR_MISC0_DISTOGG_NORMAL                 |
         EZRP_MODEM_BCR_MISC0_PH0SIZE_5);
+
+    return true;
+}
+
+static bool si4460_set_filter(uint8_t filter_num, const int16_t coeffs[14]) {
+    uint8_t props[18] = {0};
+
+    uint8_t start_prop;
+    if(filter_num == 1) {
+        start_prop = EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE13_7_0;
+    } else if(filter_num == 2) {
+        start_prop = EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE13_7_0;
+    } else {
+        return false;
+    }
+
+    size_t i;
+
+    /* Memory layout is:
+     * COE13[7:0]
+     * COE12[7:0]
+     * ...
+     * COE0[7:0]
+     * COE10[9:8] | COE11[9:8] | COE12[9:8] | COE13[9:8]
+     * COE6[9:8]  | COE7[9:8]  | COE8[9:8]  | COE9[9:8]
+     * COE2[9:8]  | COE3[9:8]  | COE4[9:8]  | COE5[9:8]
+     *                           COE0[9:8]  | COE1[9:8]
+     */
+    for(i=0; i<14; i++) {
+        if(coeffs[i] >= (1<<9)) {
+            return false;
+        }
+        props[13 - i] = coeffs[i] & 0xFF;
+    }
+    props[14] = ((((coeffs[10]>>8)&3) << 6) | (((coeffs[11]>>8)&3) << 4) |
+                 (((coeffs[12]>>8)&3) << 2) | (((coeffs[13]>>8)&3) << 0) );
+    props[15] = ((((coeffs[ 6]>>8)&3) << 6) | (((coeffs[ 7]>>8)&3) << 4) |
+                 (((coeffs[ 8]>>8)&3) << 2) | (((coeffs[ 9]>>8)&3) << 0) );
+    props[16] = ((((coeffs[ 2]>>8)&3) << 6) | (((coeffs[ 3]>>8)&3) << 4) |
+                 (((coeffs[ 4]>>8)&3) << 2) | (((coeffs[ 5]>>8)&3) << 0) );
+    props[17] = ((((coeffs[ 0]>>8)&3) << 2) | (((coeffs[ 1]>>8)&3) << 0));
+
+    for(i=0; i<sizeof(props); i++) {
+        si4460_set_property(EZRP_PROP_MODEM_CHFLT, start_prop + i, props[i]);
+    }
+
+    return true;
 }
 
 static bool si4460_configure() {
+    bool cfg_ok = true;
     struct si4460_chip_status chip_status;
     struct si4460_part_info part_info;
 
@@ -824,17 +875,17 @@ static bool si4460_configure() {
      * and MODEM_IF_FREQ=(2^19 * 4 * IF_FREQ_Hz)/(2*xo_freq)
      *                  = 2^19 * 2^2 / 2^6 / 2^1 * (xo_freq/xo_freq)
      *                  = 2^14 = 16384, regardless of actual xo_freq
+     * We then negate this (since this property is the amount to shift the RX
+     * LO and we wish to shift downwards so as to place the signal higher up),
+     * and take the 18 signed bits, giving 0x03C000.
+     * This setting doesn't need to change when using Fixed IF mode.
      */
-    /* Actually don't set this for now, as we want it at the default
-     * and it seems to break when we set it. ???
-     * TODO ???
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IF_FREQ0,
-        (uint8_t)(16384>>16));
+        (uint8_t)(0x03C000>>16));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IF_FREQ1,
-        (uint8_t)(16384>>8));
+        (uint8_t)(0x03C000>>8));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IF_FREQ2,
-        (uint8_t)(16384>>0));
-    */
+        (uint8_t)(0x03C000>>0));
 
     /* PLL synth to FVCO/4 with SYSEL to high performance */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_CLKGEN_BAND,
@@ -869,8 +920,8 @@ static bool si4460_configure() {
         .dwn3 = true,
         .rxgainx2 = false,
     };
-    si4460_set_decimation(dec_cfg);
-    si4460_set_bcr(dec_cfg, si4460_config->xo_freq, 0x0079, 0, 2);
+    cfg_ok &= si4460_set_decimation(dec_cfg);
+    cfg_ok &= si4460_set_bcr(dec_cfg, si4460_config->xo_freq, 0x0079, 0, 2);
 
     /* AFC gearing */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_GEAR,
@@ -896,7 +947,7 @@ static bool si4460_configure() {
     /* TODO set automatically */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_WAIT, 0x12);
 
-    /* AFC over the whole packet, enable PLL correction */
+    /* AFC enable PLL correction and other recommended settings */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_MISC,
         EZRP_MODEM_AFC_MISC_ENAFCFRZ_AFC_FRZN_AFTER_GEAR_SW |
         EZRP_MODEM_AFC_MISC_ENFBPLL_ENABLE_AFC_COR_POLL     |
@@ -910,69 +961,36 @@ static bool si4460_configure() {
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AGC_RFPD_DECAY, 0xED);
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AGC_IFPD_DECAY, 0xED);
 
-    /* RX filter coefficients
-     * This is WDS filter 1, 132.27kHz bandwidth */
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE13_7_0, 0xFF);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE12_7_0, 0xC4);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE11_7_0, 0x30);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE10_7_0, 0x7F);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE9_7_0, 0xF5);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE8_7_0, 0xB5);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE7_7_0, 0xB8);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE6_7_0, 0xDE);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE5_7_0, 0x05);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE4_7_0, 0x17);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE3_7_0, 0x16);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE2_7_0, 0x0C);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE1_7_0, 0x03);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE0_7_0, 0x00);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM0, 0x15);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM1, 0xFF);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM2, 0x00);
-    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
-        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM3, 0x00);
+    /* RX filter coefficients. */
+    cfg_ok &= si4460_set_filter(1, rx_wb_filter);
+    cfg_ok &= si4460_set_filter(2, rx_nb_filter);
 
-    /* Set up GPIO1 to output raw RX data for debugging */
+    /* Set up GPIOs to all tristate for now.
+     * GPIO1 is wired to the STM32 so can set this to RX_RAW_DATA etc for
+     * interesting debugging or other high-tech scenarios.
+     */
     struct si4460_gpio_pin_cfg pin_cfg_set = {
         .gpio0 = EZRP_GPIO_PIN_CFG_TRISTATE,
-        .gpio1 = EZRP_GPIO_PIN_CFG_RX_RAW_DATA,
+        .gpio1 = EZRP_GPIO_PIN_CFG_TRISTATE,
         .gpio2 = EZRP_GPIO_PIN_CFG_TRISTATE,
         .gpio3 = EZRP_GPIO_PIN_CFG_TRISTATE,
         .nirq  = EZRP_GPIO_PIN_CFG_NIRQ,
         .sdo   = EZRP_GPIO_PIN_CFG_SDO,
-        .gen_config = EZRP_GPIO_PIN_CFG_GEN_CONFIG_DRV_STRENGTH_HIGH,
+        .gen_config = EZRP_GPIO_PIN_CFG_GEN_CONFIG_DRV_STRENGTH_LOW,
     };
-    struct si4460_gpio_pin_cfg pin_cfg_get = si4460_gpio_pin_cfg(pin_cfg_set);
-    (void)pin_cfg_get;
+    si4460_gpio_pin_cfg(pin_cfg_set);
 
     /* Check chip status looks OK */
     chip_status = si4460_get_chip_status(0);
     if(chip_status.chip_status & EZRP_CHIP_STATUS_CMD_ERROR) {
         return false;
+    } else {
+        return cfg_ok;
     }
-
-    return true;
 }
 
 /* Dump the chip's entire config out over CAN */
-static void si4460_dump_config(void) {
+static void si4460_dump_params(void) {
     /* {Group ID, maximum group property ID} */
     uint8_t groups[][2] = {
         {EZRP_PROP_GLOBAL, EZRP_PROP_GLOBAL_WUT_CAL},
@@ -1022,32 +1040,41 @@ static THD_FUNCTION(si4460_thd, arg) {
         chThdSleepMilliseconds(1000);
     }
 
-    si4460_dump_config();
+    /* Save a log of all our stupid parameters */
+    si4460_dump_params();
 
     uint8_t packet[60];
     (void)packet;
 
     si4460_start_rx(0, 0, 0, EZRP_STATE_RX, EZRP_STATE_RX, EZRP_STATE_RX);
 
-    while(true) {
-        /*uint8_t state = EZRP_STATE_TX, channel;*/
-        /*struct si4460_modem_status modem_status = si4460_get_modem_status(0);*/
-        /*(void)modem_status;*/
-        /*while(state == EZRP_STATE_TX) {*/
-            /*si4460_request_device_state(&state, &channel);*/
-            /*(void)state;*/
-            /*(void)channel;*/
-        /*}*/
-        /*si4460_write_tx_fifo(packet, 60);*/
-        /*si4460_start_tx(0, EZRP_START_TX_TXCOMPLETE_STATE(EZRP_STATE_READY),*/
-                        /*0, 0, 0);*/
-        /*chThdSleepMilliseconds(1000);*/
+#define RX
 
+    while(true) {
+#ifdef TX
+        uint8_t state = EZRP_STATE_TX, channel;
+        struct si4460_modem_status modem_status = si4460_get_modem_status(0);
+        (void)modem_status;
+        while(state == EZRP_STATE_TX) {
+            si4460_request_device_state(&state, &channel);
+            (void)state;
+            (void)channel;
+        }
+        si4460_write_tx_fifo(packet, 60);
+        si4460_start_tx(0, EZRP_START_TX_TXCOMPLETE_STATE(EZRP_STATE_READY),
+                        0, 0, 0);
+        chThdSleepMilliseconds(1000);
+#endif
+#ifdef RX
         struct si4460_int_status int_status = si4460_get_int_status(0, 0, 0);
         if(int_status.ph_pend & EZRP_PH_STATUS_PACKET_RX) {
             si4460_read_rx_fifo(packet, 60);
+            /*palSetLine(LINE_LED_GRN);*/
+        } else {
+            /*palClearLine(LINE_LED_GRN);*/
         }
         chThdSleepMilliseconds(100);
+#endif
         m3status_set_ok(M3RADIO_COMPONENT_SI4460);
     }
 }
