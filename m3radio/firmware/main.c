@@ -42,8 +42,6 @@ int main(void) {
         .tcxo = true,
         .xo_freq = 26000000,
         .centre_freq = 869500000,
-        .data_rate = 1000,
-        .deviation = 12500,
     };
     si4460_init(&si4460_cfg);
 

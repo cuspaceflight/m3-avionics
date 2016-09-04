@@ -5,6 +5,9 @@
 #include "m3can.h"
 #include "ezradiopro.h"
 
+/* Temporary (I hope) bodge for sending data in. To be replaced with something
+ * sensible like a mailbox+memorypool later.
+ */
 binary_semaphore_t si4460_tx_sem;
 uint8_t si4460_tx_buf[60];
 
@@ -16,7 +19,17 @@ static SPIConfig spi_cfg = {
     .cr1 = SPI_CR1_BR_2,
 };
 
+/* The config we're passed in depends heavily on the board the radio is on,
+ * e.g. what crystal, what SPI port, what CS pin, do we have shutdown control.
+ * We'll keep it as this global because heck, everything else is terrible too.
+ */
 struct si4460_config* si4460_config;
+
+/* These are "constants" for everything using our data mode,
+ * but we'll probably want to tweak them in due course.
+ */
+static const uint32_t data_rate = 2000;
+static const uint32_t deviation = 1000;
 
 /******************************************************************************
  * Store result of larger commands
@@ -34,6 +47,10 @@ struct si4460_func_info {
     uint8_t revext, revbranch, revint;
     uint16_t patch;
     uint8_t func;
+} __attribute__((packed));
+
+struct si4460_gpio_pin_cfg {
+    uint8_t gpio0, gpio1, gpio2, gpio3, nirq, sdo, gen_config;
 } __attribute__((packed));
 
 struct si4460_int_status {
@@ -56,6 +73,17 @@ struct si4460_ph_status  {
 } __attribute__((packed));
 /*****************************************************************************/
 
+/******************************************************************************
+ * Config for more sophisticated parameter-setting commands
+ */
+struct si4460_dec_cfg {
+    uint8_t ndec0, ndec1, ndec2, ndec3;
+    uint8_t ndec2gain;
+    bool ndec2agc, chflt_lopw, droopflt, dwn2, dwn3, rxgainx2;
+};
+
+/*****************************************************************************/
+
 /*****************************************************************************
  * BOOT COMMANDS
  */
@@ -68,20 +96,27 @@ static void si4460_power_up(bool tcxo, uint32_t xo_freq);
 static struct si4460_part_info si4460_part_info(void);
 static struct si4460_func_info si4460_func_info(void)
     __attribute__((used));
-static void si4460_set_property(uint8_t group, uint8_t number, uint8_t value);
-static uint8_t si4460_get_property(uint8_t group, uint8_t number);
-static void si4460_fifo_info(bool reset_rx, bool reset_tx,
-                             uint8_t* rx_fifo_count, uint8_t* tx_fifo_space)
+static void si4460_set_property(
+    uint8_t group, uint8_t number, uint8_t value);
+static uint8_t si4460_get_property(
+    uint8_t group, uint8_t number);
+static struct si4460_gpio_pin_cfg si4460_gpio_pin_cfg(
+    struct si4460_gpio_pin_cfg gpio_pin_cfg);
+static void si4460_fifo_info(
+    bool reset_rx, bool reset_tx,
+    uint8_t* rx_fifo_count, uint8_t* tx_fifo_space)
     __attribute__((used));
-static struct si4460_int_status si4460_get_int_status(uint8_t ch_clr_pend,
-                                                      uint8_t modem_clr_pend,
-                                                      uint8_t chip_clr_pend)
+static struct si4460_int_status si4460_get_int_status(
+    uint8_t ch_clr_pend, uint8_t modem_clr_pend, uint8_t chip_clr_pend)
     __attribute__((used));
-static void si4460_request_device_state(uint8_t* curr_state,
-                                        uint8_t* current_channel);
-static void si4460_change_state(uint8_t next_state1)
+static void si4460_request_device_state(
+    uint8_t* curr_state, uint8_t* current_channel)
     __attribute__((used));
-static void si4460_read_cmd_buf(uint8_t* buf, size_t n);
+static void si4460_change_state(
+    uint8_t next_state1)
+    __attribute__((used));
+static void si4460_read_cmd_buf(
+    uint8_t* buf, size_t n);
 /*****************************************************************************/
 
 /*****************************************************************************
@@ -123,12 +158,17 @@ static struct si4460_ph_status si4460_get_ph_status(uint8_t ph_clr_pend)
 /*****************************************************************************/
 
 
-/* Our higher-level functions */
+/******************************************************************************
+ * Our higher-level commands
+ */
 static bool si4460_configure(void);
 static void si4460_set_freq(uint32_t f, uint32_t xo);
-static void si4460_set_dev(uint32_t d, uint32_t xo);
+static void si4460_set_deviation(uint32_t d, uint32_t xo);
+static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg);
 static void si4460_send_command(uint8_t* txbuf, size_t txn,
                                 uint8_t* rxbuf, size_t rxn);
+static void si4460_dump_config(void);
+/*****************************************************************************/
 
 
 static void si4460_power_up(bool tcxo, uint32_t xo_freq)
@@ -171,6 +211,20 @@ static uint8_t si4460_get_property(uint8_t group, uint8_t number)
     uint8_t rx;
     si4460_send_command(buf, sizeof(buf), &rx, 1);
     return rx;
+}
+
+static struct si4460_gpio_pin_cfg si4460_gpio_pin_cfg(
+    struct si4460_gpio_pin_cfg gpio_pin_cfg)
+{
+    uint8_t buf[8] = {
+        EZRP_GPIO_PIN_CFG,
+        gpio_pin_cfg.gpio0, gpio_pin_cfg.gpio1,
+        gpio_pin_cfg.gpio2, gpio_pin_cfg.gpio3,
+        gpio_pin_cfg.nirq,  gpio_pin_cfg.sdo,
+        gpio_pin_cfg.gen_config};
+    struct si4460_gpio_pin_cfg pin_cfg;
+    si4460_send_command(buf, sizeof(buf), (uint8_t*)&pin_cfg, sizeof(pin_cfg));
+    return pin_cfg;
 }
 
 static void si4460_fifo_info(bool reset_rx, bool reset_tx,
@@ -341,8 +395,8 @@ static void si4460_set_freq(uint32_t f, uint32_t xo) {
 }
 
 /* Compute and set the required modem configuration for the desired frequency
- * deviation. */
-static void si4460_set_dev(uint32_t d, uint32_t xo) {
+ * deviation (applies to TX only). */
+static void si4460_set_deviation(uint32_t d, uint32_t xo) {
     uint32_t freq_dev = ((uint64_t)d<<20)/xo;
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_FREQ_DEV0,
         (uint8_t)(freq_dev>>16));
@@ -350,6 +404,209 @@ static void si4460_set_dev(uint32_t d, uint32_t xo) {
         (uint8_t)(freq_dev>>8));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_FREQ_DEV2,
         (uint8_t)(freq_dev>>0));
+}
+
+/* Compute and set the RX decimators */
+static void si4460_set_decimation(struct si4460_dec_cfg dec_cfg) {
+    uint8_t cfg0 = 0, cfg1 = 0, cfg2 = 0;
+
+    if(dec_cfg.chflt_lopw) {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_CHFLT_LOPW_LOWPOWER;
+    } else {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_CHFLT_LOPW_NORMAL;
+    }
+
+    if(dec_cfg.droopflt) {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_DROOPFLTBYP_ENABLE;
+    } else {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_DROOPFLTBYP_BYPASS;
+    }
+
+    if(dec_cfg.dwn2) {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_DWN2BYP_ENABLE;
+    } else {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_DWN2BYP_BYPASS;
+    }
+
+    if(dec_cfg.dwn3) {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_DWN3BYP_ENABLE;
+    } else {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_DWN3BYP_BYPASS;
+    }
+
+    if(dec_cfg.rxgainx2) {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_RXGAINX2_DOUBLE;
+    } else {
+        cfg0 |= EZRP_MODEM_DECIMATION_CFG0_RXGAINX2_NORMAL;
+    }
+
+    if(dec_cfg.ndec0 == 1) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC0_1;
+    } else if(dec_cfg.ndec0 == 2) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC0_2;
+    } else if(dec_cfg.ndec0 == 4) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC0_4;
+    } else if(dec_cfg.ndec0 == 8) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC0_8;
+    } else if(dec_cfg.ndec0 == 16) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC0_16;
+    } else if(dec_cfg.ndec0 == 32) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC0_32;
+    } else if(dec_cfg.ndec0 == 64) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC0_64;
+    } else if(dec_cfg.ndec0 == 128) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC0_128;
+    } else {
+        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+    }
+
+    if(dec_cfg.ndec1 == 1) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC1_1;
+    } else if(dec_cfg.ndec1 == 2) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC1_2;
+    } else if(dec_cfg.ndec1 == 4) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC1_4;
+    } else if(dec_cfg.ndec1 == 8) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC1_8;
+    } else {
+        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+    }
+
+    if(dec_cfg.ndec2 == 1) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC2_1;
+    } else if(dec_cfg.ndec2 == 2) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC2_2;
+    } else if(dec_cfg.ndec2 == 4) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC2_4;
+    } else if(dec_cfg.ndec2 == 8) {
+        cfg1 |= EZRP_MODEM_DECIMATION_CFG1_NDEC2_8;
+    } else {
+        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+    }
+
+    if(dec_cfg.ndec3 == 1) {
+        cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC3_1;
+    } else if(dec_cfg.ndec3 == 2) {
+        cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC3_2;
+    } else if(dec_cfg.ndec3 == 4) {
+        cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC3_4;
+    } else if(dec_cfg.ndec3 == 8) {
+        cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC3_8;
+    } else {
+        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+    }
+
+    if(dec_cfg.ndec2gain == 0) {
+        cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC2GAIN_GAIN0;
+    } else if(dec_cfg.ndec2gain == 12) {
+        cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC2GAIN_GAIN12;
+    } else if(dec_cfg.ndec2gain == 24) {
+        cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC2GAIN_GAIN24;
+    } else {
+        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+    }
+
+    if(dec_cfg.ndec2agc) {
+        cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC2AGC_ENABLED;
+    } else {
+        cfg2 |= EZRP_MODEM_DECIMATION_CFG2_NDEC2AGC_DISABLED;
+    }
+
+    si4460_set_property(EZRP_PROP_MODEM,
+                        EZRP_PROP_MODEM_DECIMATION_CFG0, cfg0);
+    si4460_set_property(EZRP_PROP_MODEM,
+                        EZRP_PROP_MODEM_DECIMATION_CFG1, cfg1);
+    si4460_set_property(EZRP_PROP_MODEM,
+                        EZRP_PROP_MODEM_DECIMATION_CFG2, cfg2);
+}
+
+/* Set the two BCR registers based on the clock, the decimation, the data rate.
+ */
+static void si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
+                           uint16_t bcr_gain, uint8_t crfast, uint8_t crslow)
+{
+    /*
+     * The BCR system runs off the RX sampling/filtering clock (except in OOK
+     * mode where something odd happens with NDEC0), which is the XO frequency
+     * divided down by all the decimators. We can work out how much division
+     * there is and therefore what the RX clock freq is.
+     * We then program the OSR register to NCO freq / data rate, even though
+     * the documentation says this 8x the ratio between sample rate and data
+     * rate, that appears to be either a lie or misleading.
+     * The BCR NCO offset value is then added on to a 25-bit accumulator every
+     * tick of the BCR clock, and is set so the accumulator overflows at the
+     * data rate. In other words, offset=(2^25)/OSR.
+     * Again the documentation implies this is really 64x the offset value and
+     * there's some rubbish with fractional offsets, but it seems safe to
+     * ignore that. Maybe think of the accumulator as having 6 fractional bits.
+     * (PS: Why 25 bits? Who knows? Just fits the default values.)
+     */
+    float nco_freq = (float)xo_freq;
+    if(dec_cfg.dwn2) nco_freq /= 2.0f;
+    if(dec_cfg.dwn3) nco_freq /= 3.0f;
+    nco_freq /= (float)dec_cfg.ndec3;
+    nco_freq /= (float)dec_cfg.ndec2;
+    nco_freq /= (float)dec_cfg.ndec1;
+    nco_freq /= (float)dec_cfg.ndec0;
+    uint32_t bcr_osr = (uint32_t)(nco_freq / (float)data_rate);
+    uint32_t bcr_offset = (1<<25) / bcr_osr;
+
+    if(bcr_osr >= (1<<12) || bcr_offset >= (1<<22)) {
+        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+    }
+
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_OSR0,
+        (uint8_t)(bcr_osr >> 8));
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_OSR1,
+        (uint8_t)(bcr_osr >> 0));
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_NCO_OFFSET0,
+        (uint8_t)(bcr_offset >> 16));
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_NCO_OFFSET1,
+        (uint8_t)(bcr_offset >> 8));
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_NCO_OFFSET2,
+        (uint8_t)(bcr_offset >> 0));
+
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_GAIN0,
+        (uint8_t)(bcr_gain >> 8));
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_GAIN1,
+        (uint8_t)(bcr_gain >> 0));
+
+    uint8_t osr0 = si4460_get_property(
+        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_OSR0);
+    uint8_t osr1 = si4460_get_property(
+        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_OSR1);
+    uint8_t offset0 = si4460_get_property(
+        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_NCO_OFFSET0);
+    uint8_t offset1 = si4460_get_property(
+        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_NCO_OFFSET1);
+    uint8_t offset2 = si4460_get_property(
+        EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_NCO_OFFSET2);
+    (void)osr0; (void)osr1;
+    (void)offset0; (void)offset1; (void)offset2;
+
+    if(crfast >= (1<<3) || crslow >= (1<<3)) {
+        m3status_set_error(M3RADIO_COMPONENT_SI4460, M3RADIO_ERROR_SI4460_CFG);
+    }
+
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_GEAR,
+        EZRP_MODEM_BCR_GEAR_CRFAST(crfast)  |
+        EZRP_MODEM_BCR_GEAR_CRSLOW(crslow));
+
+    /* Recommended BCR settings here. Not sure by whom. Good luck. */
+    /* TODO: Investigate better BCR settings. */
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_MISC1,
+        EZRP_MODEM_BCR_MISC1_BCRFBBYP_ENABLED               |
+        EZRP_MODEM_BCR_MISC1_SLICEFBBYP_ENABLED             |
+        EZRP_MODEM_BCR_MISC1_RXNCOCOMP_DISABLED             |
+        EZRP_MODEM_BCR_MISC1_RXCOMP_LAT_SAMP_PREAMBLE_END   |
+        EZRP_MODEM_BCR_MISC1_CRGAINX2_NORMAL                |
+        EZRP_MODEM_BCR_MISC1_DIS_MIDPT_ENABLED              |
+        EZRP_MODEM_BCR_MISC1_ESC_MIDPT_ESCAPE_1CLK);
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_BCR_MISC0,
+        EZRP_MODEM_BCR_MISC0_ADCWATCH_DISABLED              |
+        EZRP_MODEM_BCR_MISC0_ADCRST_DISABLED                |
+        EZRP_MODEM_BCR_MISC0_DISTOGG_NORMAL                 |
+        EZRP_MODEM_BCR_MISC0_PH0SIZE_5);
 }
 
 static bool si4460_configure() {
@@ -488,8 +745,8 @@ static bool si4460_configure() {
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_LEN_ADJUST, 0);
 
     /* Set FIFO thresholds to 0 bytes. Don't really care. */
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_TX_THRESHOLD, 0);
-    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_RX_THRESHOLD, 0);
+    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_TX_THRESHOLD, 64);
+    si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_RX_THRESHOLD, 64);
 
     /* Field 1 length to 60 bytes, i.e. the entire fixed size radio packet */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_FIELD_1_LENGTH0, 0);
@@ -531,16 +788,18 @@ static bool si4460_configure() {
         EZRP_MODEM_MAP_CONTROL_ENINV_TXBIT_NOINVERT |
         EZRP_MODEM_MAP_CONTROL_ENINV_TXBIT_NOINVERT);
 
-    /* Modem data rate at 10x baud rate */
+    /* Modem data rate at 40x baud rate */
+    /* TODO if data rate is higher we should change this automatically */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_DATA_RATE0,
-        (uint8_t)((10*si4460_config->data_rate) >> 16));
+        (uint8_t)((40*data_rate) >> 16));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_DATA_RATE1,
-        (uint8_t)((10*si4460_config->data_rate) >> 8));
+        (uint8_t)((40*data_rate) >> 8));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_DATA_RATE2,
-        (uint8_t)((10*si4460_config->data_rate) >> 0));
+        (uint8_t)((40*data_rate) >> 0));
 
-    /* NCO at XO freq */
+    /* NCO at XO freq. Applies to TX only. */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_TX_NCO_MODE0,
+                        EZRP_MODEM_TX_NCO_MODE_TXOSR_40X    |
                         (uint8_t)(si4460_config->xo_freq>>24));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_TX_NCO_MODE1,
                         (uint8_t)(si4460_config->xo_freq>>16));
@@ -553,7 +812,29 @@ static bool si4460_configure() {
     si4460_set_freq(si4460_config->centre_freq, si4460_config->xo_freq);
 
     /* Freq dev */
-    si4460_set_dev(si4460_config->deviation, si4460_config->xo_freq);
+    si4460_set_deviation(deviation, si4460_config->xo_freq);
+
+    /* Operate on standard fixed IF */
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IF_CONTROL,
+        EZRP_MODEM_IF_CONTROL_ZEROIF_NORMAL     |
+        EZRP_MODEM_IF_CONTROL_FIXIF_FIXED       |
+        EZRP_MODEM_IF_CONTROL_ETSI_MODE_DISABLE);
+
+    /* Set IF frequency. We want IF_FREQ_Hz = (xo_freq / 64),
+     * and MODEM_IF_FREQ=(2^19 * 4 * IF_FREQ_Hz)/(2*xo_freq)
+     *                  = 2^19 * 2^2 / 2^6 / 2^1 * (xo_freq/xo_freq)
+     *                  = 2^14 = 16384, regardless of actual xo_freq
+     */
+    /* Actually don't set this for now, as we want it at the default
+     * and it seems to break when we set it. ???
+     * TODO ???
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IF_FREQ0,
+        (uint8_t)(16384>>16));
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IF_FREQ1,
+        (uint8_t)(16384>>8));
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IF_FREQ2,
+        (uint8_t)(16384>>0));
+    */
 
     /* PLL synth to FVCO/4 with SYSEL to high performance */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_CLKGEN_BAND,
@@ -561,29 +842,125 @@ static bool si4460_configure() {
         EZRP_MODEM_CLKGEN_BAND_SY_SEL_HIGHPERF      |
         EZRP_MODEM_CLKGEN_BAND_BAND_FVCO_DIV_4);
 
+    /* Select BCR phase source as phase computer. Don't know why. */
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_MDM_CTRL,
+        EZRP_MODEM_MDM_CTRL_PH_SRC_SEL_PHASE_COMPUTER);
+
+    /* Entirely undocumented with literally no idea what to do about it.
+     * So..
+     */
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IFPKD_THRESHOLDS,
+        0xE8);
+
+    /* Set decimation to give suitable RX filter bandwidth and things,
+     * then set the BCR registers accordingly.
+     */
+    /* TODO: BCR gain and gear gains need determining properly. */
+    struct si4460_dec_cfg dec_cfg = {
+        .ndec0 = 1,
+        .ndec1 = 4,
+        .ndec2 = 1,
+        .ndec3 = 1,
+        .ndec2gain = 12,
+        .ndec2agc = true,
+        .chflt_lopw = false,
+        .droopflt = true,
+        .dwn2 = false,
+        .dwn3 = true,
+        .rxgainx2 = false,
+    };
+    si4460_set_decimation(dec_cfg);
+    si4460_set_bcr(dec_cfg, si4460_config->xo_freq, 0x0079, 0, 2);
+
     /* AFC gearing */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_GEAR,
         EZRP_MODEM_AFC_GEAR_GEAR_SW_PREAMBLE    |
-        EZRP_MODEM_AFC_GEAR_AFC_FAST(2)         |
-        EZRP_MODEM_AFC_GEAR_AFC_SLOW(2));
+        EZRP_MODEM_AFC_GEAR_AFC_FAST(0)         |
+        EZRP_MODEM_AFC_GEAR_AFC_SLOW(0));
 
     /* Enable AFC, default gains */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_GAIN0,
         EZRP_MODEM_AFC_GAIN_ENAFC_ENABLE                |
         EZRP_MODEM_AFC_GAIN_AFCBD_DISABLE               |
         EZRP_MODEM_AFC_GAIN_AFC_GAIN_DIV_NO_REDUCTION   |
-        EZRP_MODEM_AFC_GAIN_AFCGAIN_12_8(0x3));
+        EZRP_MODEM_AFC_GAIN_AFCGAIN_12_8(0x00));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_GAIN1,
-        EZRP_MODEM_AFC_GAIN_AFCGAIN_7_0(0x69));
+        EZRP_MODEM_AFC_GAIN_AFCGAIN_7_0(0x0A));
 
+    /* AFC limit */
+    /* TODO set automatically */
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_LIMITER0, 0x75);
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_LIMITER1, 0x35);
+
+    /* AFC wait */
+    /* TODO set automatically */
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_WAIT, 0x12);
+
+    /* AFC over the whole packet, enable PLL correction */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_MISC,
-        EZRP_MODEM_AFC_MISC_ENAFCFRZ_AFC_PKT                |
+        EZRP_MODEM_AFC_MISC_ENAFCFRZ_AFC_FRZN_AFTER_GEAR_SW |
         EZRP_MODEM_AFC_MISC_ENFBPLL_ENABLE_AFC_COR_POLL     |
         EZRP_MODEM_AFC_MISC_EN2TB_EST_AFC_COR_2TB           |
         EZRP_MODEM_AFC_MISC_ENFZPMEND_NO_AFC_FRZN           |
         EZRP_MODEM_AFC_MISC_ENAFC_CLKSW_NO_CLK_SW           |
         EZRP_MODEM_AFC_MISC_NON_FRZEN_AFC_FRZN_CONSEC_BITS  |
         EZRP_MODEM_AFC_MISC_LARGE_FREQ_ERR_DISABLED);
+
+    /* TODO: ??? */
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AGC_RFPD_DECAY, 0xED);
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AGC_IFPD_DECAY, 0xED);
+
+    /* RX filter coefficients
+     * This is WDS filter 1, 132.27kHz bandwidth */
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE13_7_0, 0xFF);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE12_7_0, 0xC4);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE11_7_0, 0x30);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE10_7_0, 0x7F);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE9_7_0, 0xF5);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE8_7_0, 0xB5);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE7_7_0, 0xB8);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE6_7_0, 0xDE);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE5_7_0, 0x05);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE4_7_0, 0x17);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE3_7_0, 0x16);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE2_7_0, 0x0C);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE1_7_0, 0x03);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE0_7_0, 0x00);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM0, 0x15);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM1, 0xFF);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM2, 0x00);
+    si4460_set_property(EZRP_PROP_MODEM_CHFLT,
+        EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM3, 0x00);
+
+    /* Set up GPIO1 to output raw RX data for debugging */
+    struct si4460_gpio_pin_cfg pin_cfg_set = {
+        .gpio0 = EZRP_GPIO_PIN_CFG_TRISTATE,
+        .gpio1 = EZRP_GPIO_PIN_CFG_RX_RAW_DATA,
+        .gpio2 = EZRP_GPIO_PIN_CFG_TRISTATE,
+        .gpio3 = EZRP_GPIO_PIN_CFG_TRISTATE,
+        .nirq  = EZRP_GPIO_PIN_CFG_NIRQ,
+        .sdo   = EZRP_GPIO_PIN_CFG_SDO,
+        .gen_config = EZRP_GPIO_PIN_CFG_GEN_CONFIG_DRV_STRENGTH_HIGH,
+    };
+    struct si4460_gpio_pin_cfg pin_cfg_get = si4460_gpio_pin_cfg(pin_cfg_set);
+    (void)pin_cfg_get;
 
     /* Check chip status looks OK */
     chip_status = si4460_get_chip_status(0);
@@ -592,6 +969,37 @@ static bool si4460_configure() {
     }
 
     return true;
+}
+
+/* Dump the chip's entire config out over CAN */
+static void si4460_dump_config(void) {
+    /* {Group ID, maximum group property ID} */
+    uint8_t groups[][2] = {
+        {EZRP_PROP_GLOBAL, EZRP_PROP_GLOBAL_WUT_CAL},
+        {EZRP_PROP_INT_CTL, EZRP_PROP_INT_CTL_CHIP_ENABLE},
+        {EZRP_PROP_FRR_CTL, EZRP_PROP_FRR_CTL_D_MODE},
+        {EZRP_PROP_PREAMBLE, EZRP_PROP_PREAMBLE_POSTAMBLE_PATTERN3},
+        {EZRP_PROP_SYNC, EZRP_PROP_SYNC_CONFIG2},
+        {EZRP_PROP_PKT, EZRP_PROP_PKT_CRC_SEED3},
+        {EZRP_PROP_MODEM, EZRP_PROP_MODEM_DSA_MISC},
+        {EZRP_PROP_MODEM_CHFLT, EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COEM3},
+        {EZRP_PROP_PA, EZRP_PROP_PA_DIG_PWR_SEQ_CONFIG},
+        {EZRP_PROP_SYNTH, EZRP_PROP_SYNTH_VCO_KVCAL},
+        {EZRP_PROP_MATCH, EZRP_PROP_MATCH_CTRL_4},
+        {EZRP_PROP_FREQ_CONTROL, EZRP_PROP_FREQ_CONTROL_VCOCNT_RX_ADJ},
+        {EZRP_PROP_RX_HOP, EZRP_PROP_RX_HOP_TABLE_SIZE},
+        {EZRP_PROP_PTI, EZRP_PROP_PTI_LOG_EN},
+    };
+
+    size_t i, prop;
+    for(i=0; i<sizeof(groups)/sizeof(groups[0]); i++) {
+        for(prop=0; prop<=groups[i][1]; prop++) {
+            uint8_t group = groups[i][0];
+            uint8_t val = si4460_get_property(group, prop);
+            can_send_u8(CAN_MSG_ID_M3RADIO_SI4460_CFG,
+                        group, prop, val, 0, 0, 0, 0, 0, 3);
+        }
+    }
 }
 
 static THD_WORKING_AREA(si4460_thd_wa, 512);
@@ -614,23 +1022,33 @@ static THD_FUNCTION(si4460_thd, arg) {
         chThdSleepMilliseconds(1000);
     }
 
+    si4460_dump_config();
+
     uint8_t packet[60];
-    int i;
-    for(i=0; i<60; i++) packet[i] = i;
+    (void)packet;
+
+    si4460_start_rx(0, 0, 0, EZRP_STATE_RX, EZRP_STATE_RX, EZRP_STATE_RX);
 
     while(true) {
-        uint8_t state = EZRP_STATE_TX, channel;
+        /*uint8_t state = EZRP_STATE_TX, channel;*/
+        /*struct si4460_modem_status modem_status = si4460_get_modem_status(0);*/
+        /*(void)modem_status;*/
+        /*while(state == EZRP_STATE_TX) {*/
+            /*si4460_request_device_state(&state, &channel);*/
+            /*(void)state;*/
+            /*(void)channel;*/
+        /*}*/
+        /*si4460_write_tx_fifo(packet, 60);*/
+        /*si4460_start_tx(0, EZRP_START_TX_TXCOMPLETE_STATE(EZRP_STATE_READY),*/
+                        /*0, 0, 0);*/
+        /*chThdSleepMilliseconds(1000);*/
+
         struct si4460_int_status int_status = si4460_get_int_status(0, 0, 0);
-        (void)int_status;
-        /*si4460_start_rx(0, 0, 10, 8, 8, 8);*/
-        while(state == EZRP_STATE_TX) {
-            si4460_request_device_state(&state, &channel);
+        if(int_status.ph_pend & EZRP_PH_STATUS_PACKET_RX) {
+            si4460_read_rx_fifo(packet, 60);
         }
-        si4460_write_tx_fifo(packet, 60);
-        si4460_start_tx(0, EZRP_START_TX_TXCOMPLETE_STATE(EZRP_STATE_READY),
-                        0, 0, 0);
+        chThdSleepMilliseconds(100);
         m3status_set_ok(M3RADIO_COMPONENT_SI4460);
-        chThdSleepMilliseconds(1000);
     }
 }
 

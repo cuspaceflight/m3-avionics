@@ -250,6 +250,44 @@
 #define EZRP_PROP_MODEM_DSA_RSSI                    0x5e
 #define EZRP_PROP_MODEM_DSA_MISC                    0x5f
 
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE13_7_0   0x00
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE12_7_0   0x01
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE11_7_0   0x02
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE10_7_0   0x03
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE9_7_0    0x04
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE8_7_0    0x05
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE7_7_0    0x06
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE6_7_0    0x07
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE5_7_0    0x08
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE4_7_0    0x09
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE3_7_0    0x0A
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE2_7_0    0x0B
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE1_7_0    0x0C
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COE0_7_0    0x0D
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM0       0x0E
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM1       0x0F
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM2       0x10
+#define EZRP_PROP_MODEM_CHFLT_RX1_CHFLT_COEM3       0x11
+
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE13_7_0   0x12
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE12_7_0   0x13
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE11_7_0   0x14
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE10_7_0   0x15
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE9_7_0    0x16
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE8_7_0    0x17
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE7_7_0    0x18
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE6_7_0    0x19
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE5_7_0    0x1A
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE4_7_0    0x1B
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE3_7_0    0x1C
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE2_7_0    0x1D
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE1_7_0    0x1E
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COE0_7_0    0x1F
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COEM0       0x20
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COEM1       0x21
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COEM2       0x22
+#define EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COEM3       0x23
+
 #define EZRP_PROP_PA_MODE                           0x00
 #define EZRP_PROP_PA_PWR_LVL                        0x01
 #define EZRP_PROP_PA_BIAS_CLKDUTY                   0x02
@@ -298,6 +336,7 @@
 #define EZRP_PROP_PTI_LOG_EN                        0x03
 
 /* States -------------------------------------------------------------------*/
+#define EZRP_STATE_REMAIN                           0x00
 #define EZRP_STATE_SLEEP                            0x01
 #define EZRP_STATE_SPI_ACTIVE                       0x02
 #define EZRP_STATE_READY                            0x03
@@ -308,6 +347,56 @@
 #define EZRP_STATE_RX                               0x08
 
 /* Bits ---------------------------------------------------------------------*/
+
+#define EZRP_GPIO_PIN_CFG_PULL_CTL_PULL_DIS                 (0<<6)
+#define EZRP_GPIO_PIN_CFG_PULL_CTL_PULL_EN                  (1<<6)
+#define EZRP_GPIO_PIN_CFG_DONOTHING                         (0)
+#define EZRP_GPIO_PIN_CFG_TRISTATE                          (1)
+#define EZRP_GPIO_PIN_CFG_DRIVE0                            (2)
+#define EZRP_GPIO_PIN_CFG_DRIVE1                            (3)
+#define EZRP_GPIO_PIN_CFG_INPUT                             (4)
+#define EZRP_GPIO_PIN_CFG_32K_CLK                           (5)
+#define EZRP_GPIO_PIN_CFG_BOOT_CLK                          (6)
+#define EZRP_GPIO_PIN_CFG_DIV_CLK                           (7)
+#define EZRP_GPIO_PIN_CFG_CTS                               (8)
+#define EZRP_GPIO_PIN_CFG_INV_CTS                           (9)
+#define EZRP_GPIO_PIN_CFG_CMD_OVERLAP                       (10)
+#define EZRP_GPIO_PIN_CFG_SDO                               (11)
+#define EZRP_GPIO_PIN_CFG_POR                               (12)
+#define EZRP_GPIO_PIN_CFG_CAL_WUT                           (13)
+#define EZRP_GPIO_PIN_CFG_WUT                               (14)
+#define EZRP_GPIO_PIN_CFG_EN_PA                             (15)
+#define EZRP_GPIO_PIN_CFG_TX_DATA_CLK                       (16)
+#define EZRP_GPIO_PIN_CFG_RX_DATA_CLK                       (17)
+#define EZRP_GPIO_PIN_CFG_EN_LNA                            (18)
+#define EZRP_GPIO_PIN_CFG_TX_DATA                           (19)
+#define EZRP_GPIO_PIN_CFG_RX_DATA                           (20)
+#define EZRP_GPIO_PIN_CFG_RX_RAW_DATA                       (21)
+#define EZRP_GPIO_PIN_CFG_ANTENNA_1_SW                      (22)
+#define EZRP_GPIO_PIN_CFG_ANTENNA_2_SW                      (23)
+#define EZRP_GPIO_PIN_CFG_VALID_PREAMBLE                    (24)
+#define EZRP_GPIO_PIN_CFG_INVALID_PREAMBLE                  (25)
+#define EZRP_GPIO_PIN_CFG_SYNC_WORD_DETECT                  (26)
+#define EZRP_GPIO_PIN_CFG_CCA                               (27)
+#define EZRP_GPIO_PIN_CFG_IN_SLEEP                          (28)
+#define EZRP_GPIO_PIN_CFG_PKT_TRACE                         (29)
+#define EZRP_GPIO_PIN_CFG_TX_RX_DATA_CLK                    (31)
+#define EZRP_GPIO_PIN_CFG_TX_STATE                          (32)
+#define EZRP_GPIO_PIN_CFG_RX_STATE                          (33)
+#define EZRP_GPIO_PIN_CFG_RX_FIFO_FULL                      (34)
+#define EZRP_GPIO_PIN_CFG_TX_FIFO_EMPTY                     (35)
+#define EZRP_GPIO_PIN_CFG_LOW_BATT                          (36)
+#define EZRP_GPIO_PIN_CFG_CCA_LATCH                         (37)
+#define EZRP_GPIO_PIN_CFG_HOPPED                            (38)
+#define EZRP_GPIO_PIN_CFG_HOP_TABLE_WRAP                    (39)
+#define EZRP_GPIO_PIN_CFG_NIRQ                              (39)
+#define EZRP_GPIO_PIN_CFG_GEN_CONFIG_DRV_STRENGTH_HIGH      (0<<5)
+#define EZRP_GPIO_PIN_CFG_GEN_CONFIG_DRV_STRENGTH_MED_HIGH  (0<<5)
+#define EZRP_GPIO_PIN_CFG_GEN_CONFIG_DRV_STRENGTH_LED_LOW   (0<<5)
+#define EZRP_GPIO_PIN_CFG_GEN_CONFIG_DRV_STRENGTH_LOW       (0<<5)
+#define EZRP_GPIO_PIN_CFG_GPIO_STATE_INACTIVE               (0<<7)
+#define EZRP_GPIO_PIN_CFG_GPIO_STATE_ACTIVE                 (1<<7)
+
 #define EZRP_INT_STATUS_CHIP_INT                            (1<<2)
 #define EZRP_INT_STATUS_MODEM_INT                           (1<<1)
 #define EZRP_INT_STATUS_PH_INT                              (1<<0)
@@ -358,10 +447,10 @@
 
 #define EZRP_PREAMBLE_CONFIG_STD_1_SKIP_SYNC_TIMEOUT_DISABLE    (0<<7)
 #define EZRP_PREAMBLE_CONFIG_STD_1_SKIP_SYNC_TIMEOUT_ENABLE     (1<<7)
-#define EZRP_PREAMBLE_CONFIG_STD_1_RX_THRESH(x)                 (x)
+#define EZRP_PREAMBLE_CONFIG_STD_1_RX_THRESH(x)                 (x<<0)
 
 #define EZRP_PREAMBLE_CONFIG_STD_2_RX_PREAMBLE_TIMEOUT_EXTEND(x)    (x<<4)
-#define EZRP_PREAMBLE_CONFIG_STD_2_RX_PREAMBLE_TIMEOUT(x)           (x)
+#define EZRP_PREAMBLE_CONFIG_STD_2_RX_PREAMBLE_TIMEOUT(x)           (x<<0)
 
 #define EZRP_PREAMBLE_CONFIG_RX_PREAM_SRC_STANDARD_PREAM            (0<<7)
 #define EZRP_PREAMBLE_CONFIG_RX_PREAM_SRC_DSA_ONLY                  (1<<7)
@@ -405,16 +494,16 @@
 #define EZRP_PKT_CRC_CONFIG_ALT_CRC_POLYNOMIAL_CRC_16_IBM   (4<<4)
 #define EZRP_PKT_CRC_CONFIG_ALT_CRC_POLYNOMIAL_CCITT_16     (5<<4)
 #define EZRP_PKT_CRC_CONFIG_ALT_CRC_POLYNOMIAL_CRC_16_DNP   (6<<4)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_NO_CRC          (0)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_ITU_T_CRC       (1)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_IEC_16          (2)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_BAICHEVA_16     (3)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_CRC_16_IBM      (4)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_CCITT_16        (5)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_KOOPMAN         (6)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_IEEE_802_3      (7)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_CASTAGNOLI      (8)
-#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_CRC_16_DNP      (9)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_NO_CRC          (0<<0)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_ITU_T_CRC       (1<<0)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_IEC_16          (2<<0)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_BAICHEVA_16     (3<<0)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_CRC_16_IBM      (4<<0)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_CCITT_16        (5<<0)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_KOOPMAN         (6<<0)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_IEEE_802_3      (7<<0)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_CASTAGNOLI      (8<<0)
+#define EZRP_PKT_CRC_CONFIG_CRC_POLYNOMINAL_CRC_16_DNP      (9<<0)
 
 #define EZRP_PKT_WHT_BIT_NUM_SW_WHT_CTRL_DISABLE            (0<<7)
 #define EZRP_PKT_WHT_BIT_NUM_SW_WHT_CTRL_ENABLE             (1<<7)
@@ -422,7 +511,7 @@
 #define EZRP_PKT_WHT_BIT_NUM_SW_CRC_CTRL_ENABLE             (1<<6)
 #define EZRP_PKT_WHT_BIT_NUM_PN_DIRECTION_FORWARD           (0<<5)
 #define EZRP_PKT_WHT_BIT_NUM_PN_DIRECTION_REVERSED          (1<<5)
-#define EZRP_PKT_WHT_BIT_NUM_WHT_BIT_NUM(x)                 (x)
+#define EZRP_PKT_WHT_BIT_NUM_WHT_BIT_NUM(x)                 (x<<0)
 
 #define EZRP_PKT_CONFIG1_PH_FIELD_SPLIT_FIELD_SHARED        (0<<7)
 #define EZRP_PKT_CONFIG1_PH_FIELD_SPLIT_FIELD_SPLIT         (1<<7)
@@ -509,6 +598,18 @@
 #define EZRP_MODEM_MAP_CONTROL_ENINV_FD_NOINVERT            (0<<4)
 #define EZRP_MODEM_MAP_CONTROL_ENINV_FD_INVERT              (1<<4)
 
+#define EZRP_MODEM_TX_NCO_MODE_TXOSR_10X                    (0<<2)
+#define EZRP_MODEM_TX_NCO_MODE_TXOSR_40X                    (1<<2)
+#define EZRP_MODEM_TX_NCO_MODE_TXOSR_20X                    (2<<2)
+
+#define EZRP_MODEM_IF_CONTROL_ZEROIF_NORMAL                 (0<<4)
+#define EZRP_MODEM_IF_CONTROL_ZEROIF_ZERO                   (1<<4)
+#define EZRP_MODEM_IF_CONTROL_FIXIF_SCALED                  (0<<3)
+#define EZRP_MODEM_IF_CONTROL_FIXIF_FIXED                   (1<<3)
+#define EZRP_MODEM_IF_CONTROL_ETSI_MODE_DISABLE             (0<<0)
+#define EZRP_MODEM_IF_CONTROL_ETSI_MODE_ETSI_868            (1<<0)
+#define EZRP_MODEM_IF_CONTROL_ETSI_MODE_ETSI_169            (2<<0)
+
 #define EZRP_MODEM_CLKGEN_BAND_FORCE_SY_RECAL_FORCE         (0<<4)
 #define EZRP_MODEM_CLKGEN_BAND_FORCE_SY_RECAL_SKIP          (1<<4)
 #define EZRP_MODEM_CLKGEN_BAND_SY_SEL_LOWPOWER              (0<<3)
@@ -521,6 +622,74 @@
 #define EZRP_MODEM_CLKGEN_BAND_BAND_FVCO_DIV_24             (5<<0)
 #define EZRP_MODEM_CLKGEN_BAND_BAND_FVCO_DIV_24_2           (6<<0)
 #define EZRP_MODEM_CLKGEN_BAND_BAND_FVCO_DIV_24_3           (7<<0)
+
+#define EZRP_MODEM_MDM_CTRL_PH_SRC_SEL_PHASE_COMPUTER       (0<<7)
+#define EZRP_MODEM_MDM_CTRL_PH_SRC_SEL_DETECTOR             (1<<7)
+
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC2_1                  (0<<6)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC2_2                  (1<<6)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC2_4                  (2<<6)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC2_8                  (3<<6)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC1_1                  (0<<4)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC1_2                  (1<<4)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC1_4                  (2<<4)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC1_8                  (3<<4)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC0_1                  (0<<1)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC0_2                  (1<<1)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC0_4                  (2<<1)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC0_8                  (3<<1)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC0_16                 (4<<1)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC0_32                 (5<<1)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC0_64                 (6<<1)
+#define EZRP_MODEM_DECIMATION_CFG1_NDEC0_128                (7<<1)
+
+#define EZRP_MODEM_DECIMATION_CFG0_CHFLT_LOPW_NORMAL        (0<<7)
+#define EZRP_MODEM_DECIMATION_CFG0_CHFLT_LOPW_LOWPOWER      (1<<7)
+#define EZRP_MODEM_DECIMATION_CFG0_DROOPFLTBYP_ENABLE       (0<<6)
+#define EZRP_MODEM_DECIMATION_CFG0_DROOPFLTBYP_BYPASS       (1<<6)
+#define EZRP_MODEM_DECIMATION_CFG0_DWN3BYP_ENABLE           (0<<5)
+#define EZRP_MODEM_DECIMATION_CFG0_DWN3BYP_BYPASS           (1<<5)
+#define EZRP_MODEM_DECIMATION_CFG0_DWN2BYP_ENABLE           (0<<4)
+#define EZRP_MODEM_DECIMATION_CFG0_DWN2BYP_BYPASS           (1<<4)
+#define EZRP_MODEM_DECIMATION_CFG0_RXGAINX2_NORMAL          (0<<0)
+#define EZRP_MODEM_DECIMATION_CFG0_RXGAINX2_DOUBLE          (1<<0)
+
+#define EZRP_MODEM_DECIMATION_CFG2_NDEC3_1                  (0<<5)
+#define EZRP_MODEM_DECIMATION_CFG2_NDEC3_2                  (1<<5)
+#define EZRP_MODEM_DECIMATION_CFG2_NDEC3_4                  (2<<5)
+#define EZRP_MODEM_DECIMATION_CFG2_NDEC3_8                  (3<<5)
+#define EZRP_MODEM_DECIMATION_CFG2_NDEC2GAIN_GAIN0          (0<<3)
+#define EZRP_MODEM_DECIMATION_CFG2_NDEC2GAIN_GAIN12         (1<<3)
+#define EZRP_MODEM_DECIMATION_CFG2_NDEC2GAIN_GAIN24         (2<<3)
+#define EZRP_MODEM_DECIMATION_CFG2_NDEC2AGC_DISABLED        (0<<2)
+#define EZRP_MODEM_DECIMATION_CFG2_NDEC2AGC_ENABLED         (1<<2)
+
+#define EZRP_MODEM_BCR_GEAR_CRFAST(x)                       (x<<3)
+#define EZRP_MODEM_BCR_GEAR_CRSLOW(x)                       (x<<0)
+
+#define EZRP_MODEM_BCR_MISC1_BCRFBBYP_ENABLED               (0<<7)
+#define EZRP_MODEM_BCR_MISC1_BCRFBBYP_DISABLED              (1<<7)
+#define EZRP_MODEM_BCR_MISC1_SLICEFBBYP_ENABLED             (0<<7)
+#define EZRP_MODEM_BCR_MISC1_SLICEFBBYP_DISABLED            (1<<7)
+#define EZRP_MODEM_BCR_MISC1_RXNCOCOMP_DISABLED             (0<<4)
+#define EZRP_MODEM_BCR_MISC1_RXNCOCOMP_ENABLED              (1<<4)
+#define EZRP_MODEM_BCR_MISC1_RXCOMP_LAT_SAMP_PREAMBLE_END   (0<<3)
+#define EZRP_MODEM_BCR_MISC1_RXCOMP_LAT_SAMP_PREAMBLE_VALID (1<<3)
+#define EZRP_MODEM_BCR_MISC1_CRGAINX2_NORMAL                (0<<2)
+#define EZRP_MODEM_BCR_MISC1_CRGAINX2_DOUBLED               (1<<2)
+#define EZRP_MODEM_BCR_MISC1_DIS_MIDPT_ENABLED              (0<<1)
+#define EZRP_MODEM_BCR_MISC1_DIS_MIDPT_DISABLED             (1<<1)
+#define EZRP_MODEM_BCR_MISC1_ESC_MIDPT_ESCAPE_1CLK          (0<<0)
+#define EZRP_MODEM_BCR_MISC1_ESC_MIDPT_ESCAPE_PHASE_ERR     (1<<0)
+
+#define EZRP_MODEM_BCR_MISC0_ADCWATCH_DISABLED              (0<<7)
+#define EZRP_MODEM_BCR_MISC0_ADCWATCH_ENABLED               (1<<7)
+#define EZRP_MODEM_BCR_MISC0_ADCRST_DISABLED                (0<<6)
+#define EZRP_MODEM_BCR_MISC0_ADCRST_ENABLED                 (1<<6)
+#define EZRP_MODEM_BCR_MISC0_DISTOGG_NORMAL                 (0<<5)
+#define EZRP_MODEM_BCR_MISC0_DISTOGG_ENABLED                (1<<5)
+#define EZRP_MODEM_BCR_MISC0_PH0SIZE_5                      (0<<4)
+#define EZRP_MODEM_BCR_MISC0_PH0SIZE_3                      (1<<4)
 
 #define EZRP_MODEM_AFC_GEAR_GEAR_SW_PREAMBLE                (0<<6)
 #define EZRP_MODEM_AFC_GEAR_GEAR_SW_SYNC                    (1<<6)
@@ -535,8 +704,8 @@
 #define EZRP_MODEM_AFC_GAIN_AFCBD_ENABLE                    (1<<6)
 #define EZRP_MODEM_AFC_GAIN_AFC_GAIN_DIV_NO_REDUCTION       (0<<5)
 #define EZRP_MODEM_AFC_GAIN_AFC_GAIN_DIV_REDUCTION_BY_HALF  (1<<5)
-#define EZRP_MODEM_AFC_GAIN_AFCGAIN_12_8(x)                 (x)
-#define EZRP_MODEM_AFC_GAIN_AFCGAIN_7_0(x)                  (x)
+#define EZRP_MODEM_AFC_GAIN_AFCGAIN_12_8(x)                 (x<<0)
+#define EZRP_MODEM_AFC_GAIN_AFCGAIN_7_0(x)                  (x<<0)
 
 #define EZRP_MODEM_AFC_MISC_ENAFCFRZ_AFC_PKT                (0<<7)
 #define EZRP_MODEM_AFC_MISC_ENAFCFRZ_AFC_FRZN_AFTER_GEAR_SW (1<<7)
@@ -564,8 +733,8 @@
 #define EZRP_PA_MODE_PA_MODE_CLE                            (0<<0)
 #define EZRP_PA_MODE_PA_MODE_SWC                            (1<<0)
 
-#define EZRP_PA_PWR_LVL_MAXIMUM                             (0x7F)
+#define EZRP_PA_PWR_LVL_MAXIMUM                             (0x4F)
 
 #define EZRP_PA_BIAS_CLKDUTY_CLK_DUTY_DIFF_50               (0<<6)
 #define EZRP_PA_BIAS_CLKDUTY_CLK_DUTY_SINGLE_25             (3<<6)
-#define EZRP_PA_BIAS_CLKDUTY_OB(x)                          (x)
+#define EZRP_PA_BIAS_CLKDUTY_OB(x)                          (x<<0)
