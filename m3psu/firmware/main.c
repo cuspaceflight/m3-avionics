@@ -98,6 +98,29 @@ void can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
         ChargeController_disable_balancing();
       }
     }
+  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_INTEXT){
+    if(datalen >= 1){
+      if(data[0] == 1){
+        switch_to_external_power();
+      }else if(data[0] == 0){
+        switch_to_internal_power();
+      }
+    }
+  }
+}
+
+static THD_WORKING_AREA(waStatusReporter, 256);
+THD_FUNCTION(power_status_reporter, arg){
+  (void)arg;
+  chRegSetThreadName("Int/Ext Power Reporter");
+
+  uint8_t can_data[1];
+
+  while(TRUE){
+    can_data[0] = (palReadLine(LINE_EN_INT_PWR) << 1) |
+                  (palReadLine(LINE_EN_EXT_PWR));
+    can_send(CAN_MSG_ID_M3PSU_INTEXT_STATUS, false, can_data, 1);
+    chThdSleepMilliseconds(1000)
   }
 }
 
@@ -119,6 +142,8 @@ int main(void) {
   switch_to_external_power();
 
 
+  chThdCreateStatic(waStatusReporter, sizeof(waStatusReporter), NORMALPRIO,
+                    power_status_reporter, NULL);
   //chThdCreateStatic(waPowerAlert, sizeof(waPowerAlert), NORMALPRIO + 3,
   //                  powermanager_alert, NULL);
   chThdCreateStatic(waPowerManager, sizeof(waPowerManager), NORMALPRIO + 4,

@@ -20,6 +20,8 @@ CAN_MSG_ID_M3PSU_PYRO_STATUS = CAN_ID_M3PSU | msg_id(48)
 CAN_MSG_ID_M3PSU_CHARGER_STATUS = CAN_ID_M3PSU | msg_id(55)
 CAN_MSG_ID_M3PSU_TOGGLE_CHARGER = CAN_ID_M3PSU | msg_id(18)
 CAN_MSG_ID_M3PSU_TOGGLE_BALANCE = CAN_ID_M3PSU | msg_id(19)
+CAN_MSG_ID_M3PSU_TOGGLE_INTEXT = CAN_ID_M3PSU | msg_id(20)
+CAN_MSG_ID_M3PSU_INTEXT_STATUS = CAN_ID_M3PSU | msg_id(57)
 
 
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_BATT_VOLTAGES,
@@ -141,6 +143,22 @@ def toggle_balance(data):
     else:
         return "Invalid packet"
 
+@register_packet("m3psu", CAN_MSG_ID_M3PSU_TOGGLE_INTEXT, "Toggle Int/Ext")
+def toggle_intext(data):
+    if data[0] == 0:
+        return "Switch to internal power"
+    elif data[0] == 1:
+        return "Switch to external power"
+    else:
+        return "Invalid packet"
+
+@register_packet("m3psu", CAN_MSG_ID_M3PSU_INTEXT_STATUS, "Int/Ext Status")
+def intext_status(data):
+    state = data[0]
+    int_enabled = "Enabled" if bool(state & 2) else "Disabled"
+    ext_enabled = "Enabled" if bool(state & 1) else "Disabled"
+    return "Internal: {}, External: {}".format(int_enabled, ext_enabled)
+
 
 @register_command("m3psu", "Pyro supply", ("Off", "On"))
 def toggle_pyros_cmd(data):
@@ -173,4 +191,9 @@ def toggle_channel_cmd(data):
     [channel, operation] = data.split(" ")
     data = [{"Off":0, "On":1}[operation], int(channel)-1]
     return CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL, data
+
+@register_command("m3psu", "Int/Ext Supply", ("Internal", "External"))
+def toggle_intext_cmd(data):
+    data = [{"Internal":0, "External":1}[data]]
+    return CAN_MSG_ID_M3PSU_TOGGLE_INTEXT, data
 
