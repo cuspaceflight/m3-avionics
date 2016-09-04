@@ -1,0 +1,21 @@
+name: Ground Station
+lsefreq: 0
+hsefreq: 26000000
+voltage: 3.3
+mcutype: STM32F042x6
+default: input, pushpull, starthigh, pullup, highspeed
+pins:
+    STAT_HBT: pa0, output, pushpull
+    STAT_WRN: pa1, output, pushpull
+    SPI1_NSS_FLASH: pa2, output, pushpull
+    RADIO_nIRQ: pa3, input
+    SPI1_NSS_RADIO: pa4, output, pushpull
+    SPI1_SCK: pa5, af0
+    SPI1_MISO: pa6, af0
+    SPI1_MOSI: pa7, af0
+    FLASH_RST: pb1, output, pushpull
+    USB_DM: pa11, input
+    USB_DP: pa12, input
+    SWDIO: pa13, af0
+    SWCLK: pa14, pulldown, af0
+
