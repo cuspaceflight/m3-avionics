@@ -213,7 +213,7 @@ UINCDIR = ../../shared/m3can/ ../../shared/m3status/
 ULIBDIR =
 
 # List all user libraries here
-ULIBS =
+ULIBS = -lm
 
 #
 # End of user defines

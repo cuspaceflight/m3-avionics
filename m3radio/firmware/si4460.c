@@ -1,15 +1,10 @@
+#include <math.h>
 #include "si4460.h"
 #include "ch.h"
 #include "hal.h"
 #include "m3radio_status.h"
 #include "m3can.h"
 #include "ezradiopro.h"
-
-/* Temporary (I hope) bodge for sending data in. To be replaced with something
- * sensible like a mailbox+memorypool later.
- */
-binary_semaphore_t si4460_tx_sem;
-uint8_t si4460_tx_buf[60];
 
 /* The config we're passed in depends heavily on the board the radio is on,
  * e.g. what crystal, what SPI port, what CS pin, do we have shutdown control.
@@ -557,8 +552,8 @@ static bool si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
     nco_freq /= (float)dec_cfg.ndec2;
     nco_freq /= (float)dec_cfg.ndec1;
     nco_freq /= (float)dec_cfg.ndec0;
-    uint32_t bcr_osr = (uint32_t)(nco_freq / (float)data_rate);
-    uint32_t bcr_offset = (1<<25) / bcr_osr;
+    uint32_t bcr_osr = (uint32_t)roundf(nco_freq / (float)data_rate);
+    uint32_t bcr_offset = (uint32_t)roundf((1<<25) / (float)bcr_osr);
 
     if(bcr_osr >= (1<<12) || bcr_offset >= (1<<22)) {
         return false;
@@ -749,12 +744,17 @@ static bool si4460_configure() {
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_WHT_BIT_NUM,
         EZRP_PKT_WHT_BIT_NUM_SW_WHT_CTRL_ENABLE     |
         EZRP_PKT_WHT_BIT_NUM_SW_CRC_CTRL_ENABLE     |
+        EZRP_PKT_WHT_BIT_NUM_PN_DIRECTION_FORWARD   |
         EZRP_PKT_WHT_BIT_NUM_WHT_BIT_NUM(0));
 
     /* Share field settings between RX and TX,
      * enable packet handler in RX, disable 4FSK,
      * default Manchester polarity (unused), don't invert the CRC,
      * CRC is LSB first, data bytes transmitted MSb first
+     */
+    /* TODO: Eventually our ground->rocket packets will probably be shorter
+     *       than the rocket->ground packets, so we'll need to unshare
+     *       fields here.
      */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_CONFIG1,
         EZRP_PKT_CONFIG1_PH_FIELD_SPLIT_FIELD_SHARED    |
@@ -788,7 +788,7 @@ static bool si4460_configure() {
     /* No need to adjust lengths */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_LEN_ADJUST, 0);
 
-    /* Set FIFO thresholds to 0 bytes. Don't really care. */
+    /* Set FIFO thresholds to 64 bytes. Don't really care. */
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_TX_THRESHOLD, 64);
     si4460_set_property(EZRP_PROP_PKT, EZRP_PROP_PKT_RX_THRESHOLD, 64);
 
@@ -832,8 +832,8 @@ static bool si4460_configure() {
         EZRP_MODEM_MAP_CONTROL_ENINV_TXBIT_NOINVERT |
         EZRP_MODEM_MAP_CONTROL_ENINV_TXBIT_NOINVERT);
 
-    /* Modem data rate at 40x baud rate */
-    /* TODO if data rate is higher we should change this automatically */
+    /* Modem data rate at 40x baud rate. Applies to TX only. */
+    /* 40x is OK up to at least 100kbps so probably fine for us. */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_DATA_RATE0,
         (uint8_t)((40*data_rate) >> 16));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_DATA_RATE1,
@@ -841,7 +841,8 @@ static bool si4460_configure() {
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_DATA_RATE2,
         (uint8_t)((40*data_rate) >> 0));
 
-    /* NCO at XO freq. Applies to TX only. */
+    /* NCO at XO freq. Applies to TX only.
+     * Setting to xo_freq OK up to 200kbps so fine for us. */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_TX_NCO_MODE0,
                         EZRP_MODEM_TX_NCO_MODE_TXOSR_40X    |
                         (uint8_t)(si4460_config->xo_freq>>24));
@@ -855,7 +856,7 @@ static bool si4460_configure() {
     /* Set centre frequency */
     si4460_set_freq(si4460_config->centre_freq, si4460_config->xo_freq);
 
-    /* Freq dev */
+    /* Set frequency deviation (note this is half the total shift) */
     si4460_set_deviation(deviation, si4460_config->xo_freq);
 
     /* Operate on standard fixed IF */
@@ -871,7 +872,8 @@ static bool si4460_configure() {
      * We then negate this (since this property is the amount to shift the RX
      * LO and we wish to shift downwards so as to place the signal higher up),
      * and take the 18 signed bits, giving 0x03C000.
-     * This setting doesn't need to change when using Fixed IF mode.
+     * This setting doesn't need to change with data rate or crystal frequency
+     * when using Fixed IF mode.
      */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IF_FREQ0,
         (uint8_t)(0x03C000>>16));
@@ -880,7 +882,9 @@ static bool si4460_configure() {
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IF_FREQ2,
         (uint8_t)(0x03C000>>0));
 
-    /* PLL synth to FVCO/4 with SYSEL to high performance */
+    /* PLL synth to FVCO/4 (for 850-1050MHz band),
+     * with SYSEL set to high performance (not low power)
+     */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_CLKGEN_BAND,
         EZRP_MODEM_CLKGEN_BAND_FORCE_SY_RECAL_FORCE |
         EZRP_MODEM_CLKGEN_BAND_SY_SEL_HIGHPERF      |
@@ -893,13 +897,13 @@ static bool si4460_configure() {
     /* Entirely undocumented with literally no idea what to do about it.
      * So..
      */
-    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_IFPKD_THRESHOLDS,
-        0xE8);
+    si4460_set_property(EZRP_PROP_MODEM,
+        EZRP_PROP_MODEM_IFPKD_THRESHOLDS, 0xE8);
 
     /* Set decimation to give suitable RX filter bandwidth and things,
      * then set the BCR registers accordingly.
      */
-    /* TODO: BCR gain and gear gains need determining properly. */
+    /* TODO: BCR gain and gear gains need determining automatically. */
     struct si4460_dec_cfg dec_cfg = {
         .ndec0 = 1,
         .ndec1 = 4,
@@ -916,28 +920,29 @@ static bool si4460_configure() {
     cfg_ok &= si4460_set_decimation(dec_cfg);
     cfg_ok &= si4460_set_bcr(dec_cfg, si4460_config->xo_freq, 0x0079, 0, 2);
 
-    /* AFC gearing */
+    /* AFC gearing. TODO: Probably also needs setting automatically. */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_GEAR,
         EZRP_MODEM_AFC_GEAR_GEAR_SW_PREAMBLE    |
         EZRP_MODEM_AFC_GEAR_AFC_FAST(0)         |
         EZRP_MODEM_AFC_GEAR_AFC_SLOW(0));
 
-    /* Enable AFC, default gains */
+    /* Enable AFC, default gains. TODO: Set automatically. */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_GAIN0,
         EZRP_MODEM_AFC_GAIN_ENAFC_ENABLE                |
-        EZRP_MODEM_AFC_GAIN_AFCBD_DISABLE               |
+        EZRP_MODEM_AFC_GAIN_AFCBD_ENABLE                |
         EZRP_MODEM_AFC_GAIN_AFC_GAIN_DIV_NO_REDUCTION   |
         EZRP_MODEM_AFC_GAIN_AFCGAIN_12_8(0x00));
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_GAIN1,
         EZRP_MODEM_AFC_GAIN_AFCGAIN_7_0(0x0A));
 
     /* AFC limit */
-    /* TODO set automatically */
+    /* TODO set automatically, based on expected required RX BW due to both
+     * frequency inaccuracy on both ends and due to Doppler shift */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_LIMITER0, 0x75);
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_LIMITER1, 0x35);
 
     /* AFC wait */
-    /* TODO set automatically */
+    /* TODO set automatically based on data rate */
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AFC_WAIT, 0x12);
 
     /* AFC enable PLL correction and other recommended settings */
@@ -954,9 +959,15 @@ static bool si4460_configure() {
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AGC_RFPD_DECAY, 0xED);
     si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_AGC_IFPD_DECAY, 0xED);
 
-    /* RX filter coefficients. */
+    /* RX filter coefficients. TODO generate automatically based on RX BW */
     cfg_ok &= si4460_set_filter(1, rx_wb_filter);
     cfg_ok &= si4460_set_filter(2, rx_nb_filter);
+
+    /* RSSI control: latch RSSI a little bit into the packet */
+    si4460_set_property(EZRP_PROP_MODEM, EZRP_PROP_MODEM_RSSI_CONTROL,
+        EZRP_MODEM_RSSI_CONTROL_CHECK_THRESH_AT_LATCH_DISABLE   |
+        EZRP_MODEM_RSSI_CONTROL_AVERAGE_AVERAGE4                |
+        EZRP_MODEM_RSSI_CONTROL_LATCH_RX_STATE5);
 
     /* Set up GPIOs to all tristate for now.
      * GPIO1 is wired to the STM32 so can set this to RX_RAW_DATA etc for
@@ -973,6 +984,13 @@ static bool si4460_configure() {
     };
     si4460_gpio_pin_cfg(pin_cfg_set);
 
+    /* Configuration TODO:
+     * Consider DSA for better preamble sense
+     * Consider One-Shot AFC for better AFC
+     * Consider Spike Detection for increasing noise resistance
+     * Consider RSSI thresholds for LBT/CCA
+     */
+
     /* Check chip status looks OK */
     chip_status = si4460_get_chip_status(0);
     if(chip_status.chip_status & EZRP_CHIP_STATUS_CMD_ERROR) {
@@ -984,22 +1002,22 @@ static bool si4460_configure() {
 
 /* Dump the chip's entire config out over CAN */
 static void si4460_dump_params(void) {
-    /* {Group ID, maximum group property ID} */
+    /* {Group ID, number of properties} */
     uint8_t groups[][2] = {
-        {EZRP_PROP_GLOBAL, EZRP_PROP_GLOBAL_WUT_CAL},
-        {EZRP_PROP_INT_CTL, EZRP_PROP_INT_CTL_CHIP_ENABLE},
-        {EZRP_PROP_FRR_CTL, EZRP_PROP_FRR_CTL_D_MODE},
-        {EZRP_PROP_PREAMBLE, EZRP_PROP_PREAMBLE_POSTAMBLE_PATTERN3},
-        {EZRP_PROP_SYNC, EZRP_PROP_SYNC_CONFIG2},
-        {EZRP_PROP_PKT, EZRP_PROP_PKT_CRC_SEED3},
-        {EZRP_PROP_MODEM, EZRP_PROP_MODEM_DSA_MISC},
-        {EZRP_PROP_MODEM_CHFLT, EZRP_PROP_MODEM_CHFLT_RX2_CHFLT_COEM3},
-        {EZRP_PROP_PA, EZRP_PROP_PA_DIG_PWR_SEQ_CONFIG},
-        {EZRP_PROP_SYNTH, EZRP_PROP_SYNTH_VCO_KVCAL},
-        {EZRP_PROP_MATCH, EZRP_PROP_MATCH_CTRL_4},
-        {EZRP_PROP_FREQ_CONTROL, EZRP_PROP_FREQ_CONTROL_VCOCNT_RX_ADJ},
-        {EZRP_PROP_RX_HOP, EZRP_PROP_RX_HOP_TABLE_SIZE},
-        {EZRP_PROP_PTI, EZRP_PROP_PTI_LOG_EN},
+        {EZRP_PROP_GLOBAL,          0x09},
+        {EZRP_PROP_INT_CTL,         0x03},
+        {EZRP_PROP_FRR_CTL,         0x03},
+        {EZRP_PROP_PREAMBLE,        0x0d},
+        {EZRP_PROP_SYNC,            0x05},
+        {EZRP_PROP_PKT,             0x39},
+        {EZRP_PROP_MODEM,           0x5f},
+        {EZRP_PROP_MODEM_CHFLT,     0x23},
+        {EZRP_PROP_PA,              0x06},
+        {EZRP_PROP_SYNTH,           0x07},
+        {EZRP_PROP_MATCH,           0x0b},
+        {EZRP_PROP_FREQ_CONTROL,    0x07},
+        {EZRP_PROP_RX_HOP,          0x01},
+        {EZRP_PROP_PTI,             0x03},
     };
 
     size_t i, prop;
@@ -1076,8 +1094,6 @@ static THD_FUNCTION(si4460_thd, arg) {
 
 void si4460_init(struct si4460_config* config) {
     m3status_set_init(M3RADIO_COMPONENT_SI4460);
-
-    chBSemObjectInit(&si4460_tx_sem, false);
 
     si4460_config = config;
 

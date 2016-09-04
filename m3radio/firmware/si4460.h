@@ -3,9 +3,6 @@
 
 #include "hal.h"
 
-extern binary_semaphore_t si4460_tx_sem;
-extern uint8_t si4460_tx_buf[60];
-
 struct si4460_config {
     SPIDriver* spid;
     SPIConfig spi_cfg;
