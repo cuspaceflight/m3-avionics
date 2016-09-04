@@ -120,7 +120,7 @@ THD_FUNCTION(power_status_reporter, arg){
     can_data[0] = (palReadLine(LINE_EN_INT_PWR) << 1) |
                   (palReadLine(LINE_EN_EXT_PWR));
     can_send(CAN_MSG_ID_M3PSU_INTEXT_STATUS, false, can_data, 1);
-    chThdSleepMilliseconds(1000)
+    chThdSleepMilliseconds(1000);
   }
 }
 
