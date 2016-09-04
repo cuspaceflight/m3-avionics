@@ -703,7 +703,10 @@ static bool si4460_configure() {
 
     /* Sync word config ******************************************************/
     /* TX sync word, don't allow any RX errors, not 4FSK, no Manchester coding,
-     * use a two-byte sync word 0x2D 0xD4. */
+     * use a two-byte sync word 0x2D 0xD4 which has quite-good autocorrelation
+     * especially at shifts of 1 (and is recommended by silabs who ought to
+     * know)
+     */
     si4460_set_property(EZRP_PROP_SYNC, EZRP_PROP_SYNC_CONFIG,
         EZRP_SYNC_CONFIG_SKIP_TX_SYNC_XMIT      |
         EZRP_SYNC_CONFIG_RX_ERRORS(0)           |
@@ -989,6 +992,7 @@ static bool si4460_configure() {
      * Consider One-Shot AFC for better AFC
      * Consider Spike Detection for increasing noise resistance
      * Consider RSSI thresholds for LBT/CCA
+     * Perform image rejection calibration on bootup
      */
 
     /* Check chip status looks OK */
