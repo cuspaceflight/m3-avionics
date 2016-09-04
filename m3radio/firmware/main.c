@@ -35,8 +35,12 @@ int main(void) {
 
     struct si4460_config si4460_cfg = {
         .spid = &SPID2,
-        .ssport = GPIOB,
-        .sspad = GPIOB_RADIO_CS,
+        .spi_cfg = {
+            .end_cb = NULL,
+            .ssport = GPIOB,
+            .sspad = GPIOB_RADIO_CS,
+            .cr1 = SPI_CR1_BR_2,
+        },
         .sdn = true,
         .sdnline = LINE_RADIO_SDN,
         .tcxo = true,

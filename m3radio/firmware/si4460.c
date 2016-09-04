@@ -11,13 +11,6 @@
 binary_semaphore_t si4460_tx_sem;
 uint8_t si4460_tx_buf[60];
 
-static SPIConfig spi_cfg = {
-    .end_cb = NULL,
-    .ssport = 0,
-    .sspad = 0,
-    .cr1 = SPI_CR1_BR_2,
-};
-
 /* The config we're passed in depends heavily on the board the radio is on,
  * e.g. what crystal, what SPI port, what CS pin, do we have shutdown control.
  * We'll keep it as this global because heck, everything else is terrible too.
@@ -1032,7 +1025,7 @@ static THD_FUNCTION(si4460_thd, arg) {
         chThdSleepMilliseconds(100);
     }
 
-    spiStart(si4460_config->spid, &spi_cfg);
+    spiStart(si4460_config->spid, &(si4460_config->spi_cfg));
 
     /* Configure the radio's many, many parameters */
     while(!si4460_configure()) {
@@ -1043,12 +1036,13 @@ static THD_FUNCTION(si4460_thd, arg) {
     /* Save a log of all our stupid parameters */
     si4460_dump_params();
 
-    uint8_t packet[60];
-    (void)packet;
-
-    si4460_start_rx(0, 0, 0, EZRP_STATE_RX, EZRP_STATE_RX, EZRP_STATE_RX);
+    uint8_t packet[60] = {0};
 
 #define RX
+
+#ifdef RX
+    si4460_start_rx(0, 0, 0, EZRP_STATE_RX, EZRP_STATE_RX, EZRP_STATE_RX);
+#endif
 
     while(true) {
 #ifdef TX
@@ -1060,6 +1054,7 @@ static THD_FUNCTION(si4460_thd, arg) {
             (void)state;
             (void)channel;
         }
+        packet[0]++;
         si4460_write_tx_fifo(packet, 60);
         si4460_start_tx(0, EZRP_START_TX_TXCOMPLETE_STATE(EZRP_STATE_READY),
                         0, 0, 0);
@@ -1084,8 +1079,6 @@ void si4460_init(struct si4460_config* config) {
 
     chBSemObjectInit(&si4460_tx_sem, false);
 
-    spi_cfg.ssport = config->ssport;
-    spi_cfg.sspad = config->sspad;
     si4460_config = config;
 
     chThdCreateStatic(si4460_thd_wa, sizeof(si4460_thd_wa), NORMALPRIO,
