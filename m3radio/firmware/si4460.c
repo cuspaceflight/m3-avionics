@@ -533,17 +533,25 @@ static bool si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
      * The BCR system runs off the RX sampling/filtering clock (except in OOK
      * mode where something odd happens with NDEC0), which is the XO frequency
      * divided down by all the decimators. We can work out how much division
-     * there is and therefore what the RX clock freq is.
-     * We then program the OSR register to NCO freq / data rate, even though
-     * the documentation says this 8x the ratio between sample rate and data
-     * rate, that appears to be either a lie or misleading.
-     * The BCR NCO offset value is then added on to a 25-bit accumulator every
+     * there is and therefore what the RX sample clock freq is.
+     *
+     * As a fun trick, there's an additional /8 divider that's not
+     * configurable, i.e. the RX clock is actually (XO/8)/(decimators).
+     *
+     * Not relevant here, but it seems like the channel filter actually runs at
+     * Fs=XO/4, suggesting there's then another /2 before the decimators and
+     * NCO kick in.
+     *
+     * We program the OSR register to RX freq / data rate, multiplied by 8,
+     * which exactly cancels with the extra /8 factor above so we can just
+     * write the XO/decimators / data rate.
+     *
+     * The BCR NCO offset value is added on to a 22-bit accumulator every
      * tick of the BCR clock, and is set so the accumulator overflows at the
-     * data rate. In other words, offset=(2^25)/OSR.
-     * Again the documentation implies this is really 64x the offset value and
-     * there's some rubbish with fractional offsets, but it seems safe to
-     * ignore that. Maybe think of the accumulator as having 6 fractional bits.
-     * (PS: Why 25 bits? Who knows? It's what makes sense of the defaults.)
+     * data rate. We therefore want the offset = (data rate / RX freq) * 2^22.
+     * In other words, offset=(2^25)/OSR (incorporating the extra factor of 8).
+     * The documentation says this is 64x the desired offset value but it's not
+     * clear to me what that's supposed to mean.
      */
     float nco_freq = (float)xo_freq;
     if(dec_cfg.dwn2) nco_freq /= 2.0f;
