@@ -535,12 +535,8 @@ static bool si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
      * divided down by all the decimators. We can work out how much division
      * there is and therefore what the RX sample clock freq is.
      *
-     * As a fun trick, there's an additional /8 divider that's not
-     * configurable, i.e. the RX clock is actually (XO/8)/(decimators).
-     *
-     * Not relevant here, but it seems like the channel filter actually runs at
-     * Fs=XO/4, suggesting there's then another /2 before the decimators and
-     * NCO kick in.
+     * As an aside, there's an additional fixed /8 divider just after the ADC,
+     * so the RX BCR clock is actually (XO/8)/(decimators).
      *
      * We program the OSR register to RX freq / data rate, multiplied by 8,
      * which exactly cancels with the extra /8 factor above so we can just
@@ -551,7 +547,9 @@ static bool si4460_set_bcr(struct si4460_dec_cfg dec_cfg, uint32_t xo_freq,
      * data rate. We therefore want the offset = (data rate / RX freq) * 2^22.
      * In other words, offset=(2^25)/OSR (incorporating the extra factor of 8).
      * The documentation says this is 64x the desired offset value but it's not
-     * clear to me what that's supposed to mean.
+     * clear to me what that's supposed to mean. Possibly the register is
+     * actually a 16 bit integer register and a 6 bit fractional register and
+     * that's what's being accumulated, in which case... whatever?
      */
     float nco_freq = (float)xo_freq;
     if(dec_cfg.dwn2) nco_freq /= 2.0f;
