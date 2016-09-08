@@ -13,9 +13,6 @@ enum ldpc_code {
     LDPC_CODE_N1280_K1024,
     LDPC_CODE_N1536_K1024,
     LDPC_CODE_N2048_K1024,
-    LDPC_CODE_N5120_K4096,
-    LDPC_CODE_N6144_K4096,
-    LDPC_CODE_N8192_K4096,
 };
 
 /* Fill h (which must point to ((n-k)*n)/8 bytes of memory) with the
