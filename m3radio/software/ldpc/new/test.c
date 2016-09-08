@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "ldpc.h"
+
+#include "ldpc_encoder.h"
+#include "ldpc_decoder.h"
+#include "ldpc_codes.h"
 
 #define n (256)
 #define k (128)
