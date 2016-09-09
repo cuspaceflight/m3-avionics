@@ -594,7 +594,7 @@ static void get_code_params(enum ldpc_code code, int* n, int* k, int* m)
 
 uint32_t const * ldpc_codes_get_g(enum ldpc_code code, int* n, int* k, int* b)
 {
-    int m;
+    int m = 0;
     get_code_params(code, n, k, &m);
     switch(code) {
         case LDPC_CODE_N128_K64:
