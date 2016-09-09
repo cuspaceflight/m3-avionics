@@ -5,36 +5,28 @@
 #include "ldpc_decoder.h"
 #include "ldpc_codes.h"
 
-#define n (256)
-#define k (128)
-#define m (n/8)
-uint32_t h[k][n/32];
+#define n (1408)
+#define r (384)
+#define m (128)
+uint32_t h[r][n/32];
 
 int main(int argc, char* argv[]) {
     (void)argc;
     (void)argv;
 
-    ldpc_init_paritycheck(LDPC_CODE_N256_K128, (uint32_t*)h);
+    ldpc_codes_init_paritycheck(LDPC_CODE_N1280_K1024, (uint32_t*)h);
+
+    printf("P1\n%d %d\n", n, r);
 
     int i, j;
-    for(i=0; i<k; i++) {
-        if(i%m==0) {
-            for(j=0;j<n+8;j++) printf("-");
-            printf("\n");
-        }
+    for(i=0; i<r; i++) {
         for(j=0; j<n; j++) {
-            if(j%m==0)
-                printf("|");
             uint32_t hh = h[i][j/32];
             uint8_t bit = (hh & (1<<(31-(j%32)))) >> (31 - (j%32));
-            if(bit)
-                printf("%d", bit);
-            else
-                printf(" ");
+            printf("%d", 1-bit);
         }
-        printf("|\n");
+        printf("\n");
     }
-    for(j=0;j<n+8;j++) printf("-");
     printf("\n");
 
     return 0;

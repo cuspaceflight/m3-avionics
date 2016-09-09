@@ -218,8 +218,12 @@ def g_to_consts(gg):
 
 
 if __name__ == "__main__":
+    from scipy.misc import imsave
     for r in ("12", "23", "45"):
-        with np.load("ldpc_k4096_r{}.npz".format(r)) as data:
+        with np.load("ldpc_k1024_r{}.npz".format(r)) as data:
             gg = data['g']
+            hh = data['h']
         print("Rate {}/{}".format(r[0], r[1]))
-        g_to_consts(gg)
+        imsave("g_k1024_r{}.png".format(r), gg)
+        imsave("h_k1024_r{}.png".format(r), hh)
+        #g_to_consts(gg)

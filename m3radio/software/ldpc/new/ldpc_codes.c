@@ -12,9 +12,8 @@
 static void get_code_params(enum ldpc_code code, int* n, int* k, int* m);
 static void init_parity_tc(enum ldpc_code code, uint32_t* h);
 static void init_parity_tm(enum ldpc_code code, uint32_t* h);
-static void init_parity_tm_h12(enum ldpc_code code, uint32_t* h);
-static void init_parity_tm_h23(enum ldpc_code code, uint32_t* h);
-static void init_parity_tm_h45(enum ldpc_code code, uint32_t* h);
+static void init_parity_tm_sub(int m, int col0, int dwidth, int hcols,
+                               uint8_t const * design, uint32_t* h);
 
 /*
  * Generator matrix constants for the three CCSDS 231.1-O-1 codes,
@@ -88,8 +87,16 @@ static const uint8_t h_n512_k256[4][8] = {
  * the parity block, and intermediate rows are found by right circular
  * shifts of the specified rows.
  * See scripts/ccsds131_parity_to_generator.py for generation.
- * In principle you could make the k=16384 too but my desktop doesn't have
- * enough RAM to invert the relevant matrices...
+ * Only the k=1024 codes are included as they're all we plan to use and it's
+ * 4kB of code space for each of the k=4096 codes, to say nothing of the
+ * k=16384 codes! The constants for the k=4096 are available, the constants for
+ * the largest code require either more RAM or a more efficient script.
+ * In theory you should be able to add new codes by basically adding the
+ * constants here, extending the ldpc_codes enum, and adding them in to each
+ * switch(code) in this file. Right now phi_m_j_k only has the M=(128,256,512)
+ * options, but you can also easily add the remaining numbers for other block
+ * sizes (available in the python script). You'll probably need to change
+ * the type to uint16_t, though.
  */
 static const uint32_t g_n2048_k1024[8*32] = {
     0xCFA794F4, 0x9FA5A0D8, 0x8BB31D8F, 0xCA7EA8BB, 0xA7AE7EE8, 0xA68580E3,
@@ -239,7 +246,7 @@ static const uint32_t g_n1280_k1024[32*8] = {
  * previously.
  * Each matrix is defined in three parts which are to be added together.
  * Additionally the matrices for the higher rate codes are assumed to be
- * prepended to the previous rate's matrix (forming a fatter matrix).
+ * left-prepended to the previous rate's matrix (forming a fatter matrix).
  */
 static const uint8_t h_r12[3][3][5] = {
     {
@@ -249,7 +256,7 @@ static const uint8_t h_r12[3][3][5] = {
     }, {
         {0    , 0    , 0    , 0    , HP| 1},
         {0    , 0    , 0    , 0    , HP| 3},
-        {0    , HP| 6, HP| 8, 0    , 0    },
+        {0    , HP| 6, 0    , HP| 8, 0    },
     }, {
         {0    , 0    , 0    , 0    , 0    },
         {0    , 0    , 0    , 0    , HP| 4},
@@ -293,8 +300,12 @@ static const uint8_t h_r45[3][3][4] = {
 static const uint8_t theta_k[26] = {3, 0, 1, 2, 2, 3, 0, 1, 0, 1, 2, 0, 2,
                                     3, 0, 1, 2, 0, 1, 2, 0, 1, 2, 1, 2, 3};
 
-/* Phi constants. Looked up against j, log2(m)-7, (K-1). */
-static const uint16_t phi_j_m_k[4][7][26] = {
+/* Phi constants. Looked up against j, log2(m)-7, (K-1).
+ * Only the M=(128,256,512) constants are here; for k=4096 and k=16384 codes
+ * you'll need to change these to uint16_t and add the extra constants, which
+ * can be found in the Python script for easier copy/pasting.
+ */
+static const uint8_t phi_j_m_k[4][3][26] = {
     {
         {1, 22, 0, 26, 0, 10, 5, 18, 3, 22, 3, 8, 25, 25, 2, 27, 7, 7, 15, 10,
             4, 19, 7, 9, 26, 17},
@@ -302,15 +313,6 @@ static const uint16_t phi_j_m_k[4][7][26] = {
             1, 52, 61, 10, 55, 7, 12, 2},
         {16, 103, 105, 0, 50, 29, 115, 30, 92, 78, 70, 66, 39, 84, 79, 70, 29,
             32, 45, 113, 86, 1, 42, 118, 33, 126},
-        {160, 241, 185, 251, 209, 103, 90, 184, 248, 12, 111, 66, 173, 42, 157,
-            174, 104, 144, 43, 181, 250, 202, 68, 177, 170, 89},
-        {108, 126, 238, 481, 96, 28, 59, 225, 323, 28, 386, 305, 34, 510, 147,
-            199, 347, 391, 165, 414, 97, 158, 86, 168, 506, 489},
-        {226, 618, 404, 32, 912, 950, 534, 63, 971, 304, 409, 708, 719, 176,
-            743, 759, 674, 958, 984, 11, 413, 925, 687, 752, 867, 323},
-        {1148, 2032, 249, 1807, 485, 1044, 717, 873, 364, 1926, 1241, 1769,
-            532, 768, 1138, 965, 141, 1527, 505, 1312, 1840, 709, 1427, 989,
-            1925, 270},
     }, {
         {0, 27, 30, 28, 7, 1, 8, 20, 26, 24, 4, 12, 23, 15, 15, 22, 31, 3, 29,
             21, 2, 5, 11, 26, 9, 17},
@@ -318,15 +320,6 @@ static const uint16_t phi_j_m_k[4][7][26] = {
             40, 62, 27, 38, 40, 15, 11, 18},
         {0, 53, 74, 45, 47, 0, 59, 102, 25, 3, 88, 65, 62, 68, 91, 70, 115, 31,
             121, 45, 56, 54, 108, 14, 30, 116},
-        {0, 182, 249, 65, 70, 141, 237, 77, 55, 12, 227, 42, 52, 243, 179, 250,
-            247, 164, 17, 31, 149, 105, 183, 153, 177, 19},
-        {0, 375, 436, 350, 260, 84, 318, 382, 169, 213, 67, 313, 242, 188, 1,
-            306, 397, 80, 33, 7, 447, 336, 424, 134, 152, 492},
-        {0, 767, 227, 247, 284, 370, 482, 273, 886, 634, 762, 184, 696, 413,
-            854, 544, 864, 82, 1009, 437, 36, 562, 816, 452, 290, 778},
-        {0, 1822, 203, 882, 1989, 957, 1705, 1083, 1072, 354, 1942, 446, 1456,
-            1940, 1660, 1661, 587, 708, 1466, 433, 1345, 867, 1551, 2041, 1383,
-            1790},
     }, {
         {0, 12, 30, 18, 10, 16, 13, 9, 7, 15, 16, 18, 4, 23, 5, 3, 29, 11, 4,
             8, 2, 11, 11, 3, 15, 13},
@@ -334,15 +327,6 @@ static const uint16_t phi_j_m_k[4][7][26] = {
             25, 46, 24, 33, 18, 37, 35, 21},
         {0, 8, 119, 89, 31, 122, 1, 69, 92, 47, 11, 31, 19, 66, 49, 81, 96, 38,
             83, 42, 58, 24, 25, 92, 38, 120},
-        {0, 35, 167, 214, 84, 206, 122, 67, 147, 54, 23, 93, 20, 197, 46, 162,
-            101, 76, 78, 253, 124, 143, 63, 41, 214, 70},
-        {0, 219, 16, 263, 415, 403, 184, 279, 198, 307, 432, 240, 454, 294,
-            479, 289, 373, 104, 141, 270, 439, 333, 399, 14, 277, 412},
-        {0, 254, 790, 642, 248, 899, 328, 518, 477, 404, 698, 160, 497, 100,
-            518, 92, 464, 592, 198, 856, 235, 134, 542, 545, 777, 483},
-        {0, 318, 494, 1467, 757, 1085, 1630, 64, 689, 1300, 148, 777, 1431,
-            659, 352, 1177, 836, 1572, 348, 1040, 779, 476, 191, 1393, 1752,
-            1627},
     }, {
         {0, 13, 19, 14, 15, 20, 17, 4, 4, 11, 17, 20, 8, 22, 19, 15, 5, 21, 17,
             9, 20, 18, 31, 13, 2, 18},
@@ -350,15 +334,6 @@ static const uint16_t phi_j_m_k[4][7][26] = {
             56, 9, 11, 23, 8, 7, 24},
         {0, 35, 97, 112, 64, 93, 99, 94, 103, 91, 3, 6, 39, 113, 92, 119, 74,
             73, 116, 31, 127, 98, 23, 38, 18, 62},
-        {0, 162, 7, 31, 164, 11, 237, 125, 133, 99, 105, 17, 97, 91, 211, 128,
-            82, 115, 248, 62, 26, 140, 121, 12, 41, 249},
-        {0, 312, 503, 388, 48, 7, 185, 328, 254, 202, 285, 11, 168, 127, 8,
-            437, 475, 85, 419, 459, 468, 209, 311, 211, 510, 320},
-        {0, 285, 554, 809, 185, 49, 101, 82, 898, 627, 154, 65, 81, 823, 50,
-            413, 462, 175, 715, 537, 722, 37, 488, 179, 430, 264},
-        {0, 1189, 458, 460, 1039, 1000, 1265, 1223, 874, 1292, 1491, 631, 464,
-            461, 844, 392, 922, 256, 1986, 19, 266, 471, 1166, 1300, 1033,
-            1606},
     },
 };
 
@@ -369,12 +344,14 @@ void ldpc_codes_init_paritycheck(enum ldpc_code code, uint32_t* h)
         case LDPC_CODE_N128_K64:
         case LDPC_CODE_N256_K128:
         case LDPC_CODE_N512_K256:
-            return init_parity_tc(code, h);
+            init_parity_tc(code, h);
+            return;
 
         case LDPC_CODE_N1280_K1024:
         case LDPC_CODE_N1536_K1024:
         case LDPC_CODE_N2048_K1024:
-            return init_parity_tm(code, h);
+            init_parity_tm(code, h);
+            return;
     }
 }
 
@@ -448,35 +425,129 @@ static void init_parity_tc(enum ldpc_code code, uint32_t* h)
     }
 }
 
+/*
+ * Initialise a parity check matrix (h) to code (code).
+ */
 static void init_parity_tm(enum ldpc_code code, uint32_t* h)
 {
+    int n, k, m;
+
+    get_code_params(code, &n, &k, &m);
+
     switch(code) {
         case LDPC_CODE_N2048_K1024:
-            return init_parity_tm_h12(code, h);
+            init_parity_tm_sub(m, 0,   5, 5*m, (uint8_t const *)h_r12, h);
+            break;
 
         case LDPC_CODE_N1536_K1024:
-            return init_parity_tm_h23(code, h);
+            init_parity_tm_sub(m, 2*m, 5, 7*m, (uint8_t const *)h_r12, h);
+            init_parity_tm_sub(m, 0,   2, 7*m, (uint8_t const *)h_r23, h);
+            break;
 
         case LDPC_CODE_N1280_K1024:
-            return init_parity_tm_h45(code, h);
+            init_parity_tm_sub(m, 6*m, 5, 11*m, (uint8_t const *)h_r12, h);
+            init_parity_tm_sub(m, 4*m, 2, 11*m, (uint8_t const *)h_r23, h);
+            init_parity_tm_sub(m, 0,   4, 11*m, (uint8_t const *)h_r45, h);
+            break;
 
         default:
             return;
     }
 }
 
-static void init_parity_tm_h12(enum ldpc_code code, uint32_t* h)
+/*
+ * Fill in a TM parity check matrix, either the H_1/2 or H_2/3 or H_4/5.
+ * (m) is the sub-matrix size,
+ * (col0) is the column offset to start filling in at (because the higher
+ *        rate matrices are specified with the lower rate appended to the end),
+ * (dwidth) is the number of sub-matrices in the width of the design matrix,
+ * (hcols) is the total number of columns in h (including any before or after
+ *         the part of the matrix being filled in),
+ * (design) is a pointer to the design matrix, of shape [3][3][dwidth],
+ * (h) is a pointer to the parity check matrix to fill in.
+ */
+static void init_parity_tm_sub(int m, int col0, int dwidth, int hcols,
+                               uint8_t const * design, uint32_t* h)
 {
+    int logm, kk;
+    int i, j, u, v, w;
+
+    if(m == 128) {
+        logm = 7;
+    } else if(m == 256) {
+        logm = 8;
+    } else if(m == 512) {
+        logm = 9;
+    } else {
+        return;
+    }
+
+    /* Initialise to all zeros and we'll just OR bits on top */
+    for(i=0; i<3*m; i++) {
+        /* Each row of h is (hcols) bits long,
+         * and we skip (i) of these rows, then start at (m*col0) bits after.
+         * Each row of our sub matrix is (m*dwidth) bits long,
+         * and that's what we'll set to zero.
+         * Each bit length is divided by 32 to get the word offset.
+         */
+        memset(h + i*hcols/32 + col0/32, 0x00, m*dwidth/8);
+    }
+
+    /* For each of the three design matrices we add together */
+    for(u=0; u<3; u++) {
+        /* For each row of the design */
+        for(v=0; v<3; v++) {
+            /* For each column (in terms of sub-matrices) of that row */
+            for(w=0; w<dwidth; w++) {
+                uint8_t hh = design[u*3*dwidth + v*dwidth + w];
+
+                /* Don't need to do anything to get zeros */
+                if(hh == 0) {
+                    continue;
+                }
+
+                /* If not zero then at least the identity bit or the
+                 * permutation bit should be set, fail here if not */
+                if(!(hh & HP) && !(hh & HI)) {
+                    return;
+                }
+
+                /* For each row in the mxm sub-matrix */
+                for(i=0; i<m; i++) {
+                    if(hh & HP) {
+                        /* This is (k), the subscript for pi_k(i), which we
+                         * specify in the design matrix in the lower 5 bits.
+                         */
+                        kk = hh & 0x3F;
+
+                        /* Compute pi(i) to get the column in this row which
+                         * we'll set to 1.
+                         */
+                        j = m/4 * ((theta_k[kk-1] + ((4*i)/m)) % 4) +
+                            (phi_j_m_k[(4*i)/m][logm-7][kk-1] + i) % (m/4);
+                    } else {
+                        /* For identity matrix, the bit to set is j=i */
+                        j = i;
+                    }
+
+                    /* Compute the uint32_t holding bit j, and the
+                     * shift into it, and then set that bit.
+                     */
+                    int idx;
+                    idx = v*m*hcols/32; /* Skipped sub-matrices above       */
+                    idx += i*hcols/32;  /* Skipped rows above i             */
+                    idx += col0/32;     /* Skip to column 0                 */
+                    idx += w*m/32;      /* Skip w sub-matrices left of us   */
+                    idx += j/32;        /* Finally skip to the right column */
+                    int shift = 31 - (j % 32);
+                    h[idx] |= 1 << shift;
+                }
+            }
+        }
+    }
 }
 
-static void init_parity_tm_h23(enum ldpc_code code, uint32_t* h)
-{
-}
-
-static void init_parity_tm_h45(enum ldpc_code code, uint32_t* h)
-{
-}
-
+/* n=code length, k=code dimension, m=sub-matrix size */
 static void get_code_params(enum ldpc_code code, int* n, int* k, int* m)
 {
     switch(code) {
@@ -501,19 +572,19 @@ static void get_code_params(enum ldpc_code code, int* n, int* k, int* m)
         case LDPC_CODE_N1280_K1024:
             *n = 1280;
             *k = 1024;
-            *m = 32;
+            *m = 128;
             break;
 
         case LDPC_CODE_N1536_K1024:
             *n = 1536;
             *k = 1024;
-            *m = 64;
+            *m = 256;
             break;
 
         case LDPC_CODE_N2048_K1024:
             *n = 2048;
             *k = 1024;
-            *m = 128;
+            *m = 512;
             break;
 
         default:
@@ -521,26 +592,33 @@ static void get_code_params(enum ldpc_code code, int* n, int* k, int* m)
     }
 }
 
-uint32_t const * ldpc_codes_get_g(enum ldpc_code code, int* n, int* k, int* m)
+uint32_t const * ldpc_codes_get_g(enum ldpc_code code, int* n, int* k, int* b)
 {
-    get_code_params(code, n, k, m);
+    int m;
+    get_code_params(code, n, k, &m);
     switch(code) {
         case LDPC_CODE_N128_K64:
+            *b = m;
             return g_n128_k64;
 
         case LDPC_CODE_N256_K128:
+            *b = m;
             return g_n256_k128;
 
         case LDPC_CODE_N512_K256:
+            *b = m;
             return g_n512_k256;
 
         case LDPC_CODE_N1280_K1024:
+            *b = m / 4;
             return g_n1280_k1024;
 
         case LDPC_CODE_N1536_K1024:
+            *b = m / 4;
             return g_n1536_k1024;
 
         case LDPC_CODE_N2048_K1024:
+            *b = m / 4;
             return g_n2048_k1024;
 
         default:

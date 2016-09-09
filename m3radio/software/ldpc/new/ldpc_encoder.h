@@ -6,6 +6,6 @@
 /* Encode data into codeword to be transmitted.
  * data must be k/8 bytes, codeword must be n/8 bytes.
  */
-void ldpc_encode(uint8_t* data, uint8_t* codeword, enum ldpc_code code);
+void ldpc_encode(enum ldpc_code code, uint8_t* data, uint8_t* codeword);
 
 #endif
