@@ -16,20 +16,10 @@ int main(int argc, char* argv[]) {
     for(i=0; i<128; i++)
         data[i] = i;
 
-    ldpc_encode(LDPC_CODE_N2048_K1024, data, code);
-    for(i=0; i<256; i++)
-        printf("%02X ", code[i]);
-    printf("\n\n");
-
-    ldpc_encode(LDPC_CODE_N1536_K1024, data, code);
-    for(i=0; i<192; i++)
-        printf("%02X ", code[i]);
-    printf("\n\n");
-
-    ldpc_encode(LDPC_CODE_N1280_K1024, data, code);
-    for(i=0; i<160; i++)
-        printf("%02X ", code[i]);
-    printf("\n\n");
+    printf("Running benchmark, 1000 iterations of (2048,1024) code...\n");
+    for(i=0; i<1000; i++)
+        ldpc_encode(LDPC_CODE_N2048_K1024, data, code);
+    printf("Done.\n\n");
 
     return 0;
 }

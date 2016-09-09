@@ -4,12 +4,11 @@
  */
 
 #include <string.h>
-#include <stdio.h>
 #include "ldpc_encoder.h"
 
 void ldpc_encode(enum ldpc_code code, uint8_t* data, uint8_t* codeword)
 {
-    int i, j, n, k, r, b;
+    int i, j, n, k, r, b, divb, modb;
     uint32_t const * g = ldpc_codes_get_g(code, &n, &k, &b);
     if(g == NULL) {
         return;
@@ -17,11 +16,17 @@ void ldpc_encode(enum ldpc_code code, uint8_t* data, uint8_t* codeword)
 
     r = n - k;
 
+    /* Silly hand optimisation because compiler can't know b is a power of 2.
+     * modb is the bits so (x & modb) == (x % b) for x>0.
+     * divb is log2(b) such that (x>>divb) == (x/b)
+     */
+    modb = b - 1;
+    divb = 0;
+    while(!((b>>divb)&1)) divb++;
+
     /* Copy data into first part of codeword and initialise second part to 0 */
     memcpy(codeword, data, k/8);
     memset(codeword+k/8, 0x00, r/8);
-
-    printf("ldpc_encode n=%d k=%d r=%d b=%d\n", n, k, r, b);
 
     /* For each parity check equation */
     for(i=0; i<r; i++) {
@@ -38,8 +43,8 @@ void ldpc_encode(enum ldpc_code code, uint8_t* data, uint8_t* codeword)
             /* Compute the offset to i to look at to find the equivalent
              * of the block we're in rotated right by j.
              */
-            io = j%b;
-            if(io > i%b) {
+            io = j&modb;
+            if(io > (i&modb)) {
                 io -= b;
             }
 
@@ -51,7 +56,7 @@ void ldpc_encode(enum ldpc_code code, uint8_t* data, uint8_t* codeword)
              * We skip (j/b) rows of (r/32) words above us,
              * then (i-io)/32 words to get to the one we want.
              */
-            h_word = g[(j/b)*(r/32) + (i-io)/32];
+            h_word = g[(j>>divb)*(r/32) + (i-io)/32];
 
             /* Pick our parity bit */
             h_bit = (h_word >> (31 - ((i-io)%32))) & 1;
