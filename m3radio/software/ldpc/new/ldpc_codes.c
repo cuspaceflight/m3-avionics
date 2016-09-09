@@ -482,7 +482,7 @@ static void init_parity_tm_sub(int m, int col0, int dwidth, int hcols,
         return;
     }
 
-    /* Initialise to all zeros and we'll just OR bits on top */
+    /* Initialise to all zeros and we'll just XOR bits on top */
     for(i=0; i<3*m; i++) {
         /* Each row of h is (hcols) bits long,
          * and we skip (i) of these rows, then start at (m*col0) bits after.
@@ -540,7 +540,7 @@ static void init_parity_tm_sub(int m, int col0, int dwidth, int hcols,
                     idx += w*m/32;      /* Skip w sub-matrices left of us   */
                     idx += j/32;        /* Finally skip to the right column */
                     int shift = 31 - (j % 32);
-                    h[idx] |= 1 << shift;
+                    h[idx] ^= 1 << shift;
                 }
             }
         }
