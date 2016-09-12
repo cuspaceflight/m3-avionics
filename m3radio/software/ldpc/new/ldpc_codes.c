@@ -592,7 +592,8 @@ static void get_code_params(enum ldpc_code code, int* n, int* k, int* m)
     }
 }
 
-uint32_t const * ldpc_codes_get_g(enum ldpc_code code, int* n, int* k, int* b)
+const uint32_t * ldpc_codes_get_compact_generator(enum ldpc_code code,
+                                                  int* n, int* k, int* b)
 {
     int m = 0;
     get_code_params(code, n, k, &m);
@@ -623,5 +624,78 @@ uint32_t const * ldpc_codes_get_g(enum ldpc_code code, int* n, int* k, int* b)
 
         default:
             return NULL;
+    }
+}
+
+
+void ldpc_codes_init_generator(enum ldpc_code code, uint32_t* g)
+{
+    int i, j, l, n, k, b, r;
+    uint32_t const * gc = ldpc_codes_get_compact_generator(code, &n, &k, &b);
+
+    if(gc == NULL) {
+        return;
+    }
+
+    r = n - k;
+
+    /* For each row of the generator matrix */
+    for(i=0; i<k; i++) {
+        uint32_t * row = &g[i * (r/32)];
+
+        if(i % b == 0) {
+            /* If we're at the start of a block, copy from the constants */
+            memcpy(row, gc + ((i/b) * r/32), r/8);
+        } else {
+            /* Otherwise copy from the row above and rotate in each block */
+            memcpy(row, g + ((i-1) * r/32), r/8);
+
+            /* For each block in this row */
+            for(l=0; l<r/b; l++) {
+                if(b >= 32) {
+                    /* In the simple case, the blocks are at least 1 word */
+                    uint32_t* block = &row[l*b/32];
+                    uint8_t carry = block[b/32 - 1] & 1;
+
+                    /* For each word in this block */
+                    for(j=0; j<b/32; j++) {
+                        uint8_t newcarry = block[j] & 1;
+                        block[j] = (carry<<31) | block[j] >> 1;
+                        carry = newcarry;
+                    }
+                } else if(b == 16) {
+                    /* In the annoying case, the blocks are less than 1 word.
+                     * We'll only conceivably use 16 bit blocks (smaller than
+                     * 32 bits, that is) so just special case that.
+                     */
+                    int byte_idx = l*2;
+                    int shift = (byte_idx%4 == 0) ? 16 : 0;
+                    uint32_t block = (row[byte_idx / 4] >> shift) & 0xFFFF;
+                    block = ((block & 1)<<15) | (block >> 1);
+                    row[byte_idx/4] &= ~(0xFFFF << shift);
+                    row[byte_idx/4] |= block << shift;
+                } else {
+                    return;
+                }
+            }
+        }
+    }
+
+    /* We'll be using this generator matrix by XORing with uint32_t cast data,
+     * which means the data will be the "wrong way around" on little endian
+     * platforms. Instead of fixing at encoding time (costly), we'll fix it
+     * once in the generator matrix.
+     */
+    uint32_t endian_test = 1;
+    if(*(uint8_t*)&endian_test == 1) {
+        for(i=0; i<k; i++) {
+            uint32_t * row = &g[i * (r/32)];
+            for(j=0; j<r/32; j++) {
+                row[j] = ((row[j] & 0x000000FF) << 24) |
+                         ((row[j] & 0x0000FF00) <<  8) |
+                         ((row[j] & 0x00FF0000) >>  8) |
+                         ((row[j] & 0xFF000000) >> 24);
+            }
+        }
     }
 }

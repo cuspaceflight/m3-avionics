@@ -28,13 +28,29 @@ enum ldpc_code {
  */
 void ldpc_codes_init_paritycheck(enum ldpc_code code, uint32_t* h);
 
-/* Gets a pointer to the relevant constants for generator matrices.
+/* Gets a pointer to the relevant constants for compact generator matrices.
  * Also sets n and k (code size) and b (circulant block size).
  * The returned pointer is to a uint32_t[k/b][(n-k)/32],
  * each row has (n-k) bits ((n-k)/32 words),
  * there are k/b rows, which each represent b rows of the actual generator
  * matrix, which has k rows.
  */
-uint32_t const * ldpc_codes_get_g(enum ldpc_code code, int* n, int* k, int* b);
+const uint32_t * ldpc_codes_get_compact_generator(enum ldpc_code code,
+                                                  int* n, int* k, int* b);
+
+/* Initialise a generator matrix expanded from the compact circulant form.
+ * This allows quicker encoding at the cost of more memory usage.
+ * Note this will only initialise the parity part of G, and not the identity
+ * matrix, since all supported codes are systematic. This matches what's
+ * expected by the non-compact encoder.
+ * Required size of g:
+ *  (128, 64)       512 bytes       128 words       uint32_t[64][2]
+ *  (256, 128)      2048 bytes      512 words       uint32_t[128][4]
+ *  (512, 256)      8192 bytes      2048 words      uint32_t[256][8]
+ *  (1280, 1024)    32768 bytes     8192 words      uint32_t[1024][8]
+ *  (1536, 1024)    65536 bytes     16384 words     uint32_t[1024][16]
+ *  (2048, 1024)    131072 bytes    32768 words     uint32_t[1024][32]
+ */
+void ldpc_codes_init_generator(enum ldpc_code code, uint32_t* g);
 
 #endif
