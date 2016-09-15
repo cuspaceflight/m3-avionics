@@ -9,7 +9,6 @@
 #include <string.h>
 #include "ldpc_codes.h"
 
-static void get_code_params(enum ldpc_code code, int* n, int* k, int* m);
 static void init_parity_tc(enum ldpc_code code, uint32_t* h);
 static void init_parity_tm(enum ldpc_code code, uint32_t* h);
 static void init_parity_tm_sub(int m, int col0, int dwidth, int hcols,
@@ -357,9 +356,9 @@ void ldpc_codes_init_paritycheck(enum ldpc_code code, uint32_t* h)
 
 static void init_parity_tc(enum ldpc_code code, uint32_t* h)
 {
-    int u, v, i, j, n, k, m;
+    int u, v, i, j, n=0, k=0, m=0;
     uint8_t const (* proto)[8];
-    get_code_params(code, &n, &k, &m);
+    ldpc_codes_get_params(code, &n, &k, NULL, &m, NULL);
 
     switch(code) {
         case LDPC_CODE_N128_K64:
@@ -430,9 +429,9 @@ static void init_parity_tc(enum ldpc_code code, uint32_t* h)
  */
 static void init_parity_tm(enum ldpc_code code, uint32_t* h)
 {
-    int n, k, m;
+    int n=0, k=0, m=0;
 
-    get_code_params(code, &n, &k, &m);
+    ldpc_codes_get_params(code, &n, &k, NULL, &m, NULL);
 
     switch(code) {
         case LDPC_CODE_N2048_K1024:
@@ -547,79 +546,135 @@ static void init_parity_tm_sub(int m, int col0, int dwidth, int hcols,
     }
 }
 
-/* n=code length, k=code dimension, m=sub-matrix size */
-static void get_code_params(enum ldpc_code code, int* n, int* k, int* m)
+void ldpc_codes_init_sparse_paritycheck(enum ldpc_code code, uint32_t* h,
+                                        uint16_t* ci, uint16_t* cs,
+                                        uint8_t* cl,
+                                        uint16_t* vi, uint16_t* vs,
+                                        uint8_t* vl)
 {
+    int i, j, n=0, k=0, m=0, p=0, c_idx=0, v_idx=0;
+    ldpc_codes_get_params(code, &n, &k, &p, &m, NULL);
+
+    /* Step through row-by-row (check to variable direction) */
+    for(i=0; i<(n - k + p); i++) {
+        cs[i] = c_idx;
+        cl[i] = 0;
+        for(j=0; j<(n + p); j++) {
+            uint8_t pbit = (h[i*(n+p)/32 + j/32] >> (31 - (j%32))) & 1;
+            if(pbit) {
+                ci[c_idx++] = j;
+                cl[i]++;
+            }
+        }
+    }
+
+    /* Now go column-by-column (variable to check direction) */
+    for(j=0; j<(n + p); j++) {
+        vs[j] = v_idx;
+        vl[j] = 0;
+        for(i=0; i<(n -k + p); i++) {
+            uint8_t pbit = (h[i*(n+p)/32 + j/32] >> (31 - (j%32))) & 1;
+            if(pbit) {
+                vi[v_idx++] = i;
+                vl[j]++;
+            }
+        }
+    }
+}
+
+/* n=code length, k=code dimension, m=sub-matrix size,
+ * p=number of punctured parity checks
+ */
+void ldpc_codes_get_params(enum ldpc_code code,
+                           int* n, int* k, int* p, int* m, int* b)
+{
+    /* Instead of lots of null checks, just assign the parameters to local
+     * variables and update the input pointers if they're not NULL.
+     */
+    int nn=0, kk=0, pp=0, mm=0, bb=0;
+
     switch(code) {
         case LDPC_CODE_N128_K64:
-            *n = 128;
-            *k = 64;
-            *m = *n/8;
+            nn = 128;
+            kk = 64;
+            pp = 0;
+            mm = nn/8;
+            bb = mm;
             break;
 
         case LDPC_CODE_N256_K128:
-            *n = 256;
-            *k = 128;
-            *m = *n/8;
+            nn = 256;
+            kk = 128;
+            pp = 0;
+            mm = nn/8;
+            bb = mm;
             break;
 
         case LDPC_CODE_N512_K256:
-            *n = 512;
-            *k = 256;
-            *m = *n/8;
+            nn = 512;
+            kk = 256;
+            pp = 0;
+            mm = nn/8;
+            bb = mm;
             break;
 
         case LDPC_CODE_N1280_K1024:
-            *n = 1280;
-            *k = 1024;
-            *m = 128;
+            nn = 1280;
+            kk = 1024;
+            mm = 128;
+            pp = mm;
+            bb = mm / 4;
             break;
 
         case LDPC_CODE_N1536_K1024:
-            *n = 1536;
-            *k = 1024;
-            *m = 256;
+            nn = 1536;
+            kk = 1024;
+            mm = 256;
+            pp = mm;
+            bb = mm / 4;
             break;
 
         case LDPC_CODE_N2048_K1024:
-            *n = 2048;
-            *k = 1024;
-            *m = 512;
+            nn = 2048;
+            kk = 1024;
+            mm = 512;
+            pp = mm;
+            bb = mm / 4;
             break;
 
         default:
             return;
     }
+
+    if(n != NULL) *n = nn;
+    if(k != NULL) *k = kk;
+    if(p != NULL) *p = pp;
+    if(m != NULL) *m = mm;
+    if(b != NULL) *b = bb;
 }
 
 const uint32_t * ldpc_codes_get_compact_generator(enum ldpc_code code,
                                                   int* n, int* k, int* b)
 {
-    int m = 0;
-    get_code_params(code, n, k, &m);
+    ldpc_codes_get_params(code, n, k, NULL, NULL, b);
+
     switch(code) {
         case LDPC_CODE_N128_K64:
-            *b = m;
             return g_n128_k64;
 
         case LDPC_CODE_N256_K128:
-            *b = m;
             return g_n256_k128;
 
         case LDPC_CODE_N512_K256:
-            *b = m;
             return g_n512_k256;
 
         case LDPC_CODE_N1280_K1024:
-            *b = m / 4;
             return g_n1280_k1024;
 
         case LDPC_CODE_N1536_K1024:
-            *b = m / 4;
             return g_n1536_k1024;
 
         case LDPC_CODE_N2048_K1024:
-            *b = m / 4;
             return g_n2048_k1024;
 
         default:
@@ -630,7 +685,7 @@ const uint32_t * ldpc_codes_get_compact_generator(enum ldpc_code code,
 
 void ldpc_codes_init_generator(enum ldpc_code code, uint32_t* g)
 {
-    int i, j, l, n, k, b, r;
+    int i, j, l, n=0, k=0, b=0, r;
     uint32_t const * gc = ldpc_codes_get_compact_generator(code, &n, &k, &b);
 
     if(gc == NULL) {
