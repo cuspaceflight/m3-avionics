@@ -237,7 +237,7 @@ static const uint32_t g_n1280_k1024[32*8] = {
 };
 
 /* Parity check matrices corresponding to the above codes.
- * This repesentation mirrors the definition in CCSDS 131.0-B-1,
+ * This representation mirrors the definition in CCSDS 131.0-B-1,
  * and can be expanded at runtime to create the actual matrix in memory.
  * Each macro represents a single MxM sub-matrix, where M is a function
  * of the information block length and the rate.

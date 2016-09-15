@@ -96,7 +96,7 @@ void ldpc_encode_fast(enum ldpc_code code, const uint32_t* g,
     for(i=0; i<k; i++) {
         uint8_t dbit = (data[i/8] >> (7 - (i%8))) & 1;
         if(dbit) {
-            /* For each word of generator matrix */
+            /* For each word of generator matrix row */
             for(j=0; j<r/32; j++) {
                 /* XOR with the row of g */
                 const uint32_t * word = &g[i*(r/32) + j];
