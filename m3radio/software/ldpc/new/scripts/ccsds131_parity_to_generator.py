@@ -217,16 +217,50 @@ def g_to_consts(gg):
     print(", ".join("0x{}".format(const) for const in consts))
 
 
+def h_to_sparse(hh):
+    check_idxs = []
+    check_starts = []
+    check_ends = []
+    data_idxs = []
+    data_starts = []
+    data_ends = []
+    for i in range(hh.shape[0]):
+        check_starts.append(len(check_idxs))
+        for j in range(hh.shape[1]):
+            if hh[i][j]:
+                check_idxs.append(j)
+        check_ends.append(len(check_idxs))
+    for j in range(hh.shape[1]):
+        data_starts.append(len(data_idxs))
+        for i in range(hh.shape[0]):
+            if hh[i][j]:
+                data_idxs.append(i)
+        data_ends.append(len(data_idxs))
+    return (
+        check_idxs, check_starts, check_ends,
+        data_idxs, data_starts, data_ends)
+
+
 if __name__ == "__main__":
-    #from scipy.misc import imsave
-    tx = np.unpackbits(np.arange(128).astype(np.uint8)).reshape((1, -1))
+    # from scipy.misc import imsave
+    # tx = np.unpackbits(np.arange(128).astype(np.uint8)).reshape((1, -1))
     for r in ("12", "23", "45"):
         with np.load("ldpc_k1024_r{}.npz".format(r)) as data:
             gg = data['g']
             hh = data['h']
         print("Rate {}/{}".format(r[0], r[1]))
-        #imsave("g_k1024_r{}.png".format(r), gg)
-        #imsave("h_k1024_r{}.png".format(r), hh)
-        #g_to_consts(gg)
-        codeword = np.packbits(np.dot(tx, gg) % 2)
-        print(" ".join("{:02X}".format(c) for c in codeword))
+        # imsave("g_k1024_r{}.png".format(r), gg)
+        # imsave("h_k1024_r{}.png".format(r), hh)
+        # g_to_consts(gg)
+        # codeword = np.packbits(np.dot(tx, gg) % 2)
+        # print(" ".join("{:02X}".format(c) for c in codeword))
+        ci, cs, ce, di, ds, de = h_to_sparse(hh)
+        print("len(ci):", len(ci))
+        print("len(cs):", len(cs))
+        print("len(ce):", len(ce))
+        print("len(di):", len(di))
+        print("len(ds):", len(ds))
+        print("len(de):", len(de))
+        print("sum(hh):", np.sum(hh))
+        print("shape(hh):", hh.shape)
+        print()

@@ -8,16 +8,29 @@
  * This algorithm is very quick, uses little memory, and only requires
  * hard information, but is much less capable at decoding than
  * the message passing algorithm.
- * h must have been previously initialised by ldpc_code_init_paritycheck for
- * the specified code,
- * codeword must be n/8 bytes long and each bit is a hard decision,
- * data must be n/8 bytes long and is written with the decoded codeword,
- * working must be n+p bytes long and is used as a scratch working area
- * (the same length as vs in ldpc_codes_init_sparse_paritycheck).
+ *
+ * (ci, cs, cl) must all have been initialised by
+ * ldpc_codes_init_sparse_paritycheck for the appropriate code.
+ * input must be n/8 bytes long and each bit is a hard decision.
+ * output must be k/8 bytes long and is written with the decoded data.
+ * working must be n/8 + n bytes long and is used as a scratch working area:
+ *
+ * Code             Length of working area
+ * (128, 64)        144
+ * (256, 128)       288
+ * (512, 256)       576
+ *
  * Returns true on decoding success, false otherwise.
+ *
+ * Note that this algorithm is not suitable to the longer codes which use
+ * puncturing, as it cannot represent the unknown bits.
+ * It's possible to write an erasure correcting step before the bit flipping
+ * step, which should allow this code to work with puncturing, but that work
+ * is not done yet.
  */
-bool ldpc_decode_bf(enum ldpc_code code, uint32_t* h,
-                    const uint8_t* codeword, uint8_t* data, uint8_t* working);
+bool ldpc_decode_bf(enum ldpc_code code,
+                    uint16_t* ci, uint16_t* cs, uint8_t* cl,
+                    const uint8_t* input, uint8_t* output, uint8_t* working);
 
 /* Decode LLRs into data using message passing algorithm.
  * This algorithm is slower and ideally requires soft information,

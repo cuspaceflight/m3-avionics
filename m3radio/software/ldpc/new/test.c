@@ -6,8 +6,6 @@
 #include "ldpc_codes.h"
 
 const enum ldpc_code code = LDPC_CODE_N256_K128;
-const int n = 256;
-const int k = 128;
 uint32_t g[1024][32];
 
 uint32_t h[122880];
@@ -18,16 +16,18 @@ int main(int argc, char* argv[]) {
     (void)argc;
     (void)argv;
 
-    int i, j;
+    int n=0, k=0, i, j;
     uint8_t data[128];
     uint8_t code1[256] = {0};
     uint8_t code2[256] = {0};
     uint8_t code_out[256];
-    uint8_t working[7680];
+    uint8_t working[2944];
     (void)code1;
     (void)code2;
     (void)data;
     (void)j;
+
+    ldpc_codes_get_params(code, &n, &k, NULL, NULL, NULL);
 
     for(i=0; i<k/8; i++)
         data[i] = i;
@@ -37,9 +37,10 @@ int main(int argc, char* argv[]) {
     ldpc_codes_init_sparse_paritycheck(code, h, ci, cs, cl, vi, vs, vl);
 
     int biterrors;
-    for(biterrors = 0; biterrors < 20; biterrors++) {
+    for(biterrors = 0; biterrors < n/10; biterrors++) {
         for(i=0; i<k/8; i++) {
             data[i] = i;
+            code_out[i] = 0;
         }
 
         ldpc_encode_small(code, data, code1);
@@ -48,13 +49,13 @@ int main(int argc, char* argv[]) {
             code1[i] ^= 1;
         }
 
-        bool result = ldpc_decode_bf(code, h, code1, code_out, working);
+        bool result = ldpc_decode_bf(code, ci, cs, cl, code1, code_out, working);
 
         bool check = true;
         for(i=0; i<k/8; i++) {
-            if(data[i] != code_out[i]) check = false;
+            if(code_out[i] != i) check = false;
         }
-        printf("%02d errors, decoded: %d, check: %d\n", biterrors, result, check);
+        printf("%2d errors, decoded: %d, check: %d\n", biterrors, result, check);
     }
 #endif
 
