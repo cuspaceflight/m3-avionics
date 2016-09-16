@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
     for(i=0; i<n/50; i++) {
         llrs[i] = -llrs[i];
     }
-    for(i=0; i<100; i++) {
+    for(i=0; i<1000; i++) {
         bool result = ldpc_decode_mp(code, ci, cs, vi, vs, llrs, code_out, workingf);
         bool check = true;
         for(j=0; j<k/8; j++) {

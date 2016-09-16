@@ -125,9 +125,8 @@ void run_trial(double ebn0, trial_result* result)
     result->hard_bf_ber = msg_ber(txdata, rxdata);
 }
 
-void run_trials(double ebn0, trial_result* result)
+void run_trials(double ebn0, const int max_trials, trial_result* result)
 {
-    const int max_trials = 100;
     int n_trials = 0;
 
     memset(result, 0, sizeof(trial_result));
@@ -175,6 +174,8 @@ int main(int argc, char* argv[]) {
     (void)argc;
     (void)argv;
 
+    const int max_trials = 1000;
+
     size_t i;
 
     double ebn0_dbs[] = {
@@ -189,7 +190,8 @@ int main(int argc, char* argv[]) {
 
     ldpc_codes_get_params(CODE, &n, &k, &p, NULL, NULL, NULL);
 
-    printf("# Starting simulations, n=%d k=%d p=%d\n", n, k, p);
+    printf("# Starting simulations, n=%d k=%d p=%d, %d repeats\n",
+           n, k, p, max_trials);
 
     ldpc_codes_init_generator(CODE, (uint32_t*)g);
     ldpc_codes_init_paritycheck(CODE, (uint32_t*)h);
@@ -199,7 +201,7 @@ int main(int argc, char* argv[]) {
         printf("# Running trial %lu of %lu: Eb/N0=%.1fdB\n",
                i+1, sizeof(ebn0_dbs)/sizeof(double), ebn0_dbs[i]);
         double ebn0 = pow(10.0f, ebn0_dbs[i]/10.0f);
-        run_trials(ebn0, &results[i]);
+        run_trials(ebn0, max_trials, &results[i]);
     }
 
     printf("ebn0_db = [ ");
