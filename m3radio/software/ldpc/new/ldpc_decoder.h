@@ -4,12 +4,12 @@
 #include <stdbool.h>
 #include "ldpc_codes.h"
 
-/* Decode received codeword into data using bit flipping algorithm.
+/* Decode received input into output using bit flipping algorithm.
  * This algorithm is very quick, uses little memory, and only requires
  * hard information, but is much less capable at decoding than
  * the message passing algorithm.
  *
- * (ci, cs, cl) must all have been initialised by
+ * (ci, cs) must all have been initialised by
  * ldpc_codes_init_sparse_paritycheck for the appropriate code.
  * input must be n/8 bytes long and each bit is a hard decision.
  * output must be k/8 bytes long and is written with the decoded data.
@@ -29,26 +29,50 @@
  * is not done yet.
  */
 bool ldpc_decode_bf(enum ldpc_code code,
-                    uint16_t* ci, uint16_t* cs, uint8_t* cl,
+                    uint16_t* ci, uint16_t* cs,
                     const uint8_t* input, uint8_t* output, uint8_t* working);
 
 /* Decode LLRs into data using message passing algorithm.
  * This algorithm is slower and ideally requires soft information,
- * but decodes very close to optimal.
- * h must have been previously initialised by ldpc_code_init_paritycheck for
- *   the specified code,
- * llrs must be n floats long, where positive numbers are more likely to be 0,
- * data must be n/8 bytes long.
+ * but decodes very close to optimal. If you don't have soft information
+ * but do have the channel BER, you can use ldpc_decode_ber_to_llrs to
+ * go from hard information (bytes from a receiver) to soft information.
+ * If you don't have that, you can use ldpc_decode_hard_llrs to generate
+ * arbitrary LLRs from the hard information.
+ *
+ * (ci, cs, vi, vs) must all have been initialised by
+ * ldpc_codes_init_sparse_paritycheck for the appropriate code.
+ * llrs must be n floats long, where positive numbers are more likely to be 0.
+ * output must be (n+p)/8 bytes long, of which the first k/8 bytes will be set
+ *     to the original transmitted message (then followed by parity bits).
+ * working must be 2*s long:
+ *
+ * Code             Length of output        Length of working area
+ * (128, 64)        16                      1024
+ * (256, 128)       32                      2048
+ * (512, 256)       64                      4096
+ * (1280, 1024)     176                     9984
+ * (1536, 1024)     224                     11776
+ * (2048, 1024)     320                     15360
+ *
  * Returns true on decoding success, false otherwise.
  */
-bool ldpc_decode_mp(enum ldpc_code code, uint32_t* h,
-                    const float* llrs, uint8_t* data);
+bool ldpc_decode_mp(enum ldpc_code code,
+                    uint16_t* ci, uint16_t* cs,
+                    uint16_t* vi, uint16_t* vs,
+                    const float* llrs, uint8_t* output, float* working);
 
-/* Create approximate LLRs using just the channel SNR and the received data.
+/* Create approximate LLRs using just the channel BER and the received data.
  * Can be used to feed the message passing algorithm soft-ish information.
- * codeword must be n/8 bytes long, llrs must be n floats long.
+ * input must be n/8 bytes long, llrs must be n floats long.
  */
-void ldpc_snr_to_llrs(enum ldpc_code code, const uint8_t* codeword,
-                      float* llrs, float snr);
+void ldpc_decode_ber_to_llrs(enum ldpc_code code, const uint8_t* input,
+                             float* llrs, float ber);
+
+/* Create hard LLRs from hard received data.
+ * input must be n/8 bytes long, llrs must be n floats long.
+ */
+void ldpc_decode_hard_llrs(enum ldpc_code code, const uint8_t* input,
+                           float* llrs);
 
 #endif

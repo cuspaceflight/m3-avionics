@@ -21,10 +21,11 @@ enum ldpc_code {
  * p: punctured checks (number of parity bits not transmitted)
  * m: sub-matrix size (used in code definition)
  * b: circulant block size (used in generator construction)
+ * s: sum of the H matrix, i.e. total number of parity check edges
  * Specify NULL if you don't care about a certain parameter.
  */
 void ldpc_codes_get_params(enum ldpc_code code,
-                           int* n, int* k, int* p, int* m, int* b);
+                           int* n, int* k, int* p, int* m, int* b, int* s);
 
 /* Fill h with the appropriate parity check matrix, densely packed.
  * Required size of h:
@@ -46,30 +47,31 @@ void ldpc_codes_init_paritycheck(enum ldpc_code code, uint32_t* h);
  * connections either from row to column (check to variable node) or vice
  * versa very efficiently.
  *
- * To index into the lists, each has a list of starting points cs and vs, and a
- * list of lengths (node degrees) cl and vl. The length of cs and cl is equal
- * to the number of parity check equations (before puncturing), while the
- * length of vs and vl is equal to the number of variable nodes (or the
- * codeword length, n).
+ * To index into the lists, each has a list of starting points cs and vs.
+ * The length of cs is equal to the number of parity check equations (before
+ * puncturing) plus 1, while the length of vs is equal to the number of
+ * variable nodes plus 1 (or the codeword length, n, + 1).
+ * The lengths of each sub-list (the degree of that node) is implicit from the
+ * starting point of the next sub-list. The final entry in cs and vs is set to
+ * one after the end of ci/vi.
  *
  * All of these must have been allocated before calling this function,
  * with the following lengths:
- * Code             ci, vi      cs, cl      vs, vl
- * (128, 64)         512          64         128
- * (256, 128)       1024         128         256
- * (512, 256)       2048         256         512
- * (1280, 1024)     4992         384        1408
- * (1536, 1024)     5888         768        1792
- * (2048, 1024)     7680        1536        2560
+ * Code             ci, vi        cs          vs
+ * (n, k, p, s)        s     n-k+p+1       n+p+1
+ * (128, 64)         512          65         129
+ * (256, 128)       1024         129         257
+ * (512, 256)       2048         257         513
+ * (1280, 1024)     4992         385        1409
+ * (1536, 1024)     5888         769        1793
+ * (2048, 1024)     7680        1537        2561
  *
  * The non-sparse parity check matrix h must have been initialised before
  * calling this function, via ldpc_codes_init_paritycheck.
  */
 void ldpc_codes_init_sparse_paritycheck(enum ldpc_code code, uint32_t* h,
                                         uint16_t* ci, uint16_t* cs,
-                                        uint8_t* cl,
-                                        uint16_t* vi, uint16_t* vs,
-                                        uint8_t* vl);
+                                        uint16_t* vi, uint16_t* vs);
 
 /* Gets a pointer to the relevant constants for compact generator matrices.
  * Also sets n and k (code size) and b (circulant block size).

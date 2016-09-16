@@ -5,58 +5,99 @@
 #include "ldpc_decoder.h"
 #include "ldpc_codes.h"
 
-const enum ldpc_code code = LDPC_CODE_N256_K128;
+const enum ldpc_code code = LDPC_CODE_N1280_K1024;
 uint32_t g[1024][32];
-
 uint32_t h[122880];
-uint16_t ci[7680], vi[7680], cs[1536], vs[2560];
-uint8_t cl[1536], vl[2560];
+uint16_t ci[7680], vi[7680], cs[1537], vs[2561];
+float llrs[2048];
+float workingf[15360];
+uint8_t working[2944];
+uint8_t data[128];
+uint8_t code1[256] = {0};
+uint8_t code2[256] = {0};
+uint8_t code_out[256];
 
 int main(int argc, char* argv[]) {
     (void)argc;
     (void)argv;
 
-    int n=0, k=0, i, j;
-    uint8_t data[128];
-    uint8_t code1[256] = {0};
-    uint8_t code2[256] = {0};
-    uint8_t code_out[256];
-    uint8_t working[2944];
+    int n=0, k=0, p=0, i, j;
     (void)code1;
     (void)code2;
     (void)data;
     (void)j;
+    (void)working;
 
-    ldpc_codes_get_params(code, &n, &k, NULL, NULL, NULL);
+    ldpc_codes_get_params(code, &n, &k, &p, NULL, NULL, NULL);
 
     for(i=0; i<k/8; i++)
         data[i] = i;
 
-#if 1
+#if 0
+    /* See how many bit errors we can tolerate */
     ldpc_codes_init_paritycheck(code, h);
-    ldpc_codes_init_sparse_paritycheck(code, h, ci, cs, cl, vi, vs, vl);
+    ldpc_codes_init_sparse_paritycheck(code, h, ci, cs, vi, vs);
 
     int biterrors;
-    for(biterrors = 0; biterrors < n/10; biterrors++) {
+    for(biterrors = 0; biterrors < n; biterrors++) {
         for(i=0; i<k/8; i++) {
             data[i] = i;
             code_out[i] = 0;
         }
 
         ldpc_encode_small(code, data, code1);
+        ldpc_decode_ber_to_llrs(code, code1, llrs, (float)biterrors/(float)n);
+        /*ldpc_decode_hard_llrs(code, code1, llrs);*/
 
         for(i=0; i<biterrors; i++) {
-            code1[i] ^= 1;
+            llrs[i] = -llrs[i];
         }
 
-        bool result = ldpc_decode_bf(code, ci, cs, cl, code1, code_out, working);
+        /*bool result = ldpc_decode_bf(code, ci, cs, cl, code1, code_out, working);*/
+        bool result = ldpc_decode_mp(code, ci, cs, vi, vs, llrs, code_out, workingf);
 
         bool check = true;
         for(i=0; i<k/8; i++) {
             if(code_out[i] != i) check = false;
         }
         printf("%2d errors, decoded: %d, check: %d\n", biterrors, result, check);
+        for(i=0; i<(n+p)/8; i++)
+            printf("%02X ", code_out[i]);
+        printf("\n\n");
+
+        if(!check) {
+            printf("BER at failure: %.2f%%\n", 100.0f*(float)biterrors/(float)n);
+            break;
+        }
     }
+#endif
+
+#if 1
+    ldpc_codes_init_paritycheck(code, h);
+    ldpc_codes_init_sparse_paritycheck(code, h, ci, cs, vi, vs);
+    for(i=0; i<k/8; i++) {
+        data[i] = i;
+        code_out[i] = 0;
+    }
+    ldpc_encode_small(code, data, code1);
+    ldpc_decode_ber_to_llrs(code, code1, llrs, 1.0/50.0);
+    for(i=0; i<n/50; i++) {
+        llrs[i] = -llrs[i];
+    }
+    for(i=0; i<100; i++) {
+        bool result = ldpc_decode_mp(code, ci, cs, vi, vs, llrs, code_out, workingf);
+        bool check = true;
+        for(j=0; j<k/8; j++) {
+            if(code_out[j] != j) {
+                check = false;
+                break;
+            }
+        }
+        if(check && result) printf(".");
+        else printf("!");
+        fflush(stdout);
+    }
+    printf("\n");
 #endif
 
 #if 0
