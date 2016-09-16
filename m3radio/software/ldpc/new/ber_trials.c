@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
     (void)argc;
     (void)argv;
 
-    const int max_trials = 1000;
+    const int max_trials = 100000;
 
     size_t i;
 
