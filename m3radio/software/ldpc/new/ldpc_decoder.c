@@ -10,8 +10,8 @@
 
 #include <stdio.h>
 
-#define USE_TANH 0
-#define USE_MINSUM 1
+#define USE_TANH 1
+#define USE_MINSUM 0
 
 static inline float sign(float x) {
     return (x>0.0f) - (x<0.0f);
