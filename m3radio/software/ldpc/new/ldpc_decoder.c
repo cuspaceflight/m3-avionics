@@ -10,9 +10,6 @@
 
 #include <stdio.h>
 
-#define USE_TANH 1
-#define USE_MINSUM 0
-
 static inline float sign(float x) {
     return (x>0.0f) - (x<0.0f);
 }
@@ -107,12 +104,10 @@ bool ldpc_decode_mp(enum ldpc_code code,
     float llr_a;
     int parity;
     bool parity_ok;
-#if USE_MINSUM
     float prev_v_ai;
     float fabs_v_bj;
     float sgnprod;
     float minacc;
-#endif
 
     /* XXX Temporary file debug */
 #if FILEDEBUG
@@ -157,9 +152,7 @@ bool ldpc_decode_mp(enum ldpc_code code,
             /* For each check node i connected to variable node a */
             for(a_i=vs[a]; a_i<vs[a+1]; a_i++) {
                 i = vi[a_i];
-#if USE_MINSUM
                 prev_v_ai = v[a_i];
-#endif
                 v[a_i] = a < n ? llrs[a] : 0.0f;
 
                 /* For each check node j connected to variable node a */
@@ -195,7 +188,6 @@ bool ldpc_decode_mp(enum ldpc_code code,
                     }
                 }
 
-#if USE_MINSUM
                 /* Our min sum correction trick will be to zero any messages
                  * that have changed sign, as per Savin 2009:
                  * http://arxiv.org/abs/0803.1090v2
@@ -203,7 +195,6 @@ bool ldpc_decode_mp(enum ldpc_code code,
                 if(prev_v_ai != 0.0f && sign(v[a_i]) != sign(prev_v_ai)) {
                     v[a_i] = 0.0f;
                 }
-#endif
             }
 
             /* Hard decode llr_a to determine this output bit */
@@ -243,13 +234,8 @@ bool ldpc_decode_mp(enum ldpc_code code,
                  * much time.
                  */
                 a = ci[i_a];
-#if USE_TANH
-                u[i_a] = 1.0f;
-#endif
-#if USE_MINSUM
                 sgnprod = 1.0f;
                 minacc = FLT_MAX;
-#endif
 
                 /* For each variable node b connected to check node i */
                 for(i_b=cs[i]; i_b<cs[i+1]; i_b++) {
@@ -272,16 +258,11 @@ bool ldpc_decode_mp(enum ldpc_code code,
                     for(b_j=vs[b]; b_j<vs[b+1]; b_j++) {
                         j = vi[b_j];
                         if(i == j) {
-#if USE_TANH
-                            u[i_a] *= tanhf(v[b_j] / 2.0f);
-#endif
-#if USE_MINSUM
                             sgnprod *= sign(v[b_j]);
                             fabs_v_bj = fabs(v[b_j]);
                             if(fabs_v_bj < minacc) {
                                 minacc = fabs_v_bj;
                             }
-#endif
 
                             /* As soon as we find the node we're looking for,
                              * we can stop looking.
@@ -290,12 +271,7 @@ bool ldpc_decode_mp(enum ldpc_code code,
                         }
                     }
                 }
-#if USE_TANH
-                u[i_a] = 2.0f * atanhf(u[i_a]);
-#endif
-#if USE_MINSUM
                 u[i_a] = sgnprod * minacc;
-#endif
 
                 /* Work out this node's parity */
                 parity += (output[a/8] >> (7 - (a%8))) & 1;
