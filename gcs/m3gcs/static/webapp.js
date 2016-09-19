@@ -120,8 +120,7 @@ $(document).ready(function(){
                         try{
                             var latlng = state[idx]['GPS Lat/Long'].split(" ");
                             moveMarker(parseFloat(latlng[0]), parseFloat(latlng[1]));
-                        }catch{
-                            
+                        }catch (e){
                         }
                     }
                 }
