@@ -4,7 +4,6 @@
 #include "m3radio_status.h"
 #include "m3radio_gps_ant.h"
 #include "ublox.h"
-#include "si4460.h"
 
 int main(void) {
 
@@ -33,6 +32,7 @@ int main(void) {
     m3radio_gps_ant_init();
     ublox_init(&SD4);
 
+#if 0
     struct si4460_config si4460_cfg = {
         .spid = &SPID2,
         .spi_cfg = {
@@ -47,7 +47,7 @@ int main(void) {
         .xo_freq = 26000000,
         .centre_freq = 869500000,
     };
-    si4460_init(&si4460_cfg);
+#endif
 
     while (true) {
         /* Clear the watchdog timer */

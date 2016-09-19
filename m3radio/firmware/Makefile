@@ -5,7 +5,7 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16
+  USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16
 endif
 
 # C specific options here (added to USE_OPT).
@@ -99,6 +99,10 @@ include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # Other files (optional).
 include $(CHIBIOS)/test/rt/test.mk
 
+# Pull in Labrador stuff
+LABRADOR_DIR = ../labrador
+include $(LABRADOR_DIR)/embedded/labrador.mk
+
 BOARDSRC=board.c
 BOARDINC=.
 
@@ -115,9 +119,10 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
+       $(LABRADOR_SRCS) \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
-       ublox.c si4460.c \
+       ublox.c \
        m3radio_status.c m3radio_can.c m3radio_gps_ant.c \
        m3radio_router.c m3radio_router_slots.c \
        main.c
@@ -151,7 +156,7 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(CHIBIOS)/os/various
+         $(LABRADOR_INCS) $(CHIBIOS)/os/various
 
 #
 # Project, sources and paths
