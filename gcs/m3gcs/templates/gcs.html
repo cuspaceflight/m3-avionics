@@ -1,0 +1,87 @@
+<!doctype html>
+
+<head>
+<title>M3 GCS</title>
+<link rel="stylesheet" href="static/bootstrap.min.css">
+<link rel="stylesheet" href="static/bootstrap-theme.min.css">
+
+<link rel="stylesheet" href="static/webapp.css">
+
+<script src="static/jquery-3.1.0.min.js"></script>
+<script src="static/bootstrap.min.js"></script>
+
+<script src="static/webapp.js" type="text/javascript" language="javascript"></script>
+
+</head>
+<body>
+
+<div class="row">
+
+{% for name in (names | sort) %}
+<div class="col-md-4">
+    <div class="panel panel-default status-panel" id="header-{{ name }}">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ name }}</h3>
+        </div>
+        <div class="panel-body" id="content-{{ name }}">
+            <div id="display-{{ name }}">
+                
+            </div>
+            <div id="controls-{{ name }}">
+                {% for command in (commands[name] | sort) %}
+                    <div class="btn-group">
+                    <button type="button" class="btn btn-default" disabled>{{ command }}</button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                    {% for arg in commands[name][command][1] %}
+                        <li><a href="javascript:canCommand('{{ name }}', '{{ command }}', '{{ arg }}')">{{ arg }}</a></li>
+                    {% endfor %}
+                    </ul>
+                    </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+        <div class="panel-footer">Last packet heard: <span id="lasttime-{{ name }}"></span></div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Map</h3>
+        </div>
+        <div class="panel-body">
+            <div id="map"></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Packet Log</h3>
+        </div>
+        <div class="panel-body">
+            <pre id="log-window"></pre>
+        </div>
+    </div>
+</div>
+
+
+</div>
+</body>
+
+<script type="text/javascript" language="javascript">
+    {% for name in packets %}
+        packettypes["{{ name }}"] = {};
+        {% for packetid in packets[name] %}
+            packettypes["{{ name }}"]["{{ packets[name][packetid][0] }}"] = {{ packetid }};
+        {% endfor %}
+    {% endfor %}
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOoCcFecjYczBz8WZKv25QdeCFXiKBLMo&callback=mapInit" async defer></script>

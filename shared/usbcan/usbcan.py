@@ -15,7 +15,7 @@ class CANFrame:
         sid = buf[0] | (buf[1] << 8)
         rtr = buf[2]
         dlc = buf[3]
-        data = buf[4:]
+        data = buf[4:4+dlc]
         return cls(sid, rtr, dlc, data)
 
     def __init__(self, sid=None, rtr=None, dlc=None, data=None):
@@ -25,9 +25,10 @@ class CANFrame:
         self.data = data
 
     def to_bytes(self):
-        return (
-            struct.pack("<HBB", self.sid, self.rtr, self.dlc) +
-            struct.pack("{}B".format(self.dlc), *self.data))
+        out = struct.pack("<HBB", self.sid, self.rtr, self.dlc)
+        if self.dlc > 0:
+            out += struct.pack("{}B".format(self.dlc), *self.data)
+        return out
 
     def __str__(self):
         return "ID={} RTR={} DLC={} DATA={}".format(

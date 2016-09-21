@@ -16,38 +16,42 @@
 
 static volatile uint8_t channel_fire_state[4] = {0};
 static virtual_timer_t channel_timers[4];
+static binary_semaphore_t firing_reporter_thd_sem;
 
 static void disable_channel(void* arg) {
-    uint8_t channel_state = (uint32_t) arg;
+    int channel_state = (int)arg;
     channel_fire_state[channel_state] = FIRE_OFF;
+
+    chSysLockFromISR();
+    chBSemSignalI(&firing_reporter_thd_sem);
+    chSysUnlockFromISR();
 }
 
 static void set_timer(int channel, int fire_time_ms) {
+
+    /* If the timer's not already running, start it up to turn this channel off
+     * after the required time.
+     */
     chSysLock();
-    //if(chVTIsArmedI(&channel_timers[*channel_state])) {
-    //    chVTDoResetI(&channel_timers[*channel_state]);
-    //}
-    if(!chVTIsArmedI(&channel_timers[channel])) {
+    if(!chVTIsArmed(&channel_timers[channel])) {
        chVTDoSetI(&channel_timers[channel], MS2ST(fire_time_ms),
-               disable_channel, (void *)channel);
+                  disable_channel, (void *)channel);
     }
     chSysUnlock();
 }
 
 /* Reporting thread
- * Sends out fire status every 100ms
+ * Sends out fire status every 300ms, enough that we should mostly see any
+ * event at least once, but we also specifically send this when starting or
+ * stopping firing.
  */
 static THD_WORKING_AREA(m3pyro_firing_reporter_thd_wa, 128);
 static THD_FUNCTION(m3pyro_firing_reporter_thd, arg) {
     (void)arg;
     while(true) {
-        uint8_t state[4] = {
-            channel_fire_state[0], channel_fire_state[1],
-            channel_fire_state[2], channel_fire_state[3]
-        };
         can_send(CAN_MSG_ID_M3PYRO_FIRE_STATUS, false,
-                 state, sizeof(state));
-        chThdSleepMilliseconds(100);
+                 (uint8_t*)channel_fire_state, sizeof(channel_fire_state));
+        chBSemWaitTimeout(&firing_reporter_thd_sem, MS2ST(300));
     }
 }
 
@@ -59,11 +63,12 @@ static THD_WORKING_AREA(m3pyro_firing_thd_wa, 256);
 static THD_FUNCTION(m3pyro_firing_thd, arg) {
     (void)arg;
     ioline_t fire_line[4] = {LINE_FIRE1, LINE_FIRE2, LINE_FIRE3, LINE_FIRE4};
-    uint8_t status_counter = 0;
 
     while(true) {
         int i;
         for(i=0; i<4; i++) {
+
+            /* Only fire at all if we're armed. */
             if(!m3pyro_arming_armed() || channel_fire_state[i] == FIRE_OFF) {
                 palClearLine(fire_line[i]);
             } else if(channel_fire_state[i] == FIRE_EMATCH) {
@@ -78,18 +83,19 @@ static THD_FUNCTION(m3pyro_firing_thd, arg) {
             }
         }
 
-        /* Send status OK every 1s */
-        if(status_counter++ == 100) {
-            m3status_set_ok(M3PYRO_COMPONENT_FIRING);
-            status_counter = 0;
-        }
+        m3status_set_ok(M3PYRO_COMPONENT_FIRING);
 
+        /* 10ms gives the right toggle frequency for Metrons and is pretty fast
+         * for checking everything else.
+         */
         chThdSleepMilliseconds(10);
     }
 }
 
 void m3pyro_firing_init() {
     m3status_set_init(M3PYRO_COMPONENT_FIRING);
+
+    chBSemObjectInit(&firing_reporter_thd_sem, false);
 
     int i;
     for(i=0; i<4; i++) {
@@ -104,6 +110,8 @@ void m3pyro_firing_init() {
 }
 
 void m3pyro_firing_fire(uint8_t ch1, uint8_t ch2, uint8_t ch3, uint8_t ch4) {
+
+    /* Only react if we're armed */
     if(m3pyro_arming_armed()) {
         channel_fire_state[0] = ch1;
         channel_fire_state[1] = ch2;
@@ -115,4 +123,7 @@ void m3pyro_firing_fire(uint8_t ch1, uint8_t ch2, uint8_t ch3, uint8_t ch4) {
         channel_fire_state[2] = FIRE_OFF;
         channel_fire_state[3] = FIRE_OFF;
     }
+
+    /* Send out the new firing state */
+    chBSemSignal(&firing_reporter_thd_sem);
 }

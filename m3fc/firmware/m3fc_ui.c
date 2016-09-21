@@ -2,6 +2,7 @@
 #include "hal.h"
 #include "m3fc_ui.h"
 #include "m3fc_status.h"
+#include "m3fc_mission.h"
 
 static PWMConfig pwm_cfg = {
     .frequency = 80000,
@@ -57,7 +58,7 @@ static THD_FUNCTION(beeper_thd, arg) {
     chRegSetThreadName("ui_beeper");
     pwmStart(&PWMD5, &pwm_cfg);
     while(true) {
-        if(m3fc_status_pyro_armed) {
+        if(m3fc_mission_pyro_supply_good) {
             delay = 100;
         } else {
             delay = 700;

@@ -1,18 +1,15 @@
 import os
 import glob
-import time
 import struct
-import serial
-import binascii
 import argparse
 import multiprocessing
 from queue import Empty
 
-from usbcan import CANFrame, CANRX, run
+from usbcan import CANFrame, run
 
 
 m3fc_id = 1
-msg_id = lambda x: x<<5
+msg_id = lambda x: x << 5
 m3fc_msg_cfg_profile = m3fc_id | msg_id(54)
 m3fc_msg_cfg_pyros = m3fc_id | msg_id(55)
 m3fc_msg_set_cfg_profile = m3fc_id | msg_id(1)
@@ -24,6 +21,7 @@ class M3FCConfigPyros:
     use_map = {0: "Unused", 1: "Drogue", 2: "Main", 3: "Dart Separation",
                4: "Booster Separation"}
     type_map = {0: "None", 1: "EMatch", 2: "Talon", 3: "Metron"}
+
     def __init__(self, p1use, p2use, p3use, p4use,
                  p1type, p2type, p3type, p4type):
         self.p1use = p1use
@@ -40,31 +38,32 @@ class M3FCConfigPyros:
         assert packet.sid == m3fc_msg_cfg_pyros
         return cls(*packet.data)
 
-
     def to_can(self):
         return CANFrame(sid=m3fc_msg_set_cfg_pyros, rtr=False, dlc=8,
-                        data=[self.p1use, self.p2use, self.p3use, self.p4use,
-                              self.p1type, self.py2type,
+                        data=[self.p1use, self.p2use,
+                              self.p3use, self.p4use,
+                              self.p1type, self.p2type,
                               self.p3type, self.p4type])
 
     def __str__(self):
-        print("M3FC Config Pyros:")
-        print("Pyro 1: {}/{}".format(self.use_map[self.p1use],
-                                     self.type_map[self.p1type]))
-        print("Pyro 2: {}/{}".format(self.use_map[self.p2use],
-                                     self.type_map[self.p2type]))
-        print("Pyro 3: {}/{}".format(self.use_map[self.p3use],
-                                     self.type_map[self.p3type]))
-        print("Pyro 4: {}/{}".format(self.use_map[self.p4use],
-                                     self.type_map[self.p4type]))
-        print()
-
+        out = []
+        out.append("M3FC Config Pyros:")
+        out.append("Pyro 1: {}/{}".format(self.use_map[self.p1use],
+                                          self.type_map[self.p1type]))
+        out.append("Pyro 2: {}/{}".format(self.use_map[self.p2use],
+                                          self.type_map[self.p2type]))
+        out.append("Pyro 3: {}/{}".format(self.use_map[self.p3use],
+                                          self.type_map[self.p3type]))
+        out.append("Pyro 4: {}/{}".format(self.use_map[self.p4use],
+                                          self.type_map[self.p4type]))
+        out.append("")
+        return "\n".join(out)
 
 
 class M3FCConfigProfile:
     m3fc_position_map = {0: "UNSET", 1: "Dart", 2: "Core"}
     accel_axis_map = {0: "UNSET", 1: "X", 2: "-X", 3: "Y", 4: "-Y",
-            5: "Z", 6: "-Z"}
+                      5: "Z", 6: "-Z"}
 
     def __init__(self, m3fc_position, accel_axis, ignition_accel,
                  burnout_timeout, apogee_timeout, main_altitude,
@@ -90,23 +89,27 @@ class M3FCConfigProfile:
                               self.apogee_timeout, self.main_altitude,
                               self.main_timeout, self.land_timeout])
 
-
     def __str__(self):
-        print("M3FC Config Profile")
-        print("M3FC Position:", self.m3fc_position_map[self.m3fc_position])
-        print("Accelerometer Up Axis:", self.accel_axis_map[self.accel_axis])
-        print("Ignition Detection Threshold:", self.ignition_accel, "m/s/s")
-        print("Burnout Detection Timeout:", self.burnout_timeout/10,
-              "s after launch")
-        print("Apogee Detection Timeout:", self.apogee_timeout,
-              "s after launch")
-        print("Main Chute Release Altitude:", self.main_altitude*10,
-              "m above launch altitude")
-        print("Main Chute Release Timeout:", self.main_timeout,
-              "s after apogee")
-        print("Landing Detection Timeout:", self.land_timeout*10,
-              "s after launch")
-        print()
+        out = []
+        out.append("M3FC Config Profile")
+        out.append("M3FC Position: {}".format(
+                   self.m3fc_position_map[self.m3fc_position]))
+        out.append("Accelerometer Up Axis: {}".format(
+                   self.accel_axis_map[self.accel_axis]))
+        out.append("Ignition Detection Threshold: {}m/s/s".format(
+                   self.ignition_accel))
+        out.append("Burnout Detection Timeout: {:.1f}s after launch".format(
+                   self.burnout_timeout/10.0))
+        out.append("Apogee Detection Timeout: {}s after launch".format(
+                   self.apogee_timeout))
+        out.append("Main Chute Release Altitude: {}m above launch".format(
+                   self.main_altitude*10))
+        out.append("Main Chute Release Timeout: {}s after apogee".format(
+                   self.main_timeout))
+        out.append("Landing Detection Timeout: {}s after launch".format(
+                   self.land_timeout*10))
+        out.append("")
+        return "\n".join(out)
 
 
 def ppp_pad(buf):
@@ -123,29 +126,13 @@ def ppp_pad(buf):
     return struct.pack("{}B".format(len(out)), *out)
 
 
-def run(port, txq, rxq):
-    ser = serial.Serial(port, timeout=0.1)
-    rx = CANRX()
-
-    while True:
-        try:
-            frame = txq.get_nowait()
-            ser.write(ppp_pad(frame.to_bytes()))
-        except Empty:
-            pass
-
-        buf = ser.read(4096)
-        for frame in rx.process(buf):
-            rxq.put(frame)
-
-
 def read_config(rxq):
     cfg_profile = None
     cfg_pyros = None
 
     print("Waiting to receive current profile...")
 
-    while cfg_profile is None and cfg_pyros is None:
+    while cfg_profile is None or cfg_pyros is None:
         frame = rxq.get()
         if frame.sid == m3fc_msg_cfg_profile:
             cfg_profile = M3FCConfigProfile.from_can(frame)
@@ -159,12 +146,13 @@ def read_config(rxq):
 def get_new_config():
     m3fc_position = input("M3FC Position (dart/core): ")
     accel_axis = input("Accel Up Axis (X/-X/Y/-Y/Z/-Z): ")
-    ignition_accel = input("Ignition Accel (m/s/s): ")
-    burnout_timeout = input("Burnout Timeout (0.1s): ")
-    apogee_timeout = input("Apogee Timeout (s): ")
-    main_altitude = input("Main Chute Altitude (10m above launch altitude): ")
-    main_timeout = input("Main Chute Timeout (s after apogee): ")
-    land_timeout = input("Landing Timeout (10s after launch): ")
+    ignition_accel = int(input("Ignition Accel (m/s/s): "))
+    burnout_timeout = int(input("Burnout Timeout (0.1s): "))
+    apogee_timeout = int(input("Apogee Timeout (s): "))
+    main_altitude = int(input("Main Chute Altitude "
+                              "(10m above launch altitude): "))
+    main_timeout = int(input("Main Chute Timeout (s after apogee): "))
+    land_timeout = int(input("Landing Timeout (10s after launch): "))
     if m3fc_position.lower() == "dart":
         m3fc_position = 1
     elif m3fc_position.lower() == "core":
@@ -197,7 +185,7 @@ def get_new_config():
     for n in range(1, 4+1):
         pyro_use = input("Pyro {} use (none/drogue/main/dartsep/boostersep): "
                          .format(n))
-        pyro_use = pyro_use_map[pyro1_use.lower()]
+        pyro_use = pyro_use_map[pyro_use.lower()]
         if pyro_use == 0:
             pyro_type = 0
         else:
@@ -216,7 +204,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--serial-port", help="path to serial port on m3debug",
                         default="/dev/serial/by-id/*m3debug*-if02")
-    parser.add_argument("--rx", help="RX only", action="store_true")
+    parser.add_argument("--init", help="first flash, don't try to read first",
+                        action="store_true")
+    parser.add_argument("--flash", help="immediately flash config",
+                        action="store_true")
     args = parser.parse_args()
     unglob = glob.glob(args.serial_port)
     if len(unglob) == 0:
@@ -230,7 +221,12 @@ def main():
     runner = multiprocessing.Process(target=run, args=(port, txq, rxq))
     runner.start()
 
-    read_config(rxq)
+    if args.flash:
+        print("Saving new config to flash")
+        txq.put(CANFrame(sid=m3fc_msg_save_cfg, rtr=False, dlc=0, data=[]))
+
+    if not args.init:
+        read_config(rxq)
 
     try:
         cmd = input("Update config? (y/N): ")
@@ -276,7 +272,6 @@ def main():
 
     print("Saving new config to flash")
     txq.put(CANFrame(sid=m3fc_msg_save_cfg, rtr=False, dlc=0, data=[]))
-
 
 
 if __name__ == "__main__":

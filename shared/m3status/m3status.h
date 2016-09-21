@@ -13,9 +13,9 @@
  * Call ok() on components once they finish initialising successfully.
  * Call error() on components whenever an error occurs, with an optional error
  * code to give more details.
- * Every call, a status packet is sent for that specific component which
- * also includes the AND of every component's OK status, to give an overall
- * status for this board.
+ * On each call, if that component's status has changed or if it has been too
+ * long since we last transmitted this component's status, a new CAN status
+ * packet is sent out with this update and the overall status summary.
  */
 void m3status_set_init(uint8_t component);
 void m3status_set_ok(uint8_t component);

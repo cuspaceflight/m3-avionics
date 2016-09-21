@@ -7,6 +7,7 @@
 #include "ch.h"
 #include <math.h>
 #include "m3can.h"
+#include "m3fc_config.h"
 #include "m3fc_status.h"
 #include "m3fc_state_estimation.h"
 
@@ -130,7 +131,6 @@ static void m3fc_state_estimation_update_accel(float accel, float r);
 state_estimate_t m3fc_state_estimation_get_state()
 {
     float q, dt, dt2, dt3, dt4, dt5, dt6, dt2_2;
-    static int can_counter = 0;
     state_estimate_t x_out;
 
     /* TODO Determine best q-value */
@@ -204,21 +204,18 @@ state_estimate_t m3fc_state_estimation_get_state()
     chBSemSignal(&kalman_bsem);
 
     /* Send the newly predicted state and variances */
-    if(can_counter++ >= 20) {
-        float buf[2];
-        buf[0] = dt;
-        buf[1] = x[0];
-        can_send(CAN_MSG_ID_M3FC_SE_T_H, false, (uint8_t*)buf, 8);
-        buf[0] = x[1];
-        buf[1] = x[2];
-        can_send(CAN_MSG_ID_M3FC_SE_V_A, false, (uint8_t*)buf, 8);
-        buf[0] = p[0][0];
-        can_send(CAN_MSG_ID_M3FC_SE_VAR_H, false, (uint8_t*)buf, 4);
-        buf[0] = p[1][1];
-        buf[1] = p[2][2];
-        can_send(CAN_MSG_ID_M3FC_SE_VAR_V_A, false, (uint8_t*)buf, 8);
-        can_counter = 0;
-    }
+    float buf[2];
+    buf[0] = dt;
+    buf[1] = x[0];
+    can_send(CAN_MSG_ID_M3FC_SE_T_H, false, (uint8_t*)buf, 8);
+    buf[0] = x[1];
+    buf[1] = x[2];
+    can_send(CAN_MSG_ID_M3FC_SE_V_A, false, (uint8_t*)buf, 8);
+    buf[0] = p[0][0];
+    can_send(CAN_MSG_ID_M3FC_SE_VAR_H, false, (uint8_t*)buf, 4);
+    buf[0] = p[1][1];
+    buf[1] = p[2][2];
+    can_send(CAN_MSG_ID_M3FC_SE_VAR_V_A, false, (uint8_t*)buf, 8);
 
     m3status_set_ok(M3FC_COMPONENT_SE);
 
@@ -265,11 +262,8 @@ void m3fc_state_estimation_init()
  *           [P10 - K1 P00    P11 - K1 P01    P12 - K1 P02]
  *           [P20 - K2 P00    P21 - K2 P01    P22 - K2 P02]
  */
-void m3fc_state_estimation_new_pressure(float pressure)
+void m3fc_state_estimation_new_pressure(float pressure, float rms)
 {
-    /* Around 6.5Pa resolution on the barometer. */
-    float baro_res = 6.5f;
-
     float y, r, s_inv, k[3];
     float h, hd;
 
@@ -282,7 +276,7 @@ void m3fc_state_estimation_new_pressure(float pressure)
      * of the current noise variance in altitude terms for the filter.
      */
     h = m3fc_state_estimation_pressure_to_altitude(pressure);
-    hd = m3fc_state_estimation_pressure_to_altitude(pressure + baro_res);
+    hd = m3fc_state_estimation_pressure_to_altitude(pressure + rms);
 
     /* If there was an error (couldn't find suitable altitude band) for this
      * pressure, just don't use it. It's probably wrong. */
@@ -382,33 +376,53 @@ static float m3fc_state_estimation_p2a_zero_lapse(float pressure, int b)
     return hb + (Rs * tb)/(g0 * M) * (logf(pressure) - logf(pb));
 }
 
-/* Update the state estimate with a new ADXL345 accel reading.
- * Readings near clipping (16g) are ignored.
- * The sensor noise is based on the datasheet RMS value at our sampling rate.
- *
- * Base noise value at 100Hz ODR is 1.1 LSB rms and increases by sqrt(2) every
- * doubling of the data rate.
- * Therefore at 800Hz we see 3.1 LSB and by 3200Hz we see 6.2 LSB noise.
- * Scale factor is 3.9 mg/LSB so our noise figures translate to
- * 12.09mg and 24.12mg noise, which is 0.1186 m/s/s and 0.2365 m/s/s
- * acceleration rms respectively.
- *
- * In theory these should be squared to find a variance, but in practice
- * we prefer to be quite cautious and so let's not put too much trust in these
- * and just use the RMS as a variance instead.
- *
+/* Update the state estimate with a new accelerometer reading.
+ * We check if the configured "up" axis is near the maximum, and if so increase
+ * the variance to compensate.
+ * We try to remove 1g from the "up" axis, but if the overall acceleration is
+ * close to 1G, we'll assume we're just not upright any more and return 0
+ * acceleration with a larger variance.
  */
-void m3fc_state_estimation_new_accel(float accel)
+void m3fc_state_estimation_new_accels(float accels[3], float max, float rms)
 {
-    if(fabsf(accel) > 155.0f) {
-        /* The low-g accelerometer is limited to +-16g, so
-         * we'll just discard anything above 155m/s/s (15.8g).
-         */
-        return;
+    float accel;
+
+    /* Get "up" acceleration from configuration. */
+    if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_X) {
+        accel = accels[0];
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NX) {
+        accel = -accels[0];
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_Y) {
+        accel = accels[1];
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NY) {
+        accel = -accels[1];
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_Z) {
+        accel = accels[2];
+    } else if(m3fc_config.profile.accel_axis == M3FC_CONFIG_ACCEL_AXIS_NZ) {
+        accel = -accels[2];
+    } else {
+        m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_AXIS);
     }
 
-    m3fc_state_estimation_update_accel(accel, 0.1186f);
+    float overall_accel = fabsf(sqrtf(accels[0] * accels[0] +
+                                      accels[1] * accels[1] +
+                                      accels[2] * accels[2]));
+
+    if(fabsf(accel) > max) {
+        /* Update RMS if acceleration is above maximum. */
+        rms += fabsf(accel) - max;
+    } else if(overall_accel > 9.7f && overall_accel < 9.9f) {
+        /* Check if overall acceleration is near 1G, and treat as zero if so */
+        accel = 0.0f;
+        rms += 9.80665f;
+    } else {
+        /* Otherwise just subtract 1G from the "up" acceleration */
+        accel -= 9.80665f;
+    }
+
+    m3fc_state_estimation_update_accel(accel, sqrtf(rms));
 }
+
 
 /* Run the Kalman update for a single acceleration value.
  * Called internally from the new_accel functions after

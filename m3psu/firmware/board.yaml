@@ -1,0 +1,31 @@
+name: M3PSU
+lsefreq: 0
+hsefreq: 26000000
+voltage: 3.3
+mcutype: STM32F405xx
+default: input, pushpull, starthigh, pullup, highspeed
+pins:
+    JTMS: pa13, af0, pulldown
+    JTCK: pa14, af0, pulldown
+    JTDI: pa15, af0, pullup
+    JTDO: pb3, af0
+    NJTRST: pb4, af0, pullup
+    
+    CAN_RX: pb8, af9
+    CAN_TX: pb9, af9
+    
+    I2C_SCL: pa8, opendrain, af4
+    I2C_SDA: pc9, opendrain, af4
+    
+    BATT1: pa6, analog
+    BATT2: pa5, analog
+    
+    BLEED_BATT_1: pc4, output, pushpull, startlow
+    BLEED_BATT_2: pa7, output, pushpull, startlow
+    
+    EN_INT_PWR: pc8, output, opendrain, starthigh
+    EN_EXT_PWR: pa10, output, opendrain, starthigh
+    EN_PYRO: pa2, output, pushpull, startlow
+    
+    PWR: pa1, input, floating
+    NSHUTDOWN: pc5, output, pushpull, startlow
