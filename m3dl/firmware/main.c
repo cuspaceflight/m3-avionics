@@ -9,6 +9,7 @@
 #include "err_handler.h"
 #include "logging.h"
 #include "m3can.h"
+#include "m3status.h"
 
 /* Interrupt Configuration */
 static const EXTConfig extcfg = {
@@ -81,9 +82,6 @@ int main(void) {
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
 
-    /* LTC2983 Init */
-    ltc2983_init();	
-
     /* Datalogging Init */
     logging_init();
 
@@ -95,7 +93,15 @@ int main(void) {
     
     /* Enable CAN Feedback */
     can_set_loopback(TRUE);
-  
+    
+    /* Status - Initilising LTC2983 */
+    m3status_set_init(M3DL_COMPONENT_LTC2983); 
+    
+    /* LTC2983 Init */
+    ltc2983_init();	
+
+    /* Status - Initilising SD Card */
+    m3status_set_init(M3DL_COMPONENT_SD_CARD); 
 
     /* Main Loop */
     while (true) {

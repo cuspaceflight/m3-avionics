@@ -114,7 +114,7 @@ build/obj/main.o: main.c ../../shared/ChibiOS/os/rt/include/ch.h \
  ../../shared/ChibiOS/os/hal/include/st.h \
  ../../shared/ChibiOS/os/hal/include/mmc_spi.h \
  ../../shared/ChibiOS/os/hal/include/serial_usb.h LTC2983.h err_handler.h \
- logging.h ../../shared/m3can/m3can.h
+ logging.h ../../shared/m3can/m3can.h ../../shared/m3status/m3status.h
 
 ../../shared/ChibiOS/os/rt/include/ch.h:
 
@@ -367,3 +367,5 @@ err_handler.h:
 logging.h:
 
 ../../shared/m3can/m3can.h:
+
+../../shared/m3status/m3status.h:

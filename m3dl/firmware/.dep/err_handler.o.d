@@ -114,7 +114,8 @@ build/obj/err_handler.o: err_handler.c \
  ../../shared/ChibiOS/os/hal/include/wdg.h \
  ../../shared/ChibiOS/os/hal/include/st.h \
  ../../shared/ChibiOS/os/hal/include/mmc_spi.h \
- ../../shared/ChibiOS/os/hal/include/serial_usb.h err_handler.h
+ ../../shared/ChibiOS/os/hal/include/serial_usb.h err_handler.h \
+ ../../shared/m3status/m3status.h
 
 ../../shared/ChibiOS/os/rt/include/ch.h:
 
@@ -361,3 +362,5 @@ mcuconf.h:
 ../../shared/ChibiOS/os/hal/include/serial_usb.h:
 
 err_handler.h:
+
+../../shared/m3status/m3status.h:

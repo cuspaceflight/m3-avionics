@@ -1,6 +1,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "err_handler.h"
+#include "m3status.h"
 
 void err(uint8_t arg) {
 	/* Flash Error LED */
@@ -35,14 +36,7 @@ void err(uint8_t arg) {
  *
  *	0x07 = microsd_write - SD card write
  *	       failed [microsd.c]
-
-	0x08 = microsd_write - SD card write 
-	       failed [logging.c]
  *
- *
- */
-
-/* TODO: Implement an IF statement that causes
- *	 the function to act based on the error
- *	 code and to log the event occurence
+ *	0x08 = microsd_write - SD card write 
+ *	       failed [logging.c]
  */

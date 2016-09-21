@@ -5,6 +5,7 @@
 #include "ff.h"
 #include "chprintf.h"
 #include "err_handler.h"
+#include "m3status.h"
 
 /* Function Prototypes */
 
@@ -26,6 +27,7 @@ static bool microsd_card_init(FATFS* fs)
     if (i) {
         /* SD Card Connection Failure */ 
 		err(0x03);
+		m3status_set_error(M3DL_COMPONENT_SD_CARD, M3DL_ERROR_SD_CARD_CONNECTION);
         return false;
     }
 
@@ -35,6 +37,7 @@ static bool microsd_card_init(FATFS* fs)
     if(sderr != FR_OK){
 		/* SD Card Mounting Failure */		
 		err(0x04);
+		m3status_set_error(M3DL_COMPONENT_SD_CARD, M3DL_ERROR_SD_CARD_MOUNTING);
 	};
     
     return sderr == FR_OK;
@@ -85,6 +88,8 @@ SDRESULT microsd_open_file(SDFILE* fp, const char* path, SDMODE mode,
     if(sderr != FR_OK)
 		/* SD Init Failed */        
 		err(0x05);
+		m3status_set_error(M3DL_COMPONENT_SD_CARD, M3DL_ERROR_SD_CARD_INIT);
+		
     return sderr;
 }
 
@@ -117,6 +122,7 @@ SDRESULT microsd_open_file_inc(FIL* fp, const char* path, const char* ext,
             if(sderr != FR_OK) {
 				/* Incremental SD Init Failed */
                 err(0x06);
+                m3status_set_error(M3DL_COMPONENT_SD_CARD, M3DL_ERROR_SD_CARD_FILE_OPEN);                
 			}
             return sderr;
         }
@@ -152,9 +158,8 @@ SDRESULT microsd_write(SDFILE* fp, const char* buf, unsigned int btw)
 
     if(sderr != FR_OK) {
 		err(0x07);
+		m3status_set_error(M3DL_COMPONENT_SD_CARD, M3DL_ERROR_SD_CARD_WRITE);
 	}
 
     return sderr;
 }
-
-

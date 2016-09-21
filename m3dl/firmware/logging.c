@@ -7,6 +7,7 @@
 #include "chprintf.h"
 #include "osal.h"
 #include "err_handler.h"
+#include "m3status.h"
 
 /* ------------------------------------------------------------------------- */
 /* 				   DL PACKET    			     */
@@ -14,7 +15,7 @@
 
 typedef struct DLPacket {
 
-      	uint16_t ID;
+    uint16_t ID;
 	uint8_t RTR;
 	uint8_t len;
 	uint8_t data[8];
@@ -107,6 +108,9 @@ THD_FUNCTION(datalogging_thread, arg) {
     mem_init();
 
     while (microsd_open_file_inc(&file, "log", "bin", &file_system) != FR_OK);
+    
+    /* Log file opened */
+    m3status_set_ok(M3DL_COMPONENT_SD_CARD);
 
     while (logging_enable) {
 
@@ -122,24 +126,35 @@ THD_FUNCTION(datalogging_thread, arg) {
 
         /* If the cache is full, write it all to the sd card */
         if(cache_ptr + packet_size >= log_cache + LOG_CACHE_SIZE) {
+            
             write_res = microsd_write(&file, (char*)log_cache, LOG_CACHE_SIZE);
-
-            /* If the write failed, keep attempting to re-open the log file
+            
+            /* 
+             * If the write failed, keep attempting to re-open the log file
              * and write the data out when we succeed.
              */
+             
             while (write_res != FR_OK) {
                 err(0x08);
+                m3status_set_error(M3DL_COMPONENT_SD_CARD, M3DL_ERROR_SD_CARD_WRITE);
                 microsd_close_file(&file);
                 open_res = microsd_open_file_inc(&file, "log", "bin",
                                                  &file_system);
                 if(open_res == FR_OK) {
+                    
+                    /* File re-opened so reattempt write */
                     write_res = microsd_write(&file, (char*)log_cache,
                                               LOG_CACHE_SIZE);
+                    
                 }
             }
 
             /* Reset cache pointer to beginning of cache */
             cache_ptr = log_cache;
+            
+            /* Cache written to SD card succesfully */
+            m3status_set_ok(M3DL_COMPONENT_SD_CARD);            
+            
         } else {
             cache_ptr += packet_size;
         }
@@ -157,6 +172,7 @@ THD_FUNCTION(datalogging_thread, arg) {
 
     while (write_res != FR_OK) {
         err(0x08);
+        m3status_set_error(M3DL_COMPONENT_SD_CARD, M3DL_ERROR_SD_CARD_WRITE);
         microsd_close_file(&file);
         open_res = microsd_open_file_inc(&file, "log", "bin",
                                          &file_system);
@@ -166,6 +182,10 @@ THD_FUNCTION(datalogging_thread, arg) {
         }
     }
     
+    /* Remaining cache written to SD card succesfully */
+    m3status_set_ok(M3DL_COMPONENT_SD_CARD);
+    
+    /* Close file before entering low power mode */
     microsd_close_file(&file);
 }
 

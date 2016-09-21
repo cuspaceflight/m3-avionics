@@ -122,7 +122,7 @@ build/obj/logging.o: logging.c \
  /usr/arm-none-eabi/include/sys/stdio.h ../../shared/fatfs/src/integer.h \
  ffconf.h ../../shared/fatfs/src/ff.h ../../shared/fatfs/src/integer.h \
  ffconf.h logging.h ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h \
- err_handler.h
+ err_handler.h ../../shared/m3status/m3status.h
 
 /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdint.h:
 
@@ -395,3 +395,5 @@ logging.h:
 ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h:
 
 err_handler.h:
+
+../../shared/m3status/m3status.h:

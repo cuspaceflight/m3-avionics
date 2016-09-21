@@ -121,7 +121,8 @@ build/obj/microsd.o: microsd.c \
  ../../shared/ChibiOS/os/hal/include/st.h \
  ../../shared/ChibiOS/os/hal/include/mmc_spi.h \
  ../../shared/ChibiOS/os/hal/include/serial_usb.h \
- ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h err_handler.h
+ ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h err_handler.h \
+ ../../shared/m3status/m3status.h
 
 /usr/lib/gcc/arm-none-eabi/5.4.1/include/stdint.h:
 
@@ -392,3 +393,5 @@ mcuconf.h:
 ../../shared/ChibiOS/os/hal/lib/streams/chprintf.h:
 
 err_handler.h:
+
+../../shared/m3status/m3status.h:

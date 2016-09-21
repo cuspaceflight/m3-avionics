@@ -8,6 +8,7 @@
 #include "LTC2983.h"
 #include <string.h>
 #include "err_handler.h"
+#include "m3status.h"
 
 binary_semaphore_t temp_ready_sem;
 
@@ -58,6 +59,9 @@ static THD_FUNCTION(ltc2983_thd, arg) {
 
 	/* Call ltc2983_setup function */
 	ltc2983_setup();
+	
+	/* Setup succesful */
+	m3status_set_ok(M3DL_COMPONENT_LTC2983);
 
 	/* 
 	 * Enter while loop that continually starts
@@ -93,15 +97,13 @@ static THD_FUNCTION(ltc2983_thd, arg) {
 	/* Read CH10 -> Temp 5 */	
 	ltc2983_read_reg(0x034, 4, (uint8_t *)(temp_results + 3));
 
-
-	/*
-	 * LOG THE RESULTS TO SD CARD
-	 */
-
 	/*
 	 * CHECK FOR VALIDITY AND CONVERT
 	 * TO SIGNED 16 BIT INTEGER
 	 */
+	 
+	 /* Read Cycle Complete */
+	 m3status_set_ok(M3DL_COMPONENT_LTC2983);
 
 	/*
 	 * BROADCAST OVER CAN BUS
@@ -134,6 +136,7 @@ static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data) {
 	/* Check Data Length */
 	if (len > 80){
 	    err(0x01);
+	    m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_LTC2983_OVERFLOW);
 	}
         
         else {
@@ -187,6 +190,7 @@ static void ltc2983_setup(void) {
 
 	if (cmd_status_reg != 0x40) {
 		err(0x02);
+		m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_LTC2983_SETUP);
 	}
 
 	/* 
