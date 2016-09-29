@@ -4,7 +4,7 @@
 #include "m3status.h"
 
 #define M3RADIO_COMPONENT_UBLOX         (1)
-#define M3RADIO_COMPONENT_SI4460        (2)
+#define M3RADIO_COMPONENT_LABRADOR      (2)
 #define M3RADIO_COMPONENT_GPSANT        (3)
 #define M3RADIO_COMPONENT_ROUTER        (4)
 
@@ -15,7 +15,8 @@
 #define M3RADIO_ERROR_UBLOX_DECODE      (5)
 #define M3RADIO_ERROR_UBLOX_FLIGHT_MODE (6)
 #define M3RADIO_ERROR_UBLOX_NAK         (7)
-#define M3RADIO_ERROR_SI4460_CFG        (8)
+#define M3RADIO_ERROR_LABRADOR          (8)
+#define M3RADIO_ERROR_LABRADOR_SI4460   (9)
 #define M3RADIO_ERROR_ROUTER_BAD_MSGID  (9)
 
 void m3radio_status_init(void);

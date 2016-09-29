@@ -5,7 +5,7 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16
+  USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16
 endif
 
 # C specific options here (added to USE_OPT).
@@ -101,7 +101,14 @@ include $(CHIBIOS)/test/rt/test.mk
 
 # Pull in Labrador stuff
 LABRADOR_DIR = ../labrador
-include $(LABRADOR_DIR)/embedded/labrador.mk
+LABRADOR_SRC = $(LABRADOR_DIR)/labrador/src/labrador.c \
+               $(LABRADOR_DIR)/radios/src/si446x.c \
+               $(LABRADOR_DIR)/ldpc/src/ldpc_codes.c \
+               $(LABRADOR_DIR)/ldpc/src/ldpc_encoder.c \
+               $(LABRADOR_DIR)/ldpc/src/ldpc_decoder.c
+LABRADOR_INC = $(LABRADOR_DIR)/labrador/include \
+               $(LABRADOR_DIR)/radios/include \
+               $(LABRADOR_DIR)/ldpc/include
 
 BOARDSRC=board.c
 BOARDINC=.
@@ -119,12 +126,14 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
-       $(LABRADOR_SRCS) \
+       $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+       $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
        ublox.c \
        m3radio_status.c m3radio_can.c m3radio_gps_ant.c \
        m3radio_router.c m3radio_router_slots.c \
+       m3radio_labrador.c $(LABRADOR_SRC) \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -156,7 +165,8 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(LABRADOR_INCS) $(CHIBIOS)/os/various
+         $(LABRADOR_INC) $(CHIBIOS)/os/various \
+         $(CHIBIOS)/os/hal/lib/streams
 
 #
 # Project, sources and paths

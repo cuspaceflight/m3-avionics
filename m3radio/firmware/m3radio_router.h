@@ -1,5 +1,5 @@
-#ifndef M3RADIO_ROUTER
-#define M3RADIO_ROUTER
+#ifndef M3RADIO_ROUTER_H
+#define M3RADIO_ROUTER_H
 #include <stdbool.h>
 #include <stdint.h>
 
