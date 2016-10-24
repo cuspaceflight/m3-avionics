@@ -23,4 +23,10 @@ digraph {
   "MAIN DESCENT" -> LAND[label="If time since launch > land timeout \n OR |v|<0.5 m/s"];
   LAND -> LANDED;
   LANDED -> LANDED;
+  node [shape=plaintext, fontcolor=red];
+  edge [style=dashed];
+  IGNITION -> "Save launch time";
+  BURNOUT -> "Fire dart";
+  APOGEE -> "Save apogee time \n Fire drogue";
+  "RELEASE MAIN" -> "Fire main parachute";
   }
