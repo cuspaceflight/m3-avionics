@@ -1,0 +1,26 @@
+digraph {
+  INIT -> INIT [label="If not armed"];
+  INIT -> PAD [label="Armed"];
+  PAD -> PAD[label="otherwise"];
+  PAD -> IGNITION[label="If acceleration > ignition accel \n AND height > 10m AGL"];
+  //ignition needs to say "save launch time" somewhere
+  IGNITION -> "POWERED ASCENT"; 
+  "POWERED ASCENT" ->  "POWERED ASCENT";
+  "POWERED ASCENT" -> BURNOUT [label="If acceleration < 0 \n OR time since launch > burnout time"];
+  //burnout fires the dart
+  BURNOUT -> PAD
+  //it better go to pad before firing
+  BURNOUT -> "FREE ASCENT" [label="If height > 20m AGL \n AND time since launch > 200ms"];
+  "FREE ASCENT" -> "FREE ASCENT" [label="otherwise"];
+  "FREE ASCENT" -> APOGEE[label="If v<0 \n OR time since launch > apogee timout"];
+  APOGEE -> "DROGUE DESCENT";
+  //apogee saves an apogee time and fires the drogue
+  "DROGUE DESCENT" -> "RELEASE MAIN"[label="If heigh < main altitude \n OR time since apogee > main timout"];
+  "DROGUE DESCENT" -> "DROGUE DESCENT"[label="otherwise"];
+  "RELEASE MAIN" -> "MAIN DESCENT";
+  //release main fires main parachute
+  "MAIN DESCENT" -> "MAIN DESCENT"[label="otherwise"];
+  "MAIN DESCENT" -> LAND[label="If time since launch > land timeout \n OR |v|<0.5 m/s"];
+  LAND -> LANDED;
+  LANDED -> LANDED;
+  }
