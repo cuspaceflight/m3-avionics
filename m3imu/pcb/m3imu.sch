@@ -1,5 +1,4 @@
 EESchema Schematic File Version 2
-LIBS:agg-kicad
 LIBS:usblc6-2
 LIBS:ADIS16405
 LIBS:sd_reader
@@ -1818,4 +1817,6 @@ Wire Wire Line
 	2500 6750 2600 6750
 Wire Wire Line
 	2600 7250 2500 7250
+Text Notes 6150 5600 0    60   ~ 0
+NEEDS FARNELL NUMBER
 $EndSCHEMATC
