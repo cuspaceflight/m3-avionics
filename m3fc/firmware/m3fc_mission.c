@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdbool.h>
 #include "ch.h"
 #include "m3fc_mission.h"
 #include "m3fc_status.h"

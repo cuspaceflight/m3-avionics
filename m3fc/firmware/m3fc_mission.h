@@ -1,6 +1,8 @@
 #ifndef MISSION_H
 #define MISSION_H
 
+#include <stdint.h>
+
 extern volatile bool m3fc_mission_pyro_supply_good;
 extern volatile bool m3fc_mission_pyro_armed;
 extern volatile bool m3fc_mission_pyro_cont_ok;
