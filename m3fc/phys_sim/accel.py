@@ -8,7 +8,7 @@ Ymax=0			#Register maximum height
 
 #Drag parameters
 SA_rock = 0.003	 	#Surface Area of rocket
-SA_drogue= 0.1		#Surface Area of small parachute
+SA_drogue= 0.1		#Surface Area of small parachute (I picked 0.1m^2 so that when simulating we don't have to wait too long before the program finishs, should really be about 3m^2)
 SA_main= 10		#Surface Area of main parachute
 rho = 1.225 		#air density assume to be constant for now
 Cd_rock = 0.2 		#Coefficient of drag of rocket
