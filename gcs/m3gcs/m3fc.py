@@ -62,9 +62,9 @@ def status(data):
         "BBBB", bytes(data[:4]))
 
     # Display the state (and error) of the component that sent the message
-    string = "{} ({} {}".format(statuses.get(overall, "Unknown"),
-                                components.get(comp, "Unknown"),
-                                statuses.get(comp_state, "Unknown"))
+    string = "{}: ({} {}".format(statuses.get(overall, "Unknown"),
+                                 components.get(comp, "Unknown"),
+                                 statuses.get(comp_state, "Unknown"))
     if comp_error != 0:
         string += " {})".format(component_errors.get(comp_error, "Unknown"))
     else:
