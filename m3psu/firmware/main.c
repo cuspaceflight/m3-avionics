@@ -124,6 +124,32 @@ THD_FUNCTION(power_status_reporter, arg){
   }
 }
 
+static THD_WORKING_AREA(waPowerCheck, 512);
+THD_FUNCTION(power_check, arg){
+  (void)arg;
+  chRegSetThreadName("Power Switch Checker");
+
+  while(TRUE){
+    bool switch_open = palReadLine(LINE_PWR);
+    if(switch_open){
+        int i;
+        // Shutdown all channels and go to sleep
+        for(i = 0; i < 12; i++){
+            PowerManager_switch_off(i);
+        }
+        disable_external_power();
+        disable_internal_power();
+        disable_pyros();
+        //TODO enter deep sleep
+    }
+    else
+    {
+        enable_pyros(); // For debugging, light the LED on the debug board
+    }
+    chThdSleepMilliseconds(1000);
+  }
+}
+
 int main(void) {
 
   halInit();
@@ -136,14 +162,19 @@ int main(void) {
   smbus_init();
   can_init(CAN_ID_M3PSU);
 
+  // Stay powered on all the time
+  palSetLine(LINE_NSHUTDOWN);
+
   PowerManager_init();
   ChargeController_init();
 
   switch_to_external_power();
 
-
   chThdCreateStatic(waStatusReporter, sizeof(waStatusReporter), NORMALPRIO,
                     power_status_reporter, NULL);
+
+  chThdCreateStatic(waPowerCheck, sizeof(waPowerCheck), NORMALPRIO,
+                    power_check, NULL);
   //chThdCreateStatic(waPowerAlert, sizeof(waPowerAlert), NORMALPRIO + 3,
   //                  powermanager_alert, NULL);
   chThdCreateStatic(waPowerManager, sizeof(waPowerManager), NORMALPRIO + 4,
