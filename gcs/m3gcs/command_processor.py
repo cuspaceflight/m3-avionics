@@ -6,6 +6,7 @@ from queue import Queue, Empty
 
 from . import usbcan
 from .packets import registered_packets, registered_commands
+from . import logreplay
 
 txq = multiprocessing.Queue()
 rxq = multiprocessing.Queue()
@@ -58,9 +59,17 @@ def packet_process(rxq, state):
     except KeyboardInterrupt:
         return
 
-def run(port, state):
-    usbcan_runner = multiprocessing.Process(target=usbcan.run, args=(port, txq, rxq))
-    usbcan_runner.start()
+def run(state, port=None, logfile=None):
+        
+    if logfile:
+        logreplay_runner = multiprocessing.Process(target=logreplay.run, args=(logfile, rxq))
+        logreplay_runner.start()
+    
+    else:
+        usbcan_runner = multiprocessing.Process(target=usbcan.run, args=(port, txq, rxq))
+        usbcan_runner.start()
+        
+    
     
     packet_processor = multiprocessing.Process(target=packet_process, args=(rxq, state))
     packet_processor.start()
