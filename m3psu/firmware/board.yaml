@@ -23,8 +23,8 @@ pins:
     BLEED_BATT_1: pc4, output, pushpull, startlow
     BLEED_BATT_2: pa7, output, pushpull, startlow
     
-    EN_INT_PWR: pc8, output, opendrain, starthigh
-    EN_EXT_PWR: pa10, output, opendrain, starthigh
+    EN_INT_PWR: pc8, output, opendrain, starthigh, floating
+    EN_EXT_PWR: pa10, output, opendrain, starthigh, floating
     EN_PYRO: pa2, output, pushpull, startlow
     
     PWR: pa1, input, floating
