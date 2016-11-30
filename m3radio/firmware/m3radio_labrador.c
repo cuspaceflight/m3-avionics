@@ -111,11 +111,16 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
             chMsgWait();
             uint8_t* txbuf = (uint8_t*)chMsgGet(m3radio_labrador_thdp);
             labrador_err result = labrador_tx(txbuf);
+            if(result != LABRADOR_OK) {
+                m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
+                                   M3RADIO_ERROR_LABRADOR_TX);
+            }
             chMsgRelease(m3radio_labrador_thdp, (msg_t)result);
         }
 
         /* Try and receive a message, on success, send it over CAN. */
-        if(labrador_rx(&rxbuf) == LABRADOR_OK) {
+        labrador_err result = labrador_rx(&rxbuf);
+        if(result == LABRADOR_OK) {
             uint16_t sid;
             uint8_t rtr, dlc;
             uint8_t data[8];
@@ -124,6 +129,9 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
             dlc = rxbuf[1] & 0x0F;
             memcpy(data, &rxbuf[2], dlc);
             can_send(sid, rtr, data, dlc);
+        } else if(result != LABRADOR_NO_DATA) {
+            m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
+                               M3RADIO_ERROR_LABRADOR_RX);
         }
     }
 }

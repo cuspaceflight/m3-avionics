@@ -91,8 +91,7 @@ static THD_FUNCTION(m3radio_router_thd, arg) {
     uint8_t *bufptr = packet_buf;
 
     while(true) {
-        m3status_set_ok(M3RADIO_COMPONENT_ROUTER);
-
+        /* Block trying to get a message from the mailbox */
         mailbox_res = chMBFetch(&mailbox, &msg, TIME_INFINITE);
         if(mailbox_res != MSG_OK || msg == 0) continue;
         frame = (struct pool_frame*)msg;
@@ -103,6 +102,7 @@ static THD_FUNCTION(m3radio_router_thd, arg) {
         size_t frame_size = 2 + frame->dlc;
         if(bufptr + frame_size > packet_buf + sizeof(packet_buf)) {
             m3radio_labrador_tx(packet_buf);
+            m3status_set_ok(M3RADIO_COMPONENT_ROUTER);
             bufptr = packet_buf;
         }
 
@@ -113,6 +113,9 @@ static THD_FUNCTION(m3radio_router_thd, arg) {
         bufptr[1] |= (frame->dlc     ) & 0x000F;
         memcpy(&bufptr[2], frame->data, frame->dlc);
         bufptr += frame_size;
+
+        /* Free the frame from the pool */
+        chPoolFree(&mempool, (void*)msg);
     }
 }
 
@@ -120,7 +123,7 @@ void m3radio_router_init() {
     m3status_set_init(M3RADIO_COMPONENT_ROUTER);
 
     chMBObjectInit(&mailbox, (msg_t*)mailbox_buf, MEMPOOL_SIZE);
-    chPoolObjectInit(&mempool, MEMPOOL_SIZE, NULL);
+    chPoolObjectInit(&mempool, sizeof(struct pool_frame), NULL);
     chPoolLoadArray(&mempool, (void*)mempool_buf, MEMPOOL_SIZE);
 
     chThdCreateStatic(m3radio_router_thd_wa, sizeof(m3radio_router_thd_wa),

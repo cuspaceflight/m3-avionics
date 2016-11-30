@@ -17,7 +17,9 @@
 #define M3RADIO_ERROR_UBLOX_NAK         (7)
 #define M3RADIO_ERROR_LABRADOR          (8)
 #define M3RADIO_ERROR_LABRADOR_SI4460   (9)
-#define M3RADIO_ERROR_ROUTER_BAD_MSGID  (9)
+#define M3RADIO_ERROR_LABRADOR_RX       (10)
+#define M3RADIO_ERROR_LABRADOR_TX       (11)
+#define M3RADIO_ERROR_ROUTER_BAD_MSGID  (12)
 
 void m3radio_status_init(void);
 
