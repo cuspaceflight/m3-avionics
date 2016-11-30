@@ -73,25 +73,21 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
     m3status_set_init(M3RADIO_COMPONENT_LABRADOR);
 
     /* Initialise Labrador systems */
-    labrador_err rv = labrador_init(&labcfg, &labradcfg,
-                                    &labrador_radio_si446x);
-    if(rv != LABRADOR_OK) {
+    while(labrador_init(&labcfg, &labradcfg, &labrador_radio_si446x)
+          != LABRADOR_OK)
+    {
         m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
                            M3RADIO_ERROR_LABRADOR);
 
-        while(true) {
-            chThdSleepMilliseconds(100);
-        }
+        chThdSleepMilliseconds(1000);
     }
 
     /* Initialise the Si446x driver */
-    if(!si446x_init(&brdcfg, &labradcfg)) {
+    while(!si446x_init(&brdcfg, &labradcfg)) {
         m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
                            M3RADIO_ERROR_LABRADOR_SI4460);
 
-        while(true) {
-            chThdSleepMilliseconds(100);
-        }
+        chThdSleepMilliseconds(1000);
     }
 
     /* Dump the Si446x configuration to CAN for logging */
@@ -99,8 +95,6 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
 
     /* Loop sending/receiving messages */
     while (true) {
-        m3status_set_ok(M3RADIO_COMPONENT_LABRADOR);
-
         /* If there's a packet ready to send,
          * send it and then signal that we've done so.
          */
@@ -114,6 +108,8 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
             if(result != LABRADOR_OK) {
                 m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
                                    M3RADIO_ERROR_LABRADOR_TX);
+            } else {
+                m3status_set_ok(M3RADIO_COMPONENT_LABRADOR);
             }
             chMsgRelease(m3radio_labrador_thdp, (msg_t)result);
         }
@@ -129,6 +125,7 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
             dlc = rxbuf[1] & 0x0F;
             memcpy(data, &rxbuf[2], dlc);
             can_send(sid, rtr, data, dlc);
+            m3status_set_ok(M3RADIO_COMPONENT_LABRADOR);
         } else if(result != LABRADOR_NO_DATA) {
             m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
                                M3RADIO_ERROR_LABRADOR_RX);
