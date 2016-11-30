@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "labrador.h"
 #include "si446x.h"
 #include "m3can.h"
@@ -6,11 +8,13 @@
 #include "ch.h"
 #include "chprintf.h"
 
-#define TXCODE LDPC_CODE_N256_K128
+/* Remember to update m3radio_labrador.h:M3RADIO_LABRADOR_TXBUFSIZE */
+#define TXCODE LDPC_CODE_N1280_K1024
 #define RXCODE LDPC_CODE_N256_K128
 
 static uint8_t labrador_wa[LDPC_SIZE(FAST, TXCODE, MP, RXCODE)];
-static uint8_t txbuf[LDPC_PARAM_N(TXCODE)/8] = "Hello Labrador!";
+
+static thread_t* m3radio_labrador_thdp = NULL;
 
 /* Board configuration.
  * This tells the Si446x driver what our hardware looks like.
@@ -64,6 +68,8 @@ THD_WORKING_AREA(m3radio_labrador_thd_wa, 1024);
 THD_FUNCTION(m3radio_labrador_thd, arg) {
     (void)arg;
 
+    uint8_t* rxbuf;
+
     m3status_set_init(M3RADIO_COMPONENT_LABRADOR);
 
     /* Initialise Labrador systems */
@@ -91,35 +97,47 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
     /* Dump the Si446x configuration to CAN for logging */
     si446x_dump_params(si446x_cfg_cb);
 
-#define TX 1
-
-#if TX
-    int counter = 0;
-#else
-    uint8_t* rxbuf;
-#endif
-
+    /* Loop sending/receiving messages */
     while (true) {
         m3status_set_ok(M3RADIO_COMPONENT_LABRADOR);
-#if TX
-        chsnprintf((char*)txbuf, LDPC_PARAM_N(TXCODE)/8, "%015d", counter++);
-        labrador_tx(txbuf);
-        chThdSleepMilliseconds(200);
-#else
-        (void)txbuf;
-        if(labrador_rx(&rxbuf) == LABRADOR_OK) {
-            can_send((CAN_ID_M3RADIO | CAN_MSG_ID(60)), false, rxbuf, 8);
-            can_send((CAN_ID_M3RADIO | CAN_MSG_ID(61)), false, rxbuf+8, 8);
+
+        /* If there's a packet ready to send,
+         * send it and then signal that we've done so.
+         */
+        chSysLock();
+        bool msg_pending = chMsgIsPendingI(m3radio_labrador_thdp);
+        chSysUnlock();
+        if(msg_pending) {
+            chMsgWait();
+            uint8_t* txbuf = (uint8_t*)chMsgGet(m3radio_labrador_thdp);
+            labrador_err result = labrador_tx(txbuf);
+            chMsgRelease(m3radio_labrador_thdp, (msg_t)result);
         }
-        chThdSleepMilliseconds(10);
-#endif
+
+        /* Try and receive a message, on success, send it over CAN. */
+        if(labrador_rx(&rxbuf) == LABRADOR_OK) {
+            uint16_t sid;
+            uint8_t rtr, dlc;
+            uint8_t data[8];
+            sid = (rxbuf[0]<<3) | (rxbuf[1] >> 5);
+            rtr = rxbuf[1] & 0x10;
+            dlc = rxbuf[1] & 0x0F;
+            memcpy(data, &rxbuf[2], dlc);
+            can_send(sid, rtr, data, dlc);
+        }
+    }
+}
+
+void m3radio_labrador_tx(uint8_t* buf)
+{
+    if(m3radio_labrador_thdp != NULL) {
+        chMsgSend(m3radio_labrador_thdp, (msg_t)buf);
     }
 }
 
 void m3radio_labrador_init()
 {
-    chThdCreateStatic(m3radio_labrador_thd_wa,
-                      sizeof(m3radio_labrador_thd_wa),
-                      NORMALPRIO,
-                      m3radio_labrador_thd, NULL);
+    m3radio_labrador_thdp = chThdCreateStatic(
+        m3radio_labrador_thd_wa, sizeof(m3radio_labrador_thd_wa),
+        NORMALPRIO, m3radio_labrador_thd, NULL);
 }
