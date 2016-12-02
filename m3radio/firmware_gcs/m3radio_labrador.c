@@ -89,15 +89,15 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
         bool msg_pending = chMsgIsPendingI(m3radio_labrador_thdp);
         chSysUnlock();
         if(msg_pending) {
-            chMsgWait();
-            uint8_t* txbuf = (uint8_t*)chMsgGet(m3radio_labrador_thdp);
+            thread_t *tp = chMsgWait();
+            uint8_t* txbuf = (uint8_t*)chMsgGet(tp);
             labrador_err result = labrador_tx(txbuf);
             if(result != LABRADOR_OK) {
                 palSetLine(LINE_LED_RED);
             } else {
                 palClearLine(LINE_LED_RED);
             }
-            chMsgRelease(m3radio_labrador_thdp, (msg_t)result);
+            chMsgRelease(tp, (msg_t)result);
         }
 
         /* Try and receive a message, on success, send it over CAN. */
