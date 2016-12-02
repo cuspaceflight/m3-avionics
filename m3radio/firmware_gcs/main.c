@@ -1,11 +1,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "m3can.h"
-#include "m3radio_status.h"
-#include "m3radio_gps_ant.h"
 #include "m3radio_labrador.h"
-#include "m3radio_router.h"
-#include "ublox.h"
 
 #include <string.h>
 
@@ -27,15 +23,6 @@ int main(void) {
     /* Turn on the CAN system and send a packet with our firmware version */
     can_init(CAN_ID_M3RADIO);
 
-    /* We'll enable CAN loopback so we can send our own messages over
-     * the radio */
-    can_set_loopback(true);
-
-    m3radio_status_init();
-
-    m3radio_gps_ant_init();
-    ublox_init(&SD4);
-    m3radio_router_init();
     m3radio_labrador_init();
 
     while (true) {

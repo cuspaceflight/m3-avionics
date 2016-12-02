@@ -1,0 +1,1 @@
+../firmware/halconf.h

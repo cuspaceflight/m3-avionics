@@ -1,0 +1,1 @@
+../firmware/chconf.h
