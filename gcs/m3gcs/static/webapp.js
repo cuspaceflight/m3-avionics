@@ -15,6 +15,7 @@ function mapInit(){
 
 function moveMarker(lat,lng){
     marker.setPosition({lat:lat, lng:lng});
+    map.panTo({lat:lat, lng:lng});
 }
 
 
@@ -119,7 +120,7 @@ $(document).ready(function(){
                     if(idx == "m3radio"){
                         try{
                             var latlng = state[idx]['GPS Lat/Long'].split(" ");
-                            moveMarker(parseFloat(latlng[0]), parseFloat(latlng[1]));
+                            moveMarker(parseFloat(latlng[1]), parseFloat(latlng[4]));
                         }catch (e){
                         }
                     }

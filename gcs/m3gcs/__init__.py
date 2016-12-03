@@ -26,6 +26,6 @@ def run():
             print("No port matching glob found, running with no data")
         else:
             args.port = os.path.realpath(port[0])
-            command_processor.run(port=args.port, state=global_state)
+    command_processor.run(port=args.port, state=global_state)
 
     webapp.run(state=global_state)
