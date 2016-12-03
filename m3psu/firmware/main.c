@@ -138,13 +138,13 @@ THD_FUNCTION(power_check, arg){
           PowerManager_switch_off(i);
       }*/
       //disable_external_power();
-      disable_internal_power();
-      disable_pyros();
+      //disable_internal_power();
+      //disable_pyros();
       //TODO enter deep sleep
     }
     else
     {
-      enable_pyros(); // For debugging, light the LED on the debug board
+      //enable_pyros(); // For debugging, light the LED on the debug board
     }
     chThdSleepMilliseconds(1000);
   }
@@ -163,7 +163,7 @@ int main(void) {
   can_init(CAN_ID_M3PSU);
 
   // Stay powered on all the time
-  palSetLine(LINE_NSHUTDOWN);
+  //palSetLine(LINE_NSHUTDOWN);
 
   PowerManager_init();
   ChargeController_init();
