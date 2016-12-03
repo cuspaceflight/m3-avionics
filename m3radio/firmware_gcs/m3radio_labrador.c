@@ -103,6 +103,8 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
         /* Try and receive a message, on success, send it over CAN. */
         labrador_err result = labrador_rx(&rxbuf);
         if(result == LABRADOR_OK) {
+            palClearLine(LINE_LED_RED);
+            palSetLine(LINE_LED_GRN);
             uint8_t n_frames = rxbuf[0];
             uint8_t i, j;
             for(i=0, j=1; i<n_frames; i++) {
@@ -116,7 +118,7 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
                 can_send(sid, rtr, data, dlc);
                 j += 2 + dlc;
             }
-            palClearLine(LINE_LED_RED);
+            palClearLine(LINE_LED_GRN);
         } else if(result != LABRADOR_NO_DATA) {
             palSetLine(LINE_LED_RED);
         }
