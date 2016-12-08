@@ -80,35 +80,62 @@ static THD_FUNCTION(ltc2983_thd, arg) {
 	/* Wait for Conversion to Complete */
 	chBSemWait(&temp_ready_sem);
 
-	/* Read the Results */	
-
-	static uint32_t temp_results[9];
-
-
-	/* Read CH4 -> Temp 2 */	
-	ltc2983_read_reg(0x01C, 4, (uint8_t *)(temp_results));
-
-	/* Read CH6 -> Temp 3 */	
-	ltc2983_read_reg(0x024, 4, (uint8_t *)(temp_results + 1));
-
-	/* Read CH8 -> Temp 4 */	
-	ltc2983_read_reg(0x02C, 4, (uint8_t *)(temp_results + 2));
-
-	/* Read CH10 -> Temp 5 */	
-	ltc2983_read_reg(0x034, 4, (uint8_t *)(temp_results + 3));
-
-	/*
-	 * CHECK FOR VALIDITY AND CONVERT
-	 * TO SIGNED 16 BIT INTEGER
+	/* 
+	 * READ THE RESULTS
 	 */
+
+	//  static uint32_t temp_results[4];
+
+	//  /* Read CH4 -> Temp 2 */	
+	//  ltc2983_read_reg(0x01C, 4, (uint8_t *)(temp_results));
+
+	//  /* Read CH6 -> Temp 3 */	
+	//  ltc2983_read_reg(0x024, 4, (uint8_t *)(temp_results + 1));
+
+	//  /* Read CH8 -> Temp 4 */	
+	//  ltc2983_read_reg(0x02C, 4, (uint8_t *)(temp_results + 2));
+
+	//  /* Read CH10 -> Temp 5 */	
+	//  ltc2983_read_reg(0x034, 4, (uint8_t *)(temp_results +3));
+
+	//  /*
+	// * CHECK FOR VALIDITY AND CONVERT
+	// * TO SIGNED 16 BIT INTEGER
+	// */
 	 
-	 /* Read Cycle Complete */
-	 m3status_set_ok(M3DL_COMPONENT_LTC2983);
+	// /* Read Cycle Complete */
+	    
+	// m3status_set_ok(M3DL_COMPONENT_LTC2983);
 
-	/*
-	 * BROADCAST OVER CAN BUS
-	 */
-
+	//  /*
+	//   * BROADCAST OVER CAN BUS
+	//   */
+	 
+	// ################################################
+	// ###################  DEBUG  ####################
+	// ################################################
+	
+	/* Command Status Register */
+	uint8_t command_status_register;
+	
+	/* Conversion Results Registers */
+	uint32_t temp_results[20];
+	
+	/* Multiple Conversion Mask */
+	uint8_t conv_mask[4];
+	
+	/* Channel Assignment Data */
+	uint32_t assinment_data[20];
+	 
+	/* Dump all the variables */
+	ltc2983_read_reg(0x000, 1, &command_status_register);
+	ltc2983_read_reg(0x010, 80, (uint8_t *)(temp_results));
+	ltc2983_read_reg(0x0F4, 4, (uint8_t *)(conv_mask));
+	ltc2983_read_reg(0x200, 80, (uint8_t *)(assinment_data));
+	 
+	// ###############################################
+    // ################################################
+	 
 	}
   
 }
@@ -144,7 +171,7 @@ static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data) {
 	/* Populate TX Buffer */
 	txbuf[0] = 0x02;
 	txbuf[1] = addr >> 8;
-        txbuf[2] = addr & 0xFF;
+    txbuf[2] = addr & 0xFF;
 	memcpy(&txbuf[3], data, len);
 	
 	/* SPI Send */
@@ -161,10 +188,10 @@ static void ltc2983_read_reg(uint16_t addr, size_t len, uint8_t* data) {
 	/* Setup TX Buffer */
 	uint8_t txbuf[3];
 
-        /* Populate TX Buffer */
+    /* Populate TX Buffer */
 	txbuf[0] = 0x03;
 	txbuf[1] = addr >> 8;
-        txbuf[2] = addr & 0xFF;
+    txbuf[2] = addr & 0xFF;
 
 	/* SPI Send RX Command */
 	spiSelect(&SPID1);                  
@@ -181,7 +208,7 @@ static void ltc2983_setup(void) {
 	/*
 	 * Read command status register and check
 	 * that 0x40 is returned ensuring power up
-         * is complete.
+     * is complete.
 	 */
 
 	uint8_t cmd_status_reg;
@@ -247,16 +274,23 @@ static void ltc2983_setup(void) {
 	 * bit mask and write to 0x0F5 to 0x0F7
 	 */
 
-	uint8_t conversion_mask[3];
+    uint8_t conversion_mask[3];
 
-	/* Assumes CH4 CH6 CH8 CH10 Connected */
+	//  /* Assumes CH4 CH6 CH8 CH10 Connected */
 
-	/* 0x0F5 = 0 0 0 0 CH20 CH19 CH18 CH17 */	
-	conversion_mask[0] = 0x00;
-	/* 0x0F6 = CH16 CH15 CH14 CH13 CH12 CH11 CH10 CH9 */
-	conversion_mask[1] = 0x02;
-	/* 0x0F7 = CH8 CH7 CH6 CH5 CH4 CH3 CH2 CH1 */
-	conversion_mask[2] = 0xA8;
+	//  /* 0x0F5 = 0 0 0 0 CH20 CH19 CH18 CH17 */	
+	//  conversion_mask[0] = 0x00;
+	//  /* 0x0F6 = CH16 CH15 CH14 CH13 CH12 CH11 CH10 CH9 */
+	//  conversion_mask[1] = 0x02;
+	//  /* 0x0F7 = CH8 CH7 CH6 CH5 CH4 CH3 CH2 CH1 */
+	//  conversion_mask[2] = 0xA8;
+	
+	// ######## DEBUG #########
+	   conversion_mask[0] = 0x00;
+	   conversion_mask[1] = 0xAA;
+	   conversion_mask[2] = 0xAA;
+	
+	// ########################
 
 	ltc2983_write_reg(0x0F5, 3, conversion_mask);
 

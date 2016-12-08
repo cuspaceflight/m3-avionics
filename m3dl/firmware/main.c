@@ -106,11 +106,11 @@ int main(void) {
     /* Main Loop */
     while (true) {
     
-    /* Clear the watchdog timer */
-    IWDG->KR = 0xAAAA;
+        /* Clear the watchdog timer */
+        IWDG->KR = 0xAAAA;
 
-    /* Do nothing */
-    chThdSleepMilliseconds(100);
+        /* Do nothing */
+        chThdSleepMilliseconds(100);
 
     }
 

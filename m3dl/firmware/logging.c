@@ -10,7 +10,7 @@
 #include "m3status.h"
 
 /* ------------------------------------------------------------------------- */
-/* 				   DL PACKET    			     */
+/* 				                DL PACKET    			                     */
 /* ------------------------------------------------------------------------- */
 
 typedef struct DLPacket {
@@ -37,7 +37,7 @@ void logging_init(void);
 
 
 /* ------------------------------------------------------------------------- */
-/* 				STATIC VARIABLES 			     */
+/* 				            STATIC VARIABLES 			                     */
 /* ------------------------------------------------------------------------- */
 
 /* Memory pool for allocating space for incoming data to be queued. */
@@ -64,10 +64,10 @@ static bool logging_enable = TRUE;
 
 
 /* ------------------------------------------------------------------------- */
-/* 			          ENTRY POINT	 			     */
+/* 			                    ENTRY POINT	 	   		                     */
 /* ------------------------------------------------------------------------- */
 
-void logging_init(void){
+void logging_init(void) {
 
     /* Create Logging Thread */
     chThdCreateStatic(logging_wa, sizeof(logging_wa),
@@ -82,7 +82,7 @@ void disable_logging(void) {
 
 
 /* ------------------------------------------------------------------------- */
-/* 			      MAIN THREAD FUNCTIONS 			     */
+/* 			                 MAIN THREAD FUNCTIONS 			                 */
 /* ------------------------------------------------------------------------- */
 
 /* 
