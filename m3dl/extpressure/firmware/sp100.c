@@ -1,4 +1,5 @@
 #include "sp100.h"
+#include "transmit.h"
 
 #define SP100_CMD_MEASURE_A     0x85
 #define SP100_CMD_RCAD          0x80
@@ -33,6 +34,7 @@
 #define SP100_STATUS_FAULT      (1<<5)
 #define SP100_STATUS_ACCEL      (1<<6)
 #define SP100_STATUS_MEASURE    (1<<7)
+
 
 static SPIDriver* sp100_spid;
 static ioline_t* sp100_ss;
@@ -235,7 +237,9 @@ static THD_FUNCTION(sp100_thd, arg) {
             sp100_wait_measurement(i);
             sp100_pressure_read(i);
             sp100_check_status(i);
-
+            
+            /* Transmit results */
+            transmit_SP100(sp100_out[i]);
         }
         /* TODO Signal completed read */
     }

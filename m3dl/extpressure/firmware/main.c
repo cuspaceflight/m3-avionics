@@ -2,6 +2,7 @@
 #include "hal.h"
 
 #include "sp100.h"
+#include "transmit.h"
 
 struct SP100 sp100s[4] = {{0}};
 ioline_t sp100_ss[4] = {LINE_CS1, LINE_CS2, LINE_CS3, LINE_CS4};

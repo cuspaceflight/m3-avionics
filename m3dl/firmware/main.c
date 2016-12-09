@@ -111,7 +111,5 @@ int main(void) {
 
         /* Do nothing */
         chThdSleepMilliseconds(100);
-
     }
-
 }
