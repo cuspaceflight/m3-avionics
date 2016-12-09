@@ -7,7 +7,7 @@
 #define CHANNEL_MASK_REG    0x0F5
 #define CHANNEL_ASSIGN_REG  0x200
 
-/* Channel Masks */
+/* Individual Channel Masks */
 #define TEMP1_MASK   0x02
 #define TEMP2_MASK   0x08
 #define TEMP3_MASK   0x20
@@ -28,8 +28,6 @@
 #define TEMP7_ATTACHED      0
 #define TEMP8_ATTACHED      0
 #define TEMP9_ATTACHED      0
-
-#define NUM_ATTACHED        1
 
 /* Init LTC2983 */
 void ltc2983_init(void);

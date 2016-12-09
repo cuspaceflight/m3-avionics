@@ -1,13 +1,21 @@
+#include "ch.h"
+#include "hal.h"
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "hal.h"
+
 #include "microsd.h"
 #include "logging.h"
 #include "chprintf.h"
 #include "osal.h"
+
+#include "LTC2983.h"
+#include "logging.h"
 #include "err_handler.h"
+
 #include "m3status.h"
+#include "m3can.h"
 
 /* ------------------------------------------------------------------------- */
 /* 				                DL PACKET    			                     */
@@ -211,8 +219,7 @@ static void mem_init(void)
 /* ------------------------------------------------------------------------- */
 
 
-void log_can(uint16_t ID, bool RTR, uint8_t len, uint8_t* data)
-{
+void log_can(uint16_t ID, bool RTR, uint8_t len, uint8_t* data) {
     DLPacket pkt = {
         .ID = ID, .RTR = RTR,
         .len = len, .timestamp = chVTGetSystemTime()};

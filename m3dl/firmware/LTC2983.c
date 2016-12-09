@@ -4,16 +4,22 @@
 
 #include "ch.h"
 #include "hal.h"
+
 #include "LTC2983.h"
-#include <string.h>
+#include "logging.h"
 #include "err_handler.h"
+
+#include <string.h>
+
 #include "m3status.h"
+#include "m3can.h"
+
 
 /* Conversion Status Semaphore */
 binary_semaphore_t temp_ready_sem;
 
 /* Temperature Results Buffer */	
-static uint8_t temp_results[80];
+static uint8_t temp_results[80] = {0};
 
 /* Function Prototypes */
 static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data);
@@ -68,7 +74,7 @@ static THD_FUNCTION(ltc2983_thd, arg) {
 	while(TRUE) {
 
 	    /* Initiate Conversion */
-	    uint8_t cmd_init = 0x84;
+	    uint8_t cmd_init = 0x80;
 
 	    ltc2983_write_reg(CMD_STATUS_REG, 1, &cmd_init);
 
@@ -147,7 +153,33 @@ static void ltc2983_read_reg(uint16_t addr, size_t len, uint8_t* data) {
 /* Log Temperature Data */
 static void log_temp(void) {
 
-    /* Log some stuff... */
+    uint8_t TEMP_1_2[8] = {0};
+    uint8_t TEMP_3_4[8] = {0};
+    uint8_t TEMP_5_6[8] = {0};
+    uint8_t TEMP_7_8[8] = {0};
+    
+    /* Populate Results Buffers */
+    memcpy((uint8_t*)(TEMP_1_2), (uint8_t*)(temp_results + 4), 4);
+    memcpy((uint8_t*)(TEMP_1_2 + 4), (uint8_t*)(temp_results + 12), 4);
+    memcpy((uint8_t*)(TEMP_3_4), (uint8_t*)(temp_results + 20), 4);
+    memcpy((uint8_t*)(TEMP_3_4 + 4), (uint8_t*)(temp_results + 28), 4);
+    memcpy((uint8_t*)(TEMP_5_6), (uint8_t*)(temp_results + 36), 4);
+    memcpy((uint8_t*)(TEMP_5_6 + 4), (uint8_t*)(temp_results + 44), 4);
+    memcpy((uint8_t*)(TEMP_7_8), (uint8_t*)(temp_results + 52), 4);
+    memcpy((uint8_t*)(TEMP_7_8 + 4), (uint8_t*)(temp_results + 60), 4);
+
+
+    /* Log TEMP1 & TEMP2 */
+    log_can(CAN_MSG_ID_M3DL_TEMP_1_2, FALSE, 8, TEMP_1_2);
+    
+    /* Log TEMP3 & TEMP4 */
+    log_can(CAN_MSG_ID_M3DL_TEMP_3_4, FALSE, 8, TEMP_3_4);
+    
+    /* Log TEMP5 & TEMP6 */
+    log_can(CAN_MSG_ID_M3DL_TEMP_5_6, FALSE, 8, TEMP_5_6);
+    
+    /* Log TEMP7 & TEMP8 */
+    log_can(CAN_MSG_ID_M3DL_TEMP_7_8, FALSE, 8, TEMP_7_8);
 
 }
 
