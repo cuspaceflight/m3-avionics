@@ -208,7 +208,7 @@ static void ltc2983_setup(void) {
 	}
 	
 	/* Populate Diode Specific Data */
-	sensor_config[19] = 0x0000C0E4;
+	sensor_config[19] = 0x0000C0E7;
 	
 	/* Send over SPI */
 	ltc2983_write_reg(CHANNEL_ASSIGN_REG, 80, (uint8_t *)sensor_config);
