@@ -6,23 +6,23 @@ arm-none-eabi-gdb --batch --quiet \
                     -ex "file build/m3dl.elf" \
                     -ex 'break LTC2983.c:173' \
                     -ex 'run' \
-                    -ex 'printf "\n\nT1 T2 = "' \
+                    -ex 'printf "\n\nT1_T2 = "' \
                     -ex 'p/x TEMP_1_2' \
                     -ex 'printf "\n"' \
-                    -ex 'printf "T3 T4 = "' \
+                    -ex 'printf "T3_T4 = "' \
                     -ex 'p/x TEMP_3_4' \
                     -ex 'printf "\n"' \
-                    -ex 'printf "T5 T6 = "' \
+                    -ex 'printf "T5_T6 = "' \
                     -ex 'p/x TEMP_5_6' \
                     -ex 'printf "\n"' \
-                    -ex 'printf "T7 T8 = "' \
+                    -ex 'printf "T7_T8 = "' \
                     -ex 'p/x TEMP_7_8' \
                     -ex 'printf "\n\nTEMPERATURE READINGS:  "' \
-                    -ex 'printf "CJ=%dC ", (double)(((temp_results[77] << 16) | (temp_results[78] << 8) | (temp_results[79])) / 1024)' \
-                    -ex 'printf "T2=%dC ", (double)(((TEMP_1_2[5] << 16) | (TEMP_1_2[6] << 8) | (TEMP_1_2[7])) / 1024)' \
-                    -ex 'printf "T4=%dC ", (double)(((TEMP_3_4[5] << 16) | (TEMP_3_4[6] << 8) | (TEMP_3_4[7])) / 1024)' \
-                    -ex 'printf "T5=%dC ", (double)(((TEMP_5_6[1] << 16) | (TEMP_5_6[2] << 8) | (TEMP_5_6[3])) / 1024)' \
-                    -ex 'printf "T6=%dC ", (double)(((TEMP_5_6[5] << 16) | (TEMP_5_6[6] << 8) | (TEMP_5_6[7])) / 1024)' \
-                    -ex 'printf "T7=%dC ", (double)(((TEMP_7_8[1] << 16) | (TEMP_7_8[2] << 8) | (TEMP_7_8[3])) / 1024)' \
-                    -ex 'printf "T8=%dC\n\n", (double)(((TEMP_7_8[5] << 16) | (TEMP_7_8[6] << 8) | (TEMP_7_8[7])) / 1024)'
+                    -ex 'printf "CJ=%.01fC ", (double)(((temp_results[77] << 16) | (temp_results[78] << 8) | (temp_results[79])) / 1024)' \
+                    -ex 'printf "T2=%.01fC ", (double)(((TEMP_1_2[5] << 16) | (TEMP_1_2[6] << 8) | (TEMP_1_2[7])) / 1024)' \
+                    -ex 'printf "T4=%.01fC ", (double)(((TEMP_3_4[5] << 16) | (TEMP_3_4[6] << 8) | (TEMP_3_4[7])) / 1024)' \
+                    -ex 'printf "T5=%.01fC ", (double)(((TEMP_5_6[1] << 16) | (TEMP_5_6[2] << 8) | (TEMP_5_6[3])) / 1024)' \
+                    -ex 'printf "T6=%.01fC ", (double)(((TEMP_5_6[5] << 16) | (TEMP_5_6[6] << 8) | (TEMP_5_6[7])) / 1024)' \
+                    -ex 'printf "T7=%.01fC ", (double)(((TEMP_7_8[1] << 16) | (TEMP_7_8[2] << 8) | (TEMP_7_8[3])) / 1024)' \
+                    -ex 'printf "T8=%.01fC\n\n", (double)(((TEMP_7_8[5] << 16) | (TEMP_7_8[6] << 8) | (TEMP_7_8[7])) / 1024)' \
 

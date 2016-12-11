@@ -238,10 +238,9 @@ static THD_FUNCTION(sp100_thd, arg) {
             sp100_pressure_read(i);
             sp100_check_status(i);
             
-            /* Transmit results */
-            transmit_SP100(sp100_out[i]);
         }
-        /* TODO Signal completed read */
+        /* Transmit results */
+        transmit_SP100(sp100_out);
     }
 }
 
