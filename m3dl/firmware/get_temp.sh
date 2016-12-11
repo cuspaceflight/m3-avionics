@@ -1,0 +1,16 @@
+arm-none-eabi-gdb --batch --quiet \
+                    -ex 'target extended-remote /dev/ttyACM0' \
+				    -ex 'monitor version' \
+      			    -ex 'monitor jtag_scan' \
+                    -ex 'attach 1' \
+                    -ex "file build/m3dl.elf" \
+                    -ex 'break LTC2983.c:173' \
+                    -ex 'run' \
+                    -ex 'printf "\n\nTEMPERATURE READINGS:  "' \
+                    -ex 'printf "T2=%dC ", (double)(((TEMP_1_2[6] << 8) | (TEMP_1_2[7])) / 1024)' \
+                    -ex 'printf "T3=%dC ", (double)(((TEMP_3_4[2] << 8) | (TEMP_3_4[3])) / 1024)' \
+                    -ex 'printf "T4=%dC ", (double)(((TEMP_3_4[6] << 8) | (TEMP_3_4[7])) / 1024)' \
+                    -ex 'printf "T5=%dC ", (double)(((TEMP_5_6[2] << 8) | (TEMP_5_6[3])) / 1024)' \
+                    -ex 'printf "T6=%dC ", (double)(((TEMP_5_6[6] << 8) | (TEMP_5_6[7])) / 1024)' \
+                    -ex 'printf "T7=%dC ", (double)(((TEMP_7_8[2] << 8) | (TEMP_7_8[3])) / 1024)' \
+                    -ex 'printf "T8=%dC\n\n", (double)(((TEMP_7_8[6] << 8) | (TEMP_7_8[7])) / 1024)'
