@@ -189,7 +189,7 @@ static void sp100_check_status(int n) {
     }
 }
 
-static THD_WORKING_AREA(sp100_thd_wa, 256);
+static THD_WORKING_AREA(sp100_thd_wa, 512);
 static THD_FUNCTION(sp100_thd, arg) {
     (void)arg;
     size_t i;
