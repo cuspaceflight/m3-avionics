@@ -1,18 +1,14 @@
-/*
- *  LTC2983 Temperature Sensor Driver
- */
-
 #include "ch.h"
 #include "hal.h"
+
+#include <string.h>
 
 #include "LTC2983.h"
 #include "logging.h"
 #include "err_handler.h"
 
-#include <string.h>
-
-#include "m3status.h"
 #include "m3can.h"
+#include "m3status.h"
 
 
 /* Conversion Status Semaphore */
@@ -111,7 +107,7 @@ static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data) {
 
 	/* Check Data Length */
 	if (len > 80) {
-	    err(0x01);
+	    err(M3DL_ERROR_LTC2983_OVERFLOW);
 	    m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_LTC2983_OVERFLOW);
 	}
     else {
@@ -169,17 +165,17 @@ static void log_temp(void) {
     memcpy((uint8_t*)(TEMP_7_8 + 4), (uint8_t*)(temp_results + 60), 4);
 
 
-    /* Log TEMP1 & TEMP2 */
-    log_can(CAN_MSG_ID_M3DL_TEMP_1_2, FALSE, 8, TEMP_1_2);
+    /* Send TEMP1 & TEMP2 */
+    can_send(CAN_MSG_ID_M3DL_TEMP_1_2, FALSE, TEMP_1_2, 8);
     
-    /* Log TEMP3 & TEMP4 */
-    log_can(CAN_MSG_ID_M3DL_TEMP_3_4, FALSE, 8, TEMP_3_4);
+    /* Send TEMP3 & TEMP4 */
+    can_send(CAN_MSG_ID_M3DL_TEMP_3_4, FALSE, TEMP_3_4, 8);
     
-    /* Log TEMP5 & TEMP6 */
-    log_can(CAN_MSG_ID_M3DL_TEMP_5_6, FALSE, 8, TEMP_5_6);
+    /* Send TEMP5 & TEMP6 */
+    can_send(CAN_MSG_ID_M3DL_TEMP_5_6, FALSE, TEMP_5_6, 8);
     
-    /* Log TEMP7 & TEMP8 */
-    log_can(CAN_MSG_ID_M3DL_TEMP_7_8, FALSE, 8, TEMP_7_8);
+    /* Send TEMP7 & TEMP8 */
+    can_send(CAN_MSG_ID_M3DL_TEMP_7_8, FALSE, TEMP_7_8, 8);
 
 }
 
@@ -193,7 +189,7 @@ static void ltc2983_setup(void) {
 
     /* Check Power up Complete */
 	if (cmd_status_reg != 0x40) {
-		err(0x02);
+		err(M3DL_ERROR_LTC2983_SETUP);
 		m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_LTC2983_SETUP);
 	}
 	

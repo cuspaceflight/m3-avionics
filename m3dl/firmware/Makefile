@@ -122,7 +122,7 @@ CSRC = $(STARTUPSRC) \
        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
-       main.c LTC2983.c err_handler.c logging.c microsd.c
+       main.c LTC2983.c err_handler.c logging.c microsd.c pressure.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

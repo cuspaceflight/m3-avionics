@@ -5,9 +5,11 @@
 #include "ch.h"
 #include "hal.h"
 
+#include "logging.h"
+#include "pressure.h"
 #include "LTC2983.h"
 #include "err_handler.h"
-#include "logging.h"
+
 #include "m3can.h"
 #include "m3status.h"
 
@@ -40,12 +42,13 @@ static const EXTConfig extcfg = {
   } 
 };
 
-/* Heartbeat Thread*/
+/* Heartbeat Thread */
 static THD_WORKING_AREA(hbt_wa, 128);
 static THD_FUNCTION(hbt_thd, arg) {
 
   (void)arg;
   chRegSetThreadName("Heartbeat");
+  
   while (true) {
     /* Flash HBT LED */
     palSetPad(GPIOB, GPIOB_LED1_GREEN);
@@ -55,15 +58,15 @@ static THD_FUNCTION(hbt_thd, arg) {
   }
 }
 
-/* Function called on CAN packet reception */
+/* Function Called on CAN Packet Reception */
 void can_recv(uint16_t ID, bool RTR, uint8_t* data, uint8_t len) {
 
-    /* Log incoming CAN packet */
+    /* Log Incoming CAN Packet */
     log_can(ID, RTR, len, data);
 }
 
 
-/* Application entry point */
+/* Application Entry Point */
 int main(void) {
 
     /* Allow debug access during WFI sleep */
@@ -88,20 +91,23 @@ int main(void) {
     /* Init Heartbeat */
     chThdCreateStatic(hbt_wa, sizeof(hbt_wa), NORMALPRIO, hbt_thd, NULL);
 
-    /* Turn on the CAN system and send a packet with our firmware version */
+    /* Turn on the CAN System */
     can_init(CAN_ID_M3DL);
     
     /* Enable CAN Feedback */
     can_set_loopback(TRUE);
     
-    /* Status - Initilising LTC2983 */
-    m3status_set_init(M3DL_COMPONENT_LTC2983); 
+    /* Init LTC2983 */
+    ltc2983_init();
     
-    /* LTC2983 Init */
-    ltc2983_init();	
-
-    /* Status - Initilising SD Card */
+    /* Init Pressure Sensors */
+    pressure_init();
+    
+    /* m3status - Initilised SD Card */
     m3status_set_init(M3DL_COMPONENT_SD_CARD); 
+    
+    /* m3status - Initilised LTC2983 */
+    m3status_set_init(M3DL_COMPONENT_LTC2983); 
 
     /* Main Loop */
     while (true) {

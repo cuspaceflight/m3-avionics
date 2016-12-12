@@ -7,5 +7,4 @@
 
 void transmit_SP100(struct SP100 sp100res[]);
 
-
 #endif
