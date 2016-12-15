@@ -62,6 +62,7 @@ extern uint8_t m3can_own_id;
 
 /* M3DL */
 #define CAN_MSG_ID_M3DL_FREE_SPACE          (CAN_ID_M3DL | CAN_MSG_ID(32))
+#define CAN_MSG_ID_M3DL_RATE                (CAN_ID_M3DL | CAN_MSG_ID(33))
 #define CAN_MSG_ID_M3DL_TEMP_1_2            (CAN_ID_M3DL | CAN_MSG_ID(48))
 #define CAN_MSG_ID_M3DL_TEMP_3_4            (CAN_ID_M3DL | CAN_MSG_ID(49))
 #define CAN_MSG_ID_M3DL_TEMP_5_6            (CAN_ID_M3DL | CAN_MSG_ID(50))

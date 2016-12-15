@@ -13,6 +13,9 @@
 #include "m3can.h"
 #include "m3status.h"
 
+/* Packet Counter */
+static uint32_t pkt_rate;
+
 /* Interrupt Configuration */
 static const EXTConfig extcfg = {
   {
@@ -50,11 +53,19 @@ static THD_FUNCTION(hbt_thd, arg) {
   chRegSetThreadName("Heartbeat");
   
   while (true) {
+    
     /* Flash HBT LED */
     palSetPad(GPIOB, GPIOB_LED1_GREEN);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(100);
     palClearPad(GPIOB, GPIOB_LED1_GREEN);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(900);
+    
+    /* Send Current Packet Rate */
+    can_send_u32(CAN_MSG_ID_M3DL_RATE, pkt_rate, 0, 1);
+
+    /* Reset Packet Rate Counter */
+    pkt_rate = 0;
+          
   }
 }
 
@@ -63,6 +74,9 @@ void can_recv(uint16_t ID, bool RTR, uint8_t* data, uint8_t len) {
 
     /* Log Incoming CAN Packet */
     log_can(ID, RTR, len, data);
+    
+    /* Update Packet Rate */
+    pkt_rate += 1;
 }
 
 
@@ -108,7 +122,7 @@ int main(void) {
     
     /* m3status - Initilised LTC2983 */
     m3status_set_init(M3DL_COMPONENT_LTC2983); 
-
+    
     /* Main Loop */
     while (true) {
     
