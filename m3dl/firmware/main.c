@@ -61,7 +61,7 @@ static THD_FUNCTION(hbt_thd, arg) {
     chThdSleepMilliseconds(900);
     
     /* Send Current Packet Rate */
-    can_send_u32(CAN_MSG_ID_M3DL_RATE, pkt_rate, 0, 1);
+    can_send(CAN_MSG_ID_M3DL_RATE, FALSE, (uint8_t*)(&pkt_rate), 4);
 
     /* Reset Packet Rate Counter */
     pkt_rate = 0;

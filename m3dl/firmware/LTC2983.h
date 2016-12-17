@@ -24,9 +24,9 @@
 #define TEMP3_ATTACHED      0
 #define TEMP4_ATTACHED      1
 #define TEMP5_ATTACHED      1
-#define TEMP6_ATTACHED      1
-#define TEMP7_ATTACHED      1
-#define TEMP8_ATTACHED      1
+#define TEMP6_ATTACHED      0
+#define TEMP7_ATTACHED      0
+#define TEMP8_ATTACHED      0
 #define TEMP9_ATTACHED      0
 
 /* Init LTC2983 */

@@ -93,11 +93,6 @@ THD_FUNCTION(datalogging_thread, arg) {
     
     /* SD Card Initilised and File Opened */
     m3status_set_ok(M3DL_COMPONENT_SD_CARD);
-    
-    /* Report Free Space Over CAN */
-    if(f_getfree("/", &free_clusters, &fsp) == FR_OK) {    
-        can_send(CAN_MSG_ID_M3DL_FREE_SPACE, FALSE, (uint8_t*)(&free_clusters), 4);
-    }
 
     /* Begin Logging */
     while (logging_enable) {
@@ -137,6 +132,11 @@ THD_FUNCTION(datalogging_thread, arg) {
 
             /* Reset Cache Pointer */
             cache_ptr = log_cache;
+                
+            /* Report Free Space Over CAN */
+            if(f_getfree("/", &free_clusters, &fsp) == FR_OK) {    
+                can_send(CAN_MSG_ID_M3DL_FREE_SPACE, FALSE, (uint8_t*)(&free_clusters), 4);
+            }
             
             /* Cache written to SD card succesfully */
             m3status_set_ok(M3DL_COMPONENT_SD_CARD);            

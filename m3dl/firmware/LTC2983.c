@@ -75,7 +75,7 @@ static THD_FUNCTION(ltc2983_thd, arg) {
 	    ltc2983_write_reg(CMD_STATUS_REG, 1, &cmd_init);
 
 	    /* Wait for Conversion to Complete */
-	    chBSemWait(&temp_ready_sem);	    
+	    chBSemWait(&temp_ready_sem);
 	
 	    /* Read Results */
 	    ltc2983_read_reg(TEMP_RES_REG, 80, (uint8_t *)(temp_results));

@@ -42,6 +42,7 @@ def packet_process(rxq, state):
         while True:
             try:
                 frame = rxq.get_nowait()
+                print(frame)
                 res = find_processor(frame.sid)
                 if res is not None:
                     parent, processor = res
