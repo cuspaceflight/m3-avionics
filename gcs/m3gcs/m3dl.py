@@ -34,8 +34,6 @@ def free_space(data):
 def packet_rate(data):
     # 4 byte integer - packet rate
     pkt_rate, = struct.unpack("I", bytes(data[:4]))
-    print(pkt_rate)
-    # THIS FORMAT IS WRONG
     return "Packet Rate: {: 2d}/s".format(pkt_rate)
     
 @register_packet("m3dl", CAN_MSG_ID_M3DL_PRESSURE, "Pressure")
@@ -46,7 +44,7 @@ def pressure(data):
 
 @register_packet("m3dl", CAN_MSG_ID_M3DL_TEMP_1_2, "T1 T2")
 def temp_1_2(data):
-    temp1 = (data[2] << 16) | (data[3] << 8) | (data[4])
+    temp1 = (data[1] << 16) | (data[2] << 8) | (data[3])
     temp2 = (data[5] << 16) | (data[6] << 8) | (data[7])
     temp1 = temp1 if temp1 < (1<<23) else temp1 - (1<<24)
     temp2 = temp2 if temp2 < (1<<23) else temp2 - (1<<24)
@@ -54,7 +52,7 @@ def temp_1_2(data):
 
 @register_packet("m3dl", CAN_MSG_ID_M3DL_TEMP_3_4, "T3 T4")
 def temp_3_4(data):
-    temp3 = (data[2] << 16) | (data[3] << 8) | (data[4])
+    temp3 = (data[1] << 16) | (data[2] << 8) | (data[3])
     temp4 = (data[5] << 16) | (data[6] << 8) | (data[7])
     temp3 = temp3 if temp3 < (1<<23) else temp3 - (1<<24)
     temp4 = temp4 if temp4 < (1<<23) else temp4 - (1<<24)
@@ -62,7 +60,7 @@ def temp_3_4(data):
 
 @register_packet("m3dl", CAN_MSG_ID_M3DL_TEMP_5_6, "T5 T6")
 def temp_5_6(data):
-    temp5 = (data[2] << 16) | (data[3] << 8) | (data[4])
+    temp5 = (data[1] << 16) | (data[2] << 8) | (data[3])
     temp6 = (data[5] << 16) | (data[6] << 8) | (data[7])
     temp5 = temp5 if temp5 < (1<<23) else temp5 - (1<<24)
     temp6 = temp6 if temp6 < (1<<23) else temp6 - (1<<24)
@@ -70,7 +68,7 @@ def temp_5_6(data):
 
 @register_packet("m3dl", CAN_MSG_ID_M3DL_TEMP_7_8, "T7 T8")
 def temp_7_8(data):
-    temp7 = (data[2] << 16) | (data[3] << 8) | (data[4])
+    temp7 = (data[1] << 16) | (data[2] << 8) | (data[3])
     temp8 = (data[5] << 16) | (data[6] << 8) | (data[7])
     temp7 = temp7 if temp7 < (1<<23) else temp7 - (1<<24)
     temp8 = temp8 if temp8 < (1<<23) else temp8 - (1<<24)

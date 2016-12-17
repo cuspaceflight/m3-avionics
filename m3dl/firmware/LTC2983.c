@@ -56,9 +56,6 @@ static THD_FUNCTION(ltc2983_thd, arg) {
 	
 	/* Start SPI Driver */
 	spiStart(&SPID1, &hs_spicfg);
-
-	/* Wait for LTC2983 Power up Interrupt */
-	chBSemWaitTimeout(&temp_ready_sem, MS2ST(200));
  	
 	/* Call ltc2983_setup function */
 	ltc2983_setup();
@@ -182,6 +179,9 @@ static void log_temp(void) {
 /* Register Setup */
 static void ltc2983_setup(void) {
 
+    /* Allow Power Up Time */
+	chThdSleepMilliseconds(200);
+	
 	/* Read Command Status Register */
 	uint8_t cmd_status_reg;
 	
