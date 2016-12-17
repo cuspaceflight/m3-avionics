@@ -95,7 +95,7 @@ int main(void) {
     /* Initialise ChibiOS */
     halInit();
     chSysInit();
-
+    
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
 
