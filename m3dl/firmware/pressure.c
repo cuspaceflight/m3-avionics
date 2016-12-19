@@ -16,6 +16,7 @@ static uint16_t compute_crc(uint8_t *buf, size_t len);
 
 /* UART RX Buffer */
 static uint8_t rxbuf[20];
+static systime_t last_reception = 0;
 
 
 /* UART2 Config */
@@ -31,6 +32,7 @@ static const UARTConfig uart_cfg = {
     .cr3       = 0,
 };
 
+
 /* Main Thread */
 static THD_WORKING_AREA(pressure_wa, 256);
 static THD_FUNCTION(pressure_thd, arg) {
@@ -43,13 +45,27 @@ static THD_FUNCTION(pressure_thd, arg) {
     uartStart(&UARTD2, &uart_cfg);
     
     while(TRUE) {
+    
+        /* Get Current Time */
+        last_reception = chVTGetSystemTimeX();
         
         /* Recieve Buffer */
         size_t n = sizeof(rxbuf);
         uartReceiveTimeout(&UARTD2, &n, &rxbuf, TIME_INFINITE);
         
+        /* Check for Timeout */
+        if(ST2MS(chVTTimeElapsedSinceX(last_reception)) > 500) {
+            m3status_set_error(M3DL_COMPONENT_PRESSURE, M3DL_ERROR_PRESSURE_TIMEOUT);
+            err(M3DL_ERROR_PRESSURE_TIMEOUT);
+        }
+        
         /* Process Buffer */
-        process_buffer();
+        if(process_buffer()) {
+             m3status_set_ok(M3DL_COMPONENT_PRESSURE);
+        } else {
+            m3status_set_error(M3DL_COMPONENT_PRESSURE, M3DL_ERROR_CRC_FAILED);
+            err(M3DL_ERROR_CRC_FAILED);
+        }
     }
 }
 

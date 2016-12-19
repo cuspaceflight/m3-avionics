@@ -107,21 +107,20 @@ int main(void) {
 
     /* Turn on the CAN System */
     can_init(CAN_ID_M3DL);
-    
+        
     /* Enable CAN Feedback */
     can_set_loopback(TRUE);
-    
+   
+    /* Init m3status */
+    m3status_set_init(M3DL_COMPONENT_SD_CARD); 
+    m3status_set_init(M3DL_COMPONENT_LTC2983); 
+    m3status_set_init(M3DL_COMPONENT_PRESSURE); 
+
     /* Init LTC2983 */
     ltc2983_init();
     
     /* Init Pressure Sensors */
     pressure_init();
-    
-    /* m3status - Initilised SD Card */
-    m3status_set_init(M3DL_COMPONENT_SD_CARD); 
-    
-    /* m3status - Initilised LTC2983 */
-    m3status_set_init(M3DL_COMPONENT_LTC2983); 
     
     /* Main Loop */
     while (true) {

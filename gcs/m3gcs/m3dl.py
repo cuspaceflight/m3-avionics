@@ -16,12 +16,57 @@ CAN_MSG_ID_M3DL_TEMP_7_8 = CAN_ID_M3DL | msg_id(51)
 CAN_MSG_ID_M3DL_TEMP_9 = CAN_ID_M3DL | msg_id(52)
 CAN_MSG_ID_M3DL_PRESSURE = CAN_ID_M3DL | msg_id(53)
 
+components = {
+    1: "Temperature",
+    2: "SD Card",
+    3: "Pressure"
+}
+
+component_errors = {
+    0: "No Error",
+    1: "LTC2983 TX Overflow", 2: "LTC2983 Setup",
+    3: "SD Card Connection", 4: "SD Card Mounting",
+    5: "SD Card File Open", 6: "SD Card Inc File Open",
+    7: "SD Card Write", 8: "Logging Cache Flush", 9: "SD Card FULL", 
+    16: "T1 Invalid", 17: "T2 Invalid", 18: "T3 Invalid",
+    19: "T4 Invalid", 20: "T5 Invalid", 21: "T6 Invalid",
+    22: "T4 Invalid", 23: "T5 Invalid", 24: "T9 Invalid",
+    25: "CRC Failure", 32: "Pressure Timeout"
+}
+
+compstatus = {k: {"state": 0, "reason": "Unknown"} for k in components}
+
 @register_packet("m3dl", CAN_MSG_ID_M3DL_STATUS, "Status")
 def status(data):
+    global compstatus
+    # The string must start with 'OK:' 'INIT:' or 'ERROR:' as the web
+    # interface watches for these and applies special treatment (colours)
     statuses = {0: "OK", 1: "INIT", 2: "ERROR"}
     overall, comp, comp_state, comp_error = struct.unpack(
         "BBBB", bytes(data[:4]))
-    return "{}:".format(statuses.get(overall, "Unknown"))
+
+    # Display the state (and error) of the component that sent the message
+    string = "{}: ({} {}".format(statuses.get(overall, "Unknown"),
+                                 components.get(comp, "Unknown"),
+                                 statuses.get(comp_state, "Unknown"))
+    if comp_error != 0:
+        string += " {})".format(component_errors.get(comp_error, "Unknown"))
+    else:
+        string += ")"
+
+    # Update our perception of the overall state
+    if comp in compstatus:
+        compstatus[comp]['state'] = comp_state
+        compstatus[comp]['reason'] = component_errors[comp_error]
+
+    # List all components we believe to be in error
+    errors = ""
+    for k in components:
+        if compstatus[k]['state'] == 2:
+            errors += "\n{}: {}".format(components[k], compstatus[k]['reason'])
+    if errors:
+        string += "\nErrors:" + errors
+    return string
     
 @register_packet("m3dl", CAN_MSG_ID_M3DL_FREE_SPACE, "Storage")
 def free_space(data):

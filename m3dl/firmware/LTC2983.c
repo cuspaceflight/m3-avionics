@@ -73,12 +73,16 @@ static THD_FUNCTION(ltc2983_thd, arg) {
 
 	    /* Wait for Conversion to Complete */
 	    chBSemWait(&temp_ready_sem);
+	    
+	    /* Check In */
+	    m3status_set_ok(M3DL_COMPONENT_LTC2983);
 	
 	    /* Read Results */
 	    ltc2983_read_reg(TEMP_RES_REG, 80, (uint8_t *)(temp_results));
 	    
 	    /* Log Results */
 	    log_temp();
+	    
 	}
   
 }
@@ -160,8 +164,65 @@ static void log_temp(void) {
     memcpy((uint8_t*)(TEMP_5_6 + 4), (uint8_t*)(temp_results + 44), 4);
     memcpy((uint8_t*)(TEMP_7_8), (uint8_t*)(temp_results + 52), 4);
     memcpy((uint8_t*)(TEMP_7_8 + 4), (uint8_t*)(temp_results + 60), 4);
+    
+     
+    /* Test for Validity */   
+    if(TEMP1_ATTACHED == 1) {
+        if(!(&TEMP_1_2[0] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP1_INVALID);
+            err(M3DL_ERROR_TEMP1_INVALID);
+        }
+    }
 
+    if(TEMP2_ATTACHED == 1) {
+        if(!(&TEMP_1_2[4] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP2_INVALID);
+            err(M3DL_ERROR_TEMP2_INVALID);
+        }
+    }
 
+    if(TEMP3_ATTACHED == 1) {
+        if(!(&TEMP_3_4[0] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP3_INVALID);
+            err(M3DL_ERROR_TEMP3_INVALID);
+        }
+    }
+
+    if(TEMP4_ATTACHED == 1) {
+        if(!(&TEMP_3_4[4] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP4_INVALID);
+            err(M3DL_ERROR_TEMP4_INVALID);
+        }
+    }
+
+    if(TEMP5_ATTACHED == 1) {
+        if(!(&TEMP_5_6[0] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP5_INVALID);
+            err(M3DL_ERROR_TEMP5_INVALID);
+        }
+    }
+
+    if(TEMP6_ATTACHED == 1) {
+        if(!(&TEMP_5_6[4] && 0x01)){
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP6_INVALID);
+            err(M3DL_ERROR_TEMP6_INVALID);
+        }
+    }
+
+    if(TEMP7_ATTACHED == 1) {
+        if(!(&TEMP_7_8[0] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP7_INVALID);
+            err(M3DL_ERROR_TEMP7_INVALID);
+        }
+    }
+
+    if(TEMP8_ATTACHED == 1) {
+        if(!(&TEMP_7_8[4] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP8_INVALID);
+            err(M3DL_ERROR_TEMP8_INVALID);
+        }
+    }
+    
     /* Send TEMP1 & TEMP2 */
     can_send(CAN_MSG_ID_M3DL_TEMP_1_2, FALSE, TEMP_1_2, 8);
     
@@ -173,8 +234,8 @@ static void log_temp(void) {
     
     /* Send TEMP7 & TEMP8 */
     can_send(CAN_MSG_ID_M3DL_TEMP_7_8, FALSE, TEMP_7_8, 8);
-
 }
+
 
 /* Register Setup */
 static void ltc2983_setup(void) {
@@ -183,16 +244,18 @@ static void ltc2983_setup(void) {
 	chThdSleepMilliseconds(200);
 	
 	/* Read Command Status Register */
-	uint8_t cmd_status_reg;
-	
+	uint8_t cmd_status_reg = 0x00;
 	ltc2983_read_reg(CMD_STATUS_REG, 1, &cmd_status_reg);
-
-    /* Check Power up Complete */
-	if (cmd_status_reg != 0x40) {
-		err(M3DL_ERROR_LTC2983_SETUP);
-		m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_LTC2983_SETUP);
-	}
 	
+	while(cmd_status_reg != 0x40) {
+
+        /* Signal Error & Re-attempt every 100ms */        
+        err(M3DL_ERROR_LTC2983_SETUP);
+	    m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_LTC2983_SETUP);
+        chThdSleepMilliseconds(100);
+        ltc2983_read_reg(CMD_STATUS_REG, 1, &cmd_status_reg);
+    }
+		
     /* Buffer to Hold Sensor Config Data */
 	static uint32_t sensor_config[20] = {0};
 

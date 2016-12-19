@@ -4,10 +4,9 @@ arm-none-eabi-gdb --batch --quiet \
       			    -ex 'monitor jtag_scan' \
                     -ex 'attach 1' \
                     -ex "file build/m3dl.elf" \
-                    -ex 'break LTC2983.c:173' \
+                    -ex 'break LTC2983.c:167' \
                     -ex 'run' \
                     -ex 'printf "\n\nTEMPERATURE READINGS:  "' \
-                    -ex 'printf "CJ=%.1fC ", (double)(((temp_results[77] << 16) | (temp_results[78] << 8) | (temp_results[79])) / 1024)' \
                     -ex 'printf "T2=%.1fC ", (double)(((TEMP_1_2[5] << 16) | (TEMP_1_2[6] << 8) | (TEMP_1_2[7])) / 1024)' \
                     -ex 'printf "T4=%.1fC ", (double)(((TEMP_3_4[5] << 16) | (TEMP_3_4[6] << 8) | (TEMP_3_4[7])) / 1024)' \
                     -ex 'printf "T5=%.1fC ", (double)(((TEMP_5_6[1] << 16) | (TEMP_5_6[2] << 8) | (TEMP_5_6[3])) / 1024)' \
