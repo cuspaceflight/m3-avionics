@@ -15,6 +15,15 @@ static bool microsd_card_init(FATFS* fs);
 static void microsd_card_try_init(FATFS* fs);
 static void microsd_card_deinit(void);
 
+/* Driver Working Area */
+static uint8_t sd_scratchpad[512];
+
+/* SD Card Config */
+static const SDCConfig sdccfg = {
+  sd_scratchpad,
+  SDC_MODE_4BIT
+};
+
 
 /* SD Card Initilisation */
 static bool microsd_card_init(FATFS* fs) {
@@ -23,7 +32,7 @@ static bool microsd_card_init(FATFS* fs) {
     FRESULT sderr;
 
     /* Initialise the SDC interface */
-    sdcStart(&SDCD1, NULL);
+    sdcStart(&SDCD1, &sdccfg);
 
     /* Attempt to connect to the SD card */
     int i = sdcConnect(&SDCD1);
