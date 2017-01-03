@@ -1,7 +1,7 @@
 EESchema Schematic File Version 2
 LIBS:agg-kicad
 LIBS:Li-Ion-Charger-Board-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -599,17 +599,6 @@ $EndComp
 Text Notes 5100 2750 0    60   ~ 0
 Address 0x09
 NoConn ~ 4650 3900
-$Comp
-L VCC #PWR012
-U 1 1 56E18C4B
-P 5150 1400
-F 0 "#PWR012" H 5150 1510 50  0001 L CNN
-F 1 "VCC" H 5150 1490 50  0000 C CNN
-F 2 "" H 5150 1400 60  0000 C CNN
-F 3 "" H 5150 1400 60  0000 C CNN
-	1    5150 1400
-	1    0    0    -1  
-$EndComp
 $Comp
 L VBATT #PWR013
 U 1 1 56E1ABD5
@@ -1504,21 +1493,6 @@ Wire Wire Line
 	10450 3800 10550 3800
 Text Label 10550 3800 0    60   ~ 0
 ~ALERT
-Text Label 8850 4150 2    60   ~ 0
-V_MAIN
-$Comp
-L VCC #PWR037
-U 1 1 56ED3312
-P 9000 4150
-F 0 "#PWR037" H 9000 4260 50  0001 L CNN
-F 1 "VCC" V 8950 4250 50  0000 C CNN
-F 2 "" H 9000 4150 60  0000 C CNN
-F 3 "" H 9000 4150 60  0000 C CNN
-	1    9000 4150
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	8850 4150 9000 4150
 Text Label 4700 5450 2    60   ~ 0
 ~ALERT
 $Comp
@@ -1608,20 +1582,6 @@ Wire Wire Line
 	10250 4150 10400 4150
 Text Label 10250 4150 2    60   ~ 0
 3v3_PSU
-$Comp
-L PWR #FLG039
-U 1 1 56E4659E
-P 8950 4100
-F 0 "#FLG039" H 8950 4260 50  0001 C CNN
-F 1 "PWR" H 8950 4190 50  0000 C CNN
-F 2 "" H 8950 4100 50  0001 C CNN
-F 3 "" H 8950 4100 50  0001 C CNN
-	1    8950 4100
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8950 4100 8950 4150
-Connection ~ 8950 4150
 $Comp
 L PWR #FLG040
 U 1 1 56E467CC
@@ -1790,4 +1750,6 @@ Wire Wire Line
 	8600 5450 8550 5450
 Wire Wire Line
 	8550 5450 8550 5500
+Text Label 5150 1400 1    60   ~ 0
+CHARGE
 $EndSCHEMATC
