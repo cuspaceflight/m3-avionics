@@ -5,11 +5,16 @@
 #include "ch.h"
 #include "hal.h"
 
+#include "logging.h"
+#include "pressure.h"
 #include "LTC2983.h"
 #include "err_handler.h"
-#include "logging.h"
+
 #include "m3can.h"
 #include "m3status.h"
+
+/* Packet Counter */
+static uint32_t pkt_rate;
 
 /* Interrupt Configuration */
 static const EXTConfig extcfg = {
@@ -40,30 +45,42 @@ static const EXTConfig extcfg = {
   } 
 };
 
-/* Heartbeat Thread*/
+/* Heartbeat Thread */
 static THD_WORKING_AREA(hbt_wa, 128);
 static THD_FUNCTION(hbt_thd, arg) {
 
   (void)arg;
   chRegSetThreadName("Heartbeat");
+  
   while (true) {
+    
     /* Flash HBT LED */
     palSetPad(GPIOB, GPIOB_LED1_GREEN);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(100);
     palClearPad(GPIOB, GPIOB_LED1_GREEN);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(900);
+    
+    /* Send Current Packet Rate */
+    can_send(CAN_MSG_ID_M3DL_RATE, FALSE, (uint8_t*)(&pkt_rate), 4);
+
+    /* Reset Packet Rate Counter */
+    pkt_rate = 0;
+          
   }
 }
 
-/* Function called on CAN packet reception */
+/* Function Called on CAN Packet Reception */
 void can_recv(uint16_t ID, bool RTR, uint8_t* data, uint8_t len) {
 
-    /* Log incoming CAN packet */
+    /* Log Incoming CAN Packet */
     log_can(ID, RTR, len, data);
+    
+    /* Update Packet Rate */
+    pkt_rate += 1;
 }
 
 
-/* Application entry point */
+/* Application Entry Point */
 int main(void) {
 
     /* Allow debug access during WFI sleep */
@@ -78,7 +95,7 @@ int main(void) {
     /* Initialise ChibiOS */
     halInit();
     chSysInit();
-
+    
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
 
@@ -88,30 +105,30 @@ int main(void) {
     /* Init Heartbeat */
     chThdCreateStatic(hbt_wa, sizeof(hbt_wa), NORMALPRIO, hbt_thd, NULL);
 
-    /* Turn on the CAN system and send a packet with our firmware version */
+    /* Turn on the CAN System */
     can_init(CAN_ID_M3DL);
-    
+        
     /* Enable CAN Feedback */
     can_set_loopback(TRUE);
-    
-    /* Status - Initilising LTC2983 */
-    m3status_set_init(M3DL_COMPONENT_LTC2983); 
-    
-    /* LTC2983 Init */
-    ltc2983_init();	
-
-    /* Status - Initilising SD Card */
+   
+    /* Init m3status */
     m3status_set_init(M3DL_COMPONENT_SD_CARD); 
+    m3status_set_init(M3DL_COMPONENT_LTC2983); 
+    m3status_set_init(M3DL_COMPONENT_PRESSURE); 
 
+    /* Init LTC2983 */
+    ltc2983_init();
+    
+    /* Init Pressure Sensors */
+    pressure_init();
+    
     /* Main Loop */
     while (true) {
     
-    /* Clear the watchdog timer */
-    IWDG->KR = 0xAAAA;
+        /* Clear the watchdog timer */
+        IWDG->KR = 0xAAAA;
 
-    /* Do nothing */
-    chThdSleepMilliseconds(100);
-
+        /* Do nothing */
+        chThdSleepMilliseconds(100);
     }
-
 }

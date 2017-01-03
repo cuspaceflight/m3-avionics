@@ -1,8 +1,10 @@
 var map;
 var marker;
+var line;
+var path;
 function mapInit(){
     map = new google.maps.Map(document.getElementById("map"), {
-        center: {lat:55.7163992, lng:-4.8039792},
+        center: {lat:52, lng:0},
         zoom: 16,
     });
     
@@ -11,10 +13,21 @@ function mapInit(){
         map: map,
         title: "Rocket"
     });
+
+    path = new google.maps.MVCArray();
+    line = new google.maps.Polyline({
+        map: map,
+        strokeColor: "#f00",
+        strokeWeight: 2,
+        strokeOpacity: 1,
+        path: path
+    });
 }
 
 function moveMarker(lat,lng){
-    marker.setPosition({lat:lat, lng:lng});
+    var pos = new google.maps.LatLng({lat:lat, lng:lng});
+    marker.setPosition(pos);
+    path.push(pos);
 }
 
 
@@ -119,7 +132,7 @@ $(document).ready(function(){
                     if(idx == "m3radio"){
                         try{
                             var latlng = state[idx]['GPS Lat/Long'].split(" ");
-                            moveMarker(parseFloat(latlng[0]), parseFloat(latlng[1]));
+                            moveMarker(parseFloat(latlng[1]), parseFloat(latlng[4]));
                         }catch (e){
                         }
                     }

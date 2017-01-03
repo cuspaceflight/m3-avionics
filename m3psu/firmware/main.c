@@ -132,19 +132,19 @@ THD_FUNCTION(power_check, arg){
   while(TRUE){
     bool switch_open = palReadLine(LINE_PWR);
     if(switch_open){
-        int i;
-        // Shutdown all channels and go to sleep
-        for(i = 0; i < 12; i++){
-            PowerManager_switch_off(i);
-        }
-        disable_external_power();
-        disable_internal_power();
-        disable_pyros();
-        //TODO enter deep sleep
+      //int i;
+      // Shutdown all channels and go to sleep
+      /*for(i = 0; i < 12; i++){
+          PowerManager_switch_off(i);
+      }*/
+      //disable_external_power();
+      //disable_internal_power();
+      //disable_pyros();
+      //TODO enter deep sleep
     }
     else
     {
-        enable_pyros(); // For debugging, light the LED on the debug board
+      //enable_pyros(); // For debugging, light the LED on the debug board
     }
     chThdSleepMilliseconds(1000);
   }
@@ -163,7 +163,7 @@ int main(void) {
   can_init(CAN_ID_M3PSU);
 
   // Stay powered on all the time
-  palSetLine(LINE_NSHUTDOWN);
+  //palSetLine(LINE_NSHUTDOWN);
 
   PowerManager_init();
   ChargeController_init();

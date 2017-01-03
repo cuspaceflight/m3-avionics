@@ -1,21 +1,27 @@
-/*
- *  LTC2983 Temperature Sensor Driver
- *   (Assuming TEMP 2 - 5 Connected)
- */
-
 #include "ch.h"
 #include "hal.h"
-#include "LTC2983.h"
+
 #include <string.h>
+
+#include "LTC2983.h"
+#include "logging.h"
 #include "err_handler.h"
+
+#include "m3can.h"
 #include "m3status.h"
 
+
+/* Conversion Status Semaphore */
 binary_semaphore_t temp_ready_sem;
+
+/* Temperature Results Buffer */	
+static uint8_t temp_results[80] = {0};
 
 /* Function Prototypes */
 static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data);
 static void ltc2983_read_reg(uint16_t addr, size_t len, uint8_t* data);
 static void ltc2983_setup(void);
+static void log_temp(void);
 
 /* Set SPI Config */
 static const SPIConfig hs_spicfg = {
@@ -40,75 +46,43 @@ void temp_ready(EXTDriver *extp, expchannel_t channel) {
 
 }
 
-/* LTC2983 Thread */
+/* Temperature Sensing Thread */
 static THD_WORKING_AREA(ltc2983_wa, 256);
 static THD_FUNCTION(ltc2983_thd, arg) {
 	
-	/* Set Thread Name & Start SPI */
+	/* Set Thread Name */
 	(void)arg;
 	chRegSetThreadName("LTC2983");
+	
+	/* Start SPI Driver */
 	spiStart(&SPID1, &hs_spicfg);
-
-	/* 
-	 * Sleep until LTC2983 power up fires
-	 * interrupt taking TEMP_INT HIGH  
-	 */
-
-	chBSemWaitTimeout(&temp_ready_sem, MS2ST(200));
  	
-
 	/* Call ltc2983_setup function */
 	ltc2983_setup();
 	
 	/* Setup succesful */
 	m3status_set_ok(M3DL_COMPONENT_LTC2983);
 
-	/* 
-	 * Enter while loop that continually starts
-	 * a multi-channel conversion and sleeps until
-	 * completion is signalled by the LTC2983 
-	 * taking the TEMP_INT pin high  
-	 */
-
+	/* Initiate Continious Multi-Channel Conversion */
 	while(TRUE) {
 
-	/* Initiate Conversion */
-	uint8_t cmd_init = 0x80;
+	    /* Initiate Conversion */
+	    uint8_t cmd_init = 0x80;
 
-	ltc2983_write_reg(0x000, 1, &cmd_init);
+	    ltc2983_write_reg(CMD_STATUS_REG, 1, &cmd_init);
 
-	/* Wait for Conversion to Complete */
-	chBSemWait(&temp_ready_sem);
-
-	/* Read the Results */	
-
-	static uint32_t temp_results[9];
-
-
-	/* Read CH4 -> Temp 2 */	
-	ltc2983_read_reg(0x01C, 4, (uint8_t *)(temp_results));
-
-	/* Read CH6 -> Temp 3 */	
-	ltc2983_read_reg(0x024, 4, (uint8_t *)(temp_results + 1));
-
-	/* Read CH8 -> Temp 4 */	
-	ltc2983_read_reg(0x02C, 4, (uint8_t *)(temp_results + 2));
-
-	/* Read CH10 -> Temp 5 */	
-	ltc2983_read_reg(0x034, 4, (uint8_t *)(temp_results + 3));
-
-	/*
-	 * CHECK FOR VALIDITY AND CONVERT
-	 * TO SIGNED 16 BIT INTEGER
-	 */
-	 
-	 /* Read Cycle Complete */
-	 m3status_set_ok(M3DL_COMPONENT_LTC2983);
-
-	/*
-	 * BROADCAST OVER CAN BUS
-	 */
-
+	    /* Wait for Conversion to Complete */
+	    chBSemWait(&temp_ready_sem);
+	    
+	    /* Check In */
+	    m3status_set_ok(M3DL_COMPONENT_LTC2983);
+	
+	    /* Read Results */
+	    ltc2983_read_reg(TEMP_RES_REG, 80, (uint8_t *)(temp_results));
+	    
+	    /* Log Results */
+	    log_temp();
+	    
 	}
   
 }
@@ -116,14 +90,13 @@ static THD_FUNCTION(ltc2983_thd, arg) {
 /* Entry Point */
 void ltc2983_init(void) {
     
-        /* Init Temp Ready Semaphore */
-        chBSemObjectInit(&temp_ready_sem, FALSE);
+    /* Init Temp Ready Semaphore */
+    chBSemObjectInit(&temp_ready_sem, FALSE);
 
-        /* Create LTC2983 Thread */
-        chThdCreateStatic(ltc2983_wa, sizeof(ltc2983_wa),
-                      NORMALPRIO, ltc2983_thd, NULL);
+    /* Create LTC2983 Thread */
+    chThdCreateStatic(ltc2983_wa, sizeof(ltc2983_wa),
+                  NORMALPRIO, ltc2983_thd, NULL);
 
-	
 }
 
 
@@ -134,17 +107,16 @@ static void ltc2983_write_reg(uint16_t addr, size_t len, uint8_t* data) {
 	static uint8_t txbuf[83];
 
 	/* Check Data Length */
-	if (len > 80){
-	    err(0x01);
+	if (len > 80) {
+	    err(M3DL_ERROR_LTC2983_OVERFLOW);
 	    m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_LTC2983_OVERFLOW);
 	}
-        
-        else {
+    else {
 
 	/* Populate TX Buffer */
 	txbuf[0] = 0x02;
 	txbuf[1] = addr >> 8;
-        txbuf[2] = addr & 0xFF;
+    txbuf[2] = addr & 0xFF;
 	memcpy(&txbuf[3], data, len);
 	
 	/* SPI Send */
@@ -161,10 +133,10 @@ static void ltc2983_read_reg(uint16_t addr, size_t len, uint8_t* data) {
 	/* Setup TX Buffer */
 	uint8_t txbuf[3];
 
-        /* Populate TX Buffer */
+    /* Populate TX Buffer */
 	txbuf[0] = 0x03;
 	txbuf[1] = addr >> 8;
-        txbuf[2] = addr & 0xFF;
+    txbuf[2] = addr & 0xFF;
 
 	/* SPI Send RX Command */
 	spiSelect(&SPID1);                  
@@ -175,90 +147,170 @@ static void ltc2983_read_reg(uint16_t addr, size_t len, uint8_t* data) {
 	spiUnselect(&SPID1);
 }
 
+/* Log Temperature Data */
+static void log_temp(void) {
+
+    uint8_t TEMP_1_2[8] = {0};
+    uint8_t TEMP_3_4[8] = {0};
+    uint8_t TEMP_5_6[8] = {0};
+    uint8_t TEMP_7_8[8] = {0};
+    
+    /* Populate Results Buffers */
+    memcpy((uint8_t*)(TEMP_1_2), (uint8_t*)(temp_results + 4), 4);
+    memcpy((uint8_t*)(TEMP_1_2 + 4), (uint8_t*)(temp_results + 12), 4);
+    memcpy((uint8_t*)(TEMP_3_4), (uint8_t*)(temp_results + 20), 4);
+    memcpy((uint8_t*)(TEMP_3_4 + 4), (uint8_t*)(temp_results + 28), 4);
+    memcpy((uint8_t*)(TEMP_5_6), (uint8_t*)(temp_results + 36), 4);
+    memcpy((uint8_t*)(TEMP_5_6 + 4), (uint8_t*)(temp_results + 44), 4);
+    memcpy((uint8_t*)(TEMP_7_8), (uint8_t*)(temp_results + 52), 4);
+    memcpy((uint8_t*)(TEMP_7_8 + 4), (uint8_t*)(temp_results + 60), 4);
+    
+     
+    /* Test for Validity */   
+    if(TEMP1_ATTACHED == 1) {
+        if(!(&TEMP_1_2[0] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP1_INVALID);
+            err(M3DL_ERROR_TEMP1_INVALID);
+        }
+    }
+
+    if(TEMP2_ATTACHED == 1) {
+        if(!(&TEMP_1_2[4] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP2_INVALID);
+            err(M3DL_ERROR_TEMP2_INVALID);
+        }
+    }
+
+    if(TEMP3_ATTACHED == 1) {
+        if(!(&TEMP_3_4[0] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP3_INVALID);
+            err(M3DL_ERROR_TEMP3_INVALID);
+        }
+    }
+
+    if(TEMP4_ATTACHED == 1) {
+        if(!(&TEMP_3_4[4] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP4_INVALID);
+            err(M3DL_ERROR_TEMP4_INVALID);
+        }
+    }
+
+    if(TEMP5_ATTACHED == 1) {
+        if(!(&TEMP_5_6[0] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP5_INVALID);
+            err(M3DL_ERROR_TEMP5_INVALID);
+        }
+    }
+
+    if(TEMP6_ATTACHED == 1) {
+        if(!(&TEMP_5_6[4] && 0x01)){
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP6_INVALID);
+            err(M3DL_ERROR_TEMP6_INVALID);
+        }
+    }
+
+    if(TEMP7_ATTACHED == 1) {
+        if(!(&TEMP_7_8[0] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP7_INVALID);
+            err(M3DL_ERROR_TEMP7_INVALID);
+        }
+    }
+
+    if(TEMP8_ATTACHED == 1) {
+        if(!(&TEMP_7_8[4] && 0x01)) {
+            m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP8_INVALID);
+            err(M3DL_ERROR_TEMP8_INVALID);
+        }
+    }
+    
+    /* Send TEMP1 & TEMP2 */
+    can_send(CAN_MSG_ID_M3DL_TEMP_1_2, FALSE, TEMP_1_2, 8);
+    
+    /* Send TEMP3 & TEMP4 */
+    can_send(CAN_MSG_ID_M3DL_TEMP_3_4, FALSE, TEMP_3_4, 8);
+    
+    /* Send TEMP5 & TEMP6 */
+    can_send(CAN_MSG_ID_M3DL_TEMP_5_6, FALSE, TEMP_5_6, 8);
+    
+    /* Send TEMP7 & TEMP8 */
+    can_send(CAN_MSG_ID_M3DL_TEMP_7_8, FALSE, TEMP_7_8, 8);
+}
+
+
 /* Register Setup */
 static void ltc2983_setup(void) {
 
-	/*
-	 * Read command status register and check
-	 * that 0x40 is returned ensuring power up
-         * is complete.
-	 */
-
-	uint8_t cmd_status_reg;
+    /* Allow Power Up Time */
+	chThdSleepMilliseconds(200);
 	
-	ltc2983_read_reg(0x000, 1, &cmd_status_reg);
-
-	if (cmd_status_reg != 0x40) {
-		err(0x02);
-		m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_LTC2983_SETUP);
-	}
-
-	/* 
-	 * Loop over address to populate sensor config
-	 * buffer and send to ltc2983 at 0x200
-	 */
+	/* Read Command Status Register */
+	uint8_t cmd_status_reg = 0x00;
+	ltc2983_read_reg(CMD_STATUS_REG, 1, &cmd_status_reg);
 	
+	while(cmd_status_reg != 0x40) {
 
-	/* Buffer to Hold Sensor Config Data */
-	static uint8_t sensor_config[80];
+        /* Signal Error & Re-attempt every 100ms */        
+        err(M3DL_ERROR_LTC2983_SETUP);
+	    m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_LTC2983_SETUP);
+        chThdSleepMilliseconds(100);
+        ltc2983_read_reg(CMD_STATUS_REG, 1, &cmd_status_reg);
+    }
+		
+    /* Buffer to Hold Sensor Config Data */
+	static uint32_t sensor_config[20] = {0};
 
-	/* Loop Pointer */
-	uint8_t i;
-	i = 0;
-
-	/* Populate Thermocouple Specific Data */
-	while (i < 76){
-	
-		if ((i%8) == 0){
-			/* Odd Channel Number */
-			sensor_config[i] = 0x00;
-			sensor_config[i + 1] = 0x00;
-			sensor_config[i + 2] = 0x00;
-			sensor_config[i + 3] = 0x00;		
-		} 
-		else {
-			/* Even Channel Number */
-			sensor_config[i] = 0x15;
-			sensor_config[i + 1] = 0x10;
-			sensor_config[i + 2] = 0x00;
-			sensor_config[i + 3] = 0x00;	
+    /* Populate Thermocouple Specific Data */
+    for (int i = 0; i < 19; i++) {
+		if ((i%2) == 1){
+			sensor_config[i] = 0x00001015;				
 		}
-
-		i = i + 4;
 	}
-
 	
 	/* Populate Diode Specific Data */
-	sensor_config[76] = 0xE4;
-	sensor_config[77] = 0x50;
-	sensor_config[78] = 0x0C;
-	sensor_config[79] = 0x49;	
-
-
-	/*
-  	 * Send over SPI & return to thread
-	 */
-
-	ltc2983_write_reg(0x200, 80, sensor_config);
-
+	sensor_config[19] = 0x0000C0E7;
 	
-	/* 
-	 * Populate multiple conversion channel
-	 * bit mask and write to 0x0F5 to 0x0F7
-	 */
+	/* Send over SPI */
+	ltc2983_write_reg(CHANNEL_ASSIGN_REG, 80, (uint8_t *)sensor_config);
+	
+	
+	/* Multi-Channel Conversion Mask */	 
+    uint8_t conversion_mask[3] = {0};
+    
+    /* TEMP1 - TEMP2 - TEMP3 - TEMP4 */
+    if (TEMP1_ATTACHED == 1) {
+        conversion_mask[2] |= TEMP1_MASK;
+        }
+    if (TEMP2_ATTACHED == 1) {
+        conversion_mask[2] |= TEMP2_MASK;
+        }
+    if (TEMP3_ATTACHED == 1) {
+        conversion_mask[2] |= TEMP3_MASK;
+        }
+    if (TEMP4_ATTACHED == 1) {
+        conversion_mask[2] |= TEMP4_MASK;
+        }
+    
+    /* TEMP5 - TEMP6 - TEMP7 - TEMP8 */
+    if (TEMP5_ATTACHED == 1) {
+        conversion_mask[1] |= TEMP5_MASK;
+        }
+    if (TEMP6_ATTACHED == 1) {
+        conversion_mask[1] |= TEMP6_MASK;
+        }
+    if (TEMP7_ATTACHED == 1) {
+        conversion_mask[1] |= TEMP7_MASK;
+        }
+    if (TEMP8_ATTACHED == 1) {
+        conversion_mask[1] |= TEMP8_MASK;
+        }
 
-	uint8_t conversion_mask[3];
-
-	/* Assumes CH4 CH6 CH8 CH10 Connected */
-
-	/* 0x0F5 = 0 0 0 0 CH20 CH19 CH18 CH17 */	
-	conversion_mask[0] = 0x00;
-	/* 0x0F6 = CH16 CH15 CH14 CH13 CH12 CH11 CH10 CH9 */
-	conversion_mask[1] = 0x02;
-	/* 0x0F7 = CH8 CH7 CH6 CH5 CH4 CH3 CH2 CH1 */
-	conversion_mask[2] = 0xA8;
-
-	ltc2983_write_reg(0x0F5, 3, conversion_mask);
+	/* TEMP9 */
+	if (TEMP9_ATTACHED == 1) {
+        conversion_mask[0] |= TEMP9_MASK;
+        }
+	
+	/* Write Mask Over SPI */
+	ltc2983_write_reg(CHANNEL_MASK_REG, 3, conversion_mask);
 
 }
 

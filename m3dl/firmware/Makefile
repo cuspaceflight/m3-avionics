@@ -122,7 +122,7 @@ CSRC = $(STARTUPSRC) \
        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
-       main.c LTC2983.c err_handler.c logging.c microsd.c
+       main.c LTC2983.c err_handler.c logging.c microsd.c pressure.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -252,7 +252,20 @@ unpower:
 	arm-none-eabi-gdb --batch \
 		              -ex 'target extended-remote /dev/ttyACM0' \
 		              -ex 'monitor tpwr disable'
+		              
+tc_flash: build/$(PROJECT).elf
+	arm-none-eabi-gdb --batch \
+		              -ex 'target extended-remote /dev/ttyACM0' \
+					  -ex 'monitor version' \
+					  -ex 'monitor swdp_scan' \
+					  -ex 'attach 1' \
+					  -ex 'load' build/$(PROJECT).elf \
 
+tc_debug: build/$(PROJECT).elf
+	arm-none-eabi-gdb -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'monitor swdp_scan' \
+					  -ex 'attach 1' \
+					  -ex "file build/$(PROJECT).elf" \
 #
 # End BMP flashing
 ##############################################################################

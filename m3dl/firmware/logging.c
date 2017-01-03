@@ -1,18 +1,25 @@
+#include "ch.h"
+#include "hal.h"
+#include "chprintf.h"
+#include "osal.h"
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "hal.h"
-#include "microsd.h"
+
 #include "logging.h"
-#include "chprintf.h"
-#include "osal.h"
+#include "microsd.h"
+#include "LTC2983.h"
+#include "logging.h"
 #include "err_handler.h"
+
+#include "m3can.h"
 #include "m3status.h"
 
-/* ------------------------------------------------------------------------- */
-/* 				   DL PACKET    			     */
-/* ------------------------------------------------------------------------- */
+#define LOG_MEMPOOL_ITEMS 3072      // 1K
+#define LOG_CACHE_SIZE    16384     // 16KB
 
+/* Datalogger Packet */
 typedef struct DLPacket {
 
     uint16_t ID;
@@ -23,33 +30,23 @@ typedef struct DLPacket {
 } __attribute__((packed)) DLPacket;
 
 
-/* ------------------------------------------------------------------------- */
-
-#define LOG_MEMPOOL_ITEMS 3072  // 1K
-#define LOG_CACHE_SIZE    16384 // 16KB
-
-static THD_WORKING_AREA(logging_wa, 2048);
-
+/* Function Prototypes */
 static void mem_init(void);
-static void _log(DLPacket *packet);
 void logging_init(void);
+static void _log(DLPacket *packet);
 
 
+/* Logging Enabled/Disabled */
+static bool logging_enable = TRUE;
 
-/* ------------------------------------------------------------------------- */
-/* 				STATIC VARIABLES 			     */
-/* ------------------------------------------------------------------------- */
+/* Data cache to ensure SD writes are done LOG_CACHE_SIZE bytes at a time */
+static volatile char log_cache[LOG_CACHE_SIZE];
 
-/* Memory pool for allocating space for incoming data to be queued. */
+/* Memory pool for allocating space for incoming data to be queued */
 static memory_pool_t log_mempool;
 
-/* Mailbox (queue) for storing/accessing data asynchronously. Will be storing
- * pointers to data (packets).
- */
+/* Mailbox (queue) for storing pointers to data (packets) */
 static mailbox_t log_mailbox;
-
-/* Data cache to ensure SD writes are done LOG_CACHE_SIZE bytes at a time. */
-static volatile char log_cache[LOG_CACHE_SIZE];
 
 /* Statically allocated memory used for the memory pool */
 static volatile char mempool_buffer[LOG_MEMPOOL_ITEMS * sizeof(DLPacket)]
@@ -60,159 +57,174 @@ static volatile char mempool_buffer[LOG_MEMPOOL_ITEMS * sizeof(DLPacket)]
 static volatile msg_t mailbox_buffer[LOG_MEMPOOL_ITEMS]
                       __attribute__((section(".MAIN_STACK_RAM")));
 
-static bool logging_enable = TRUE;
 
-
-/* ------------------------------------------------------------------------- */
-/* 			          ENTRY POINT	 			     */
-/* ------------------------------------------------------------------------- */
-
-void logging_init(void){
-
-    /* Create Logging Thread */
-    chThdCreateStatic(logging_wa, sizeof(logging_wa),
-                      HIGHPRIO, datalogging_thread, NULL);
-}
-
-
-void disable_logging(void) {
-    logging_enable = FALSE;
-}
-
-
-
-/* ------------------------------------------------------------------------- */
-/* 			      MAIN THREAD FUNCTIONS 			     */
-/* ------------------------------------------------------------------------- */
-
-/* 
- * Main datalogging thread. Continuously checks for data added through the
- * logging functions, and persists it to an SD card
- */
-
+/* Datalogging Thread */
+static THD_WORKING_AREA(logging_wa, 3072);
 THD_FUNCTION(datalogging_thread, arg) {
 
-    static const int packet_size = sizeof(DLPacket);
-    volatile char* cache_ptr = log_cache; // pointer to keep track of cache
-
-    SDFS file_system;        // struct that encapsulates file system state
-    SDFILE file;             // file struct thing
-    msg_t mailbox_res;       // mailbox fetch result
-    intptr_t data_msg;       // buffer to store the fetched mailbox item
-    SDRESULT write_res;      // result of writing data to file system
-    SDRESULT open_res;       // result of re-opening the log file
     (void)arg;
-
-    /* Initialise Stuff */
     chRegSetThreadName("Datalogging");
+
+    /* Packet Size */
+    static const int packet_size = sizeof(DLPacket);
+    
+    /* Pointer to Keep Track of Cache */
+    volatile char* cache_ptr = log_cache;
+    
+    /* File System Variables */
+    SDFS file_system;
+    FATFS *fsp;
+    SDFILE file;
+    SDRESULT write_res;
+    SDRESULT open_res;
+    
+    /* Number of Avaliable 16KB Clusters */
+    uint32_t free_clusters;    
+    
+    /* Mailbox Variables */             
+    msg_t mailbox_res;       
+    intptr_t data_msg;     
+
+    /* Initalise Memory */
     mem_init();
 
+    /* Attempt to Open log_xxxxx.bin */
     while (microsd_open_file_inc(&file, "log", "bin", &file_system) != FR_OK);
     
-    /* Log file opened */
+    /* SD Card Initilised and File Opened */
     m3status_set_ok(M3DL_COMPONENT_SD_CARD);
 
+    /* Begin Logging */
     while (logging_enable) {
 
-        /* Block waiting for a message to be available */
+        /* Wait for Message to be Avaliable */
         mailbox_res = chMBFetch(&log_mailbox, (msg_t*)&data_msg, MS2ST(100));
 
-        /* Mailbox was reset while waiting/fetch failed ... try again! */
+        /* Re-attempt if Mailbox was Reset or Fetch Failed */
         if (mailbox_res != MSG_OK || data_msg == 0) continue;
 
-        /* Put packet in the static cache and free it from the memory pool */
+        /* Put Packet in Static Cache and Free From Memory Pool */
         memcpy((void*)cache_ptr, (void*)data_msg, packet_size);
         chPoolFree(&log_mempool, (void*)data_msg);
 
-        /* If the cache is full, write it all to the sd card */
+        /* Detect Full Cache and Write to SD Card */
         if(cache_ptr + packet_size >= log_cache + LOG_CACHE_SIZE) {
             
+            /* Attempt to Write Cache */
             write_res = microsd_write(&file, (char*)log_cache, LOG_CACHE_SIZE);
-            
-            /* 
-             * If the write failed, keep attempting to re-open the log file
-             * and write the data out when we succeed.
-             */
-             
+                             
             while (write_res != FR_OK) {
-                err(0x08);
+            
+                /* Signal Failed Write */           
+                err(M3DL_ERROR_SD_CARD_WRITE);
                 m3status_set_error(M3DL_COMPONENT_SD_CARD, M3DL_ERROR_SD_CARD_WRITE);
+                
+                /* Attempt to Re-open File */
                 microsd_close_file(&file);
-                open_res = microsd_open_file_inc(&file, "log", "bin",
-                                                 &file_system);
+                open_res = microsd_open_file_inc(&file, "log", "bin", &file_system);
+                
                 if(open_res == FR_OK) {
                     
-                    /* File re-opened so reattempt write */
-                    write_res = microsd_write(&file, (char*)log_cache,
-                                              LOG_CACHE_SIZE);
-                    
+                    /* Re-attempt to Write Cache */
+                    write_res = microsd_write(&file, (char*)log_cache, LOG_CACHE_SIZE);
                 }
             }
 
-            /* Reset cache pointer to beginning of cache */
+            /* Reset Cache Pointer */
             cache_ptr = log_cache;
+                
+            /* Report Free Space Over CAN */
+            if(f_getfree("/", &free_clusters, &fsp) == FR_OK) {    
+                can_send(CAN_MSG_ID_M3DL_FREE_SPACE, FALSE, (uint8_t*)(&free_clusters), 4);
+            }
             
             /* Cache written to SD card succesfully */
             m3status_set_ok(M3DL_COMPONENT_SD_CARD);            
-            
+        
         } else {
+        
+            /* Increment Cache Pointer */
             cache_ptr += packet_size;
         }
     }
 
 
-    /* Flight Complete - Flush Cache to Disk and Unmount SD Card */
-     
+    /* Logging Disabled - Attempt to Flush Remainder of Cache to Disk */
     write_res = microsd_write(&file, (char*)log_cache, (cache_ptr - log_cache));
 
-    /* 
-     * If the write failed, keep attempting to re-open the log file
-     * and write the data out when we succeed.
-     */
-
     while (write_res != FR_OK) {
-        err(0x08);
+
+        /* Signal Failed Write */           
+        err(M3DL_ERROR_SD_CARD_WRITE);
         m3status_set_error(M3DL_COMPONENT_SD_CARD, M3DL_ERROR_SD_CARD_WRITE);
+
+        /* Attempt to Re-open File */
         microsd_close_file(&file);
-        open_res = microsd_open_file_inc(&file, "log", "bin",
-                                         &file_system);
+        open_res = microsd_open_file_inc(&file, "log", "bin", &file_system);
+
         if(open_res == FR_OK) {
-            write_res = microsd_write(&file, (char*)log_cache,
-                                      (cache_ptr - log_cache));
+            
+            /* Re-attempt to Write Cache */
+            write_res = microsd_write(&file, (char*)log_cache, (cache_ptr - log_cache));
         }
     }
     
-    /* Remaining cache written to SD card succesfully */
+    /* Cache written to SD card succesfully */
     m3status_set_ok(M3DL_COMPONENT_SD_CARD);
     
-    /* Close file before entering low power mode */
+    /* Close File and Disconnect From SD Card */
     microsd_close_file(&file);
 }
 
-/* 
- * Initialise memory management structures used to keep the data temporarily
- * in memory.
- */
-static void mem_init(void)
-{
+/* Initialise Mailbox and Memorypool */
+static void mem_init(void) {
+    
     chMBObjectInit(&log_mailbox, (msg_t*)mailbox_buffer, LOG_MEMPOOL_ITEMS);
     chPoolObjectInit(&log_mempool, sizeof(DLPacket), NULL);
 
-    /* 
-     * Fill the memory pool with statically allocated bits of memory
-     * ie. prevent dynamic core memory allocation (which cannot be freed), we
-     * just want the "bookkeeping" that memory pools provide
-     */
+    /* Fill Memory Pool with Statically Allocated Bits of Memory */
     chPoolLoadArray(&log_mempool, (void*)mempool_buffer, LOG_MEMPOOL_ITEMS);
 }
 
-/* ------------------------------------------------------------------------- */
-/* 				         LOGGING CAN PACKET   		                         */
-/* ------------------------------------------------------------------------- */
+
+/* Allocate and Post a Formatted Packet to the Mailbox */
+static void _log(DLPacket *packet) {
+
+    void* msg;
+    msg_t retval;
+
+    /* Allocate Space for Packet and Copy it into a Mailbox Message */
+    msg = chPoolAlloc(&log_mempool);
+    if (msg == NULL) return;
+    memcpy(msg, (void*)packet, sizeof(DLPacket));
+
+    /* Put it in the Mailbox Buffer */
+    retval = chMBPost(&log_mailbox, (intptr_t)msg, TIME_IMMEDIATE);
+    if (retval != MSG_OK) {
+        chPoolFree(&log_mempool, msg);
+        return;
+    }
+}
 
 
-void log_can(uint16_t ID, bool RTR, uint8_t len, uint8_t* data)
-{
+/* Init Logging */
+void logging_init(void) {
+
+    /* Create Datalogging Thread */
+    chThdCreateStatic(logging_wa, sizeof(logging_wa),
+                      HIGHPRIO, datalogging_thread, NULL);
+}
+
+
+/* Disable Logging */
+void disable_logging(void) {
+    logging_enable = FALSE;
+}
+
+
+/* Log a CAN Packet */
+void log_can(uint16_t ID, bool RTR, uint8_t len, uint8_t* data) {
+    
     DLPacket pkt = {
         .ID = ID, .RTR = RTR,
         .len = len, .timestamp = chVTGetSystemTime()};
@@ -222,26 +234,3 @@ void log_can(uint16_t ID, bool RTR, uint8_t len, uint8_t* data)
 }
 
 
-
-/* 
- * Allocate and post a formatted packet containing metadata + data to mailbox.
- * Use counter arrays to determine if this data should be sampled to radio.
- * (it's called _log because log conflicts with a library function)
- */
-static void _log(DLPacket *packet)
-{
-    void* msg;
-    msg_t retval;
-
-    /* Allocate space for the packet and copy it into a mailbox message */
-    msg = chPoolAlloc(&log_mempool);
-    if (msg == NULL) return;
-    memcpy(msg, (void*)packet, sizeof(DLPacket));
-
-    /* put it in the mailbox buffer */
-    retval = chMBPost(&log_mailbox, (intptr_t)msg, TIME_IMMEDIATE);
-    if (retval != MSG_OK) {
-        chPoolFree(&log_mempool, msg);
-        return;
-    }
-}

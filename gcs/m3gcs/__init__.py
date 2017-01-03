@@ -7,7 +7,7 @@ from . import command_processor
 from . import webapp
 from .packets import registered_packets
 
-from . import m3pyro, m3fc, m3psu, m3radio
+from . import m3pyro, m3fc, m3psu, m3radio, m3dl
 
 
 def run():
@@ -26,8 +26,7 @@ def run():
     global_state = shared_mgr.dict({c:{"data":{}, "time":{}} for c in registered_packets.keys()})
 
     if args.logfile:
-        command_processor.run(logfile=args.logfile, state=global_state)
-    
+        command_processor.run(logfile=args.logfile, state=global_state)    
     else:
         if "*" in args.port:
             port = glob.glob(args.port)
@@ -35,6 +34,6 @@ def run():
                 print("No port matching glob found, running with no data")
             else:
                 args.port = os.path.realpath(port[0])
-                command_processor.run(port=args.port, state=global_state)
+        command_processor.run(port=args.port, state=global_state)
 
     webapp.run(state=global_state)

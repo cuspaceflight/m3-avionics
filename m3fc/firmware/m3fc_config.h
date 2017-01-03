@@ -60,7 +60,7 @@ struct m3fc_config {
         /* Pyro channel type, 0=NONE 1=EMATCH 2=TALON 3=METRON */
         uint8_t pyro_1_type, pyro_2_type, pyro_3_type, pyro_4_type;
     } __attribute__((packed)) pyros;
-} __attribute__((packed)) __attribute__((aligned(32)));
+} __attribute__((packed)) __attribute__((aligned(4)));
 
 extern struct m3fc_config m3fc_config;
 
