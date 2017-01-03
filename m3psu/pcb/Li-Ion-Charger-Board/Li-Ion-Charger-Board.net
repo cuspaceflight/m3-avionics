@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source I:/GitHub/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/Li-Ion-Charger-Board.sch)
-    (date "03/01/2017 00:27:47")
+    (date "03/01/2017 00:42:43")
     (tool "Eeschema (2016-12-10 revision 9c758c4)-makepkg")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -197,18 +197,18 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 56C79D18))
     (comp (ref R12)
-      (value 33k)
+      (value 330k)
       (footprint agg:0402)
       (fields
-        (field (name Farnell) 2447160))
+        (field (name Farnell) 2324303))
       (libsource (lib agg-kicad) (part R))
       (sheetpath (names /) (tstamps /))
       (tstamp 56C7C3EA))
     (comp (ref R13)
-      (value 5k1)
+      (value 51k)
       (footprint agg:0402)
       (fields
-        (field (name Farnell) 2447201))
+        (field (name Farnell) 1458806))
       (libsource (lib agg-kicad) (part R))
       (sheetpath (names /) (tstamps /))
       (tstamp 56C7DF8E))
