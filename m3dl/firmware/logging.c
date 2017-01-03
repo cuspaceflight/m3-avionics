@@ -51,11 +51,11 @@ static mailbox_t log_mailbox;
 /* Statically allocated memory used for the memory pool */
 static volatile char mempool_buffer[LOG_MEMPOOL_ITEMS * sizeof(DLPacket)]
                      __attribute__((aligned(sizeof(stkalign_t))))
-                     __attribute__((section(".MAIN_STACK_RAM")));
+                     __attribute__((section(".ccm")));
 
 /* Statically allocated memory used for the queue in mailbox */
 static volatile msg_t mailbox_buffer[LOG_MEMPOOL_ITEMS]
-                      __attribute__((section(".MAIN_STACK_RAM")));
+                      __attribute__((section(".ccm")));
 
 
 /* Datalogging Thread */
