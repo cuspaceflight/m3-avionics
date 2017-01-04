@@ -17,16 +17,15 @@ def run():
                         default="/dev/serial/by-id/*m3debug*-if02")
 
     parser.add_argument("--logfile", help="Path to logfile to replay",
-                        default=None)    
+                        default=None)
 
     args = parser.parse_args()
 
-
     shared_mgr = multiprocessing.Manager()
-    global_state = shared_mgr.dict({c:{"data":{}, "time":{}} for c in registered_packets.keys()})
+    packet_queue = shared_mgr.Queue()
 
     if args.logfile:
-        command_processor.run(logfile=args.logfile, state=global_state)    
+        command_processor.run(logfile=args.logfile, queue=packet_queue)
     else:
         if "*" in args.port:
             port = glob.glob(args.port)
@@ -34,6 +33,6 @@ def run():
                 print("No port matching glob found, running with no data")
             else:
                 args.port = os.path.realpath(port[0])
-        command_processor.run(port=args.port, state=global_state)
+        command_processor.run(port=args.port, queue=packet_queue)
 
-    webapp.run(state=global_state)
+    webapp.run(queue=packet_queue)
