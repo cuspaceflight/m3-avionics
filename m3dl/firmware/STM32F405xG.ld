@@ -30,6 +30,11 @@ MEMORY
     ram7  : org = 0x00000000, len = 0
 }
 
+SECTIONS
+{
+    .ccm : { . = ALIGN(8); } > ram4
+}
+
 /* RAM region to be used for Main stack. This stack accommodates the processing
    of all exceptions and interrupts*/
 REGION_ALIAS("MAIN_STACK_RAM", ram4);

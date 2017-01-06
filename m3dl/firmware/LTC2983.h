@@ -20,14 +20,16 @@
 
 /* USER DEFINED CONFIG */
 #define TEMP1_ATTACHED      0
-#define TEMP2_ATTACHED      1
 #define TEMP3_ATTACHED      0
+#define TEMP9_ATTACHED      0
+
+#define TEMP2_ATTACHED      1
 #define TEMP4_ATTACHED      1
 #define TEMP5_ATTACHED      1
-#define TEMP6_ATTACHED      0
-#define TEMP7_ATTACHED      0
-#define TEMP8_ATTACHED      0
-#define TEMP9_ATTACHED      0
+#define TEMP6_ATTACHED      1
+#define TEMP7_ATTACHED      1
+#define TEMP8_ATTACHED      1
+
 
 /* Init LTC2983 */
 void ltc2983_init(void);
