@@ -789,26 +789,26 @@ Text Label 4350 5600 0    60   ~ 0
 DSG
 $Comp
 L NFET2 Q1
-U 1 1 58711F76
+U 2 1 58711F76
 P 1800 1300
 F 0 "Q1" V 1900 1250 50  0000 C CNN
 F 1 "NFET2" V 1650 1350 50  0000 C CNN
 F 2 "agg:PowerFLAT-5x6" H 1800 1300 50  0001 C CNN
 F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 1800 1300 50  0001 C CNN
 F 4 "2098274" H 1800 1300 60  0001 C CNN "Farnell"
-	1    1800 1300
+	2    1800 1300
 	0    1    -1   0   
 $EndComp
 $Comp
 L NFET2 Q1
-U 2 1 58712036
+U 1 1 58712036
 P 2200 1300
 F 0 "Q1" V 2300 1250 50  0000 C CNN
 F 1 "NFET2" V 2050 1400 50  0000 C CNN
 F 2 "agg:PowerFLAT-5x6" H 2200 1300 50  0001 C CNN
 F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 2200 1300 50  0001 C CNN
 F 4 "2098274" H 2200 1300 60  0001 C CNN "Farnell"
-	2    2200 1300
+	1    2200 1300
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -1010,18 +1010,6 @@ F 3 "" H 5050 6850 50  0001 C CNN
 F 4 "2496792" H 5050 6850 60  0001 C CNN "Farnell"
 	1    5050 6850
 	0    1    1    0   
-$EndComp
-$Comp
-L NFET2 Q3
-U 1 1 5877953E
-P 2650 2950
-F 0 "Q3" V 2750 2900 50  0000 C CNN
-F 1 "NFET2" V 2500 3000 50  0000 C CNN
-F 2 "agg:PowerFLAT-5x6" H 2650 2950 50  0001 C CNN
-F 3 "http://www.st.com/web/en/resource/technical/document/datasheet/CD00279555.pdf" H 2650 2950 50  0001 C CNN
-F 4 "2098274" H 2650 2950 60  0001 C CNN "Farnell"
-	1    2650 2950
-	1    0    0    1   
 $EndComp
 $Comp
 L C C6
@@ -2023,4 +2011,16 @@ Wire Wire Line
 	2400 6100 2250 6100
 Wire Wire Line
 	2600 6200 2250 6200
+$Comp
+L NFET_GDS Q3
+U 1 1 5874DD64
+P 2650 2950
+F 0 "Q3" H 2737 2854 50  0000 L CNN
+F 1 "NFET_GDS" H 2737 2945 50  0000 L CNN
+F 2 "agg:SON2x2N" H 2650 2950 50  0001 C CNN
+F 3 "" H 2650 2950 50  0001 C CNN
+F 4 "2544998" H 2650 2950 60  0001 C CNN "Farnell"
+	1    2650 2950
+	1    0    0    1   
+$EndComp
 $EndSCHEMATC
