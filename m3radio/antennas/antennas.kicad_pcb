@@ -1,0 +1,865 @@
+
+(kicad_pcb 
+  (version 4) 
+  (host antennas.py "2016-12-07T04:39:17.250028") 
+  (page A0) 
+  (layers 
+    (0 F.Cu signal) 
+    (31 B.Cu signal hide) 
+    (40 Dwgs.User user) 
+    (44 Edge.Cuts user)) 
+  (net 0 "") 
+  (net 1 Antennas) 
+  (net_class Default "" 
+    (clearance 0.2000) 
+    (trace_width 0.2000) 
+    (via_dia 0.8000) 
+    (via_drill 0.4000)) 
+  (module X0 
+    (layer F.Cu) 
+    (tedit 0) 
+    (tstamp 0) 
+    (at 89.1150 25.0000) 
+    (pad 1 thru_hole circle 
+      (at 0 0) 
+      (size 2.5000 2.5000) 
+      (drill 1.5000) 
+      (layers F.Cu) 
+      (zone_connect 2) 
+      (net 1 Antennas))) 
+  (module X1 
+    (layer F.Cu) 
+    (tedit 0) 
+    (tstamp 0) 
+    (at 89.1150 171.3127) 
+    (pad 1 thru_hole circle 
+      (at 0 0) 
+      (size 2.5000 2.5000) 
+      (drill 1.5000) 
+      (layers F.Cu) 
+      (zone_connect 2) 
+      (net 1 Antennas))) 
+  (module X2 
+    (layer F.Cu) 
+    (tedit 0) 
+    (tstamp 0) 
+    (at 195.9292 280.3127) 
+    (pad 1 thru_hole circle 
+      (at 0 0) 
+      (size 2.5000 2.5000) 
+      (drill 1.5000) 
+      (layers F.Cu) 
+      (zone_connect 2) 
+      (net 1 Antennas))) 
+  (module X3 
+    (layer F.Cu) 
+    (tedit 0) 
+    (tstamp 0) 
+    (at 195.9292 441.6255) 
+    (pad 1 thru_hole circle 
+      (at 0 0) 
+      (size 2.5000 2.5000) 
+      (drill 1.5000) 
+      (layers F.Cu) 
+      (zone_connect 2) 
+      (net 1 Antennas))) 
+  (gr_line 
+    (start 20.0000 144.7418) 
+    (end 20.0000 20.0000) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 20.0000 20.0000) 
+    (end 158.2301 20.0000) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 158.2301 20.0000) 
+    (end 158.2301 144.7418) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 158.2301 144.7418) 
+    (end 20.0000 144.7418) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 20.0000 250.3127) 
+    (end 20.0000 166.3127) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 20.0000 166.3127) 
+    (end 158.2301 166.3127) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 158.2301 166.3127) 
+    (end 158.2301 250.3127) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 158.2301 250.3127) 
+    (end 20.0000 250.3127) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 20.0000 410.0546) 
+    (end 20.0000 275.3127) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 20.0000 275.3127) 
+    (end 371.8584 275.3127) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 371.8584 275.3127) 
+    (end 371.8584 410.0546) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 371.8584 410.0546) 
+    (end 20.0000 410.0546) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 20.0000 540.6255) 
+    (end 20.0000 436.6255) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 20.0000 436.6255) 
+    (end 371.8584 436.6255) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 371.8584 436.6255) 
+    (end 371.8584 540.6255) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (gr_line 
+    (start 371.8584 540.6255) 
+    (end 20.0000 540.6255) 
+    (layer Edge.Cuts) 
+    (width 0.1000)) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 20.9650 28.1418) 
+        (xy 20.9650 139.7418) 
+        (xy 157.2650 139.7418) 
+        (xy 157.2650 28.1418) 
+        (xy 91.6150 28.1418) 
+        (xy 91.6150 55.0000) 
+        (xy 86.6150 55.0000) 
+        (xy 86.6150 28.1418) 
+        (xy 20.9650 28.1418)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 88.3450 55.0000) 
+        (xy 88.3450 25.0000) 
+        (xy 89.8850 25.0000) 
+        (xy 89.8850 55.0000) 
+        (xy 88.3450 55.0000)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 88.6150 24.5000) 
+        (xy 88.6150 25.5000) 
+        (xy 89.6150 25.5000) 
+        (xy 89.6150 24.5000)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 22.5575 181.3127) 
+        (xy 22.5575 242.8127) 
+        (xy 25.0575 245.3127) 
+        (xy 86.5575 245.3127) 
+        (xy 86.5575 183.8127) 
+        (xy 84.0575 181.3127) 
+        (xy 22.5575 181.3127)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 91.6726 181.3127) 
+        (xy 91.6726 242.8127) 
+        (xy 94.1726 245.3127) 
+        (xy 155.6726 245.3127) 
+        (xy 155.6726 183.8127) 
+        (xy 153.1726 181.3127) 
+        (xy 91.6726 181.3127)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 54.6950 181.3127) 
+        (xy 54.6950 171.4502) 
+        (xy 80.7975 171.4502) 
+        (xy 80.7975 171.1752) 
+        (xy 54.7849 171.1752) 
+        (xy 54.4200 171.5401) 
+        (xy 54.4200 181.3127) 
+        (xy 54.6950 181.3127)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 80.7975 171.5367) 
+        (xy 88.8273 171.5367) 
+        (xy 89.3390 171.0250) 
+        (xy 89.3390 171.0887) 
+        (xy 88.8910 171.0887) 
+        (xy 88.8910 171.0887) 
+        (xy 80.7975 171.0887) 
+        (xy 80.7975 171.5367)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 123.8101 181.3127) 
+        (xy 123.8101 171.5401) 
+        (xy 123.4451 171.1752) 
+        (xy 97.4326 171.1752) 
+        (xy 97.4326 171.4502) 
+        (xy 123.5351 171.4502) 
+        (xy 123.5351 181.3127) 
+        (xy 123.8101 181.3127)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 97.4326 171.0887) 
+        (xy 89.3390 171.0887) 
+        (xy 89.3390 171.0887) 
+        (xy 88.8910 171.0887) 
+        (xy 88.8910 171.0250) 
+        (xy 89.4028 171.5367) 
+        (xy 97.4326 171.5367) 
+        (xy 97.4326 171.0887)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 88.6150 170.8127) 
+        (xy 88.6150 171.8127) 
+        (xy 89.6150 171.8127) 
+        (xy 89.6150 170.8127)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 50.9646 293.4546) 
+        (xy 50.9646 405.0546) 
+        (xy 164.9646 405.0546) 
+        (xy 164.9646 293.4546) 
+        (xy 110.4646 293.4546) 
+        (xy 110.4646 320.3127) 
+        (xy 105.4646 320.3127) 
+        (xy 105.4646 293.4546) 
+        (xy 50.9646 293.4546)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 226.8938 293.4546) 
+        (xy 226.8938 405.0546) 
+        (xy 340.8938 405.0546) 
+        (xy 340.8938 293.4546) 
+        (xy 286.3938 293.4546) 
+        (xy 286.3938 320.3127) 
+        (xy 281.3938 320.3127) 
+        (xy 281.3938 293.4546) 
+        (xy 226.8938 293.4546)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 108.1886 320.3127) 
+        (xy 108.1886 280.5367) 
+        (xy 195.6415 280.5367) 
+        (xy 196.1532 280.0250) 
+        (xy 196.1532 280.0887) 
+        (xy 195.7052 280.0887) 
+        (xy 195.7052 280.0887) 
+        (xy 108.2523 280.0887) 
+        (xy 107.7406 280.6005) 
+        (xy 107.7406 320.3127) 
+        (xy 108.1886 320.3127)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 284.1178 320.3127) 
+        (xy 284.1178 280.6005) 
+        (xy 283.6061 280.0887) 
+        (xy 196.1532 280.0887) 
+        (xy 196.1532 280.0887) 
+        (xy 195.7052 280.0887) 
+        (xy 195.7052 280.0250) 
+        (xy 196.2169 280.5367) 
+        (xy 283.6698 280.5367) 
+        (xy 283.6698 320.3127) 
+        (xy 284.1178 320.3127)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 195.4292 279.8127) 
+        (xy 195.4292 280.8127) 
+        (xy 196.4292 280.8127) 
+        (xy 196.4292 279.8127)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 31.9823 471.6255) 
+        (xy 31.9823 533.1255) 
+        (xy 34.4823 535.6255) 
+        (xy 95.9823 535.6255) 
+        (xy 95.9823 474.1255) 
+        (xy 93.4823 471.6255) 
+        (xy 31.9823 471.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 119.9469 471.6255) 
+        (xy 119.9469 533.1255) 
+        (xy 122.4469 535.6255) 
+        (xy 183.9469 535.6255) 
+        (xy 183.9469 474.1255) 
+        (xy 181.4469 471.6255) 
+        (xy 119.9469 471.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 207.9115 471.6255) 
+        (xy 207.9115 533.1255) 
+        (xy 210.4115 535.6255) 
+        (xy 271.9115 535.6255) 
+        (xy 271.9115 474.1255) 
+        (xy 269.4115 471.6255) 
+        (xy 207.9115 471.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 295.8761 471.6255) 
+        (xy 295.8761 533.1255) 
+        (xy 298.3761 535.6255) 
+        (xy 359.8761 535.6255) 
+        (xy 359.8761 474.1255) 
+        (xy 357.3761 471.6255) 
+        (xy 295.8761 471.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 64.1198 471.6255) 
+        (xy 64.1198 461.7630) 
+        (xy 90.2223 461.7630) 
+        (xy 90.2223 461.4880) 
+        (xy 64.2097 461.4880) 
+        (xy 63.8448 461.8529) 
+        (xy 63.8448 471.6255) 
+        (xy 64.1198 471.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 90.2223 461.8495) 
+        (xy 107.6769 461.8495) 
+        (xy 108.1886 461.3377) 
+        (xy 108.1886 461.4015) 
+        (xy 107.7406 461.4015) 
+        (xy 107.7406 461.4015) 
+        (xy 90.2223 461.4015) 
+        (xy 90.2223 461.8495)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 152.0844 471.6255) 
+        (xy 152.0844 461.8529) 
+        (xy 151.7195 461.4880) 
+        (xy 125.7069 461.4880) 
+        (xy 125.7069 461.7630) 
+        (xy 151.8094 461.7630) 
+        (xy 151.8094 471.6255) 
+        (xy 152.0844 471.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 125.7069 461.4015) 
+        (xy 108.1886 461.4015) 
+        (xy 108.1886 461.4015) 
+        (xy 107.7406 461.4015) 
+        (xy 107.7406 461.3377) 
+        (xy 108.2523 461.8495) 
+        (xy 125.7069 461.8495) 
+        (xy 125.7069 461.4015)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 240.0490 471.6255) 
+        (xy 240.0490 461.7630) 
+        (xy 266.1515 461.7630) 
+        (xy 266.1515 461.4880) 
+        (xy 240.1389 461.4880) 
+        (xy 239.7740 461.8529) 
+        (xy 239.7740 471.6255) 
+        (xy 240.0490 471.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 266.1515 461.8495) 
+        (xy 283.6061 461.8495) 
+        (xy 284.1178 461.3377) 
+        (xy 284.1178 461.4015) 
+        (xy 283.6698 461.4015) 
+        (xy 283.6698 461.4015) 
+        (xy 266.1515 461.4015) 
+        (xy 266.1515 461.8495)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 328.0136 471.6255) 
+        (xy 328.0136 461.8529) 
+        (xy 327.6487 461.4880) 
+        (xy 301.6361 461.4880) 
+        (xy 301.6361 461.7630) 
+        (xy 327.7386 461.7630) 
+        (xy 327.7386 471.6255) 
+        (xy 328.0136 471.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 301.6361 461.4015) 
+        (xy 284.1178 461.4015) 
+        (xy 284.1178 461.4015) 
+        (xy 283.6698 461.4015) 
+        (xy 283.6698 461.3377) 
+        (xy 284.1815 461.8495) 
+        (xy 301.6361 461.8495) 
+        (xy 301.6361 461.4015)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 108.4066 461.6255) 
+        (xy 108.4066 442.0675) 
+        (xy 123.2946 442.0675) 
+        (xy 123.2946 441.1835) 
+        (xy 108.3426 441.1835) 
+        (xy 107.5226 442.0035) 
+        (xy 107.5226 461.6255) 
+        (xy 108.4066 461.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 123.2946 441.8495) 
+        (xy 195.6415 441.8495) 
+        (xy 196.1532 441.3377) 
+        (xy 196.1532 441.4015) 
+        (xy 195.7052 441.4015) 
+        (xy 195.7052 441.4015) 
+        (xy 123.2946 441.4015) 
+        (xy 123.2946 441.8495)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 284.3358 461.6255) 
+        (xy 284.3358 442.0035) 
+        (xy 283.5158 441.1835) 
+        (xy 268.5638 441.1835) 
+        (xy 268.5638 442.0675) 
+        (xy 283.4518 442.0675) 
+        (xy 283.4518 461.6255) 
+        (xy 284.3358 461.6255)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 268.5638 441.4015) 
+        (xy 196.1532 441.4015) 
+        (xy 196.1532 441.4015) 
+        (xy 195.7052 441.4015) 
+        (xy 195.7052 441.3377) 
+        (xy 196.2169 441.8495) 
+        (xy 268.5638 441.8495) 
+        (xy 268.5638 441.4015)))) 
+  (zone 
+    (net 1) 
+    (net_name Antennas) 
+    (layer F.Cu) 
+    (tstamp 0) 
+    (hatch edge 0.5000) 
+    (connect_pads 
+      (clearance 0.3000)) 
+    (min_thickness 0.0500) 
+    (fill yes 
+      (arc_segments 32) 
+      (thermal_gap 0.3000) 
+      (thermal_bridge_width 0.2500)) 
+    (polygon 
+      (pts 
+        (xy 195.4292 441.1255) 
+        (xy 195.4292 442.1255) 
+        (xy 196.4292 442.1255) 
+        (xy 196.4292 441.1255)))))
