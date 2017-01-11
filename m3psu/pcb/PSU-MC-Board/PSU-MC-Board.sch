@@ -7,8 +7,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "M3PSU - MCU Board"
-Date "2016-06-29"
-Rev "1"
+Date "2017-01-11"
+Rev "2"
 Comp "CU Spaceflight"
 Comment1 "Drawn by: Levin Tan, Jamie Wood"
 Comment2 ""
