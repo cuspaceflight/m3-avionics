@@ -29,7 +29,7 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:agg-kicad
-LIBS:TDOA-cache
+LIBS:TOAD-cache
 EELAYER 25 0
 EELAYER END
 $Descr A3 16535 11693
