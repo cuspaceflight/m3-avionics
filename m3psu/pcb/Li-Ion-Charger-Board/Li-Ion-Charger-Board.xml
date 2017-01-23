@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>/home/cusf/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/Li-Ion-Charger-Board.sch</source>
-    <date>Wed 11 Jan 2017 23:09:57 GMT</date>
-    <tool>Eeschema 201611132047+7352~55~ubuntu16.10.1-product</tool>
+    <source>/home/adam/Projects/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/Li-Ion-Charger-Board.sch</source>
+    <date>Mon 23 Jan 2017 20:51:07 GMT</date>
+    <tool>Eeschema 201610051318+7278~55~ubuntu14.04.1-</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>M3PSU Li-Ion Charger Board</title>
@@ -97,7 +97,7 @@
       <fields>
         <field name="Farnell">2471154</field>
       </fields>
-      <libsource lib="agg-kicad" part="BQ40Z60"/>
+      <libsource lib="Li-Ion-Charger-Board-cache" part="BQ40Z60"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>586FCBE1</tstamp>
     </comp>
@@ -566,7 +566,7 @@
     </comp>
   </components>
   <libparts>
-    <libpart lib="agg-kicad" part="BQ40Z60">
+    <libpart lib="Li-Ion-Charger-Board-cache" part="BQ40Z60">
       <fields>
         <field name="Reference">IC</field>
         <field name="Value">BQ40Z60</field>
@@ -749,7 +749,10 @@
   </libparts>
   <libraries>
     <library logical="agg-kicad">
-      <uri>/home/cusf/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/../../../agg-kicad/agg-kicad.lib</uri>
+      <uri>/home/adam/Projects/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/../../../agg-kicad/agg-kicad.lib</uri>
+    </library>
+    <library logical="Li-Ion-Charger-Board-cache">
+      <uri>/home/adam/Projects/m3-avionics/m3psu/pcb/Li-Ion-Charger-Board/Li-Ion-Charger-Board-cache.lib</uri>
     </library>
   </libraries>
   <nets>
