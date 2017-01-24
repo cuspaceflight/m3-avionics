@@ -376,7 +376,7 @@ ltc3887_fault_status ltc3887_get_fault_status(LTC3887 *ltc, uint8_t page) {
     fault_status.other_memory_or_logic_fault = 0;
   }
 
-  if ((status_word && LTC3887_STATUS_OTHER) != 0) {
+  if ((status_word & LTC3887_STATUS_OTHER) != 0) {
     fault_status.other = 1;
   }
   else {
