@@ -27,7 +27,6 @@
 
 static THD_WORKING_AREA(waPowerManager, 1024);
 static THD_WORKING_AREA(waChargeController, 1024);
-static THD_WORKING_AREA(waChargerWatchdog, 512);
 //static THD_WORKING_AREA(waPowerAlert, 512);
 
 void enable_internal_power(void){
@@ -162,9 +161,6 @@ int main(void) {
   smbus_init();
   can_init(CAN_ID_M3PSU);
 
-  // Stay powered on all the time
-  //palSetLine(LINE_NSHUTDOWN);
-
   PowerManager_init();
   ChargeController_init();
 
@@ -182,8 +178,6 @@ int main(void) {
 
   chThdCreateStatic(waChargeController, sizeof(waChargeController), NORMALPRIO + 2,
                     chargecontroller_thread, NULL);
-  chThdCreateStatic(waChargerWatchdog, sizeof(waChargerWatchdog), NORMALPRIO + 1,
-                    charger_watchdog_thread, NULL);
 
   // All done, go to sleep forever
   chThdSleep(TIME_INFINITE);
