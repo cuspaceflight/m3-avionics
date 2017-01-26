@@ -479,7 +479,7 @@ static bool ublox_configure(void)
 
     msg.msg_class = UBX_NAV;
     msg.msg_id    = UBX_NAV_PVT;
-    msg.rate      = 10;
+    msg.rate      = 1;
     success &= ublox_transmit((uint8_t*)&msg);
     if(!success) return FALSE;
 
