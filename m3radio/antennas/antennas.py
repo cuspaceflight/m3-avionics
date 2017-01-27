@@ -79,7 +79,7 @@ feed_dart_gps = [
 feed_dart_telemetry = [
     [  # Patch to feed directly
         [  # Vertical
-            (strip_w_50r, 30e-3),  # Plain 50R feedline up to the feedpoint
+            (strip_w_50r, 35e-3),  # Plain 50R feedline up to the feedpoint
         ],
         [],
     ],
@@ -108,9 +108,9 @@ antennas = [
         "w_array": 44e-3 * np.pi,
         "feed": feed_dart_telemetry,
         "w_patch": 136.3e-3,
-        "l_patch": 111.6e-3,
+        "l_patch": 115.0e-3,
         "w_inset": 5e-3,
-        "l_inset": inset_length(e=2.2, l=111.6e-3),
+        "l_inset": 30.0e-3,
         "r_corner": None,
         "h": 0.5e-3,
     },
@@ -118,8 +118,8 @@ antennas = [
     {
         "w_array": 44e-3 * np.pi,
         "feed": feed_dart_gps,
-        "w_patch": 64.0e-3,
-        "l_patch": 64.0e-3,
+        "w_patch": 63.0e-3,
+        "l_patch": 63.0e-3,
         "w_inset": 0,
         "l_inset": 0,
         "r_corner": 2.5e-3,
@@ -129,8 +129,8 @@ antennas = [
     {
         "w_array": 112e-3 * np.pi,
         "feed": feed_booster_telemetry,
-        "w_patch": 114e-3,
-        "l_patch": 111.6e-3,
+        "w_patch": 110e-3,
+        "l_patch": 115.0e-3,
         "w_inset": 5e-3,
         "l_inset": inset_length(e=2.2, l=111.6e-3),
         "r_corner": None,
@@ -140,8 +140,8 @@ antennas = [
     {
         "w_array": 112e-3 * np.pi,
         "feed": feed_booster_gps,
-        "w_patch": 64.0e-3,
-        "l_patch": 64.0e-3,
+        "w_patch": 63.0e-3,
+        "l_patch": 63.0e-3,
         "w_inset": 0,
         "l_inset": 0,
         "r_corner": 2.5e-3,
