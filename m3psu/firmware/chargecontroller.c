@@ -38,14 +38,6 @@ void ChargeController_disable_charger(void) {
   }
 }
 
-void ChargeController_enable_balancing(void){
-  bq40z60_set_balancing_enabled(&charger, TRUE);
-}
-
-void ChargeController_disable_balancing(void){
-  bq40z60_set_balancing_enabled(&charger, FALSE);
-}
-
 bool ChargeController_is_charger_enabled(void){
     uint8_t enabled = 0;
     if(bq40z60_is_charger_enabled(&charger, &enabled)!=ERR_OK){
@@ -112,8 +104,9 @@ THD_FUNCTION(chargecontroller_thread, arg) {
 
 
     // report voltages in multiples of 0.02v
-    can_data[0] = (uint8_t) ((batt1 * 100) / 2);
-    can_data[1] = (uint8_t) ((batt2 * 100) / 2);
+    // TODO
+    //can_data[0] = (uint8_t) ((batt1 * 100) / 2);
+    //can_data[1] = (uint8_t) ((batt2 * 100) / 2);
 
     can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, sizeof(can_data));
 

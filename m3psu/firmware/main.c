@@ -29,18 +29,11 @@ static THD_WORKING_AREA(waPowerManager, 1024);
 static THD_WORKING_AREA(waChargeController, 1024);
 //static THD_WORKING_AREA(waPowerAlert, 512);
 
-void enable_internal_power(void){
-  palClearLine(LINE_EN_INT_PWR);
+void enable_system_power(void){
+  palClearLine(LINE_EN_POWER);
 }
-void disable_internal_power(void){
-  palSetLine(LINE_EN_INT_PWR);
-}
-
-void enable_external_power(void){
-  palClearLine(LINE_EN_EXT_PWR);
-}
-void disable_external_power(void){
-  palSetLine(LINE_EN_EXT_PWR);
+void disable_system_power(void){
+  palSetLine(LINE_EN_POWER);
 }
 
 void enable_pyros(void){
@@ -48,18 +41,6 @@ void enable_pyros(void){
 }
 void disable_pyros(void){
   palClearLine(LINE_EN_PYRO);
-}
-
-void switch_to_external_power(void){
-  enable_external_power();
-  chThdSleepMilliseconds(5);
-  ChargeController_enable_charger();
-}
-
-void switch_to_internal_power(void){
-  ChargeController_disable_charger();
-  chThdSleepMilliseconds(5);
-  disable_external_power();
 }
 
 void can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
@@ -89,37 +70,6 @@ void can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
         ChargeController_disable_charger();
       }
     }
-  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_BALANCE){
-    if(datalen >= 1){
-      if(data[0] == 1){
-        ChargeController_enable_balancing();
-      }else if(data[0] == 0){
-        ChargeController_disable_balancing();
-      }
-    }
-  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_INTEXT){
-    if(datalen >= 1){
-      if(data[0] == 1){
-        switch_to_external_power();
-      }else if(data[0] == 0){
-        switch_to_internal_power();
-      }
-    }
-  }
-}
-
-static THD_WORKING_AREA(waStatusReporter, 256);
-THD_FUNCTION(power_status_reporter, arg){
-  (void)arg;
-  chRegSetThreadName("Int/Ext Power Reporter");
-
-  uint8_t can_data[1];
-
-  while(TRUE){
-    can_data[0] = (palReadLine(LINE_EN_INT_PWR) << 1) |
-                  (palReadLine(LINE_EN_EXT_PWR));
-    can_send(CAN_MSG_ID_M3PSU_INTEXT_STATUS, false, can_data, 1);
-    chThdSleepMilliseconds(1000);
   }
 }
 
@@ -131,19 +81,15 @@ THD_FUNCTION(power_check, arg){
   while(TRUE){
     bool switch_open = palReadLine(LINE_PWR);
     if(switch_open){
-      //int i;
+      int i;
       // Shutdown all channels and go to sleep
-      /*for(i = 0; i < 12; i++){
+      for(i = 0; i < 12; i++){
           PowerManager_switch_off(i);
-      }*/
+      }
       //disable_external_power();
-      //disable_internal_power();
-      //disable_pyros();
+      disable_pyros();
+      disable_system_power();
       //TODO enter deep sleep
-    }
-    else
-    {
-      //enable_pyros(); // For debugging, light the LED on the debug board
     }
     chThdSleepMilliseconds(1000);
   }
@@ -155,8 +101,7 @@ int main(void) {
   chSysInit();
 
   enable_pyros();
-
-  enable_internal_power();
+  enable_system_power();
 
   smbus_init();
   can_init(CAN_ID_M3PSU);
@@ -164,10 +109,7 @@ int main(void) {
   PowerManager_init();
   ChargeController_init();
 
-  switch_to_external_power();
-
-  chThdCreateStatic(waStatusReporter, sizeof(waStatusReporter), NORMALPRIO,
-                    power_status_reporter, NULL);
+  ChargeController_enable_charger();
 
   chThdCreateStatic(waPowerCheck, sizeof(waPowerCheck), NORMALPRIO,
                     power_check, NULL);
