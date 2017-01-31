@@ -168,56 +168,56 @@ static void log_temp(void) {
      
     /* Test for Validity */   
     if(TEMP1_ATTACHED == 1) {
-        if(!(&TEMP_1_2[0] && 0x01)) {
+        if(!(TEMP_1_2[0] & 0x01)) {
             m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP1_INVALID);
             err(M3DL_ERROR_TEMP1_INVALID);
         }
     }
 
     if(TEMP2_ATTACHED == 1) {
-        if(!(&TEMP_1_2[4] && 0x01)) {
+        if(!(TEMP_1_2[4] & 0x01)) {
             m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP2_INVALID);
             err(M3DL_ERROR_TEMP2_INVALID);
         }
     }
 
     if(TEMP3_ATTACHED == 1) {
-        if(!(&TEMP_3_4[0] && 0x01)) {
+        if(!(TEMP_3_4[0] & 0x01)) {
             m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP3_INVALID);
             err(M3DL_ERROR_TEMP3_INVALID);
         }
     }
 
     if(TEMP4_ATTACHED == 1) {
-        if(!(&TEMP_3_4[4] && 0x01)) {
+        if(!(TEMP_3_4[4] & 0x01)) {
             m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP4_INVALID);
             err(M3DL_ERROR_TEMP4_INVALID);
         }
     }
 
     if(TEMP5_ATTACHED == 1) {
-        if(!(&TEMP_5_6[0] && 0x01)) {
+        if(!(TEMP_5_6[0] & 0x01)) {
             m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP5_INVALID);
             err(M3DL_ERROR_TEMP5_INVALID);
         }
     }
 
     if(TEMP6_ATTACHED == 1) {
-        if(!(&TEMP_5_6[4] && 0x01)){
+        if(!(TEMP_5_6[4] & 0x01)){
             m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP6_INVALID);
             err(M3DL_ERROR_TEMP6_INVALID);
         }
     }
 
     if(TEMP7_ATTACHED == 1) {
-        if(!(&TEMP_7_8[0] && 0x01)) {
+        if(!(TEMP_7_8[0] & 0x01)) {
             m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP7_INVALID);
             err(M3DL_ERROR_TEMP7_INVALID);
         }
     }
 
     if(TEMP8_ATTACHED == 1) {
-        if(!(&TEMP_7_8[4] && 0x01)) {
+        if(!(TEMP_7_8[4] & 0x01)) {
             m3status_set_error(M3DL_COMPONENT_LTC2983, M3DL_ERROR_TEMP8_INVALID);
             err(M3DL_ERROR_TEMP8_INVALID);
         }
@@ -260,7 +260,8 @@ static void ltc2983_setup(void) {
 	static uint32_t sensor_config[20] = {0};
 
     /* Populate Thermocouple Specific Data */
-    for (int i = 0; i < 19; i++) {
+    int i = 0;
+    for (i = 0; i < 19; i++) {
 		if ((i%2) == 1){
 			sensor_config[i] = 0x00001015;				
 		}
