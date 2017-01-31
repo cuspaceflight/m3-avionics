@@ -130,8 +130,14 @@ uint8_t smbus_read_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddr
   // copy rest of tx-data
   memcpy(cmd+2, txdat, txdatlen);
 
+  if(txdatlen == 0){
+      txdatlen = 1;
+  }else{
+      txdatlen += 2;
+  }
+
   i2cAcquireBus(i2c);
-  msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, cmd, txdatlen+2, recv, datalen+1, MS2ST(20), 1);
+  msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, cmd, txdatlen, recv, datalen+1, MS2ST(20), 1);
   i2cReleaseBus(i2c);
 
   if (status == MSG_OK) {
