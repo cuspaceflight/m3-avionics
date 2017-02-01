@@ -92,6 +92,12 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
  */
 void can_init(uint8_t board_id);
 
+/* Set up CAN filters to only allow messages from the IDs in allowed_ids.
+ * These IDs are the CAN_ID_* macros defined in m3can.h.
+ * numids is the length of allowed_ids.
+ */
+void can_filter_messages(uint16_t *allowed_ids, uint8_t numids);
+
 /* Call can_send to transmit a packet.
  * msg_id should be from the list above
  * can_rtr is the "remote transmission request", set to indicate you're asking

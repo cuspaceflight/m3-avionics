@@ -35,6 +35,39 @@ static const CANConfig cancfg = {
 };
 
 
+void can_filter_messages(uint16_t *allowed_ids, uint8_t numids) {
+    // clear all filters
+    canSTM32SetFilters(28, 0, NULL);
+    // Layout of bits in register (we're in 16-bit mode; see manual p. 1092):
+    // STDID       RTR IDE EXID
+    // A9876543210 0   0   17,16,15
+    // mask: last 5 bits match RTR, IDE, EXID -- ignore those
+    const uint16_t mask = 0x1f << 5;  // match last 5 bits of STDID
+    mask <<= 16;   // align mask in register
+    const uint32_t numfilters = numids/2 + (numids % 2);
+    chDbgAssert(numfilters <= 28, "Too many filters passed in");
+
+    CANFilter filters[28] = { 0 };
+    for (uint8_t i = 0; i < numids; i += 2) {
+        uint8_t n = i / 2;  // CANFilter number -- 2 filters per CANFilter
+        filters[n].filter       = n;    // filter number to be programmed
+        filters[n].mode         = 0;    // mask mode
+        filters[n].scale        = 0;    // 16-bit mode enough to filter STDID
+        filters[n].assignment   = 0;    // must be zero
+        // registers: 16 LSB are ID, 16 MSG are mask
+        // each register is one filter
+        filters[n].register1 = (allowed_ids[i] << 5) | mask;
+        if (i == numids-1) {
+            // odd number of IDs passed in
+            filters[n].register2 = NULL;
+        } else {
+            filters[n].register2 = (allowed_ids[i+1] << 5) | mask;
+        }
+    }
+    canSTM32SetFilters(28, numfilters, filters)
+}
+
+
 void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
     static CANTxFrame txmsg;
 
@@ -146,6 +179,8 @@ void can_init(uint8_t board_id) {
     m3can_own_id = board_id;
     canStart(&CAND1, &cancfg);
     m3can_send_git_version();
+    // uint32_t allowed[] = { m3can_own_id };
+    // can_filter_messages(allowed, 1);
     chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO,
                       can_rx_thd, NULL);
 }
