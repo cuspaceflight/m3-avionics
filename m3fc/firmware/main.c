@@ -50,7 +50,8 @@ int main(void) {
     halInit();
     chSysInit();
 
-    can_init(CAN_ID_M3FC);
+    uint16_t listen_to_ids[] = { CAN_ID_M3FC, CAN_ID_M3PSU, CAN_ID_M3PYRO };
+    can_init(CAN_ID_M3FC, listen_to_ids, 3);
 
     m3fc_ui_init();
     m3fc_config_init();

@@ -108,8 +108,8 @@ int main(void) {
     /* Init Heartbeat */
     chThdCreateStatic(hbt_wa, sizeof(hbt_wa), NORMALPRIO, hbt_thd, NULL);
 
-    /* Turn on the CAN System */
-    can_init(CAN_ID_M3DL);
+    /* Turn on the CAN System, listen to all messages */
+    can_init(CAN_ID_M3DL, NULL, 0);
         
     /* Enable CAN Feedback */
     can_set_loopback(TRUE);

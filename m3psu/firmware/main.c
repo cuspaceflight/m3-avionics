@@ -160,7 +160,9 @@ int main(void) {
   enable_internal_power();
 
   smbus_init();
-  can_init(CAN_ID_M3PSU);
+
+  uint16_t listen_to_ids[] = { CAN_ID_M3PSU };
+  can_init(CAN_ID_M3PSU, listen_to_ids, 1);
 
   // Stay powered on all the time
   //palSetLine(LINE_NSHUTDOWN);
