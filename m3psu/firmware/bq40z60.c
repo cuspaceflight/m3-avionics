@@ -77,13 +77,13 @@
 // Gas Gauging:State:Qmax Cell 4 -> 2200 mAh
 // Gas Gauging:State:Qmax Pack -> 2200 mAh
 
-// Gas Gauging:Design:Design Capacity -> 2000mAh
+// Gas Gauging:Design:Design Capacity mAh -> 2200mAh
+// Gas Gauging:Design:Design Capacity cWh -> 1628 cWh
 // Gas Gauging:Design:Design Voltage -> 7400 mV
 
 // Gas Gauging:IT Cfg:Load Mode -> 1 (Constant Power)
 // Gas Gauging:IT Cfg:Load Select -> 7 (default) (Max Avg P Last Run) (apparently best for variable loads)
 // Gas Gauging:IT Cfg:Term Voltage -> 6000 mV (2 cells * 3000mV/cell)
-// Gas Gauging:IT Cfg:Update Status ?
 
 //// Settings:Configuration:IO Config
 // BTP_POL -> 0 (default) (assert low)
