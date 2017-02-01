@@ -112,13 +112,19 @@
 // OperationStatus give XCHG (1 if charging prohibited - see manual 4.12)
 // ITStatus1, ITStatus2, ITStatus3 for gauging info (for debug only?)
 
-#define BQ40Z60_CMD_MANUFACTURER_ACCESS     0x44
+#define BQ40Z60_CMD_CURRENT                   0x0A
+#define BQ40Z60_CMD_RELATIVE_STATE_OF_CHARGE  0x0D
+#define BQ40Z60_CMD_RUN_TIME_TO_EMPTY         0x11
+#define BQ40Z60_CMD_MANUFACTURER_ACCESS       0x44
+#define BQ40Z60_CMD_OPERATION_STATUS          0x54
+#define BQ40Z60_CMD_DASTATUS1                 0x71
 
 #define BQ40Z60_MAC_OPERATION_STATUS        0x0054
 #define BQ40Z60_MAC_MANUFACTURING_STATUS    0x0057
 #define BQ40Z60_MAC_CHGR_EN_TOGGLE          0x00C0
 
 #define BQ40Z60_MAC_MANUFACTURING_STATUS_HI_CHGR_EN_MASK    (1 << 2)
+#define BQ40Z60_OPERATION_STATUS_B0_DSG        (1 << 1)
 
 uint8_t bq40z60_mac_write(BQ40Z60 *bq, uint16_t mac_address, uint8_t *txbuf, uint8_t txbuflen){
   uint8_t txdat[64];
@@ -164,6 +170,65 @@ uint8_t bq40z60_is_charger_enabled(BQ40Z60 *bq, uint8_t *enabled){
   }else{
       *enabled = 0;
   }
+
+  return ERR_OK;
+}
+
+uint8_t bq40z60_get_cell_voltages(BQ40Z60 *bq, float *batt1, float *batt2){
+  uint8_t rxbuf[32];
+  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_DASTATUS1, NULL, 0, rxbuf, sizeof(rxbuf))){
+    return ERR_COMMS;
+  }
+
+  *batt1 = (float) (rxbuf[0] | (rxbuf[1] << 8)) / 1000.0f;
+  *batt2 = (float) (rxbuf[2] | (rxbuf[3] << 8)) / 1000.0f;
+
+  return ERR_OK;
+}
+
+uint8_t bq40z60_get_current(BQ40Z60 *bq, uint16_t *ma){
+  uint8_t rxbuf[2];
+
+  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_CURRENT, NULL, 0, rxbuf, sizeof(rxbuf))){
+    return ERR_COMMS;
+  }
+
+  *ma = rxbuf[0] | (rxbuf[1] << 8);
+
+  return ERR_OK;
+}
+
+uint8_t bq40z60_get_run_time_to_empty(BQ40Z60 *bq, uint16_t *mins){
+  uint8_t rxbuf[2];
+
+  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RUN_TIME_TO_EMPTY, NULL, 0, rxbuf, sizeof(rxbuf))){
+    return ERR_COMMS;
+  }
+
+  *mins = rxbuf[0] | (rxbuf[1] << 8);
+
+  return ERR_OK;
+}
+
+uint8_t bq40z60_get_rsoc(BQ40Z60 *bq, uint8_t *percent){
+  uint8_t rxbuf[1];
+
+  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RELATIVE_STATE_OF_CHARGE, NULL, 0, rxbuf, sizeof(rxbuf))){
+    return ERR_COMMS;
+  }
+
+  *percent = rxbuf[0];
+
+  return ERR_OK;
+}
+
+uint8_t bq40z60_is_discharging(BQ40Z60 *bq, bool *status){
+  uint8_t rxbuf[4];
+  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_OPERATION_STATUS, NULL, 0, rxbuf, sizeof(rxbuf))){
+    return ERR_COMMS;
+  }
+
+  *status = (rxbuf[0] & BQ40Z60_OPERATION_STATUS_B0_DSG) != 0;
 
   return ERR_OK;
 }

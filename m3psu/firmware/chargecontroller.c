@@ -46,47 +46,12 @@ bool ChargeController_is_charger_enabled(void){
     return enabled != 0;
 }
 
-bool ChargeController_is_charger_overcurrent(void) {
-  if(!ChargeController_is_charger_enabled()){
-      return FALSE;
-  }
-  //TODO READ CHARGER STATUS?
-  return FALSE;
-}
-
-bool ChargeController_is_adapter_present(void) {
-  if(!ChargeController_is_charger_enabled()){
-    return FALSE;
-  }
-  //TODO READ CHARGER STATUS?
-  return FALSE;
-}
-
 bool ChargeController_is_charging(void){
-  //TODO Just read status, see if CHG bit is set
-
-  // If adapter not present, not charging
-  if(!ChargeController_is_adapter_present()){
-    return FALSE;
+  bool status = false;
+  if(bq40z60_is_discharging(&charger, &status) != ERR_OK){
+    return false;
   }
-  // If charger disabled, not charging
-  if(!ChargeController_is_charger_enabled()){
-      return FALSE;
-  }
-  // If charge current / voltage are 0, not charging
-  uint16_t val = 0;
-  //TODO READ CHARGE VOLTAGE?
-  //max17435_get_charge_voltage(&charger, &val);
-  if (val == 0){
-    return FALSE;
-  }
-  //TODO READ CHARGE CURRENT?
-  //max17435_get_charge_current(&charger, &val);
-  if (val == 0){
-    return FALSE;
-  }
-
-  return TRUE;
+  return !status;
 }
 
 THD_FUNCTION(chargecontroller_thread, arg) {
@@ -94,40 +59,76 @@ THD_FUNCTION(chargecontroller_thread, arg) {
   chRegSetThreadName("Charge Monitor");
 
   msg_t status = 0;
-  uint8_t can_data[2];
+  uint8_t can_data[8];
+  bool anyerrors = false;
 
   while (!chThdShouldTerminateX()) {
+    anyerrors = false;
+
     // Measure battery voltages
-    //TODO READ CELL VOLTAGES
+    float batt1 = 0;
+    float batt2 = 0;
 
-    //TODO READ RSOC, TIME_TO_EMPTY
+    status = bq40z60_get_cell_voltages(&charger, &batt1, &batt2);
+    if(status == ERR_OK){
+      // report voltages in multiples of 0.02v
+      can_data[0] = (uint8_t) ((batt1 * 100) / 2);
+      can_data[1] = (uint8_t) ((batt2 * 100) / 2);
 
+      can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, sizeof(can_data));
+    }else{
+      anyerrors = true;
+    }
 
-    // report voltages in multiples of 0.02v
-    // TODO
-    //can_data[0] = (uint8_t) ((batt1 * 100) / 2);
-    //can_data[1] = (uint8_t) ((batt2 * 100) / 2);
+    chThdSleepMilliseconds(1);
 
-    can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, sizeof(can_data));
+    // Read Time-to-Empty at current rate of discharge
+    uint16_t mins = 0;
+    status = bq40z60_get_run_time_to_empty(&charger, &mins);
+    if(status == ERR_OK){
+      can_data[0] = mins & 0xff;
+      can_data[1] = (mins >> 8) & 0xff;
+    }else{
+      can_data[0] = -1;
+      can_data[1] = -1;
+      anyerrors = true;
+    }
+
+    // Read Relative State-of-Charge (capacity remaining)
+    uint8_t percent = 0;
+    status = bq40z60_get_rsoc(&charger, &percent);
+    if(status == ERR_OK){
+      can_data[2] = percent & 0xff;
+    }else{
+      can_data[2] = -1;
+      anyerrors = true;
+    }
+
+    can_send(CAN_MSG_ID_M3PSU_CAPACITY, false, can_data, 3);
+
 
     chThdSleepMilliseconds(1);
 
     // Poll total system current
     uint16_t ma = 0;
-    //TODO READ SYSTEM CURRENT
+    status = bq40z60_get_current(&charger, &ma);
     if(status == ERR_OK){
-      m3status_set_ok(M3STATUS_COMPONENT_CHARGER);
       can_data[0] = ma & 0xff;
       can_data[1] = (ma >> 8) & 0xff;
     }else{
-      m3status_set_error(M3STATUS_COMPONENT_CHARGER, M3STATUS_CHARGER_ERROR_READ);
+      anyerrors = true;
       can_data[0] = -1;
       can_data[1] = -1;
     }
-    can_data[2] = ((ChargeController_is_adapter_present() ? 1 : 0) << 2) |
-                  ((ChargeController_is_charger_overcurrent() ? 1 : 0) << 1) |
+    can_data[2] = ((ChargeController_is_charging() ? 1 : 0) << 1) |
                   (ChargeController_is_charger_enabled() ? 1 : 0);
     can_send(CAN_MSG_ID_M3PSU_CHARGER_STATUS, false, can_data, 3);
+
+    if(anyerrors){
+      m3status_set_error(M3STATUS_COMPONENT_CHARGER, M3STATUS_CHARGER_ERROR_READ);
+    }else{
+      m3status_set_ok(M3STATUS_COMPONENT_CHARGER);
+    }
 
     chThdSleepMilliseconds(100);
   }
