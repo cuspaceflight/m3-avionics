@@ -489,6 +489,7 @@
  */
 #define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
   /* System halt code here.*/                                               \
+  GPIOC->ODR |= (1<<7);                                                     \
 }
 
 /** @} */

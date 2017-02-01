@@ -13,6 +13,9 @@
 #include "m3can.h"
 #include "m3status.h"
 
+#define LTC2983_ATTACHED        FALSE
+#define BAROMETERS_ATTACHED     FALSE
+
 /* Packet Counter */
 static uint32_t pkt_rate;
 
@@ -111,16 +114,20 @@ int main(void) {
     /* Enable CAN Feedback */
     can_set_loopback(TRUE);
    
-    /* Init m3status */
+    /* Can't use m3status before logging or CAN is set up */
     m3status_set_init(M3DL_COMPONENT_SD_CARD); 
-    m3status_set_init(M3DL_COMPONENT_LTC2983); 
-    m3status_set_init(M3DL_COMPONENT_PRESSURE); 
 
     /* Init LTC2983 */
+#if LTC2983_ATTACHED
+    m3status_set_init(M3DL_COMPONENT_LTC2983); 
     ltc2983_init();
+#endif
     
     /* Init Pressure Sensors */
+#if BAROMETERS_ATTACHED
+    m3status_set_init(M3DL_COMPONENT_PRESSURE); 
     pressure_init();
+#endif
     
     /* Main Loop */
     while (true) {
