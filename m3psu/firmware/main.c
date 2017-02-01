@@ -86,16 +86,32 @@ THD_FUNCTION(power_check, arg){
       for(i = 0; i < 12; i++){
           PowerManager_switch_off(i);
       }
-      //disable_external_power();
       disable_pyros();
       disable_system_power();
-      //TODO enter deep sleep
+
+      while(true){ // Make sure we go to sleep
+        // Enable deep-sleep
+        SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+        // Enable STANDBY mode
+        PWR->CR |= PWR_CR_PDDS;
+        // Make sure STOP mode is disabled
+        PWR->CR &= ~PWR_CR_LPDS;
+        // Clear the WUF Wakeup Flag
+        PWR->CR |= PWR_CR_CWUF;
+
+        __SEV(); // Make sure there is an event present
+        __WFE(); // Clear the event
+        __WFE(); // Go to sleep
+      }
+
     }
     chThdSleepMilliseconds(1000);
   }
 }
 
 int main(void) {
+  /* Allow debug access during all sleep modes */
+  DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP | DBGMCU_CR_DBG_STOP | DBGMCU_CR_DBG_STANDBY;
 
   halInit();
   chSysInit();
