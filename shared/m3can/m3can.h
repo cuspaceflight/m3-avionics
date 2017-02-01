@@ -89,14 +89,10 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
 /* Call can_init early during startup, setting your board ID from the list
  * above.
+ * filter_ids is an array of allowed board IDs to listen to,
+ * num_filter_ids is the length of that array.
  */
-void can_init(uint8_t board_id);
-
-/* Set up CAN filters to only allow messages from the IDs in allowed_ids.
- * These IDs are the CAN_ID_* macros defined in m3can.h.
- * numids is the length of allowed_ids.
- */
-void can_filter_messages(uint16_t *allowed_ids, uint8_t numids);
+void can_init(uint8_t board_id, uint16_t *filter_ids, size_t num_filter_ids);
 
 /* Call can_send to transmit a packet.
  * msg_id should be from the list above

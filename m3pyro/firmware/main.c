@@ -19,7 +19,8 @@ int main(void) {
     halInit();
     chSysInit();
 
-    can_init(CAN_ID_M3PYRO);
+    uint16_t filter_ids[] = { CAN_ID_M3PYRO };
+    can_init(CAN_ID_M3PYRO, filter_ids, 1);
 
     palClearLine(LINE_FIRE1);
     palClearLine(LINE_FIRE2);
