@@ -121,51 +121,51 @@
 #define BQ40Z60_MAC_MANUFACTURING_STATUS_HI_CHGR_EN_MASK    (1 << 2)
 
 uint8_t bq40z60_mac_write(BQ40Z60 *bq, uint16_t mac_address, uint8_t *txbuf, uint8_t txbuflen){
-    uint8_t txdat[64];
-    
-    chDbgAssert(txbuflen <= 62, "txbuflen > 62");
-    
-    txdat[0] = mac_address & 0xff;
-    txdat[1] = (mac_address >> 8) & 0xff;
-    
-    // copy rest of the data to transmit
-    memcpy(txdat+2, txbuf, txbuflen);
-    
-    return smbus_write_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_MANUFACTURER_ACCESS, txdat, txbuflen+2);
+  uint8_t txdat[64];
+
+  chDbgAssert(txbuflen <= 62, "txbuflen > 62");
+
+  txdat[0] = mac_address & 0xff;
+  txdat[1] = (mac_address >> 8) & 0xff;
+
+  // copy rest of the data to transmit
+  memcpy(txdat+2, txbuf, txbuflen);
+
+  return smbus_write_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_MANUFACTURER_ACCESS, txdat, txbuflen+2);
 }
 
 uint8_t bq40z60_mac_read(BQ40Z60 *bq, uint16_t mac_address, uint8_t *rxbuf, uint8_t rxbuflen){
-    uint8_t txdat[2];
-    txdat[0] = mac_address & 0xff;
-    txdat[1] = (mac_address >> 8) & 0xff;
-    return smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_MANUFACTURER_ACCESS, txdat, sizeof(txdat), rxbuf, rxbuflen);
+  uint8_t txdat[2];
+  txdat[0] = mac_address & 0xff;
+  txdat[1] = (mac_address >> 8) & 0xff;
+  return smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_MANUFACTURER_ACCESS, txdat, sizeof(txdat), rxbuf, rxbuflen);
 }
 
 uint8_t bq40z60_set_charger_enabled(BQ40Z60 *bq, uint8_t enabled){
-    // Check if charger is already enabled and toggle it if necessary
-    uint8_t is_enabled = 0;
-    if(bq40z60_is_charger_enabled(bq, &is_enabled) != ERR_OK){
-        return ERR_COMMS;
-    }
-    if(is_enabled != enabled){
-        return bq40z60_mac_write(bq, BQ40Z60_MAC_CHGR_EN_TOGGLE, NULL, 0);
-    }
-    return ERR_OK;
+  // Check if charger is already enabled and toggle it if necessary
+  uint8_t is_enabled = 0;
+  if(bq40z60_is_charger_enabled(bq, &is_enabled) != ERR_OK){
+      return ERR_COMMS;
+  }
+  if(is_enabled != enabled){
+      return bq40z60_mac_write(bq, BQ40Z60_MAC_CHGR_EN_TOGGLE, NULL, 0);
+  }
+  return ERR_OK;
 }
 
 uint8_t bq40z60_is_charger_enabled(BQ40Z60 *bq, uint8_t *enabled){
-    uint8_t rxdat[2];
-    if(bq40z60_mac_read(bq, BQ40Z60_MAC_MANUFACTURING_STATUS, rxdat, sizeof(rxdat))!=ERR_OK){
-        return ERR_COMMS;
-    }
-    
-    if((rxdat[1] & BQ40Z60_MAC_MANUFACTURING_STATUS_HI_CHGR_EN_MASK) != 0){
-        *enabled = 1;
-    }else{
-        *enabled = 0;
-    }
-    
-    return ERR_OK;
+  uint8_t rxdat[2];
+  if(bq40z60_mac_read(bq, BQ40Z60_MAC_MANUFACTURING_STATUS, rxdat, sizeof(rxdat))!=ERR_OK){
+      return ERR_COMMS;
+  }
+
+  if((rxdat[1] & BQ40Z60_MAC_MANUFACTURING_STATUS_HI_CHGR_EN_MASK) != 0){
+      *enabled = 1;
+  }else{
+      *enabled = 0;
+  }
+
+  return ERR_OK;
 }
 
 uint8_t bq40z60_init(BQ40Z60 *bq, I2CDriver *i2c, i2caddr_t address){
