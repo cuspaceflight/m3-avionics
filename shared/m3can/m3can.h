@@ -10,6 +10,7 @@
 #define CAN_ID_M3RADIO   (4)
 #define CAN_ID_M3IMU     (5)
 #define CAN_ID_M3DL      (6)
+#define CAN_ID_GROUND    (7)
 
 #define CAN_MSG_ID(x)    (x<<5)
 
@@ -25,6 +26,8 @@ extern uint8_t m3can_own_id;
 #define CAN_MSG_ID_M3RADIO_GPS_TIME         (CAN_ID_M3RADIO | CAN_MSG_ID(50))
 #define CAN_MSG_ID_M3RADIO_GPS_STATUS       (CAN_ID_M3RADIO | CAN_MSG_ID(51))
 #define CAN_MSG_ID_M3RADIO_SI4460_CFG       (CAN_ID_M3RADIO | CAN_MSG_ID(52))
+#define CAN_MSG_ID_M3RADIO_PACKET_COUNT     (CAN_ID_M3RADIO | CAN_MSG_ID(53))
+#define CAN_MSG_ID_M3RADIO_PACKET_STATS     (CAN_ID_M3RADIO | CAN_MSG_ID(54))
 
 
 /* M3PSU */

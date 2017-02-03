@@ -131,6 +131,14 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
             dlc = rxbuf[1] & 0x0F;
             memcpy(data, &rxbuf[2], dlc);
             can_send(sid, rtr, data, dlc);
+
+            /* Also send updated radio stats based on this packet */
+            can_send_u32(CAN_MSG_ID_M3RADIO_PACKET_COUNT,
+                         labstats.tx_count, labstats.rx_count, 2);
+            can_send_u16(CAN_MSG_ID_M3RADIO_PACKET_STATS,
+                         labstats.rssi, labstats.freq_offset,
+                         labstats.n_bit_errs, labstats.ldpc_iters, 4);
+
             m3status_set_ok(M3RADIO_COMPONENT_LABRADOR);
         } else if(result != LABRADOR_NO_DATA) {
             m3status_set_error(M3RADIO_COMPONENT_LABRADOR,

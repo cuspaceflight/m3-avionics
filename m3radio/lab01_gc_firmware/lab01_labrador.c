@@ -8,6 +8,11 @@
 #include "si446x.h"
 #include "usbserial.h"
 
+#define CAN_MSG_ID(x) (x<<5)
+#define CAN_ID_GROUND (7)
+#define CAN_MSG_ID_GROUND_PACKET_COUNT (CAN_ID_GROUND | CAN_MSG_ID(53))
+#define CAN_MSG_ID_GROUND_PACKET_STATS (CAN_ID_GROUND | CAN_MSG_ID(54))
+
 #define TXCODE LDPC_CODE_N256_K128
 #define RXCODE LDPC_CODE_N1280_K1024
 
@@ -91,9 +96,19 @@ static THD_FUNCTION(lab01_labrador_thd, arg) {
                 dlc = rxbuf[j+1] & 0x0F;
                 memcpy(data, &rxbuf[j+2], dlc);
                 usbserial_send(sid, rtr, data, dlc);
-                (void)sid; (void)rtr; (void)data; (void)dlc;
                 j += 2 + dlc;
             }
+
+            /* additionally send the computer our stats from this packet */
+            uint32_t d0 = labstats.tx_count, d1 = labstats.rx_count;
+            uint8_t count_data[8] = { d0, d0>>8, d0>>16, d0>>24,
+                                      d1, d1>>8, d1>>16, d1>>24 };
+            uint16_t d2 = labstats.rssi, d3 = labstats.freq_offset,
+                     d4 = labstats.n_bit_errs, d5 = labstats.ldpc_iters;
+            uint8_t stats_data[8] = { d2, d2>>8, d3, d3>>8,
+                                      d4, d4>>8, d5, d5>>8 };
+            usbserial_send(CAN_MSG_ID_GROUND_PACKET_COUNT, 0, count_data, 8);
+            usbserial_send(CAN_MSG_ID_GROUND_PACKET_STATS, 0, stats_data, 8);
             palClearLine(LINE_PIO1);
         } else if(result != LABRADOR_NO_DATA) {
             palSetLine(LINE_PIO0);
