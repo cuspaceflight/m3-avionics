@@ -58,6 +58,10 @@ struct labrador_config labcfg = {
  */
 struct labrador_radio_config labradcfg;
 
+/* Labrador statistics. Updated by Labrador, read by us.
+ */
+struct labrador_stats labstats;
+
 /* Callback for the configuration dumping utility in the Si446x driver */
 static void si446x_cfg_cb(uint8_t g, uint8_t p, uint8_t v)
 {
@@ -73,7 +77,7 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
     m3status_set_init(M3RADIO_COMPONENT_LABRADOR);
 
     /* Initialise Labrador systems */
-    while(labrador_init(&labcfg, &labradcfg, &labrador_radio_si446x)
+    while(labrador_init(&labcfg, &labradcfg, &labstats, &labrador_radio_si446x)
           != LABRADOR_OK)
     {
         m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
