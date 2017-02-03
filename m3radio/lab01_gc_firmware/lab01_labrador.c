@@ -74,7 +74,7 @@ static THD_FUNCTION(lab01_labrador_thd, arg) {
             chMsgRelease(tp, (msg_t)result);
         }
 
-        /* Try and receive a message, on success, send it over CAN. */
+        /* Try and receive a message, on success, send it over USB. */
         labrador_err result = labrador_rx(&rxbuf);
         if(result == LABRADOR_OK) {
             palClearLine(LINE_PIO0);
@@ -117,7 +117,6 @@ void lab01_labrador_init()
         palClearLine(LINE_PIO0);
         chThdSleepMilliseconds(500);
     }
-
 }
 
 void lab01_labrador_run()

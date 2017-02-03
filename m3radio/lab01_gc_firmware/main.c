@@ -67,10 +67,10 @@ int main(void) {
     lab01_labrador_run();
 
     while (true) {
-        palClearLine(LINE_PIO2);
-        chThdSleepMilliseconds(500);
         palSetLine(LINE_PIO2);
-        chThdSleepMilliseconds(500);
+        chThdSleepMilliseconds(200);
+        palClearLine(LINE_PIO2);
+        chThdSleepMilliseconds(800);
     }
 }
 

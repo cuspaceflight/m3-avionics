@@ -28,6 +28,7 @@ static THD_FUNCTION(usbserial_thd, arg)
     chThdSleepMilliseconds(1500);
     usbStart(serusbcfg.usbp, &usbcfg);
     usbConnectBus(serusbcfg.usbp);
+    chThdSleepMilliseconds(1000);
 
     usb_setup = true;
 
@@ -35,13 +36,13 @@ static THD_FUNCTION(usbserial_thd, arg)
     int msgidx = 0;
 
     while(true) {
-        uint8_t c = chSequentialStreamGet(&SDU1);
+        uint8_t c = chnGetTimeout(&SDU1, TIME_INFINITE);
         if(c == 0x7E) {
             msgidx = 0;
             continue;
         }
         if(c == 0x7D) {
-            c = chSequentialStreamGet(&SDU1) ^ 0x20;
+            c = chnGetTimeout(&SDU1, TIME_INFINITE) ^ 0x20;
         }
         msg.raw[msgidx++] = c;
         if(msgidx >= 4 && msgidx == msg.len + 4 && msg.len <= 8) {
@@ -84,5 +85,5 @@ void usbserial_send(uint16_t sid, uint8_t rtr, uint8_t* data, uint8_t dlc)
         chThdSleepMilliseconds(10);
     }
 
-    chSequentialStreamWrite(&SDU1, buf, bufidx);
+    chnWrite(&SDU1, buf, bufidx);
 }
