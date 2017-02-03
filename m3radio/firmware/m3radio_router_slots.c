@@ -25,7 +25,7 @@ struct m3radio_slot m3radio_slots[2048] = {
     [CAN_MSG_ID_M3PSU_CHANNEL_STATUS_1112]  = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
     [CAN_MSG_ID_M3PSU_PYRO_STATUS]          = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
     [CAN_MSG_ID_M3PSU_CHARGER_STATUS]       = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
-    [CAN_MSG_ID_M3PSU_CAPACTIY]             = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
+    /*[CAN_MSG_ID_M3PSU_CAPACITY]             = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },*/
 
 
     [CAN_ID_M3FC | CAN_MSG_ID_VERSION]  = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
@@ -68,7 +68,7 @@ struct m3radio_slot m3radio_slots[2048] = {
 
 
     [CAN_ID_M3PYRO | CAN_MSG_ID_VERSION] = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
-    [CAN_ID_M3PYRO | CAN_MSG_ID_STATUS}  = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
+    [CAN_ID_M3PYRO | CAN_MSG_ID_STATUS]  = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
 
     [CAN_MSG_ID_M3PYRO_FIRE_STATUS]     = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
     [CAN_MSG_ID_M3PYRO_ARM_STATUS]      = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },

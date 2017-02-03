@@ -24,8 +24,10 @@ int main(void) {
     halInit();
     chSysInit();
 
-    /* Turn on the CAN system and send a packet with our firmware version */
-    can_init(CAN_ID_M3RADIO);
+    /* Turn on the CAN system and send a packet with our firmware version.
+     * We listen to all subsystems so don't set any filters.
+     */
+    can_init(CAN_ID_M3RADIO, NULL, 0);
 
     /* We'll enable CAN loopback so we can send our own messages over
      * the radio */
