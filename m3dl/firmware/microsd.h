@@ -15,7 +15,7 @@
 #include "ffconf.h"
 #include "ff.h"
 
-/* ------------------------------------------------------------------------- */
+/* FILE SYSTEM/SD CARD DATA TYPES */
 
 /* 
  * SDMODE takes the value of BYTE, which are the possible file opening modes.
@@ -37,35 +37,36 @@ typedef BYTE SDMODE;
 
 typedef FRESULT SDRESULT;
 
-/* File object */
+/* File Object */
 typedef FIL SDFILE;
 
-/* File system object */
+/* File System Object */
 typedef FATFS SDFS;
 
-/* ------------------------------------------------------------------------- */
 
-/* File system/SD card functions */
+/* FILE SYSTEM/SD CARD FUNCTIONS */
 
-/* Open file in path <path> and opening mode <mode> to file object <fp>.
- * Blocking operation. Re-attempts indefinitely upon failure.
- * TODO: possibly implement timeout since there is no preemption
- * TODO: fix->do not open multiple files at once ... bad things might happen.
+/* 
+ * Open file in path <path> and opening mode <mode> to file object <fp>.
+ * Blocking operation - Re-attempts indefinitely upon failure.
+ * DO NOT open multiple files at once.
  */
+ 
 SDRESULT microsd_open_file(SDFILE* fp, const char* path, SDMODE mode,
     SDFS* sd);
 
-/* Open file under incremental naming scheme.
- */
+/* Open file under incremental naming scheme */
 SDRESULT microsd_open_file_inc(SDFILE* fp, const char* path, const char* ext,
     SDFS* sd);
 
-/* Close file object <fp>. */
+/* Close file object <fp> */
 SDRESULT microsd_close_file(SDFILE* fp);
 
-/* Assumes file is open.
+/* 
+ * Assumes file is open.
  * Writes exactly <btw> bytes from <buff> to <fp>, or until disk is full.
  */
+ 
 SDRESULT microsd_write(SDFILE* fp, const char* buff, unsigned int btw);
 
 #endif /* MICROSD_H */

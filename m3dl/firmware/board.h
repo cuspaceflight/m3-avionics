@@ -393,7 +393,7 @@
  * PB4  - NJTRST                       (af0, pullup).
  * PB5  - PIN5                         (unused).
  * PB6  - PIN6                         (unused).
- * PB7  - TEMP_INT                     (input).
+ * PB7  - TEMP_INT                     (input, pulldown).
  * PB8  - CAN_RX                       (af9).
  * PB9  - CAN_TX                       (af9).
  * PB10 - PIN10                        (unused).
@@ -458,7 +458,7 @@
                                         PIN_PUPD_PULLUP(GPIOB_NJTRST) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN5) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN6) | \
-                                        PIN_PUPD_PULLUP(GPIOB_TEMP_INT) | \
+                                        PIN_PUPD_PULLDOWN(GPIOB_TEMP_INT) | \
                                         PIN_PUPD_PULLUP(GPIOB_CAN_RX) | \
                                         PIN_PUPD_PULLUP(GPIOB_CAN_TX) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN10) | \

@@ -33,7 +33,7 @@ static void set_timer(int channel, int fire_time_ms) {
      * after the required time.
      */
     chSysLock();
-    if(!chVTIsArmed(&channel_timers[channel])) {
+    if(!chVTIsArmedI(&channel_timers[channel])) {
        chVTDoSetI(&channel_timers[channel], MS2ST(fire_time_ms),
                   disable_channel, (void *)channel);
     }

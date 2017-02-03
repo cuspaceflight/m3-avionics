@@ -35,6 +35,38 @@ static const CANConfig cancfg = {
 };
 
 
+static void can_filter_messages(uint16_t *allowed_ids, uint8_t numids) {
+    // clear all filters
+    canSTM32SetFilters(27, 0, NULL);
+    // Layout of bits in register (we're in 16-bit mode; see manual p. 1092):
+    // STDID       RTR IDE EXID
+    // A9876543210 0   0   17,16,15
+    // mask: last 5 bits match RTR, IDE, EXID -- ignore those
+    const uint32_t mask = 0x1f << (5+16);  // match last 5 bits of STDID, shift to mask position
+    const uint32_t numfilters = numids/2 + (numids % 2);
+    chDbgAssert(numfilters <= 27, "Too many filters passed in");
+
+    CANFilter filters[27] = { 0 };
+    for (uint8_t i = 0; i < numids; i += 2) {
+        uint8_t n = i / 2;  // CANFilter number -- 2 filters per CANFilter
+        filters[n].filter       = n;    // filter number to be programmed
+        filters[n].mode         = 0;    // mask mode
+        filters[n].scale        = 0;    // 16-bit mode enough to filter STDID
+        filters[n].assignment   = 0;    // must be zero
+        // registers: 16 LSB are ID, 16 MSG are mask
+        // each register is one filter
+        filters[n].register1 = (allowed_ids[i] << 5) | mask;
+        if (i == numids-1) {
+            // odd number of IDs passed in
+            filters[n].register2 = filters[n].register1;
+        } else {
+            filters[n].register2 = (allowed_ids[i+1] << 5) | mask;
+        }
+    }
+    canSTM32SetFilters(27, numfilters, filters);
+}
+
+
 void can_send(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
     static CANTxFrame txmsg;
 
@@ -108,7 +140,7 @@ void can_send_f32(uint16_t msg_id, float d0, float d1, size_t n)
 }
 
 
-static THD_WORKING_AREA(can_rx_wa, 256);
+static THD_WORKING_AREA(can_rx_wa, 512);
 static THD_FUNCTION(can_rx_thd, arg) {
     (void)arg;
 
@@ -142,8 +174,11 @@ void can_set_loopback(bool enabled) {
 }
 
 
-void can_init(uint8_t board_id) {
+void can_init(uint8_t board_id, uint16_t* filter_ids, size_t num_filter_ids) {
     m3can_own_id = board_id;
+    if(filter_ids != NULL) {
+        can_filter_messages(filter_ids, num_filter_ids);
+    }
     canStart(&CAND1, &cancfg);
     m3can_send_git_version();
     chThdCreateStatic(can_rx_wa, sizeof(can_rx_wa), NORMALPRIO,

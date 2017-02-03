@@ -15,7 +15,7 @@ class CANFrame:
         sid = buf[0] | (buf[1] << 8)
         rtr = buf[2]
         dlc = buf[3]
-        data = buf[4:]
+        data = buf[4:4+dlc]
         return cls(sid, rtr, dlc, data)
 
     def __init__(self, sid=None, rtr=None, dlc=None, data=None):

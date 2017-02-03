@@ -3,7 +3,7 @@
 #include "m3fc_status.h"
 #include "m3fc_flash.h"
 
-#define M3FC_CONFIG_FLASH (0x080d9500)
+#define M3FC_CONFIG_FLASH (0x080e0000)
 
 struct m3fc_config m3fc_config;
 
@@ -21,21 +21,25 @@ static THD_FUNCTION(m3fc_config_reporter_thd, arg) {
         can_send(CAN_MSG_ID_M3FC_CFG_PYROS, false,
                  (uint8_t*)&m3fc_config.pyros, 8);
 
+        /* Check the config. Sets an error inside the relevant config check
+         * functions, so no need to handle the error case here.
+         */
         if(m3fc_config_check()) {
             m3status_set_ok(M3FC_COMPONENT_CFG);
         }
+
         chThdSleepMilliseconds(5000);
     }
 }
 
 bool m3fc_config_load() {
     return m3fc_flash_read((uint32_t*)M3FC_CONFIG_FLASH,
-                           (uint32_t*)&m3fc_config, sizeof(m3fc_config)>>2);
+                           (uint32_t*)&m3fc_config, sizeof(m3fc_config)/4);
 }
 
 void m3fc_config_save() {
     m3fc_flash_write((uint32_t*)&m3fc_config,
-                     (uint32_t*)M3FC_CONFIG_FLASH, sizeof(m3fc_config)>>2);
+                     (uint32_t*)M3FC_CONFIG_FLASH, sizeof(m3fc_config)/4);
 }
 
 void m3fc_config_init() {
@@ -43,7 +47,6 @@ void m3fc_config_init() {
 
     if(!m3fc_config_load()) {
         m3status_set_error(M3FC_COMPONENT_CFG, M3FC_ERROR_CFG_READ);
-        return;
     }
 
     chThdCreateStatic(m3fc_config_reporter_thd_wa,

@@ -66,6 +66,14 @@ extern uint8_t m3can_own_id;
 
 
 /* M3DL */
+#define CAN_MSG_ID_M3DL_FREE_SPACE          (CAN_ID_M3DL | CAN_MSG_ID(32))
+#define CAN_MSG_ID_M3DL_RATE                (CAN_ID_M3DL | CAN_MSG_ID(33))
+#define CAN_MSG_ID_M3DL_TEMP_1_2            (CAN_ID_M3DL | CAN_MSG_ID(48))
+#define CAN_MSG_ID_M3DL_TEMP_3_4            (CAN_ID_M3DL | CAN_MSG_ID(49))
+#define CAN_MSG_ID_M3DL_TEMP_5_6            (CAN_ID_M3DL | CAN_MSG_ID(50))
+#define CAN_MSG_ID_M3DL_TEMP_7_8            (CAN_ID_M3DL | CAN_MSG_ID(51))
+#define CAN_MSG_ID_M3DL_TEMP_9              (CAN_ID_M3DL | CAN_MSG_ID(52))
+#define CAN_MSG_ID_M3DL_PRESSURE            (CAN_ID_M3DL | CAN_MSG_ID(53))
 
 
 /* M3IMU */
@@ -86,8 +94,10 @@ void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen);
 
 /* Call can_init early during startup, setting your board ID from the list
  * above.
+ * filter_ids is an array of allowed board IDs to listen to,
+ * num_filter_ids is the length of that array.
  */
-void can_init(uint8_t board_id);
+void can_init(uint8_t board_id, uint16_t *filter_ids, size_t num_filter_ids);
 
 /* Call can_send to transmit a packet.
  * msg_id should be from the list above
@@ -123,3 +133,4 @@ void can_send_f32(uint16_t msg_id, float d0, float d1, size_t n);
 void can_set_loopback(bool enabled);
 
 #endif /* _M3CAN_H */
+

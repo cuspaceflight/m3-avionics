@@ -1,14 +1,23 @@
 /*
- *  Martlet 3 Data Logger
+ *  Martlet 3 Datalogger
  */
 
 #include "ch.h"
 #include "hal.h"
 
+#include "logging.h"
+#include "pressure.h"
 #include "LTC2983.h"
 #include "err_handler.h"
-#include "logging.h"
+
 #include "m3can.h"
+#include "m3status.h"
+
+#define LTC2983_ATTACHED        FALSE
+#define BAROMETERS_ATTACHED     FALSE
+
+/* Packet Counter */
+static uint32_t pkt_rate;
 
 /* Interrupt Configuration */
 static const EXTConfig extcfg = {
@@ -39,29 +48,42 @@ static const EXTConfig extcfg = {
   } 
 };
 
-/* Heartbeat Thread*/
+/* Heartbeat Thread */
 static THD_WORKING_AREA(hbt_wa, 128);
 static THD_FUNCTION(hbt_thd, arg) {
 
   (void)arg;
   chRegSetThreadName("Heartbeat");
+  
   while (true) {
+    
     /* Flash HBT LED */
     palSetPad(GPIOB, GPIOB_LED1_GREEN);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(100);
     palClearPad(GPIOB, GPIOB_LED1_GREEN);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(900);
+    
+    /* Send Current Packet Rate */
+    can_send(CAN_MSG_ID_M3DL_RATE, FALSE, (uint8_t*)(&pkt_rate), 4);
+
+    /* Reset Packet Rate Counter */
+    pkt_rate = 0;
+          
   }
 }
 
-
+/* Function Called on CAN Packet Reception */
 void can_recv(uint16_t ID, bool RTR, uint8_t* data, uint8_t len) {
 
+    /* Log Incoming CAN Packet */
     log_can(ID, RTR, len, data);
+    
+    /* Update Packet Rate */
+    pkt_rate += 1;
 }
 
 
-/* Application entry point */
+/* Application Entry Point */
 int main(void) {
 
     /* Allow debug access during WFI sleep */
@@ -76,12 +98,9 @@ int main(void) {
     /* Initialise ChibiOS */
     halInit();
     chSysInit();
-
+    
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
-
-    /* LTC2983 Init */
-    ltc2983_init();	
 
     /* Datalogging Init */
     logging_init();
@@ -89,25 +108,34 @@ int main(void) {
     /* Init Heartbeat */
     chThdCreateStatic(hbt_wa, sizeof(hbt_wa), NORMALPRIO, hbt_thd, NULL);
 
-    /* Turn on the CAN system and send a packet with our firmware version */
-    can_init(CAN_ID_M3DL);
-    
+    /* Turn on the CAN System, listen to all messages */
+    can_init(CAN_ID_M3DL, NULL, 0);
+        
     /* Enable CAN Feedback */
     can_set_loopback(TRUE);
-    
-    uint8_t data[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+   
+    /* Can't use m3status before logging or CAN is set up */
+    m3status_set_init(M3DL_COMPONENT_SD_CARD); 
 
+    /* Init LTC2983 */
+#if LTC2983_ATTACHED
+    m3status_set_init(M3DL_COMPONENT_LTC2983); 
+    ltc2983_init();
+#endif
+    
+    /* Init Pressure Sensors */
+#if BAROMETERS_ATTACHED
+    m3status_set_init(M3DL_COMPONENT_PRESSURE); 
+    pressure_init();
+#endif
+    
+    /* Main Loop */
     while (true) {
     
-    /* SD Card Test */
-    log_can(0x123, false, 8, data);
-    
-    /* Clear the watchdog timer */
-    IWDG->KR = 0xAAAA;
+        /* Clear the watchdog timer */
+        IWDG->KR = 0xAAAA;
 
-    /* Do nothing */
-    chThdSleepMilliseconds(1);
-
+        /* Do nothing */
+        chThdSleepMilliseconds(100);
     }
-
 }

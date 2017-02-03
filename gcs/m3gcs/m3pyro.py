@@ -17,13 +17,14 @@ CAN_MSG_ID_M3PYRO_SUPPLY_STATUS = (CAN_ID_M3PYRO | msg_id(49))
 
 @register_packet("m3pyro", CAN_MSG_ID_M3PYRO_STATUS, "Status")
 def status(data):
-    status_map = {0: "Good", 1: "Init", 2: "Error"}
-    return "Status: {}".format(
+    status_map = {0: "OK", 1: "Init", 2: "Error"}
+    return "{}".format(
         status_map.get(data[0], "Unknown"))
+
 
 @register_packet("m3pyro", CAN_MSG_ID_M3PYRO_FIRE_STATUS, "Fire Status")
 def fire_status(data):
-    status_map = {0: "Off", 1: "Firing", 2: "Pulsed Firing"}
+    status_map = {0: "Off", 1: "EMatch", 2: "Talon", 3: "Metron"}
     return "Ch1: {}, Ch2: {}, Ch3: {}, Ch4: {}".format(
         *[status_map.get(x, "Unknown") for x in data[:4]])
 
@@ -36,8 +37,11 @@ def arm_status(data):
 
 @register_packet("m3pyro", CAN_MSG_ID_M3PYRO_CONTINUITY, "Continuity")
 def continuity(data):
-    resistances = ["{:.1f}Ω".format(float(d)/10) if d != 255 else "HI"
+    resistances = ["{:.1f}Ω".format(float(d)*2) if d != 255 else "HI"
                    for d in data[:4]]
+    # Disabled reading of 2 byte raw ADC values
+    # resistances = ["{:d}".format(d)
+    #                for d in struct.unpack("HHHH", bytes(data))]
     return "Ch1: {}, Ch2: {}, Ch3: {}, Ch4: {}".format(*resistances)
 
 
@@ -46,31 +50,33 @@ def supply_status(data):
     return "{:.1f}V".format(float(data[0])/10)
 
 
-@register_command("m3pyro", "Fire Ch1", ("Off", "Fire", "Pulsed Fire"))
-def fire_ch1(data):
-    command_map = {"Off": 0, "Fire": 1, "Pulsed Fire": 2}
-    data = [command_map.get(data, 0), 0, 0, 0]
-    return CAN_MSG_ID_M3PYRO_FIRE_COMMAND, data
+@register_packet("m3pyro", CAN_MSG_ID_M3PYRO_FIRE_COMMAND, "Fire")
+def fire(data):
+    command_map = {0: "Off", 1: "EMatch", 2: "Talon", 3: "Metron"}
+    string = ""
+    for ch, op in enumerate(data):
+        if command_map[op] == "Off":
+            continue
+        else:
+            string += "Channel {} type {}, ".format(ch+1, command_map[op])
+    if string == "":
+        string = "No channels firing"
+    return string
 
 
-@register_command("m3pyro", "Fire Ch2", ("Off", "Fire", "Pulsed Fire"))
-def fire_ch2(data):
-    command_map = {"Off": 0, "Fire": 1, "Pulsed Fire": 2}
-    data = [0, command_map.get(data, 0), 0, 0]
-    return CAN_MSG_ID_M3PYRO_FIRE_COMMAND, data
-
-
-@register_command("m3pyro", "Fire Ch3", ("Off", "Fire", "Pulsed Fire"))
-def fire_ch3(data):
-    command_map = {"Off": 0, "Fire": 1, "Pulsed Fire": 2}
-    data = [0, 0, command_map.get(data, 0), 0]
-    return CAN_MSG_ID_M3PYRO_FIRE_COMMAND, data
-
-
-@register_command("m3pyro", "Fire Ch4", ("Off", "Fire", "Pulsed Fire"))
-def fire_ch4(data):
-    command_map = {"Off": 0, "Fire": 1, "Pulsed Fire": 2}
-    data = [0, 0, 0, command_map.get(data, 0)]
+@register_command("m3pyro", "Fire Ch1",
+                  ("1 Off", "1 EMatch", "1 Talon", "1 Metron"))
+@register_command("m3pyro", "Fire Ch2",
+                  ("2 Off", "2 EMatch", "2 Talon", "2 Metron"))
+@register_command("m3pyro", "Fire Ch3",
+                  ("3 Off", "3 EMatch", "3 Talon", "3 Metron"))
+@register_command("m3pyro", "Fire Ch4",
+                  ("4 Off", "4 EMatch", "4 Talon", "4 Metron"))
+def fire_ch_cmd(data):
+    [channel, operation] = data.split(" ")
+    command_map = {"Off": 0, "EMatch": 1, "Talon": 2, "Metron": 3}
+    data = [0, 0, 0, 0]
+    data[int(channel)-1] = int(command_map[operation])
     return CAN_MSG_ID_M3PYRO_FIRE_COMMAND, data
 
 

@@ -25,7 +25,7 @@ pins:
     SPI1_MISO: pa6, af5
     SPI1_MOSI: pa7, af5
     SPI1_CS: pa8, output, pushpull
-    TEMP_INT: pb7, input
+    TEMP_INT: pb7, input, pulldown
 
     CAN_RX: pb8, af9
     CAN_TX: pb9, af9
