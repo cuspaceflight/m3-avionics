@@ -113,6 +113,9 @@ static THD_FUNCTION(lab01_labrador_thd, arg) {
         } else if(result != LABRADOR_NO_DATA) {
             palSetLine(LINE_PIO0);
         }
+
+        /* Need a short break to stop this thread hogging all the CPU time */
+        chThdYield();
     }
 }
 
