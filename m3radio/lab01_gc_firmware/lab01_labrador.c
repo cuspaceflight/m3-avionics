@@ -49,6 +49,7 @@ struct labrador_config labcfg = {
 };
 
 struct labrador_radio_config labradcfg;
+struct labrador_stats labstats;
 
 static THD_WORKING_AREA(lab01_labrador_thd_wa, 1024);
 static THD_FUNCTION(lab01_labrador_thd, arg) {
@@ -102,7 +103,7 @@ static THD_FUNCTION(lab01_labrador_thd, arg) {
 
 void lab01_labrador_init()
 {
-    while(labrador_init(&labcfg, &labradcfg, &labrador_radio_si446x)
+    while(labrador_init(&labcfg, &labradcfg, &labstats, &labrador_radio_si446x)
           != LABRADOR_OK)
     {
         palSetLine(LINE_PIO0);
