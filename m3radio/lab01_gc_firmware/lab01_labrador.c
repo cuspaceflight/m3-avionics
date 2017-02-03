@@ -115,7 +115,7 @@ static THD_FUNCTION(lab01_labrador_thd, arg) {
         }
 
         /* Need a short break to stop this thread hogging all the CPU time */
-        chThdYield();
+        chThdSleepMilliseconds(10);
     }
 }
 
