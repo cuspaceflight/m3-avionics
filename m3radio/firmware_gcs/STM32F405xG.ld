@@ -1,1 +1,0 @@
-../firmware/STM32F405xG.ld
