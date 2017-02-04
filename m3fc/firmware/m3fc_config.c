@@ -16,10 +16,10 @@ static THD_FUNCTION(m3fc_config_reporter_thd, arg) {
 
     while(true) {
         /* Send current config over CAN every 5s */
-        can_send(CAN_MSG_ID_M3FC_CFG_PROFILE, false,
-                 (uint8_t*)&m3fc_config.profile, 8);
-        can_send(CAN_MSG_ID_M3FC_CFG_PYROS, false,
-                 (uint8_t*)&m3fc_config.pyros, 8);
+        m3can_send(CAN_MSG_ID_M3FC_CFG_PROFILE, false,
+                   (uint8_t*)&m3fc_config.profile, 8);
+        m3can_send(CAN_MSG_ID_M3FC_CFG_PYROS, false,
+                   (uint8_t*)&m3fc_config.pyros, 8);
 
         /* Check the config. Sets an error inside the relevant config check
          * functions, so no need to handle the error case here.

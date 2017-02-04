@@ -222,7 +222,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
                     (palReadLine(LINE_BLEED_BATT_1) << 1) |
                     palReadLine(LINE_BLEED_BATT_2);
 
-      can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, 3);
+      m3can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, 3);
     }else{
       m3status_set_error(M3STATUS_COMPONENT_ADC, M3STATUS_ADC_ERROR_READ);
     }
@@ -246,7 +246,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
     can_data[2] = ((ChargeController_is_adapter_present() ? 1 : 0) << 2) |
                   ((ChargeController_is_charger_overcurrent() ? 1 : 0) << 1) |
                   (shouldCharge ? 1 : 0);
-    can_send(CAN_MSG_ID_M3PSU_CHARGER_STATUS, false, can_data, 3);
+    m3can_send(CAN_MSG_ID_M3PSU_CHARGER_STATUS, false, can_data, 3);
 
     chThdSleepMilliseconds(100);
   }

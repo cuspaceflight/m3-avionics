@@ -64,7 +64,7 @@ static THD_FUNCTION(hbt_thd, arg) {
     chThdSleepMilliseconds(900);
     
     /* Send Current Packet Rate */
-    can_send(CAN_MSG_ID_M3DL_RATE, FALSE, (uint8_t*)(&pkt_rate), 4);
+    m3can_send(CAN_MSG_ID_M3DL_RATE, FALSE, (uint8_t*)(&pkt_rate), 4);
 
     /* Reset Packet Rate Counter */
     pkt_rate = 0;
@@ -73,7 +73,7 @@ static THD_FUNCTION(hbt_thd, arg) {
 }
 
 /* Function Called on CAN Packet Reception */
-void can_recv(uint16_t ID, bool RTR, uint8_t* data, uint8_t len) {
+void m3can_recv(uint16_t ID, bool RTR, uint8_t* data, uint8_t len) {
 
     /* Log Incoming CAN Packet */
     log_can(ID, RTR, len, data);
@@ -109,10 +109,10 @@ int main(void) {
     chThdCreateStatic(hbt_wa, sizeof(hbt_wa), NORMALPRIO, hbt_thd, NULL);
 
     /* Turn on the CAN System, listen to all messages */
-    can_init(CAN_ID_M3DL, NULL, 0);
+    m3can_init(CAN_ID_M3DL, NULL, 0);
         
     /* Enable CAN Feedback */
-    can_set_loopback(TRUE);
+    m3can_set_loopback(TRUE);
    
     /* Can't use m3status before logging or CAN is set up */
     m3status_set_init(M3DL_COMPONENT_SD_CARD); 

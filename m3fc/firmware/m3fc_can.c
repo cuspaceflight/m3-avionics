@@ -5,8 +5,8 @@
 #include "m3fc_mock.h"
 #include "m3fc_mission.h"
 
-void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
-    (void)can_rtr;
+void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen) {
+    (void)rtr;
 
     if(msg_id == CAN_MSG_ID_M3PYRO_SUPPLY_STATUS) {
         m3fc_mission_handle_pyro_supply(data, datalen);

@@ -258,7 +258,7 @@ static void m3fc_mission_send_state(state_t state, instance_data_t *data) {
 
     uint8_t buf[5] = {met, met>>8, met>>16, met>>24, can_state};
 
-    can_send(CAN_MSG_ID_M3FC_MISSION_STATE, false, buf, 5);
+    m3can_send(CAN_MSG_ID_M3FC_MISSION_STATE, false, buf, 5);
 }
 
 static void m3fc_mission_fire_pyro(int usage) {
@@ -275,7 +275,7 @@ static void m3fc_mission_fire_pyro(int usage) {
     if(m3fc_config.pyros.pyro_4_usage == usage) {
         channels[3] = m3fc_config.pyros.pyro_4_type;
     }
-    can_send(CAN_MSG_ID_M3PYRO_FIRE_COMMAND, false, channels, 4);
+    m3can_send(CAN_MSG_ID_M3PYRO_FIRE_COMMAND, false, channels, 4);
 }
 
 static void m3fc_mission_fire_drogue_pyro() {

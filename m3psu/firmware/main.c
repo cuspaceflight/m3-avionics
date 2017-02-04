@@ -63,7 +63,7 @@ void switch_to_internal_power(void){
   disable_external_power();
 }
 
-void can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
+void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   (void)rtr;
 
   if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_PYROS){
@@ -119,7 +119,7 @@ THD_FUNCTION(power_status_reporter, arg){
   while(TRUE){
     can_data[0] = (palReadLine(LINE_EN_INT_PWR) << 1) |
                   (palReadLine(LINE_EN_EXT_PWR));
-    can_send(CAN_MSG_ID_M3PSU_INTEXT_STATUS, false, can_data, 1);
+    m3can_send(CAN_MSG_ID_M3PSU_INTEXT_STATUS, false, can_data, 1);
     chThdSleepMilliseconds(1000);
   }
 }
@@ -162,7 +162,7 @@ int main(void) {
   smbus_init();
 
   uint16_t listen_to_ids[] = { CAN_ID_M3PSU };
-  can_init(CAN_ID_M3PSU, listen_to_ids, 1);
+  m3can_init(CAN_ID_M3PSU, listen_to_ids, 1);
 
   // Stay powered on all the time
   //palSetLine(LINE_NSHUTDOWN);

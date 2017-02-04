@@ -277,7 +277,7 @@ static THD_FUNCTION(adxl345_thd, arg)
          */
         m3fc_state_estimation_new_accels(faccels, 156.96f, 0.1186f);
 
-        can_send(CAN_MSG_ID_M3FC_ACCEL, false, (uint8_t*)accels, 6);
+        m3can_send(CAN_MSG_ID_M3FC_ACCEL, false, (uint8_t*)accels, 6);
 
         wait_result = chBSemWaitTimeout(&adxl345_thd_sem, MS2ST(100));
 

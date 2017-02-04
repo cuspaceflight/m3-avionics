@@ -135,7 +135,7 @@ THD_FUNCTION(datalogging_thread, arg) {
                 
             /* Report Free Space Over CAN */
             if(f_getfree("/", &free_clusters, &fsp) == FR_OK) {    
-                can_send(CAN_MSG_ID_M3DL_FREE_SPACE, FALSE, (uint8_t*)(&free_clusters), 4);
+                m3can_send(CAN_MSG_ID_M3DL_FREE_SPACE, FALSE, (uint8_t*)(&free_clusters), 4);
             }
             
             /* Cache written to SD card succesfully */

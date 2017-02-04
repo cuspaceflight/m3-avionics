@@ -273,13 +273,13 @@ static bool ublox_transmit(uint8_t *buf)
 }
 
 static void ublox_can_send_pvt(ublox_pvt_t *pvt) {
-    can_send_i32(CAN_MSG_ID_M3RADIO_GPS_LATLNG, pvt->lat, pvt->lon, 2);
-    can_send_i32(CAN_MSG_ID_M3RADIO_GPS_ALT, pvt->height, pvt->h_msl, 2);
-    can_send_u8(CAN_MSG_ID_M3RADIO_GPS_TIME, pvt->year, pvt->year>>8,
-                pvt->month, pvt->day, pvt->hour, pvt->minute, pvt->second,
-                pvt->valid, 8);
-    can_send_u8(CAN_MSG_ID_M3RADIO_GPS_STATUS, pvt->fix_type, pvt->flags,
-                pvt->num_sv, 0, 0, 0, 0, 0, 3);
+    m3can_send_i32(CAN_MSG_ID_M3RADIO_GPS_LATLNG, pvt->lat, pvt->lon, 2);
+    m3can_send_i32(CAN_MSG_ID_M3RADIO_GPS_ALT, pvt->height, pvt->h_msl, 2);
+    m3can_send_u8(CAN_MSG_ID_M3RADIO_GPS_TIME, pvt->year, pvt->year>>8,
+                  pvt->month, pvt->day, pvt->hour, pvt->minute, pvt->second,
+                  pvt->valid, 8);
+    m3can_send_u8(CAN_MSG_ID_M3RADIO_GPS_STATUS, pvt->fix_type, pvt->flags,
+                  pvt->num_sv, 0, 0, 0, 0, 0, 3);
 }
 
 /* Run new byte b through the UBX decoding state machine. Note that this

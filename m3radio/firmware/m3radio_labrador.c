@@ -67,7 +67,7 @@ struct labrador_stats labstats;
 /* Callback for the configuration dumping utility in the Si446x driver */
 static void si446x_cfg_cb(uint8_t g, uint8_t p, uint8_t v)
 {
-    can_send_u8(CAN_MSG_ID_M3RADIO_SI4460_CFG, g, p, v, 0, 0, 0, 0, 0, 3);
+    m3can_send_u8(CAN_MSG_ID_M3RADIO_SI4460_CFG, g, p, v, 0, 0, 0, 0, 0, 3);
 }
 
 THD_WORKING_AREA(m3radio_labrador_thd_wa, 1024);
@@ -130,14 +130,14 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
             rtr = rxbuf[1] & 0x10;
             dlc = rxbuf[1] & 0x0F;
             memcpy(data, &rxbuf[2], dlc);
-            can_send(sid, rtr, data, dlc);
+            m3can_send(sid, rtr, data, dlc);
 
             /* Also send updated radio stats based on this packet */
-            can_send_u32(CAN_MSG_ID_M3RADIO_PACKET_COUNT,
-                         labstats.tx_count, labstats.rx_count, 2);
-            can_send_u16(CAN_MSG_ID_M3RADIO_PACKET_STATS,
-                         labstats.rssi, labstats.freq_offset,
-                         labstats.n_bit_errs, labstats.ldpc_iters, 4);
+            m3can_send_u32(CAN_MSG_ID_M3RADIO_PACKET_COUNT,
+                           labstats.tx_count, labstats.rx_count, 2);
+            m3can_send_u16(CAN_MSG_ID_M3RADIO_PACKET_STATS,
+                           labstats.rssi, labstats.freq_offset,
+                           labstats.n_bit_errs, labstats.ldpc_iters, 4);
 
             m3status_set_ok(M3RADIO_COMPONENT_LABRADOR);
         } else if(result != LABRADOR_NO_DATA) {

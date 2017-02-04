@@ -119,7 +119,7 @@ bool process_buffer(void) {
     }
 
     /* Log Pressure Readings */
-    can_send(CAN_MSG_ID_M3DL_PRESSURE, FALSE, res, 8);
+    m3can_send(CAN_MSG_ID_M3DL_PRESSURE, FALSE, res, 8);
 
     /* Compute Local CRC */
     chk = compute_crc(res, 8);

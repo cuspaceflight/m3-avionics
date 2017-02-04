@@ -224,16 +224,16 @@ static void log_temp(void) {
     }
     
     /* Send TEMP1 & TEMP2 */
-    can_send(CAN_MSG_ID_M3DL_TEMP_1_2, FALSE, TEMP_1_2, 8);
+    m3can_send(CAN_MSG_ID_M3DL_TEMP_1_2, FALSE, TEMP_1_2, 8);
     
     /* Send TEMP3 & TEMP4 */
-    can_send(CAN_MSG_ID_M3DL_TEMP_3_4, FALSE, TEMP_3_4, 8);
+    m3can_send(CAN_MSG_ID_M3DL_TEMP_3_4, FALSE, TEMP_3_4, 8);
     
     /* Send TEMP5 & TEMP6 */
-    can_send(CAN_MSG_ID_M3DL_TEMP_5_6, FALSE, TEMP_5_6, 8);
+    m3can_send(CAN_MSG_ID_M3DL_TEMP_5_6, FALSE, TEMP_5_6, 8);
     
     /* Send TEMP7 & TEMP8 */
-    can_send(CAN_MSG_ID_M3DL_TEMP_7_8, FALSE, TEMP_7_8, 8);
+    m3can_send(CAN_MSG_ID_M3DL_TEMP_7_8, FALSE, TEMP_7_8, 8);
 }
 
 

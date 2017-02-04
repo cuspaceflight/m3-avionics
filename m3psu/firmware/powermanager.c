@@ -162,7 +162,7 @@ THD_FUNCTION(powermanager_thread, arg){
         can_data[7] = 0;
 
         uint8_t base_id = CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12 >> 5;
-        can_send(CAN_ID_M3PSU | (CAN_MSG_ID((base_id + idx))), false, can_data, 8);
+        m3can_send(CAN_ID_M3PSU | (CAN_MSG_ID((base_id + idx))), false, can_data, 8);
 
         m3status_set_ok(M3STATUS_COMPONENT_DCDC1 + idx);
 
@@ -188,7 +188,7 @@ THD_FUNCTION(powermanager_thread, arg){
       can_data[6] = palReadLine(LINE_EN_PYRO);
       can_data[7] = 0;
 
-      can_send(CAN_MSG_ID_M3PSU_PYRO_STATUS, false, can_data, 8);
+      m3can_send(CAN_MSG_ID_M3PSU_PYRO_STATUS, false, can_data, 8);
 
       m3status_set_ok(M3STATUS_COMPONENT_PYRO_MON);
     }else{

@@ -1014,8 +1014,8 @@ static void si4460_dump_params(void) {
         for(prop=0; prop<=groups[i][1]; prop++) {
             uint8_t group = groups[i][0];
             uint8_t val = si4460_get_property(group, prop);
-            can_send_u8(CAN_MSG_ID_M3RADIO_SI4460_CFG,
-                        group, prop, val, 0, 0, 0, 0, 0, 3);
+            m3can_send_u8(CAN_MSG_ID_M3RADIO_SI4460_CFG,
+                          group, prop, val, 0, 0, 0, 0, 0, 3);
         }
     }
 }
