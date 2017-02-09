@@ -9,7 +9,7 @@
 #include "ch.h"
 #include "hal.h"
 
-void smbus_init(void);
+void smbus_init(I2CDriver *i2c);
 
 uint8_t smbus_write_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint8_t value);
 uint8_t smbus_read_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint8_t *result);

@@ -142,9 +142,26 @@ uint8_t bq40z60_mac_write(BQ40Z60 *bq, uint16_t mac_address, uint8_t *txbuf, uin
 
 uint8_t bq40z60_mac_read(BQ40Z60 *bq, uint16_t mac_address, uint8_t *rxbuf, uint8_t rxbuflen){
   uint8_t txdat[2];
+  uint8_t rxdat[64];
+
+  // Tell the chip which address we want to read
   txdat[0] = mac_address & 0xff;
   txdat[1] = (mac_address >> 8) & 0xff;
-  return smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_MANUFACTURER_ACCESS, txdat, sizeof(txdat), rxbuf, rxbuflen);
+  msg_t status = smbus_write_block(bq->config.i2c, bq->config.address, 0x44, txdat, sizeof(txdat));
+  if(status != 0){
+      return status;
+  }
+
+  // Read the data back from the chip
+  status = smbus_read_block(bq->config.i2c, bq->config.address, 0x44, NULL, 0, rxdat, rxbuflen + 2);
+  if(status != 0){
+      return status;
+  }
+
+  // Copy the data to the output buffer
+  memcpy(rxbuf, rxdat+2, rxbuflen);
+
+  return 0;
 }
 
 uint8_t bq40z60_set_charger_enabled(BQ40Z60 *bq, uint8_t enabled){
@@ -187,37 +204,28 @@ uint8_t bq40z60_get_cell_voltages(BQ40Z60 *bq, float *batt1, float *batt2){
 }
 
 uint8_t bq40z60_get_current(BQ40Z60 *bq, uint16_t *ma){
-  uint8_t rxbuf[2];
-
-  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_CURRENT, NULL, 0, rxbuf, sizeof(rxbuf))){
+  if(!smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_CURRENT, ma)){
     return ERR_COMMS;
   }
-
-  *ma = rxbuf[0] | (rxbuf[1] << 8);
 
   return ERR_OK;
 }
 
 uint8_t bq40z60_get_run_time_to_empty(BQ40Z60 *bq, uint16_t *mins){
-  uint8_t rxbuf[2];
-
-  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RUN_TIME_TO_EMPTY, NULL, 0, rxbuf, sizeof(rxbuf))){
+  if(!smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RUN_TIME_TO_EMPTY, mins)){
     return ERR_COMMS;
   }
-
-  *mins = rxbuf[0] | (rxbuf[1] << 8);
 
   return ERR_OK;
 }
 
 uint8_t bq40z60_get_rsoc(BQ40Z60 *bq, uint8_t *percent){
-  uint8_t rxbuf[1];
-
-  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RELATIVE_STATE_OF_CHARGE, NULL, 0, rxbuf, sizeof(rxbuf))){
+  uint16_t perc = 0;
+  if(!smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RELATIVE_STATE_OF_CHARGE, &perc)){
     return ERR_COMMS;
   }
 
-  *percent = rxbuf[0];
+  *percent = perc & 0xff;
 
   return ERR_OK;
 }
