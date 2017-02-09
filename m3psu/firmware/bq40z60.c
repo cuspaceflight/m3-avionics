@@ -193,7 +193,7 @@ uint8_t bq40z60_is_charger_enabled(BQ40Z60 *bq, uint8_t *enabled){
 
 uint8_t bq40z60_get_cell_voltages(BQ40Z60 *bq, float *batt1, float *batt2){
   uint8_t rxbuf[32];
-  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_DASTATUS1, NULL, 0, rxbuf, sizeof(rxbuf))){
+  if(smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_DASTATUS1, NULL, 0, rxbuf, sizeof(rxbuf)) != ERR_OK){
     return ERR_COMMS;
   }
 
@@ -203,8 +203,8 @@ uint8_t bq40z60_get_cell_voltages(BQ40Z60 *bq, float *batt1, float *batt2){
   return ERR_OK;
 }
 
-uint8_t bq40z60_get_current(BQ40Z60 *bq, uint16_t *ma){
-  if(!smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_CURRENT, ma)){
+uint8_t bq40z60_get_current(BQ40Z60 *bq, int16_t *ma){
+  if(smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_CURRENT, (uint16_t *)ma) != ERR_OK){
     return ERR_COMMS;
   }
 
@@ -212,7 +212,7 @@ uint8_t bq40z60_get_current(BQ40Z60 *bq, uint16_t *ma){
 }
 
 uint8_t bq40z60_get_run_time_to_empty(BQ40Z60 *bq, uint16_t *mins){
-  if(!smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RUN_TIME_TO_EMPTY, mins)){
+  if(smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RUN_TIME_TO_EMPTY, mins) != ERR_OK){
     return ERR_COMMS;
   }
 
@@ -221,7 +221,7 @@ uint8_t bq40z60_get_run_time_to_empty(BQ40Z60 *bq, uint16_t *mins){
 
 uint8_t bq40z60_get_rsoc(BQ40Z60 *bq, uint8_t *percent){
   uint16_t perc = 0;
-  if(!smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RELATIVE_STATE_OF_CHARGE, &perc)){
+  if(smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_RELATIVE_STATE_OF_CHARGE, &perc) != ERR_OK){
     return ERR_COMMS;
   }
 
@@ -232,7 +232,7 @@ uint8_t bq40z60_get_rsoc(BQ40Z60 *bq, uint8_t *percent){
 
 uint8_t bq40z60_is_discharging(BQ40Z60 *bq, bool *status){
   uint8_t rxbuf[4];
-  if(!smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_OPERATION_STATUS, NULL, 0, rxbuf, sizeof(rxbuf))){
+  if(smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_OPERATION_STATUS, NULL, 0, rxbuf, sizeof(rxbuf)) != ERR_OK){
     return ERR_COMMS;
   }
 

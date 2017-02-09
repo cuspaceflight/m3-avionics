@@ -110,7 +110,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
     chThdSleepMilliseconds(1);
 
     // Poll total system current
-    uint16_t ma = 0;
+    int16_t ma = 0;
     status = bq40z60_get_current(&charger, &ma);
     if(status == ERR_OK){
       can_data[0] = ma & 0xff;
