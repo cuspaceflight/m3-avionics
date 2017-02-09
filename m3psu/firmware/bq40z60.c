@@ -112,6 +112,7 @@
 // OperationStatus give XCHG (1 if charging prohibited - see manual 4.12)
 // ITStatus1, ITStatus2, ITStatus3 for gauging info (for debug only?)
 
+#define BQ40Z60_CMD_TEMPERATURE               0x08
 #define BQ40Z60_CMD_CURRENT                   0x0A
 #define BQ40Z60_CMD_RELATIVE_STATE_OF_CHARGE  0x0D
 #define BQ40Z60_CMD_RUN_TIME_TO_EMPTY         0x11
@@ -120,6 +121,7 @@
 #define BQ40Z60_CMD_DASTATUS1                 0x71
 
 #define BQ40Z60_MAC_OPERATION_STATUS        0x0054
+#define BQ40Z60_MAC_CHARGING_STATUS         0x0055
 #define BQ40Z60_MAC_MANUFACTURING_STATUS    0x0057
 #define BQ40Z60_MAC_CHGR_EN_TOGGLE          0x00C0
 
@@ -227,6 +229,22 @@ uint8_t bq40z60_get_rsoc(BQ40Z60 *bq, uint8_t *percent){
 
   *percent = perc & 0xff;
 
+  return ERR_OK;
+}
+
+uint8_t bq40z60_get_temperature(BQ40Z60 *bq, uint16_t *cK){
+  if(smbus_read_word(bq->config.i2c, bq->config.address, BQ40Z60_CMD_TEMPERATURE, cK) != ERR_OK){
+    return ERR_COMMS;
+  }
+  return ERR_OK;
+}
+
+uint8_t bq40z60_get_charging_status(BQ40Z60 *bq, uint16_t *chgstatus){
+  uint8_t rxdat[3];
+  if(bq40z60_mac_read(bq, BQ40Z60_MAC_CHARGING_STATUS, rxdat, sizeof(rxdat)) != ERR_OK){
+    return ERR_COMMS;
+  }
+  *chgstatus = rxdat[0] | (rxdat[1] << 8);
   return ERR_OK;
 }
 

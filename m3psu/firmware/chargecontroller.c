@@ -22,9 +22,6 @@ void ChargeController_init(void) {
   }else{
     m3status_set_error(M3STATUS_COMPONENT_CHARGER, M3STATUS_CHARGER_ERROR_INIT);
   }
-
-  // Disable charger
-  ChargeController_disable_charger();
 }
 
 void ChargeController_enable_charger(void) {
@@ -75,7 +72,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
       can_data[0] = (uint8_t) ((batt1 * 100) / 2);
       can_data[1] = (uint8_t) ((batt2 * 100) / 2);
 
-      can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, sizeof(can_data));
+      can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, 2);
     }else{
       anyerrors = true;
     }
@@ -106,9 +103,6 @@ THD_FUNCTION(chargecontroller_thread, arg) {
 
     can_send(CAN_MSG_ID_M3PSU_CAPACITY, false, can_data, 3);
 
-
-    chThdSleepMilliseconds(1);
-
     // Poll total system current
     int16_t ma = 0;
     status = bq40z60_get_current(&charger, &ma);
@@ -120,9 +114,42 @@ THD_FUNCTION(chargecontroller_thread, arg) {
       can_data[0] = -1;
       can_data[1] = -1;
     }
-    can_data[2] = ((ChargeController_is_charging() ? 1 : 0) << 1) |
+
+    // Read chip temperature
+    uint16_t temp_cK = 0;
+    status = bq40z60_get_temperature(&charger, &temp_cK);
+    if(status == ERR_OK){
+      can_data[3] = temp_cK & 0xff;
+      can_data[4] = (temp_cK >> 8) & 0xff;
+    }else{
+      can_data[3] = -1;
+      can_data[4] = -1;
+      anyerrors = true;
+    }
+
+    // Read some status bits
+    uint16_t chgstatus = 0;
+    status = bq40z60_get_charging_status(&charger, &chgstatus);
+    uint8_t charge_voltage_mode = 4;
+    uint8_t charge_inhibit = 0;
+    if(status == ERR_OK){
+      switch(chgstatus & 0x7){
+        case 1: charge_voltage_mode = 0; break;
+        case 2: charge_voltage_mode = 1; break;
+        case 4: charge_voltage_mode = 2; break;
+        case 8: charge_voltage_mode = 3; break;
+      }
+      if((chgstatus & (1 << 4)) != 0){
+        charge_inhibit = 1;
+      }
+    }else{
+      anyerrors = true;
+    }
+    can_data[2] = (charge_voltage_mode << 3) |
+                  (charge_inhibit << 2) |
+                  ((ChargeController_is_charging() ? 1 : 0) << 1) |
                   (ChargeController_is_charger_enabled() ? 1 : 0);
-    can_send(CAN_MSG_ID_M3PSU_CHARGER_STATUS, false, can_data, 3);
+    can_send(CAN_MSG_ID_M3PSU_CHARGER_STATUS, false, can_data, 5);
 
     if(anyerrors){
       m3status_set_error(M3STATUS_COMPONENT_CHARGER, M3STATUS_CHARGER_ERROR_READ);

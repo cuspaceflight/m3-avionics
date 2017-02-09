@@ -27,6 +27,8 @@ uint8_t bq40z60_get_cell_voltages(BQ40Z60 *bq, float *batt1, float *batt2);
 uint8_t bq40z60_get_current(BQ40Z60 *bq, int16_t *ma);
 uint8_t bq40z60_get_run_time_to_empty(BQ40Z60 *bq, uint16_t *mins);
 uint8_t bq40z60_get_rsoc(BQ40Z60 *bq, uint8_t *percent);
+uint8_t bq40z60_get_temperature(BQ40Z60 *bq, uint16_t *cK);
+uint8_t bq40z60_get_charging_status(BQ40Z60 *bq, uint16_t *chgstatus);
 
 uint8_t bq40z60_is_discharging(BQ40Z60 *bq, bool *status);
 
