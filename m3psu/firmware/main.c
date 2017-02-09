@@ -25,15 +25,20 @@
 #include "smbus.h"
 #include "m3can.h"
 
+static const RTCWakeup rtc_wakeup_cfg = {
+  (4 << 16) |   // WUCKSEL=ck_spre (1Hz)
+  (4)           // Wake every 5s (4+1)
+};
+
 static THD_WORKING_AREA(waPowerManager, 1024);
 static THD_WORKING_AREA(waChargeController, 1024);
 //static THD_WORKING_AREA(waPowerAlert, 512);
 
 void enable_system_power(void){
-  palClearLine(LINE_EN_POWER);
+  palSetLine(LINE_EN_POWER);
 }
 void disable_system_power(void){
-  palSetLine(LINE_EN_POWER);
+  palClearLine(LINE_EN_POWER);
 }
 
 void enable_pyros(void){
@@ -73,6 +78,26 @@ void can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   }
 }
 
+void go_to_sleep(void){
+  // Enable deep-sleep
+  SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+  // Enable STANDBY mode
+  PWR->CR |= PWR_CR_PDDS;
+  // Make sure STOP mode is disabled
+  PWR->CR &= ~PWR_CR_LPDS;
+
+  // Clear the WUF Wakeup Flag
+  PWR->CR |= PWR_CR_CWUF;
+
+  // Clear any RTC interrupts
+  RTC->ISR &= ~(RTC_ISR_ALRBF | RTC_ISR_ALRAF | RTC_ISR_WUTF | RTC_ISR_TAMP1F |
+    RTC_ISR_TSOVF | RTC_ISR_TSF);
+
+  __SEV(); // Make sure there is an event present
+  __WFE(); // Clear the event
+  __WFE(); // Go to sleep
+}
+
 static THD_WORKING_AREA(waPowerCheck, 512);
 THD_FUNCTION(power_check, arg){
   (void)arg;
@@ -89,19 +114,11 @@ THD_FUNCTION(power_check, arg){
       disable_pyros();
       disable_system_power();
 
-      while(true){ // Make sure we go to sleep
-        // Enable deep-sleep
-        SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-        // Enable STANDBY mode
-        PWR->CR |= PWR_CR_PDDS;
-        // Make sure STOP mode is disabled
-        PWR->CR &= ~PWR_CR_LPDS;
-        // Clear the WUF Wakeup Flag
-        PWR->CR |= PWR_CR_CWUF;
+      rtcSTM32SetPeriodicWakeup(&RTCD1, &rtc_wakeup_cfg);
 
-        __SEV(); // Make sure there is an event present
-        __WFE(); // Clear the event
-        __WFE(); // Go to sleep
+      chSysLock();
+      while(true){ // Make sure we go to sleep
+        go_to_sleep();
       }
 
     }
@@ -111,15 +128,25 @@ THD_FUNCTION(power_check, arg){
 
 int main(void) {
   /* Allow debug access during all sleep modes */
-  DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP | DBGMCU_CR_DBG_STOP | DBGMCU_CR_DBG_STANDBY;
+  DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
 
   halInit();
+
+  // Early power-switch check
+  if(palReadLine(LINE_PWR)){
+    enable_pyros();
+
+    rtcSTM32SetPeriodicWakeup(&RTCD1, &rtc_wakeup_cfg);
+
+    go_to_sleep();
+  }
+
   chSysInit();
 
   enable_pyros();
   enable_system_power();
 
-  smbus_init();
+  smbus_init(&I2C_DRIVER);
   can_init(CAN_ID_M3PSU);
 
   PowerManager_init();
