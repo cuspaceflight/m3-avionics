@@ -95,19 +95,22 @@ def pyro_status(data):
 
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_CHARGER_STATUS, "Charger Status")
 def charger_status(data):
-    # 3 bytes. First two are charge current in mA, last is status bits
-    current, state = struct.unpack("hB", bytes(data[:3]))
+    # 5 bytes. First two are charge current in mA, 3rd is status bits, 4-5th are temperature in cK
+    current, state, tempcK = struct.unpack("=hBH", bytes(data[:5]))
     should_charge = bool(state & 1)
-    is_charging = bool(state & 4)
-    overcurrent = bool(state & 2)
+    is_charging = bool(state & 2)
+    charge_inhibit = bool(state & 4)
+    voltage_mode = (state >> 3) & 0x3;
+    tempC = (tempcK/10) - 273.2
 
-    string = "{: 4d}mA".format(current)
+    string = "{: 4d}mA, {: 3.1f}degC".format(current, tempC)
     if should_charge:
         string += ", charger enabled"
     if is_charging:
         string += ", charging"
-    if overcurrent:
-        string += ", OVERCURRENT!"
+    if charge_inhibit:
+        string += ", inhibited"
+    string += ", {} mode".format(["PCV", "LV", "MV", "HV", "INVAL"][voltage_mode])
     return string
 
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_TOGGLE_CHARGER, "Toggle Charger")
