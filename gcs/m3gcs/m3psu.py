@@ -19,33 +19,18 @@ CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL = CAN_ID_M3PSU | msg_id(17)
 CAN_MSG_ID_M3PSU_PYRO_STATUS = CAN_ID_M3PSU | msg_id(48)
 CAN_MSG_ID_M3PSU_CHARGER_STATUS = CAN_ID_M3PSU | msg_id(55)
 CAN_MSG_ID_M3PSU_TOGGLE_CHARGER = CAN_ID_M3PSU | msg_id(18)
-CAN_MSG_ID_M3PSU_TOGGLE_BALANCE = CAN_ID_M3PSU | msg_id(19)
-CAN_MSG_ID_M3PSU_TOGGLE_INTEXT = CAN_ID_M3PSU | msg_id(20)
-CAN_MSG_ID_M3PSU_INTEXT_STATUS = CAN_ID_M3PSU | msg_id(57)
+CAN_MSG_ID_M3PSU_CAPACITY = CAN_ID_M3PSU | msg_id(57)
 
 
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_BATT_VOLTAGES,
     "Battery Voltages")
 def batt_volts(data):
-    # 3 bytes
-    batt1, batt2, state = struct.unpack("BBB", bytes(data[:3]))
+    # 2 bytes
+    batt1, batt2 = struct.unpack("BB", bytes(data[:2]))
     batt1 *= 0.02
     batt2 *= 0.02
 
-    # Third byte is status bits.
-    should_balance = bool(state & 4)
-    bleed_batt1 = bool(state & 2)
-    bleed_batt2 = bool(state & 1)
-
-    string = "{: 4.2f}V, {: 4.2f}V".format(batt1, batt2)
-    if should_balance:
-        string += ", balance enabled"
-    if bleed_batt1:
-        string += ", bleeding batt1"
-    if bleed_batt2:
-        string += ", bleeding batt2"
-    
-    return string
+    return "{: 4.2f}V, {: 4.2f}V".format(batt1, batt2)
 
 
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_TOGGLE_PYROS, "Toggle Pyros")
@@ -111,7 +96,7 @@ def pyro_status(data):
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_CHARGER_STATUS, "Charger Status")
 def charger_status(data):
     # 3 bytes. First two are charge current in mA, last is status bits
-    current, state = struct.unpack("HB", bytes(data[:3]))
+    current, state = struct.unpack("hB", bytes(data[:3]))
     should_charge = bool(state & 1)
     is_charging = bool(state & 4)
     overcurrent = bool(state & 2)
@@ -134,30 +119,13 @@ def toggle_charger(data):
     else:
         return "Invalid packet"
 
-@register_packet("m3psu", CAN_MSG_ID_M3PSU_TOGGLE_BALANCE, "Toggle Balance")
-def toggle_balance(data):
-    if data[0] == 0:
-        return "Disable balance"
-    elif data[0] == 1:
-        return "Enable balance"
-    else:
-        return "Invalid packet"
-
-@register_packet("m3psu", CAN_MSG_ID_M3PSU_TOGGLE_INTEXT, "Toggle Int/Ext")
-def toggle_intext(data):
-    if data[0] == 0:
-        return "Switch to internal power"
-    elif data[0] == 1:
-        return "Switch to external power"
-    else:
-        return "Invalid packet"
-
-@register_packet("m3psu", CAN_MSG_ID_M3PSU_INTEXT_STATUS, "Int/Ext Status")
-def intext_status(data):
-    state = data[0]
-    int_enabled = "Enabled" if bool(state & 2) else "Disabled"
-    ext_enabled = "Enabled" if bool(state & 1) else "Disabled"
-    return "Internal: {}, External: {}".format(int_enabled, ext_enabled)
+@register_packet("m3psu", CAN_MSG_ID_M3PSU_CAPACITY, "Capacity")
+def capacity(data):
+    mins, = struct.unpack("h", bytes(data[:2]))
+    if mins == -1:
+        mins = "Inf"
+    percent = data[2]
+    return "Capacity: {}%, Time left: {}".format(percent, mins)
 
 
 @register_command("m3psu", "Pyro supply", ("Off", "On"))
@@ -169,11 +137,6 @@ def toggle_pyros_cmd(data):
 def toggle_charger_cmd(data):
     data = [{"Off":0, "On":1}[data]]
     return CAN_MSG_ID_M3PSU_TOGGLE_CHARGER, data
-
-@register_command("m3psu", "Balancing", ("Off", "On"))
-def toggle_balance_cmd(data):
-    data = [{"Off":0, "On":1}[data]]
-    return CAN_MSG_ID_M3PSU_TOGGLE_BALANCE, data
 
 @register_command("m3psu", "5V IMU", ("1 Off", "1 On"))
 @register_command("m3psu", "5V AUX 2", ("2 Off", "2 On"))
@@ -191,9 +154,4 @@ def toggle_channel_cmd(data):
     [channel, operation] = data.split(" ")
     data = [{"Off":0, "On":1}[operation], int(channel)-1]
     return CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL, data
-
-@register_command("m3psu", "Int/Ext Supply", ("Internal", "External"))
-def toggle_intext_cmd(data):
-    data = [{"Internal":0, "External":1}[data]]
-    return CAN_MSG_ID_M3PSU_TOGGLE_INTEXT, data
 
