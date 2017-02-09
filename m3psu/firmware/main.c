@@ -134,8 +134,6 @@ int main(void) {
 
   // Early power-switch check
   if(palReadLine(LINE_PWR)){
-    enable_pyros();
-
     rtcSTM32SetPeriodicWakeup(&RTCD1, &rtc_wakeup_cfg);
 
     go_to_sleep();
