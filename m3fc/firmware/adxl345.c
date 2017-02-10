@@ -108,7 +108,7 @@ static bool adxl345_self_test()
     int16_t accels[3], st_accels[3];
     int32_t accel_sums[3] = {0, 0, 0};
 
-    /* Set 800Hz ODR and disable low powder mode */
+    /* Set 800Hz ODR and disable low power mode */
     adxl345_write_u8(ADXL345_REG_BWRATE, ADXL345_BWRATE_RATE_800HZ);
 
     /* Set +-16G range and full resolution */
@@ -192,7 +192,7 @@ static bool adxl345_check_id()
  */
 static void adxl345_configure()
 {
-    /* Set 800Hz ODR and disable low powder mode */
+    /* Set 800Hz ODR and disable low power mode */
     adxl345_write_u8(ADXL345_REG_BWRATE, ADXL345_BWRATE_RATE_800HZ);
 
     /* Set +-16G range and full resolution */

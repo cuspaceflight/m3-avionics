@@ -48,14 +48,14 @@ class M3FCConfigPyros:
     def __str__(self):
         out = []
         out.append("M3FC Config Pyros:")
-        out.append("Pyro 1: {}/{}".format(self.use_map[self.p1use],
-                                          self.type_map[self.p1type]))
-        out.append("Pyro 2: {}/{}".format(self.use_map[self.p2use],
-                                          self.type_map[self.p2type]))
-        out.append("Pyro 3: {}/{}".format(self.use_map[self.p3use],
-                                          self.type_map[self.p3type]))
-        out.append("Pyro 4: {}/{}".format(self.use_map[self.p4use],
-                                          self.type_map[self.p4type]))
+        out.append("Pyro 1: {}/{}".format(self.use_map.get(self.p1use, "?"),
+                                          self.type_map.get(self.p1type, "?")))
+        out.append("Pyro 2: {}/{}".format(self.use_map.get(self.p2use, "?"),
+                                          self.type_map.get(self.p2type, "?")))
+        out.append("Pyro 3: {}/{}".format(self.use_map.get(self.p3use, "?"),
+                                          self.type_map.get(self.p3type, "?")))
+        out.append("Pyro 4: {}/{}".format(self.use_map.get(self.p4use, "?"),
+                                          self.type_map.get(self.p4type, "?")))
         out.append("")
         return "\n".join(out)
 
@@ -93,9 +93,9 @@ class M3FCConfigProfile:
         out = []
         out.append("M3FC Config Profile")
         out.append("M3FC Position: {}".format(
-                   self.m3fc_position_map[self.m3fc_position]))
+                   self.m3fc_position_map.get(self.m3fc_position, "Unknown")))
         out.append("Accelerometer Up Axis: {}".format(
-                   self.accel_axis_map[self.accel_axis]))
+                   self.accel_axis_map.get(self.accel_axis, "Unknown")))
         out.append("Ignition Detection Threshold: {}m/s/s".format(
                    self.ignition_accel))
         out.append("Burnout Detection Timeout: {:.1f}s after launch".format(

@@ -404,9 +404,9 @@ void m3fc_state_estimation_new_accels(float accels[3], float max, float rms)
         m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_AXIS);
     }
 
-    float overall_accel = fabsf(sqrtf(accels[0] * accels[0] +
-                                      accels[1] * accels[1] +
-                                      accels[2] * accels[2]));
+    float overall_accel = sqrtf(accels[0] * accels[0] +
+                                accels[1] * accels[1] +
+                                accels[2] * accels[2]);
 
     if(fabsf(accel) > max) {
         /* Update RMS if acceleration is above maximum. */
