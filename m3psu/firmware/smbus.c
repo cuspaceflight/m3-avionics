@@ -9,10 +9,10 @@
 #include "smbus.h"
 #include "config.h"
 
-static const I2CConfig i2cfg = {OPMODE_SMBUS_HOST, 100000, STD_DUTY_CYCLE};
+static const I2CConfig i2c_cfg = {OPMODE_SMBUS_HOST, 100000, STD_DUTY_CYCLE};
 
-void smbus_init(void){
-  i2cStart(&I2C_DRIVER, &i2cfg);
+void smbus_init(I2CDriver *i2c){
+  i2cStart(i2c, &i2c_cfg);
 }
 
 msg_t i2c_transmit_retry_n(I2CDriver *i2c, uint8_t deviceaddress, uint8_t *txdat, uint8_t txdatlen, uint8_t *rxdat, uint8_t rxdatlen, systime_t timeout, uint8_t retries){
@@ -21,8 +21,8 @@ msg_t i2c_transmit_retry_n(I2CDriver *i2c, uint8_t deviceaddress, uint8_t *txdat
     msg_t status = i2cMasterTransmitTimeout(i2c, deviceaddress, txdat, txdatlen, rxdat, rxdatlen, timeout);
 
     if(status == MSG_TIMEOUT){
-      i2cStop(&I2C_DRIVER);
-      i2cStart(&I2C_DRIVER, &i2cfg);
+      i2cStop(i2c);
+      i2cStart(i2c, &i2c_cfg);
     }else{
       return status;
     }
@@ -130,8 +130,14 @@ uint8_t smbus_read_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddr
   // copy rest of tx-data
   memcpy(cmd+2, txdat, txdatlen);
 
+  if(txdatlen == 0){
+      txdatlen = 1;
+  }else{
+      txdatlen += 2;
+  }
+
   i2cAcquireBus(i2c);
-  msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, cmd, txdatlen+2, recv, datalen+1, MS2ST(20), 1);
+  msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, cmd, txdatlen, recv, datalen+1, MS2ST(20), 1);
   i2cReleaseBus(i2c);
 
   if (status == MSG_OK) {

@@ -63,6 +63,8 @@ void PowerManager_init(){
     m3status_set_error(M3STATUS_COMPONENT_DCDC6, M3STATUS_DCDC_ERROR_INIT);
   }
 
+  PowerManager_switch_on(0); // Start the IMU
+  PowerManager_switch_on(3);
   PowerManager_switch_on(2); // Start the Flight Computer
   PowerManager_switch_on(4); // Start the Radio
   PowerManager_switch_on(7);
