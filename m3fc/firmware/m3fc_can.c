@@ -30,5 +30,7 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen) {
         m3fc_mock_handle_baro(data, datalen);
     } else if(msg_id == CAN_MSG_ID_M3FC_ARM) {
         m3fc_mission_handle_arm(data, datalen);
+    } else if(msg_id == CAN_MSG_ID_M3FC_FIRE) {
+        m3fc_mission_handle_fire(data, datalen);
     }
 }

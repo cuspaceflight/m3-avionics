@@ -65,6 +65,7 @@ extern uint8_t m3can_own_id;
 #define CAN_MSG_ID_M3FC_MOCK_ACCEL          (CAN_ID_M3FC | CAN_MSG_ID(6))
 #define CAN_MSG_ID_M3FC_MOCK_BARO           (CAN_ID_M3FC | CAN_MSG_ID(7))
 #define CAN_MSG_ID_M3FC_ARM                 (CAN_ID_M3FC | CAN_MSG_ID(8))
+#define CAN_MSG_ID_M3FC_FIRE                (CAN_ID_M3FC | CAN_MSG_ID(9))
 
 
 /* M3DL */

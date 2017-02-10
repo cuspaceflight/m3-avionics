@@ -392,7 +392,25 @@ void m3fc_mission_handle_pyro_continuity(uint8_t* data, uint8_t datalen){
 
 void m3fc_mission_handle_arm(uint8_t* data, uint8_t datalen) {
     (void)data;
-    (void)datalen;
+
+    if(datalen != 0) {
+        return;
+    }
 
     m3fc_mission_armed = true;
+}
+
+void m3fc_mission_handle_fire(uint8_t* data, uint8_t datalen)
+{
+    if(datalen != 1) {
+        return;
+    }
+
+    if(data[0] == M3FC_CONFIG_PYRO_USAGE_DROGUE) {
+        m3fc_mission_fire_drogue_pyro();
+    } else if(data[0] == M3FC_CONFIG_PYRO_USAGE_MAIN) {
+        m3fc_mission_fire_main_pyro();
+    } else if(data[0] == M3FC_CONFIG_PYRO_USAGE_DART) {
+        m3fc_mission_fire_dart_pyro();
+    }
 }

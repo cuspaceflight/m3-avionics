@@ -26,6 +26,7 @@ CAN_MSG_ID_M3FC_MOCK_ENABLE = CAN_ID_M3FC | msg_id(5)
 CAN_MSG_ID_M3FC_MOCK_ACCEL = CAN_ID_M3FC | msg_id(6)
 CAN_MSG_ID_M3FC_MOCK_BARO = CAN_ID_M3FC | msg_id(7)
 CAN_MSG_ID_M3FC_ARM = CAN_ID_M3FC | msg_id(8)
+CAN_MSG_ID_M3FC_FIRE = CAN_ID_M3FC | msg_id(9)
 
 components = {
     1: "Mission Control",
@@ -202,3 +203,11 @@ def arm(data):
 @register_command("m3fc", "Arm", ["Arm"])
 def arm_cmd(data):
     return CAN_MSG_ID_M3FC_ARM, []
+
+
+@register_command("m3fc", "Fire Drogue", ["Fire Drogue"])
+@register_command("m3fc", "Fire Main", ["Fire Main"])
+@register_command("m3fc", "Fire Dart", ["Fire Dart"])
+def fire_cmd(data):
+    pyros = {"Fire Drogue": 1, "Fire Main": 2, "Fire Dart": 3}
+    return CAN_MSG_ID_M3FC_FIRE, [pyros.get(data, 0)]
