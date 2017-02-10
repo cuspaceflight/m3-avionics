@@ -105,9 +105,9 @@ def inset_length(e, l):
 antennas = [
     # Dart telemetry
     {
-        "w_array": 44e-3 * np.pi,
+        "w_array": 134e-3,
         "feed": feed_dart_telemetry,
-        "w_patch": 136.3e-3,
+        "w_patch": 133.0e-3,
         "l_patch": 115.0e-3,
         "w_inset": 5e-3,
         "l_inset": 30.0e-3,
@@ -116,7 +116,7 @@ antennas = [
     },
     # Dart GPS
     {
-        "w_array": 44e-3 * np.pi,
+        "w_array": 134e-3,
         "feed": feed_dart_gps,
         "w_patch": 63.0e-3,
         "l_patch": 63.0e-3,

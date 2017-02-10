@@ -29,17 +29,21 @@
             </div>
             <div id="controls-{{ name }}">
                 {% for command in (commands[name] | sort) %}
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-default" disabled>{{ command }}</button>
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                    {% for arg in commands[name][command][1] %}
-                        <li><a href="javascript:canCommand('{{ name }}', '{{ command }}', '{{ arg }}')">{{ arg }}</a></li>
-                    {% endfor %}
-                    </ul>
-                    </div>
+                    {% if (commands[name][command][1] | length) == 1 %}
+                        <button type="button" class="btn btn-default" onclick="javascript:canCommand('{{ name }}', '{{ command }}', '{{ commands[name][command][1][0] }}')">{{ command }}</button>
+                    {% else %}
+                        <div class="btn-group">
+                        <button type="button" class="btn btn-default" disabled>{{ command }}</button>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                        {% for arg in commands[name][command][1] %}
+                            <li><a href="javascript:canCommand('{{ name }}', '{{ command }}', '{{ arg }}')">{{ arg }}</a></li>
+                        {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
             

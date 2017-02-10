@@ -7,7 +7,7 @@ from . import command_processor
 from . import webapp
 from .packets import registered_packets
 
-from . import m3pyro, m3fc, m3psu, m3radio, m3dl
+from . import m3pyro, m3fc, m3psu, m3radio, m3dl, m3imu
 
 
 def run():
