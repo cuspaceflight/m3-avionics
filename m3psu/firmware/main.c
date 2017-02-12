@@ -103,7 +103,7 @@ THD_FUNCTION(power_check, arg){
   (void)arg;
   chRegSetThreadName("Power Switch Checker");
 
-  while(TRUE){
+  while(true){
     bool switch_open = palReadLine(LINE_PWR);
     if(switch_open){
       int i;
