@@ -30,6 +30,13 @@ class CANFrame:
             out += struct.pack("{}B".format(self.dlc), *self.data)
         return out
 
+    def data_bytes(self):
+        if self.dlc > 0:
+            out = struct.pack("{}B".format(self.dlc), *self.data)
+        else:
+            out = b""
+        return out
+
     def __str__(self):
         return "ID={} RTR={} DLC={} DATA={}".format(
             bin(self.sid)[2:], self.rtr, self.dlc,

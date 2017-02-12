@@ -18,6 +18,11 @@ CAN_MSG_ID_M3FC_SE_VAR_H = CAN_ID_M3FC | msg_id(52)
 CAN_MSG_ID_M3FC_SE_VAR_V_A = CAN_ID_M3FC | msg_id(53)
 CAN_MSG_ID_M3FC_CFG_PROFILE = CAN_ID_M3FC | msg_id(54)
 CAN_MSG_ID_M3FC_CFG_PYROS = CAN_ID_M3FC | msg_id(55)
+CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_X = CAN_ID_M3FC | msg_id(56)
+CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Y = CAN_ID_M3FC | msg_id(57)
+CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Z = CAN_ID_M3FC | msg_id(58)
+CAN_MSG_ID_M3FC_CFG_RADIO_FREQ = CAN_ID_M3FC | msg_id(59)
+CAN_MSG_ID_M3FC_CFG_CRC = CAN_ID_M3FC | msg_id(60)
 CAN_MSG_ID_M3FC_SET_CFG_PROFILE = CAN_ID_M3FC | msg_id(1)
 CAN_MSG_ID_M3FC_SET_CFG_PYROS = CAN_ID_M3FC | msg_id(2)
 CAN_MSG_ID_M3FC_LOAD_CFG = CAN_ID_M3FC | msg_id(3)
@@ -47,7 +52,9 @@ component_errors = {
     3: "Config Read", 8: "Config Check Profile", 9: "Config Check Pyros",
     10: "Accel Bad ID", 11: "Accel Self Test", 12: "Accel Timeout",
     13: "Accel Axis", 14: "SE Pressure", 15: "Pyro Arm", 4: "Pyro Continuity",
-    5: "Pyro Supply", 16: "Mock Enabled", 17: "CAN Bad Command"
+    5: "Pyro Supply", 16: "Mock Enabled", 17: "CAN Bad Command",
+    18: "Config Check Accel Cal", 19: "Config Check Radio Freq",
+    20: "Config Check CRC",
 }
 
 compstatus = {k: {"state": 0, "reason": "Unknown"} for k in components}
@@ -178,6 +185,26 @@ def cfg_pyros(data):
                                   pyro_2_usage, pyro_2_type,
                                   pyro_3_usage, pyro_3_type,
                                   pyro_4_usage, pyro_4_type))
+
+
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_X, "Accel Cal X")
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Y, "Accel Cal Y")
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Z, "Accel Cal Z")
+def cfg_accel_cal(data):
+    scale, offset = struct.unpack("<ff", bytes(data))
+    return "Scale {:.6f}g/LSB, Offset {:.3f}LSB".format(scale, offset)
+
+
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_RADIO_FREQ, "Radio Freq")
+def cfg_radio_freq(data):
+    freq = struct.unpack("<I", bytes(data[:4]))[0]
+    return "{:.6f} MHz".format(freq/1e6)
+
+
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_CRC, "Config CRC")
+def cfg_crc(data):
+    crc = struct.unpack("<I", bytes(data[:4]))[0]
+    return hex(crc)
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_LOAD_CFG, "Load config")

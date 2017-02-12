@@ -211,10 +211,17 @@ static void adxl345_configure()
 }
 
 static void adxl345_accels_to_mss(int16_t accels[3], float faccels[3]) {
-    int i;
-    for(i=0; i<3; i++) {
-        faccels[i] = accels[i] * ((3.9f / 1000.0f) * 9.80665f);
-    }
+    const float g = 9.80665f;
+
+    /* Use configured scale factor and 0g offset to convert
+     * raw accelerometer readings into values in m/s/s.
+     */
+    faccels[0] = ((float)accels[0] - m3fc_config.accel_cal.x_offset)
+                 * m3fc_config.accel_cal.x_scale * g;
+    faccels[1] = ((float)accels[1] - m3fc_config.accel_cal.y_offset)
+                 * m3fc_config.accel_cal.y_scale * g;
+    faccels[2] = ((float)accels[2] - m3fc_config.accel_cal.z_offset)
+                 * m3fc_config.accel_cal.z_scale * g;
 }
 
 /* ISR triggered by the EXTI peripheral when DRDY gets asserted.
