@@ -101,7 +101,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
       anyerrors = true;
     }
 
-    can_send(CAN_MSG_ID_M3PSU_CAPACITY, false, can_data, 3);
+    m3can_send(CAN_MSG_ID_M3PSU_CAPACITY, false, can_data, 3);
 
     // Poll total system current
     int16_t ma = 0;
