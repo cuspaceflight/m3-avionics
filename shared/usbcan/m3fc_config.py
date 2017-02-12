@@ -2,9 +2,9 @@ import os
 import glob
 import yaml
 import struct
-import binascii
 import argparse
 import multiprocessing
+import crcmod.predefined
 from queue import Empty
 
 from usbcan import CANFrame, run
@@ -315,7 +315,11 @@ class M3FCConfig:
             pyros.p2type, pyros.p3type, pyros.p4type, accel_cal_x.scale,
             accel_cal_x.offset, accel_cal_y.scale, accel_cal_y.offset,
             accel_cal_z.scale, accel_cal_z.offset, radio_freq.freq)
-        return M3FCConfigCRC(binascii.crc32(raw))
+        # convert to 32 bit words and then reverse the byte ordering
+        u32 = struct.unpack(">11I", raw)
+        raw = struct.pack("<11I", *u32)
+        crc32_func = crcmod.predefined.mkCrcFun('crc-32-mpeg')
+        return M3FCConfigCRC(crc32_func(raw))
 
     def parts(self):
         return [self.profile, self.pyros, self.accel_cal_x, self.accel_cal_y,
@@ -383,7 +387,18 @@ def main():
     parser.add_argument("--file", help="path to config yaml file")
     parser.add_argument("--flash", help="save new config to flash",
                         action="store_true")
+    parser.add_argument("--crc", help="just compute crc on a file",
+                        action="store_true")
     args = parser.parse_args()
+
+    if args.crc:
+        if not args.file:
+            print("must specify --file with --crc")
+            return
+        cfg = config_from_file(args.file)
+        print(cfg)
+        return
+
     unglob = glob.glob(args.serial_port)
     if len(unglob) == 0:
         raise RuntimeError("No serial ports matching glob found")
