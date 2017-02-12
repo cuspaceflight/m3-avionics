@@ -1,6 +1,7 @@
 import os
 import glob
 import yaml
+import time
 import struct
 import argparse
 import multiprocessing
@@ -382,12 +383,14 @@ def config_from_file(path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--serial-port", help="path to serial port on m3debug",
+    parser.add_argument("--port", help="path to serial port on m3debug",
                         default="/dev/serial/by-id/*m3debug*-if02")
     parser.add_argument("--file", help="path to config yaml file")
     parser.add_argument("--flash", help="save new config to flash",
                         action="store_true")
     parser.add_argument("--crc", help="just compute crc on a file",
+                        action="store_true")
+    parser.add_argument("--slow", help="work slowly over rf links",
                         action="store_true")
     args = parser.parse_args()
 
@@ -418,8 +421,16 @@ def main():
         accept = input("Set new config? (y/N): ")
         if accept.lower() == "y":
             print("Setting new config")
-            for frame in cfg.to_can():
-                txq.put(frame)
+            if args.slow:
+                for i in range(5):
+                    print("Attempt {}".format(i))
+                    for idx, frame in enumerate(cfg.to_can()):
+                        print("{}, ", end='', flush=True)
+                        txq.put(frame)
+                        time.sleep(1)
+            else:
+                for frame in cfg.to_can():
+                    txq.put(frame)
         else:
             print("Not setting new config")
 
