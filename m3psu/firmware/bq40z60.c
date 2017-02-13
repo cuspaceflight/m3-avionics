@@ -122,11 +122,12 @@
 
 #define BQ40Z60_MAC_OPERATION_STATUS        0x0054
 #define BQ40Z60_MAC_CHARGING_STATUS         0x0055
+#define BQ40Z60_MAC_GAUGING_STATUS          0x0056
 #define BQ40Z60_MAC_MANUFACTURING_STATUS    0x0057
 #define BQ40Z60_MAC_CHGR_EN_TOGGLE          0x00C0
 
 #define BQ40Z60_MAC_MANUFACTURING_STATUS_HI_CHGR_EN_MASK    (1 << 2)
-#define BQ40Z60_OPERATION_STATUS_B0_DSG        (1 << 1)
+#define BQ40Z60_GAUGING_STATUS_B0_DSG_MASK                  (1 << 6)
 
 uint8_t bq40z60_mac_write(BQ40Z60 *bq, uint16_t mac_address, uint8_t *txbuf, uint8_t txbuflen){
   uint8_t txdat[64];
@@ -253,12 +254,12 @@ uint8_t bq40z60_get_charging_status(BQ40Z60 *bq, uint8_t *chgstatus, uint8_t chg
 }
 
 uint8_t bq40z60_is_discharging(BQ40Z60 *bq, bool *status){
-  uint8_t rxbuf[4];
-  if(smbus_read_block(bq->config.i2c, bq->config.address, BQ40Z60_CMD_OPERATION_STATUS, NULL, 0, rxbuf, sizeof(rxbuf)) != ERR_OK){
+  uint8_t rxbuf[3];
+  if(bq40z60_mac_read(bq, BQ40Z60_MAC_GAUGING_STATUS, rxbuf, sizeof(rxbuf)) != ERR_OK){
     return ERR_COMMS;
   }
 
-  *status = (rxbuf[0] & BQ40Z60_OPERATION_STATUS_B0_DSG) != 0;
+  *status = (rxbuf[0] & BQ40Z60_GAUGING_STATUS_B0_DSG_MASK) != 0;
 
   return ERR_OK;
 }
