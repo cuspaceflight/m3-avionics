@@ -101,7 +101,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
       anyerrors = true;
     }
 
-    can_send(CAN_MSG_ID_M3PSU_CAPACITY, false, can_data, 3);
+    m3can_send(CAN_MSG_ID_M3PSU_CAPACITY, false, can_data, 3);
 
     // Poll total system current
     int16_t ma = 0;
@@ -133,7 +133,7 @@ THD_FUNCTION(chargecontroller_thread, arg) {
     uint8_t charge_voltage_mode = 4;
     uint8_t charge_inhibit = 0;
     if(status == ERR_OK){
-      switch(chgstatus & 0x7){
+      switch(chgstatus & 0xf){
         case 1: charge_voltage_mode = 0; break;
         case 2: charge_voltage_mode = 1; break;
         case 4: charge_voltage_mode = 2; break;

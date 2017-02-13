@@ -16,8 +16,6 @@ static uint16_t compute_crc(uint8_t *buf, size_t len);
 
 /* UART RX Buffer */
 static uint8_t rxbuf[20];
-static systime_t last_reception = 0;
-
 
 /* UART2 Config */
 static const UARTConfig uart_cfg = {
@@ -36,29 +34,25 @@ static const UARTConfig uart_cfg = {
 /* Main Thread */
 static THD_WORKING_AREA(pressure_wa, 256);
 static THD_FUNCTION(pressure_thd, arg) {
-    
     /* Set Thread Name */
-	(void)arg;
-	chRegSetThreadName("Pressure");
-    
+    (void)arg;
+    chRegSetThreadName("Pressure");
+
     /* Start UART Driver */
     uartStart(&UARTD2, &uart_cfg);
-    
+
     while(TRUE) {
-    
-        /* Get Current Time */
-        last_reception = chVTGetSystemTimeX();
-        
+
         /* Recieve Buffer */
         size_t n = sizeof(rxbuf);
-        uartReceiveTimeout(&UARTD2, &n, &rxbuf, TIME_INFINITE);
-        
+        msg_t rv = uartReceiveTimeout(&UARTD2, &n, &rxbuf, MS2ST(1000));
+
         /* Check for Timeout */
-        if(ST2MS(chVTTimeElapsedSinceX(last_reception)) > 500) {
+        if(rv == MSG_TIMEOUT || rv == MSG_RESET) {
             m3status_set_error(M3DL_COMPONENT_PRESSURE, M3DL_ERROR_PRESSURE_TIMEOUT);
             err(M3DL_ERROR_PRESSURE_TIMEOUT);
         }
-        
+
         /* Process Buffer */
         if(process_buffer()) {
              m3status_set_ok(M3DL_COMPONENT_PRESSURE);
@@ -88,22 +82,19 @@ bool process_buffer(void) {
     size_t m = sizeof(res);
     size_t j = 0;
     size_t i = 0;
-    
+
     /* Fill Results Buffer */
     while(j < m) {
-        
         /* Read in First Byte */
         b = rxbuf[i];
-        
+
         /* Check for Start Byte */
         if(b == 0x7E) {
-            
+
             /* Do Nothing */
             j = 0;
-            i = i+1;    
-            
+            i = i+1;
         } else {
-            
             /* Handle Escaped Characters */
             if(b == 0x7D) {
                 b = rxbuf[i+1] ^ 0x20;
@@ -111,7 +102,6 @@ bool process_buffer(void) {
             } else {
                 i = i+1;
             }
-            
             /* Write Byte to Results Buffer */
             res[j] = b;
             j = j+1;
@@ -123,7 +113,7 @@ bool process_buffer(void) {
 
     /* Compute Local CRC */
     chk = compute_crc(res, 8);
-    
+
     /* Compare CRCs */
     if(((chk & 0xFF) == res[m-2]) && (((chk >> 8) & 0xFF) == res[m-1])) {
         return true;

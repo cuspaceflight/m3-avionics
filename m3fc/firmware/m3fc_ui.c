@@ -63,7 +63,7 @@ static THD_FUNCTION(beeper_thd, arg) {
         } else {
             delay = 700;
         }
-        /*pwmEnableChannel(&PWMD5, 0, 10);*/
+        pwmEnableChannel(&PWMD5, 0, 10);
         chThdSleepMilliseconds(100);
         pwmDisableChannel(&PWMD5, 0);
         chThdSleepMilliseconds(delay);

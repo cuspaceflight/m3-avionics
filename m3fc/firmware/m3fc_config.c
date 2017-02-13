@@ -182,13 +182,23 @@ static bool m3fc_config_check_crc(void)
     crc = CRC->DR;
     RCC->AHB1ENR &= ~RCC_AHB1ENR_CRCEN;
 
-    return crc == m3fc_config.crc;
+    bool ok = crc == m3fc_config.crc;
+
+    if(!ok) {
+        m3status_set_error(M3FC_COMPONENT_CFG, M3FC_ERROR_CFG_CHK_CRC);
+    }
+
+    return ok;
 }
 
 bool m3fc_config_check() {
-    return m3fc_config_check_profile() && m3fc_config_check_pyros()
-        && m3fc_config_check_accel_cal() && m3fc_config_check_radio_freq()
-        && m3fc_config_check_crc();
+    bool ok = true;
+    ok &= m3fc_config_check_profile();
+    ok &= m3fc_config_check_pyros();
+    ok &= m3fc_config_check_accel_cal();
+    ok &= m3fc_config_check_radio_freq();
+    ok &= m3fc_config_check_crc();
+    return ok;
 }
 
 void m3fc_config_handle_set_profile(uint8_t* data, uint8_t datalen) {
