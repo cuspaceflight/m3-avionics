@@ -25,12 +25,13 @@ CAN_MSG_ID_M3PSU_CAPACITY = CAN_ID_M3PSU | msg_id(57)
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_BATT_VOLTAGES,
     "Battery Voltages")
 def batt_volts(data):
-    # 2 bytes
-    batt1, batt2 = struct.unpack("BB", bytes(data[:2]))
-    batt1 *= 0.02
-    batt2 *= 0.02
+    # 3 bytes
+    cell1, cell2, batt = struct.unpack("HHH", bytes(data[:6]))
+    cell1 *= 0.01
+    cell2 *= 0.01
+    batt *= 0.01
 
-    return "{: 4.2f}V, {: 4.2f}V".format(batt1, batt2)
+    return "{: 4.2f}V, {: 4.2f}V, Batt: {: 4.2f}V".format(cell1, cell2, batt)
 
 
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_TOGGLE_PYROS, "Toggle Pyros")
@@ -97,15 +98,17 @@ def pyro_status(data):
 def charger_status(data):
     # 5 bytes. First two are charge current in mA, 3rd is status bits, 4-5th are temperature in cK
     current, state, tempcK = struct.unpack("=hBH", bytes(data[:5]))
-    should_charge = bool(state & 1)
+    charger_enabled = bool(state & 1)
     is_charging = bool(state & 2)
     charge_inhibit = bool(state & 4)
     voltage_mode = (state >> 3) & 0x3;
     tempC = (tempcK/10) - 273.2
 
     string = "{: 4d}mA, {: 3.1f}degC".format(current, tempC)
-    if should_charge:
+    if charger_enabled:
         string += ", charger enabled"
+    else:
+        string += ", charger disabled"
     if is_charging:
         string += ", charging"
     if charge_inhibit:

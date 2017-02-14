@@ -142,8 +142,10 @@ uint8_t smbus_read_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddr
 
   if (status == MSG_OK) {
     // First byte read is the length of data being returned by the device.
-    uint8_t numbytes = (datalen < recv[0]) ? datalen : recv[0];
-    memcpy(data, recv+1, numbytes);
+    if(datalen != recv[0]){
+        return ERR_COMMS;
+    }
+    memcpy(data, recv+1, datalen);
     return ERR_OK;
   }
   return ERR_COMMS;

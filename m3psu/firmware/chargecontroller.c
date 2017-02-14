@@ -1,5 +1,5 @@
 /*
- * Charge controller and balancer
+ * Charge controller
  * Cambridge University Spaceflight
  */
 
@@ -63,16 +63,24 @@ THD_FUNCTION(chargecontroller_thread, arg) {
     anyerrors = false;
 
     // Measure battery voltages
-    float batt1 = 0;
-    float batt2 = 0;
+    float cell1 = 0;
+    float cell2 = 0;
+    float batt = 0;
 
-    status = bq40z60_get_cell_voltages(&charger, &batt1, &batt2);
+    status = bq40z60_get_cell_voltages(&charger, &cell1, &cell2, &batt);
     if(status == ERR_OK){
-      // report voltages in multiples of 0.02v
-      can_data[0] = (uint8_t) ((batt1 * 100) / 2);
-      can_data[1] = (uint8_t) ((batt2 * 100) / 2);
+      // report voltages in multiples of 0.01v
+      uint16_t cell1_u = (uint16_t)(cell1 * 100);
+      uint16_t cell2_u = (uint16_t)(cell2 * 100);
+      uint16_t batt_u = (uint16_t)(batt * 100);
+      can_data[0] = cell1_u & 0xff;
+      can_data[1] = (cell1_u >> 8) & 0xff;
+      can_data[2] = cell2_u & 0xff;
+      can_data[3] = (cell2_u >> 8) & 0xff;
+      can_data[4] = batt_u & 0xff;
+      can_data[5] = (batt_u >> 8) & 0xff;
 
-      m3can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, 2);
+      m3can_send(CAN_MSG_ID_M3PSU_BATT_VOLTAGES, false, can_data, 6);
     }else{
       anyerrors = true;
     }
@@ -128,18 +136,18 @@ THD_FUNCTION(chargecontroller_thread, arg) {
     }
 
     // Read some status bits
-    uint16_t chgstatus = 0;
-    status = bq40z60_get_charging_status(&charger, &chgstatus);
+    uint8_t chgstatus[3];
+    status = bq40z60_get_charging_status(&charger, chgstatus, sizeof(chgstatus));
     uint8_t charge_voltage_mode = 4;
     uint8_t charge_inhibit = 0;
     if(status == ERR_OK){
-      switch(chgstatus & 0xf){
+      switch(chgstatus[0] & 0xf){
         case 1: charge_voltage_mode = 0; break;
         case 2: charge_voltage_mode = 1; break;
         case 4: charge_voltage_mode = 2; break;
         case 8: charge_voltage_mode = 3; break;
       }
-      if((chgstatus & (1 << 4)) != 0){
+      if((chgstatus[0] & (1 << 4)) != 0){
         charge_inhibit = 1;
       }
     }else{
