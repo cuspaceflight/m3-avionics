@@ -408,15 +408,17 @@ void m3fc_state_estimation_new_accels(float accels[3], float max, float rms)
                                 accels[1] * accels[1] +
                                 accels[2] * accels[2]);
 
-    if(fabsf(accel) > max) {
-        /* Update RMS if acceleration is above maximum. */
-        rms += fabsf(accel) - max;
-    } else if(overall_accel > 9.7f && overall_accel < 9.9f) {
-        /* Check if overall acceleration is near 1G, and treat as zero if so */
+    /* Check if overall acceleration is near 1G, and treat as zero if so */
+    if(overall_accel > 9.7f && overall_accel < 9.9f) {
         accel = 0.0f;
         rms += 9.80665f;
     } else {
-        /* Otherwise just subtract 1G from the "up" acceleration */
+        /* Update RMS if acceleration is above maximum. */
+        if(fabsf(accel) > max) {
+            rms += fabsf(accel) - max;
+        }
+
+        /* Subtract 1G from the "up" acceleration */
         accel -= 9.80665f;
     }
 

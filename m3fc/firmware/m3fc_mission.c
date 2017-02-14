@@ -1,10 +1,11 @@
 #include <math.h>
 #include "ch.h"
+#include "m3can.h"
 #include "m3fc_mission.h"
 #include "m3fc_status.h"
-#include "m3can.h"
 #include "m3fc_config.h"
 #include "m3fc_state_estimation.h"
+#include "m3fc_ui.h"
 
 #define PYRO_SUPPLY_THRESHOLD       (40)
 #define PYRO_CONT_THRESHOLD         (100)
@@ -71,6 +72,12 @@ static state_t do_state_init(instance_data_t *data) {
 
     m3fc_mission_check_pyros();
 
+    if(m3fc_mission_pyro_supply_good) {
+        m3fc_ui_beeper_mode = M3FC_UI_BEEPER_FAST;
+    } else {
+        m3fc_ui_beeper_mode = M3FC_UI_BEEPER_SLOW;
+    }
+
     /* We only proceed to the pad state after receiving an ARM command. */
     if(!m3fc_mission_armed) {
         return STATE_INIT;
@@ -85,6 +92,8 @@ static state_t do_state_pad(instance_data_t *data)
     m3fc_state_estimation_trust_barometer = true;
 
     m3fc_mission_check_pyros();
+
+    m3fc_ui_beeper_mode = M3FC_UI_BEEPER_OFF;
 
     /* Detect ignition when the acceleration exceeds the threshold and we're
      * 10m above our ground altitude, which should be small enough to not
@@ -202,6 +211,13 @@ static state_t do_state_release_main(instance_data_t *data)
     (void)data;
     m3fc_state_estimation_trust_barometer = true;
     m3fc_mission_fire_main_pyro();
+
+    /* Start beeping again once we're coming down under parachute,
+     * to make it easier to notice/find the rocket.
+     * Performance of the accelerometer (affected by beeper) is
+     * not important after main parachute is released.
+     */
+    m3fc_ui_beeper_mode = M3FC_UI_BEEPER_FAST;
 
     /* At main release we fire the main and move directly into main descent. */
     return STATE_MAIN_DESCENT;
