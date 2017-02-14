@@ -36,6 +36,17 @@ void lowpower_enable(){
 
 void lowpower_disable(){
   chVTReset(&lowpower_timer); // Cancel the 'awake' timer
+
+  /* Clear the flag, then sleep for a few seconds.
+   * When we wake from sleep, we'll be back in full-power mode
+   */
+  lowpower_set_mode_flag(false);
+  lowpower_setup_sleep(3);
+
+  chSysLock();
+  while(true){ // Make sure we go to sleep
+    lowpower_go_to_sleep();
+  }
 }
 
 static void lowpower_mode_sleep(void *arg){
