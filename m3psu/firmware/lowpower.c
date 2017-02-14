@@ -25,9 +25,13 @@ void lowpower_enable(){
   /* Set the flag, then sleep for a few seconds.
    * When we wake from sleep, we'll enter low-power mode as normal
    */
-   lowpower_set_mode_flag(true);
-   lowpower_setup_sleep(3);
-   lowpower_go_to_sleep();
+  lowpower_set_mode_flag(true);
+  lowpower_setup_sleep(3);
+
+  chSysLock();
+  while(true){ // Make sure we go to sleep
+    lowpower_go_to_sleep();
+  }
 }
 
 void lowpower_disable(){
