@@ -22,31 +22,13 @@
 #include "config.h"
 #include "powermanager.h"
 #include "chargecontroller.h"
+#include "lowpower.h"
 #include "smbus.h"
 #include "m3can.h"
-
-static const RTCWakeup rtc_wakeup_cfg = {
-  (4 << 16) |   // WUCKSEL=ck_spre (1Hz)
-  (4)           // Wake every 5s (4+1)
-};
 
 static THD_WORKING_AREA(waPowerManager, 1024);
 static THD_WORKING_AREA(waChargeController, 1024);
 //static THD_WORKING_AREA(waPowerAlert, 512);
-
-void enable_system_power(void){
-  palSetLine(LINE_EN_POWER);
-}
-void disable_system_power(void){
-  palClearLine(LINE_EN_POWER);
-}
-
-void enable_pyros(void){
-  palSetLine(LINE_EN_PYRO);
-}
-void disable_pyros(void){
-  palClearLine(LINE_EN_PYRO);
-}
 
 void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   (void)rtr;
@@ -54,9 +36,9 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_PYROS){
     if(datalen >= 1){
       if(data[0] == 0){
-        disable_pyros();
+        PowerManager_disable_pyros();
       }else if(data[0] == 1){
-        enable_pyros();
+        PowerManager_enable_pyros();
       }
     }
   }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL){
@@ -64,7 +46,11 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
       if(data[0] == 1){
         PowerManager_switch_on(data[1]);
       }else if(data[0] == 0){
-        PowerManager_switch_off(data[1]);
+        if(data[1] == 4 || data[1] == 7 || data[1] == 11){
+          // Ignore turning off the radio or CAN!
+        }else{
+          PowerManager_switch_off(data[1]);
+        }
       }
     }
   }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_CHARGER){
@@ -75,27 +61,15 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
         ChargeController_disable_charger();
       }
     }
+  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER){
+    if(datalen >= 1){
+      if(data[0] == 1){
+        lowpower_enable();
+      }else if(data[0] == 0){
+        lowpower_disable();
+      }
+    }
   }
-}
-
-void go_to_sleep(void){
-  // Enable deep-sleep
-  SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-  // Enable STANDBY mode
-  PWR->CR |= PWR_CR_PDDS;
-  // Make sure STOP mode is disabled
-  PWR->CR &= ~PWR_CR_LPDS;
-
-  // Clear the WUF Wakeup Flag
-  PWR->CR |= PWR_CR_CWUF;
-
-  // Clear any RTC interrupts
-  RTC->ISR &= ~(RTC_ISR_ALRBF | RTC_ISR_ALRAF | RTC_ISR_WUTF | RTC_ISR_TAMP1F |
-    RTC_ISR_TSOVF | RTC_ISR_TSF);
-
-  __SEV(); // Make sure there is an event present
-  __WFE(); // Clear the event
-  __WFE(); // Go to sleep
 }
 
 static THD_WORKING_AREA(waPowerCheck, 512);
@@ -106,19 +80,13 @@ THD_FUNCTION(power_check, arg){
   while(true){
     bool switch_open = palReadLine(LINE_PWR);
     if(switch_open){
-      int i;
-      // Shutdown all channels and go to sleep
-      for(i = 0; i < 12; i++){
-          PowerManager_switch_off(i);
-      }
-      disable_pyros();
-      disable_system_power();
+      PowerManager_shutdown();
 
-      rtcSTM32SetPeriodicWakeup(&RTCD1, &rtc_wakeup_cfg);
+      lowpower_setup_sleep(5);
 
       chSysLock();
       while(true){ // Make sure we go to sleep
-        go_to_sleep();
+        lowpower_go_to_sleep();
       }
 
     }
@@ -127,22 +95,23 @@ THD_FUNCTION(power_check, arg){
 }
 
 int main(void) {
-  /* Allow debug access during all sleep modes */
+  /* Allow debug access during sleep mode */
   DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
 
   halInit();
 
   // Early power-switch check
   if(palReadLine(LINE_PWR)){
-    rtcSTM32SetPeriodicWakeup(&RTCD1, &rtc_wakeup_cfg);
-
-    go_to_sleep();
+    lowpower_set_mode_flag(false); // Disable low-power mode
+    lowpower_setup_sleep(5);
+    lowpower_go_to_sleep();
   }
 
   chSysInit();
 
-  enable_pyros();
-  enable_system_power();
+  PowerManager_enable_system_power();
+
+  lowpower_init();
 
   smbus_init(&I2C_DRIVER);
 
@@ -151,6 +120,27 @@ int main(void) {
 
   PowerManager_init();
   ChargeController_init();
+
+  if(lowpower_get_mode_flag()){ // We're supposed to be in low-power mode
+    PowerManager_switch_on(4); // Start the Radio
+    PowerManager_switch_on(7);
+    PowerManager_switch_on(11); // Start the CAN transceivers
+
+    lowpower_start_awake_timer();
+  }else{
+    lowpower_set_mode_flag(0); // Make sure the flag is cleared
+
+    PowerManager_enable_pyros();
+
+    //PowerManager_switch_on(0); // Start the IMU
+    PowerManager_switch_on(3);
+    PowerManager_switch_on(2); // Start the Flight Computer
+    PowerManager_switch_on(4); // Start the Radio
+    PowerManager_switch_on(7);
+    PowerManager_switch_on(6); // Start the Pyro
+    PowerManager_switch_on(10); // Start the DL including base board for USB
+    PowerManager_switch_on(11); // Start the CAN transceivers
+  }
 
   ChargeController_enable_charger();
 
