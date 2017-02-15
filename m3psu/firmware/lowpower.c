@@ -5,6 +5,7 @@
 
 #include "ch.h"
 
+#include "m3can.h"
 #include "error.h"
 #include "smbus.h"
 #include "config.h"
@@ -65,6 +66,8 @@ void lowpower_early_wakeup_check(){
       // Bring up the minimal amount to talk to the charger over SMBus
       chSysInit();
       smbus_init(&I2C_DRIVER);
+      m3can_init(CAN_ID_M3PSU, NULL, 0);
+      ChargeController_init();
       ChargeController_disable_battleshort();
     }
 
