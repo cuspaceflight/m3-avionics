@@ -19,6 +19,7 @@ CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL = CAN_ID_M3PSU | msg_id(17)
 CAN_MSG_ID_M3PSU_PYRO_STATUS = CAN_ID_M3PSU | msg_id(48)
 CAN_MSG_ID_M3PSU_CHARGER_STATUS = CAN_ID_M3PSU | msg_id(55)
 CAN_MSG_ID_M3PSU_TOGGLE_CHARGER = CAN_ID_M3PSU | msg_id(18)
+CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER = CAN_ID_M3PSU | msg_id(19)
 CAN_MSG_ID_M3PSU_CAPACITY = CAN_ID_M3PSU | msg_id(57)
 
 
@@ -143,6 +144,11 @@ def toggle_pyros_cmd(data):
 def toggle_charger_cmd(data):
     data = [{"Off":0, "On":1}[data]]
     return CAN_MSG_ID_M3PSU_TOGGLE_CHARGER, data
+
+@register_command("m3psu", "Lowpower", ("Off", "On"))
+def toggle_lowpower_cmd(data):
+    data = [{"Off":0, "On":1}[data]]
+    return CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER, data
 
 @register_command("m3psu", "5V IMU", ("1 Off", "1 On"))
 @register_command("m3psu", "5V AUX 2", ("2 Off", "2 On"))

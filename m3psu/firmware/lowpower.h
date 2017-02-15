@@ -8,17 +8,23 @@
 
 #include "ch.h"
 
-#define LOW_POWER_MODE_FLAG_ADDR (BKPSRAM_BASE + 0)
+#define LOWPOWER_MODE_FLAG_ADDR (BKPSRAM_BASE + 0)
+#define LOWPOWER_ENTRY_FLAG_ADDR (BKPSRAM_BASE + 4)
+#define LOWPOWER_WAKEUP_COUNT_ADDR (BKPSRAM_BASE + 8)
 
+#define LOWPOWER_FLAG_MAGIC (0x12345678)
+
+#define LOWPOWER_POWER_SWITCH_INTERVAL 5 // Check power switch every 5 seconds
 #define LOWPOWER_SLEEP_TIME 600 // Sleep for 10 mins
 #define LOWPOWER_AWAKE_TIME 180 // Awake for 3 mins
 
 void lowpower_init(void);
 
+THD_FUNCTION(lowpower_power_check_thread, arg);
+
+void lowpower_early_wakeup_check(void);
 void lowpower_start_awake_timer(void);
-
 void lowpower_setup_sleep(uint16_t seconds);
-
 void lowpower_go_to_sleep(void);
 
 void lowpower_enable(void);

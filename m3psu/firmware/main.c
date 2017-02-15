@@ -29,6 +29,7 @@
 static THD_WORKING_AREA(waPowerManager, 1024);
 static THD_WORKING_AREA(waChargeController, 1024);
 //static THD_WORKING_AREA(waPowerAlert, 512);
+static THD_WORKING_AREA(waPowerCheck, 512);
 
 void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   (void)rtr;
@@ -72,46 +73,19 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   }
 }
 
-static THD_WORKING_AREA(waPowerCheck, 512);
-THD_FUNCTION(power_check, arg){
-  (void)arg;
-  chRegSetThreadName("Power Switch Checker");
-
-  while(true){
-    bool switch_open = palReadLine(LINE_PWR);
-    if(switch_open){
-      PowerManager_shutdown();
-
-      lowpower_setup_sleep(5);
-
-      chSysLock();
-      while(true){ // Make sure we go to sleep
-        lowpower_go_to_sleep();
-      }
-
-    }
-    chThdSleepMilliseconds(1000);
-  }
-}
-
 int main(void) {
   /* Allow debug access during sleep mode */
   DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
 
   halInit();
 
-  // Early power-switch check
-  if(palReadLine(LINE_PWR)){
-    lowpower_set_mode_flag(false); // Disable low-power mode
-    lowpower_setup_sleep(5);
-    lowpower_go_to_sleep();
-  }
+  lowpower_early_wakeup_check();
 
   chSysInit();
 
-  PowerManager_enable_system_power();
-
   lowpower_init();
+
+  PowerManager_enable_system_power();
 
   smbus_init(&I2C_DRIVER);
 
@@ -145,7 +119,7 @@ int main(void) {
   ChargeController_enable_charger();
 
   chThdCreateStatic(waPowerCheck, sizeof(waPowerCheck), NORMALPRIO,
-                    power_check, NULL);
+                    lowpower_power_check_thread, NULL);
   //chThdCreateStatic(waPowerAlert, sizeof(waPowerAlert), NORMALPRIO + 3,
   //                  powermanager_alert, NULL);
   chThdCreateStatic(waPowerManager, sizeof(waPowerManager), NORMALPRIO + 4,

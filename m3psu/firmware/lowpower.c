@@ -21,12 +21,74 @@ void lowpower_init(){
   chVTObjectInit(&lowpower_timer);
 }
 
+static bool lowpower_get_entry_flag(void){
+  volatile uint32_t *entry = (volatile uint32_t *)(LOWPOWER_ENTRY_FLAG_ADDR);
+  return *entry == LOWPOWER_FLAG_MAGIC;
+}
+
+static void lowpower_set_entry_flag(bool enabled){
+  volatile uint32_t *entry = (volatile uint32_t *)(LOWPOWER_ENTRY_FLAG_ADDR);
+  *entry = enabled ? LOWPOWER_FLAG_MAGIC : 0;
+}
+
+bool lowpower_get_mode_flag(){
+  volatile uint32_t *lpm = (volatile uint32_t *)(LOWPOWER_MODE_FLAG_ADDR);
+  return *lpm == LOWPOWER_FLAG_MAGIC;
+}
+
+void lowpower_set_mode_flag(bool enabled){
+  volatile uint32_t *lpm = (volatile uint32_t *)(LOWPOWER_MODE_FLAG_ADDR);
+  *lpm = enabled ? LOWPOWER_FLAG_MAGIC : 0;
+}
+
+static void lowpower_set_wakeup_count(uint32_t count){
+  volatile uint32_t *wakeup_count = (volatile uint32_t *)(LOWPOWER_WAKEUP_COUNT_ADDR);
+  *wakeup_count = count;
+}
+
+static uint32_t lowpower_get_wakeup_count(void){
+  volatile uint32_t *wakeup_count = (volatile uint32_t *)(LOWPOWER_WAKEUP_COUNT_ADDR);
+  return *wakeup_count;
+}
+
+void lowpower_early_wakeup_check(){
+  // Early power-switch check
+  if(palReadLine(LINE_PWR)){ // If the power switch is 'off'
+    lowpower_set_mode_flag(false); // Disable low-power mode
+    lowpower_set_entry_flag(false);
+    lowpower_set_wakeup_count(0); // Clear the wakeup counter
+    lowpower_setup_sleep(LOWPOWER_POWER_SWITCH_INTERVAL);
+    lowpower_go_to_sleep();
+  }
+
+  // If we're in low-power mode
+  if(lowpower_get_mode_flag()){
+
+    // If we're not rebooting into low-power mode
+    if(!lowpower_get_entry_flag()){
+      // Increment the wakeup counter
+      lowpower_set_wakeup_count(lowpower_get_wakeup_count() + 1);
+
+      // If we haven't woken up enough times yet, go back to sleep
+      if(lowpower_get_wakeup_count() < (LOWPOWER_SLEEP_TIME / LOWPOWER_POWER_SWITCH_INTERVAL)){
+        lowpower_setup_sleep(LOWPOWER_POWER_SWITCH_INTERVAL);
+        lowpower_go_to_sleep();
+      }
+
+      lowpower_set_wakeup_count(0);
+    }
+
+    lowpower_set_entry_flag(false);
+  }
+}
+
 void lowpower_enable(){
   /* Set the flag, then sleep for a few seconds.
    * When we wake from sleep, we'll enter low-power mode as normal
    */
   lowpower_set_mode_flag(true);
-  lowpower_setup_sleep(3);
+  lowpower_set_entry_flag(true);
+  lowpower_setup_sleep(1);
 
   chSysLock();
   while(true){ // Make sure we go to sleep
@@ -41,7 +103,8 @@ void lowpower_disable(){
    * When we wake from sleep, we'll be back in full-power mode
    */
   lowpower_set_mode_flag(false);
-  lowpower_setup_sleep(3);
+  lowpower_set_entry_flag(false);
+  lowpower_setup_sleep(1);
 
   chSysLock();
   while(true){ // Make sure we go to sleep
@@ -49,31 +112,36 @@ void lowpower_disable(){
   }
 }
 
-static void lowpower_mode_sleep(void *arg){
+static thread_t *wakeup_thp;
+
+static THD_WORKING_AREA(wa_shutdown_thread, 512);
+THD_FUNCTION(lowpower_shutdown_thread, arg){
   (void)arg;
-  PowerManager_shutdown();
+  wakeup_thp = chThdGetSelfX();
+  while(true){
+    chEvtWaitAny((eventmask_t)1);
+    PowerManager_shutdown();
 
-  lowpower_setup_sleep(LOWPOWER_SLEEP_TIME);
+    lowpower_setup_sleep(LOWPOWER_POWER_SWITCH_INTERVAL);
 
-  chSysLock();
-  while(true){ // Make sure we go to sleep
-    lowpower_go_to_sleep();
+    chSysLock();
+    while(true){ // Make sure we go to sleep
+      lowpower_go_to_sleep();
+    }
   }
+}
+
+static void lowpower_trigger_shutdown(void *arg){
+  (void)arg;
+  chSysLockFromISR();
+  chEvtSignalI(wakeup_thp, (eventmask_t)1);
+  chSysUnlockFromISR();
 }
 
 void lowpower_start_awake_timer(){
-  // wait 3 mins, then go to sleep again
-  chVTSet(&lowpower_timer, S2ST(LOWPOWER_AWAKE_TIME), lowpower_mode_sleep, NULL);
-}
-
-bool lowpower_get_mode_flag(){
-  volatile uint32_t *lpm = (volatile uint32_t *)(LOW_POWER_MODE_FLAG_ADDR);
-  return *lpm == 0x12345678;
-}
-
-void lowpower_set_mode_flag(bool enabled){
-  volatile uint32_t *lpm = (volatile uint32_t *)(LOW_POWER_MODE_FLAG_ADDR);
-  *lpm = enabled ? 0x12345678 : 0;
+  // wait some time, then go to sleep again
+  chVTSet(&lowpower_timer, S2ST(LOWPOWER_AWAKE_TIME), lowpower_trigger_shutdown, NULL);
+  chThdCreateStatic(wa_shutdown_thread, sizeof(wa_shutdown_thread), NORMALPRIO, lowpower_shutdown_thread, NULL);
 }
 
 void lowpower_setup_sleep(uint16_t seconds){
@@ -107,3 +175,25 @@ void lowpower_go_to_sleep(void){
   __WFE(); // Clear the event
   __WFE(); // Go to sleep
 }
+
+THD_FUNCTION(lowpower_power_check_thread, arg){
+  (void)arg;
+  chRegSetThreadName("Power Switch Checker");
+
+  while(true){
+    bool switch_open = palReadLine(LINE_PWR);
+    if(switch_open){
+      PowerManager_shutdown();
+
+      lowpower_setup_sleep(LOWPOWER_POWER_SWITCH_INTERVAL);
+
+      chSysLock();
+      while(true){ // Make sure we go to sleep
+        lowpower_go_to_sleep();
+      }
+
+    }
+    chThdSleepMilliseconds(1000);
+  }
+}
+
