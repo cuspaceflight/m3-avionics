@@ -255,6 +255,14 @@ uint8_t bq40z60_get_charging_status(BQ40Z60 *bq, uint8_t *chgstatus, uint8_t chg
   return ERR_OK;
 }
 
+uint8_t bq40z60_get_operation_status(BQ40Z60 *bq, uint8_t *opstatus, uint8_t opstatuslen){
+  chDbgAssert(opstatuslen == 4, "opstatuslen != 4");
+  if(bq40z60_mac_read(bq, BQ40Z60_MAC_OPERATION_STATUS, opstatus, opstatuslen) != ERR_OK){
+    return ERR_COMMS;
+  }
+  return ERR_OK;
+}
+
 uint8_t bq40z60_is_discharging(BQ40Z60 *bq, bool *status){
   uint8_t rxbuf[3];
   if(bq40z60_mac_read(bq, BQ40Z60_MAC_GAUGING_STATUS, rxbuf, sizeof(rxbuf)) != ERR_OK){

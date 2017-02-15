@@ -14,9 +14,6 @@ void ChargeController_enable_charger(void);
 void ChargeController_disable_charger(void);
 bool ChargeController_is_charger_enabled(void);
 
-bool ChargeController_is_charger_overcurrent(void);
-bool ChargeController_is_adapter_present(void);
-
 bool ChargeController_is_charging(void);
 
 bool ChargeController_get_battleshort_flag(void);

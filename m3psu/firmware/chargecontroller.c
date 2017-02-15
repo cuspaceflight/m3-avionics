@@ -175,7 +175,18 @@ THD_FUNCTION(chargecontroller_thread, arg) {
     }else{
       anyerrors = true;
     }
-    can_data[2] = ((ChargeController_get_battleshort_flag() ? 1 : 0) << 5) |
+    uint8_t opstatus[4];
+    status = bq40z60_get_operation_status(&charger, opstatus, sizeof(opstatus));
+    uint8_t acfet = 0;
+    if(status == ERR_OK){
+      if((opstatus[0] & (1 << 4)) != 0){
+        acfet = 1;
+      }
+    }else{
+      anyerrors = true;
+    }
+    can_data[2] = (acfet << 6) |
+                  ((ChargeController_get_battleshort_flag() ? 1 : 0) << 5) |
                   (charge_voltage_mode << 3) |
                   (charge_inhibit << 2) |
                   ((ChargeController_is_charging() ? 1 : 0) << 1) |

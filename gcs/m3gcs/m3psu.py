@@ -104,6 +104,7 @@ def charger_status(data):
     is_charging = bool(state & 2)
     charge_inhibit = bool(state & 4)
     battleshort = bool(state & 32)
+    acfet = bool(state & 64)
     voltage_mode = (state >> 3) & 0x3;
     tempC = (tempcK/10) - 273.2
 
@@ -114,6 +115,10 @@ def charger_status(data):
         string += ", charger disabled"
     if is_charging:
         string += ", charging"
+    if acfet:
+        string += ", ACFET on"
+    else:
+        string += ", ACFET off"
     if charge_inhibit:
         string += ", inhibited"
     if battleshort:
