@@ -37,6 +37,7 @@ uint8_t bq40z60_get_charge_voltage(BQ40Z60 *bq, uint16_t *mv);
 uint8_t bq40z60_get_charge_current(BQ40Z60 *bq, uint16_t *ma);
 
 uint8_t bq40z60_write_dataflash(BQ40Z60 *bq, uint16_t addr, uint8_t *data, uint8_t datalen);
+uint8_t bq40z60_read_dataflash(BQ40Z60 *bq, uint16_t addr, uint8_t *data, uint8_t datalen);
 uint8_t bq40z60_disable_all_protections(BQ40Z60 *bq);
 uint8_t bq40z60_enable_default_protections(BQ40Z60 *bq);
 

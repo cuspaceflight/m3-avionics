@@ -286,14 +286,59 @@ uint8_t bq40z60_write_dataflash(BQ40Z60 *bq, uint16_t addr, uint8_t *data, uint8
   return status;
 }
 
+uint8_t bq40z60_read_dataflash(BQ40Z60 *bq, uint16_t addr, uint8_t *data, uint8_t datalen){
+  chDbgAssert(datalen <= 32, "datalen > 32");
+  chDbgAssert(addr >= 0x4000 && addr <= 0x5FFF, "DF address OOB");
+
+  uint8_t rxdat[32];
+  msg_t status = bq40z60_mac_read(bq, addr, rxdat, datalen);
+  if(status != ERR_OK){
+    return status;
+  }
+
+  memcpy(data, rxdat, datalen);
+
+  return ERR_OK;
+}
+
 uint8_t bq40z60_disable_all_protections(BQ40Z60 *bq){
   uint8_t zeroes[4] = {0,0,0,0};
-  return bq40z60_write_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, zeroes, sizeof(zeroes));
+  msg_t status = bq40z60_write_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, zeroes, sizeof(zeroes));
+  if(status != ERR_OK){
+    return status;
+  }
+
+  uint8_t rx[32];
+  status = bq40z60_read_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, rx, sizeof(rx));
+  if(status != ERR_OK){
+    return status;
+  }
+
+  if(rx[0] != 0 || rx[1] != 0 || rx[2] != 0 || rx[3] != 0){
+    return ERR_INVAL;
+  }
+
+  return ERR_OK;
 }
 
 uint8_t bq40z60_enable_default_protections(BQ40Z60 *bq){
   uint8_t defaults[4] = {0xff, 0x7f, 0xd5, 0x2f};
-  return bq40z60_write_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, defaults, sizeof(defaults));
+  msg_t status = bq40z60_write_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, defaults, sizeof(defaults));
+  if(status != ERR_OK){
+    return status;
+  }
+
+  uint8_t rx[32];
+  status = bq40z60_read_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, rx, sizeof(rx));
+  if(status != ERR_OK){
+    return status;
+  }
+
+  if(rx[0] != 0xff || rx[1] != 0x7f || rx[2] != 0xd5 || rx[3] != 0x2f){
+    return ERR_INVAL;
+  }
+
+  return ERR_OK;
 }
 
 uint8_t bq40z60_init(BQ40Z60 *bq, I2CDriver *i2c, i2caddr_t address){
