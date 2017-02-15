@@ -212,6 +212,6 @@ THD_FUNCTION(powermanager_thread, arg){
       m3status_set_error(M3STATUS_COMPONENT_PYRO_MON, M3STATUS_PYRO_MON_ERROR_COMMS);
     }
 
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(100);
   }
 }

@@ -83,11 +83,11 @@ def toggle_channel(data):
 
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_PYRO_STATUS, "Pyro Status")
 def pyro_status(data):
-    # 7 bytes: 16bit voltage (mV), 16bit current (uA), 16bit power (0.1mW)
+    # 7 bytes: 16bit voltage (mV), 16bit current (mA), 16bit power (mW)
     # 1bit pyro enable line measurement
     voltage, current, power, pyro = struct.unpack("HHHB", bytes(data[:7]))
     string = "{: 5.3f}V {: 6.3f}A {: 7.3f}W".format(voltage/1000.0,
-        current/1000000.0, power/100000.0)
+        current/1000.0, power/1000.0)
     if pyro == 1:
         string += ", pyro enabled"
     elif pyro == 0:
