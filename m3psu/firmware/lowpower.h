@@ -12,7 +12,7 @@
 
 #define LOWPOWER_POWER_SWITCH_INTERVAL 5 // Check power switch every 5 seconds
 #define LOWPOWER_SLEEP_TIME 600 // Sleep for 10 mins
-#define LOWPOWER_AWAKE_TIME 180 // Awake for 3 mins
+#define LOWPOWER_AWAKE_TIME 120 // Awake for 2 mins
 
 void lowpower_init(void);
 
