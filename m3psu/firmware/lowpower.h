@@ -8,11 +8,7 @@
 
 #include "ch.h"
 
-#define LOWPOWER_MODE_FLAG_ADDR (BKPSRAM_BASE + 0)
-#define LOWPOWER_ENTRY_FLAG_ADDR (BKPSRAM_BASE + 4)
-#define LOWPOWER_WAKEUP_COUNT_ADDR (BKPSRAM_BASE + 8)
-
-#define LOWPOWER_FLAG_MAGIC (0x12345678)
+#include "backupregs.h"
 
 #define LOWPOWER_POWER_SWITCH_INTERVAL 5 // Check power switch every 5 seconds
 #define LOWPOWER_SLEEP_TIME 600 // Sleep for 10 mins

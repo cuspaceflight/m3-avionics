@@ -70,6 +70,14 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
         lowpower_disable();
       }
     }
+  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_BATTLESHORT){
+    if(datalen >= 1){
+      if(data[0] == 1){
+        ChargeController_enable_battleshort();
+      }else if(data[0] == 0){
+        ChargeController_disable_battleshort();
+      }
+    }
   }
 }
 

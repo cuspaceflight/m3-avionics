@@ -129,6 +129,8 @@
 #define BQ40Z60_MAC_MANUFACTURING_STATUS_HI_CHGR_EN_MASK    (1 << 2)
 #define BQ40Z60_GAUGING_STATUS_B0_DSG_MASK                  (1 << 6)
 
+#define BQ40Z60_DF_ENABLED_PROTECTIONS_A    0x4845
+
 uint8_t bq40z60_mac_write(BQ40Z60 *bq, uint16_t mac_address, uint8_t *txbuf, uint8_t txbuflen){
   uint8_t txdat[64];
 
@@ -262,6 +264,28 @@ uint8_t bq40z60_is_discharging(BQ40Z60 *bq, bool *status){
   *status = (rxbuf[0] & BQ40Z60_GAUGING_STATUS_B0_DSG_MASK) != 0;
 
   return ERR_OK;
+}
+
+uint8_t bq40z60_write_dataflash(BQ40Z60 *bq, uint16_t addr, uint8_t *data, uint8_t datalen){
+  chDbgAssert(datalen <= 32, "datalen > 32");
+  chDbgAssert(addr >= 0x4000 && addr <= 0x5FFF, "DF address OOB");
+
+  msg_t status = bq40z60_mac_write(bq, addr, data, datalen);
+  if(status == ERR_OK){
+    chThdSleepMilliseconds(500); // Wait for flash to save
+  }
+
+  return status;
+}
+
+uint8_t bq40z60_disable_all_protections(BQ40Z60 *bq){
+  uint8_t zeroes[4] = {0,0,0,0};
+  return bq40z60_write_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, zeroes, sizeof(zeroes));
+}
+
+uint8_t bq40z60_enable_default_protections(BQ40Z60 *bq){
+  uint8_t defaults[4] = {0xff, 0x7f, 0xd5, 0x2f};
+  return bq40z60_write_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, defaults, sizeof(defaults));
 }
 
 uint8_t bq40z60_init(BQ40Z60 *bq, I2CDriver *i2c, i2caddr_t address){

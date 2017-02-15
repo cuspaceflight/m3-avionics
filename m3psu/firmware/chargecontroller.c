@@ -9,6 +9,7 @@
 #include "m3can.h"
 #include "m3status.h"
 #include "chargecontroller.h"
+#include "backupregs.h"
 
 #include "bq40z60.h"
 
@@ -49,6 +50,27 @@ bool ChargeController_is_charging(void){
     return false;
   }
   return !status;
+}
+
+bool ChargeController_get_battleshort_flag(){
+  volatile uint32_t *flag = (volatile uint32_t *)(CHARGECONTROLLER_BATTLESHORT_FLAG_ADDR);
+  return *flag == BACKUPREG_FLAG_MAGIC;
+}
+
+static void ChargeController_set_battleshort_flag(bool enabled){
+  volatile uint32_t *flag = (volatile uint32_t *)(CHARGECONTROLLER_BATTLESHORT_FLAG_ADDR);
+  *flag = enabled ? BACKUPREG_FLAG_MAGIC : 0;
+}
+
+void ChargeController_enable_battleshort(){
+  ChargeController_set_battleshort_flag(true);
+  bq40z60_disable_all_protections(&charger);
+}
+
+void ChargeController_disable_battleshort(){
+  if(bq40z60_enable_default_protections(&charger) == ERR_OK){
+    ChargeController_set_battleshort_flag(false);
+  }
 }
 
 THD_FUNCTION(chargecontroller_thread, arg) {
@@ -153,7 +175,8 @@ THD_FUNCTION(chargecontroller_thread, arg) {
     }else{
       anyerrors = true;
     }
-    can_data[2] = (charge_voltage_mode << 3) |
+    can_data[2] = ((ChargeController_get_battleshort_flag() ? 1 : 0) << 5) |
+                  (charge_voltage_mode << 3) |
                   (charge_inhibit << 2) |
                   ((ChargeController_is_charging() ? 1 : 0) << 1) |
                   (ChargeController_is_charger_enabled() ? 1 : 0);

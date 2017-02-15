@@ -20,6 +20,7 @@ CAN_MSG_ID_M3PSU_PYRO_STATUS = CAN_ID_M3PSU | msg_id(48)
 CAN_MSG_ID_M3PSU_CHARGER_STATUS = CAN_ID_M3PSU | msg_id(55)
 CAN_MSG_ID_M3PSU_TOGGLE_CHARGER = CAN_ID_M3PSU | msg_id(18)
 CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER = CAN_ID_M3PSU | msg_id(19)
+CAN_MSG_ID_M3PSU_TOGGLE_BATTLESHORT = CAN_ID_M3PSU | msg_id(20)
 CAN_MSG_ID_M3PSU_CAPACITY = CAN_ID_M3PSU | msg_id(57)
 
 
@@ -102,6 +103,7 @@ def charger_status(data):
     charger_enabled = bool(state & 1)
     is_charging = bool(state & 2)
     charge_inhibit = bool(state & 4)
+    battleshort = bool(state & 32)
     voltage_mode = (state >> 3) & 0x3;
     tempC = (tempcK/10) - 273.2
 
@@ -114,6 +116,10 @@ def charger_status(data):
         string += ", charging"
     if charge_inhibit:
         string += ", inhibited"
+    if battleshort:
+        string += ", WAR MODE"
+    else:
+        string += ", peace mode"
     string += ", {} mode".format(["PCV", "LV", "MV", "HV", "INVAL"][voltage_mode])
     return string
 
@@ -149,6 +155,11 @@ def toggle_charger_cmd(data):
 def toggle_lowpower_cmd(data):
     data = [{"Off":0, "On":1}[data]]
     return CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER, data
+
+@register_command("m3psu", "Battleshort", ("Peace", "War"))
+def toggle_battleshort(data):
+    data = [{"Peace":0, "War":1}[data]]
+    return CAN_MSG_ID_M3PSU_TOGGLE_BATTLESHORT, data
 
 @register_command("m3psu", "5V IMU", ("1 Off", "1 On"))
 @register_command("m3psu", "5V AUX 2", ("2 Off", "2 On"))

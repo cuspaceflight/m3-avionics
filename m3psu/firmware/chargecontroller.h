@@ -19,6 +19,10 @@ bool ChargeController_is_adapter_present(void);
 
 bool ChargeController_is_charging(void);
 
+bool ChargeController_get_battleshort_flag(void);
+void ChargeController_enable_battleshort(void);
+void ChargeController_disable_battleshort(void);
+
 THD_FUNCTION(chargecontroller_thread, arg);
 
 #endif /* CHARGECONTROLLER_H_ */

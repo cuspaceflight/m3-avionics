@@ -6,8 +6,10 @@
 #include "ch.h"
 
 #include "error.h"
-
+#include "smbus.h"
+#include "config.h"
 #include "powermanager.h"
+#include "chargecontroller.h"
 #include "lowpower.h"
 
 static virtual_timer_t lowpower_timer;
@@ -23,22 +25,22 @@ void lowpower_init(){
 
 static bool lowpower_get_entry_flag(void){
   volatile uint32_t *entry = (volatile uint32_t *)(LOWPOWER_ENTRY_FLAG_ADDR);
-  return *entry == LOWPOWER_FLAG_MAGIC;
+  return *entry == BACKUPREG_FLAG_MAGIC;
 }
 
 static void lowpower_set_entry_flag(bool enabled){
   volatile uint32_t *entry = (volatile uint32_t *)(LOWPOWER_ENTRY_FLAG_ADDR);
-  *entry = enabled ? LOWPOWER_FLAG_MAGIC : 0;
+  *entry = enabled ? BACKUPREG_FLAG_MAGIC : 0;
 }
 
 bool lowpower_get_mode_flag(){
   volatile uint32_t *lpm = (volatile uint32_t *)(LOWPOWER_MODE_FLAG_ADDR);
-  return *lpm == LOWPOWER_FLAG_MAGIC;
+  return *lpm == BACKUPREG_FLAG_MAGIC;
 }
 
 void lowpower_set_mode_flag(bool enabled){
   volatile uint32_t *lpm = (volatile uint32_t *)(LOWPOWER_MODE_FLAG_ADDR);
-  *lpm = enabled ? LOWPOWER_FLAG_MAGIC : 0;
+  *lpm = enabled ? BACKUPREG_FLAG_MAGIC : 0;
 }
 
 static void lowpower_set_wakeup_count(uint32_t count){
@@ -57,6 +59,15 @@ void lowpower_early_wakeup_check(){
     lowpower_set_mode_flag(false); // Disable low-power mode
     lowpower_set_entry_flag(false);
     lowpower_set_wakeup_count(0); // Clear the wakeup counter
+
+    // Disable battleshort if enabled
+    if(ChargeController_get_battleshort_flag()){
+      // Bring up the minimal amount to talk to the charger over SMBus
+      chSysInit();
+      smbus_init(&I2C_DRIVER);
+      ChargeController_disable_battleshort();
+    }
+
     lowpower_setup_sleep(LOWPOWER_POWER_SWITCH_INTERVAL);
     lowpower_go_to_sleep();
   }
