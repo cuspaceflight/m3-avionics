@@ -13,7 +13,7 @@ struct m3fc_config m3fc_config = {
         .ignition_accel = 20,
         .burnout_timeout = 30,
         .apogee_timeout = 10,
-        .main_altitude = 20,
+        .main_altitude = 2,
         .main_timeout = 30,
         .land_timeout = 30,
     },
@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
     state_t cur_state = STATE_PAD;
     state_t new_state;
     instance_data_t data = {0};
+    data.h_ground = -54.0f;
     systime_t last_mission_time = 0;
 
     while(fread(&packet, sizeof(struct log_packet), 1, logfile)) {
@@ -78,11 +79,13 @@ int main(int argc, char* argv[])
                 (float)packet.i16[1] * 0.0039 * g,
                 ((float)packet.i16[2]) * 0.00405 * g,
             };
-            m3fc_state_estimation_new_accels(faccels, 156.96f, 0.1186f);
+            m3fc_state_estimation_new_accels(faccels, 156.96f, 10.01f);
             fwrite(&packet, sizeof(struct log_packet), 1, outfile);
         } else if(packet.sid == CAN_MSG_ID_M3FC_BARO) {
             /* run SE on new pressure */
             m3fc_state_estimation_new_pressure((float)packet.i32[1], 250.0f);
+            fwrite(&packet, sizeof(struct log_packet), 1, outfile);
+        } else if(packet.sid == CAN_MSG_ID_M3RADIO_GPS_ALT) {
             fwrite(&packet, sizeof(struct log_packet), 1, outfile);
         }
 
@@ -100,6 +103,13 @@ int main(int argc, char* argv[])
                 cur_state = new_state;
             }
 
+            if(cur_state == STATE_APOGEE) {
+                /* on the martlet junior flight, we are upside down after
+                 * drogue release as the avionics hangs from the parachute.
+                 */
+                m3fc_config.profile.accel_axis = M3FC_CONFIG_ACCEL_AXIS_NZ;
+            }
+
             struct log_packet se_t_h = {
                 .sid = CAN_MSG_ID_M3FC_SE_T_H, .rtr = 0, .dlc = 8,
                 .f32 = {0, data.state.h},
@@ -110,14 +120,26 @@ int main(int argc, char* argv[])
                 .f32 = {data.state.v, data.state.a},
                 .ts  = current_time,
             };
+            struct log_packet se_var_h = {
+                .sid = CAN_MSG_ID_M3FC_SE_VAR_H, .rtr = 0, .dlc = 8,
+                .f32 = {p[0][0]},
+                .ts = current_time,
+            };
+            struct log_packet se_var_v_a = {
+                .sid = CAN_MSG_ID_M3FC_SE_VAR_V_A, .rtr = 0, .dlc = 8,
+                .f32 = {p[1][1], p[2][2]},
+                .ts = current_time,
+            };
             struct log_packet mc_state = {
                 .sid = CAN_MSG_ID_M3FC_MISSION_STATE, .rtr = 0, .dlc = 5,
                 .u8 = {0, 0, 0, 0, new_state},
                 .ts = current_time,
             };
-            fwrite(&se_t_h, sizeof(struct log_packet), 1, outfile);
-            fwrite(&se_v_a, sizeof(struct log_packet), 1, outfile);
-            fwrite(&mc_state, sizeof(struct log_packet), 1, outfile);
+            fwrite(&se_t_h,     sizeof(struct log_packet), 1, outfile);
+            fwrite(&se_v_a,     sizeof(struct log_packet), 1, outfile);
+            fwrite(&se_var_h,   sizeof(struct log_packet), 1, outfile);
+            fwrite(&se_var_v_a, sizeof(struct log_packet), 1, outfile);
+            fwrite(&mc_state,   sizeof(struct log_packet), 1, outfile);
 
             last_mission_time = current_time;
         }

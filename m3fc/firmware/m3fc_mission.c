@@ -95,12 +95,14 @@ static state_t do_state_pad(instance_data_t *data)
 
     m3fc_ui_beeper_mode = M3FC_UI_BEEPER_OFF;
 
-    /* Detect ignition when the acceleration exceeds the threshold and we're
-     * 10m above our ground altitude, which should be small enough to not
-     * change the required acceleration threshold too much.
+    /* Detect ignition when the acceleration exceeds the threshold.
+     * Previously we also required altitude 10m above h_ground, but
+     * this often leads to a large delay before ignition is detected.
+     * Since we check at burnout that we're at least 20m above ground,
+     * and revert back to pad if not, there's less harm in false positive
+     * ignition detection, vs a lot of harm in a false negative.
      */
-    if(data->state.a > m3fc_config.profile.ignition_accel &&
-       data->state.h > data->h_ground + 10.0f)
+    if(data->state.a > m3fc_config.profile.ignition_accel)
     {
         return STATE_IGNITION;
     } else {
