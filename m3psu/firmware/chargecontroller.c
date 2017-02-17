@@ -15,6 +15,16 @@
 
 BQ40Z60 charger;
 
+bool ChargeController_get_battleshort_flag(){
+  volatile uint32_t *flag = (volatile uint32_t *)(CHARGECONTROLLER_BATTLESHORT_FLAG_ADDR);
+  return *flag == BACKUPREG_FLAG_MAGIC;
+}
+
+static void ChargeController_set_battleshort_flag(bool enabled){
+  volatile uint32_t *flag = (volatile uint32_t *)(CHARGECONTROLLER_BATTLESHORT_FLAG_ADDR);
+  *flag = enabled ? BACKUPREG_FLAG_MAGIC : 0;
+}
+
 void ChargeController_init(void) {
   m3status_set_init(M3STATUS_COMPONENT_CHARGER);
 
@@ -22,6 +32,14 @@ void ChargeController_init(void) {
     m3status_set_ok(M3STATUS_COMPONENT_CHARGER);
   }else{
     m3status_set_error(M3STATUS_COMPONENT_CHARGER, M3STATUS_CHARGER_ERROR_INIT);
+  }
+
+  bool enabled = false;
+  while(bq40z60_are_default_protections_enabled(&charger, &enabled) != ERR_OK);
+  if(enabled){
+    ChargeController_set_battleshort_flag(false);
+  }else{
+    ChargeController_set_battleshort_flag(true);
   }
 }
 
@@ -50,16 +68,6 @@ bool ChargeController_is_charging(void){
     return false;
   }
   return !status;
-}
-
-bool ChargeController_get_battleshort_flag(){
-  volatile uint32_t *flag = (volatile uint32_t *)(CHARGECONTROLLER_BATTLESHORT_FLAG_ADDR);
-  return *flag == BACKUPREG_FLAG_MAGIC;
-}
-
-static void ChargeController_set_battleshort_flag(bool enabled){
-  volatile uint32_t *flag = (volatile uint32_t *)(CHARGECONTROLLER_BATTLESHORT_FLAG_ADDR);
-  *flag = enabled ? BACKUPREG_FLAG_MAGIC : 0;
 }
 
 void ChargeController_enable_battleshort(){
