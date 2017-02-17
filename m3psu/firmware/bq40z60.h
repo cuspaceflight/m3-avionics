@@ -20,6 +20,8 @@ typedef struct {
 
 uint8_t bq40z60_init(BQ40Z60 *bq, I2CDriver *i2c, i2caddr_t address);
 
+uint8_t bq40z60_device_reset(BQ40Z60 *bq);
+
 uint8_t bq40z60_set_charger_enabled(BQ40Z60 *bq, uint8_t enabled);
 uint8_t bq40z60_is_charger_enabled(BQ40Z60 *bq, uint8_t *enabled);
 

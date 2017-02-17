@@ -64,13 +64,16 @@ static void ChargeController_set_battleshort_flag(bool enabled){
 
 void ChargeController_enable_battleshort(){
   ChargeController_set_battleshort_flag(true);
-  bq40z60_disable_all_protections(&charger);
+  while(bq40z60_disable_all_protections(&charger) != ERR_OK){
+  }
+  bq40z60_device_reset(&charger);
 }
 
 void ChargeController_disable_battleshort(){
-  if(bq40z60_enable_default_protections(&charger) == ERR_OK){
-    ChargeController_set_battleshort_flag(false);
+  while(bq40z60_enable_default_protections(&charger) != ERR_OK){
   }
+  ChargeController_set_battleshort_flag(false);
+  bq40z60_device_reset(&charger);
 }
 
 THD_FUNCTION(chargecontroller_thread, arg) {

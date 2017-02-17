@@ -341,6 +341,10 @@ uint8_t bq40z60_enable_default_protections(BQ40Z60 *bq){
   return ERR_OK;
 }
 
+uint8_t bq40z60_device_reset(BQ40Z60 *bq){
+    return bq40z60_mac_write(bq, 0x0041, NULL, 0);
+}
+
 uint8_t bq40z60_init(BQ40Z60 *bq, I2CDriver *i2c, i2caddr_t address){
   bq->config.i2c = i2c;
   bq->config.address = address;
