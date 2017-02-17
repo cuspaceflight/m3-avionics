@@ -22,6 +22,7 @@ CAN_MSG_ID_M3PSU_TOGGLE_CHARGER = CAN_ID_M3PSU | msg_id(18)
 CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER = CAN_ID_M3PSU | msg_id(19)
 CAN_MSG_ID_M3PSU_TOGGLE_BATTLESHORT = CAN_ID_M3PSU | msg_id(20)
 CAN_MSG_ID_M3PSU_CAPACITY = CAN_ID_M3PSU | msg_id(57)
+CAN_MSG_ID_M3PSU_AWAKE_TIME = CAN_ID_M3PSU | msg_id(58)
 
 
 @register_packet("m3psu", CAN_MSG_ID_M3PSU_BATT_VOLTAGES,
@@ -144,6 +145,23 @@ def capacity(data):
         mins = "Inf"
     percent = data[2]
     return "Capacity: {}%, Time left: {}".format(percent, mins)
+
+@register_packet("m3psu", CAN_MSG_ID_M3PSU_AWAKE_TIME, "Awake Time")
+def awake_time(data):
+    secs,status = struct.unpack("HB", bytes(data[:3]))
+    mins = int(secs / 60)
+    secs = secs % 60
+    lowpower_mode = bool(status & 1)
+    string = ""
+    if mins > 0:
+        string += "{}m {:02}s".format(mins, secs)
+    else:
+        string += "{}s".format(secs)
+    if lowpower_mode:
+        string += ", low-power mode"
+    else:
+        string += ", full-power mode"
+    return string
 
 
 @register_command("m3psu", "Pyro supply", ("Off", "On"))

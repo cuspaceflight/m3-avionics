@@ -48,6 +48,7 @@ extern uint8_t m3can_own_id;
 #define CAN_MSG_ID_M3PSU_CHARGER_STATUS         (CAN_ID_M3PSU | CAN_MSG_ID(55))
 #define CAN_MSG_ID_M3PSU_BATT_VOLTAGES          (CAN_ID_M3PSU | CAN_MSG_ID(56))
 #define CAN_MSG_ID_M3PSU_CAPACITY               (CAN_ID_M3PSU | CAN_MSG_ID(57))
+#define CAN_MSG_ID_M3PSU_AWAKE_TIME             (CAN_ID_M3PSU | CAN_MSG_ID(58))
 
 
 /* M3FC */

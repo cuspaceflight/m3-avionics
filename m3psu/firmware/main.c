@@ -30,6 +30,7 @@ static THD_WORKING_AREA(waPowerManager, 1024);
 static THD_WORKING_AREA(waChargeController, 1024);
 //static THD_WORKING_AREA(waPowerAlert, 512);
 static THD_WORKING_AREA(waPowerCheck, 512);
+static THD_WORKING_AREA(waAwakeTime, 128);
 
 void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   (void)rtr;
@@ -81,6 +82,23 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   }
 }
 
+THD_FUNCTION(awake_time_thread, arg){
+  (void)arg;
+  while(true){
+    systime_t time_now = chVTGetSystemTime();
+    uint16_t secs_awake = (uint16_t)(time_now / CH_CFG_ST_FREQUENCY);
+    uint8_t data[3];
+    data[0] = secs_awake & 0xff;
+    data[1] = (secs_awake >> 8) & 0xff;
+
+    data[2] = lowpower_get_mode_flag() ? 1 : 0;
+
+    m3can_send(CAN_MSG_ID_M3PSU_AWAKE_TIME, false, data, sizeof(data));
+
+    chThdSleepMilliseconds(500);
+  }
+}
+
 int main(void) {
   /* Allow debug access during sleep mode */
   DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
@@ -125,6 +143,8 @@ int main(void) {
   }
 
   ChargeController_enable_charger();
+
+  chThdCreateStatic(waAwakeTime, sizeof(waAwakeTime), NORMALPRIO, awake_time_thread, NULL);
 
   chThdCreateStatic(waPowerCheck, sizeof(waPowerCheck), NORMALPRIO,
                     lowpower_power_check_thread, NULL);
