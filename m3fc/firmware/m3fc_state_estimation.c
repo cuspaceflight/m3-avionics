@@ -134,7 +134,7 @@ state_estimate_t m3fc_state_estimation_get_state()
     state_estimate_t x_out;
 
     /* TODO Determine best q-value */
-    q = 500.0;
+    q = 500.0f;
 
     /* Acquire lock */
     chBSemWait(&kalman_bsem);
@@ -265,7 +265,7 @@ void m3fc_state_estimation_init()
 void m3fc_state_estimation_new_pressure(float pressure, float rms)
 {
     float y, r, s_inv, k[3];
-    float h, hd;
+    float h, hp, hm;
 
     /* Discard data when mission control believes we are transonic. */
     if(!m3fc_state_estimation_trust_barometer)
@@ -276,17 +276,18 @@ void m3fc_state_estimation_new_pressure(float pressure, float rms)
      * of the current noise variance in altitude terms for the filter.
      */
     h = m3fc_state_estimation_pressure_to_altitude(pressure);
-    hd = m3fc_state_estimation_pressure_to_altitude(pressure + rms);
+    hp = m3fc_state_estimation_pressure_to_altitude(pressure + rms);
+    hm = m3fc_state_estimation_pressure_to_altitude(pressure - rms);
 
     /* If there was an error (couldn't find suitable altitude band) for this
      * pressure, just don't use it. It's probably wrong. */
-    if(h == -9999.0f || hd == -9999.0f) {
+    if(h == -9999.0f || hp == -9999.0f || hm == -9999.0f) {
         m3status_set_error(M3FC_COMPONENT_SE, M3FC_ERROR_SE_PRESSURE);
         return;
     }
 
     /* TODO: validate choice of r */
-    r = (h - hd) * (h - hd);
+    r = (hm - hp) * (hm - hp);
 
     /* Acquire lock */
     chBSemWait(&kalman_bsem);
@@ -422,7 +423,7 @@ void m3fc_state_estimation_new_accels(float accels[3], float max, float rms)
         accel -= 9.80665f;
     }
 
-    m3fc_state_estimation_update_accel(accel, sqrtf(rms));
+    m3fc_state_estimation_update_accel(accel, rms*rms);
 }
 
 
