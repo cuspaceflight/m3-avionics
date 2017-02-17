@@ -130,6 +130,7 @@
 #define BQ40Z60_GAUGING_STATUS_B0_DSG_MASK                  (1 << 6)
 
 #define BQ40Z60_DF_ENABLED_PROTECTIONS_A    0x4845
+#define BQ40Z60_DF_AOLD_THRESHOLD           0x4960
 
 uint8_t bq40z60_mac_write(BQ40Z60 *bq, uint16_t mac_address, uint8_t *txbuf, uint8_t txbuflen){
   uint8_t txdat[64];
@@ -301,48 +302,95 @@ uint8_t bq40z60_read_dataflash(BQ40Z60 *bq, uint16_t addr, uint8_t *data, uint8_
   return ERR_OK;
 }
 
-uint8_t bq40z60_disable_all_protections(BQ40Z60 *bq){
-  uint8_t zeroes[4] = {0,0,0,0};
-  msg_t status = bq40z60_write_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, zeroes, sizeof(zeroes));
-  if(status != ERR_OK){
-    return status;
-  }
+uint8_t bq40z60_verify_dataflash(BQ40Z60 *bq, uint16_t addr, uint8_t *data, uint8_t datalen){
+  chDbgAssert(datalen <= 32, "datalen > 32");
+  chDbgAssert(addr >= 0x4000 && addr <= 0x5FFF, "DF address OOB");
 
   uint8_t rx[32];
-  status = bq40z60_read_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, rx, sizeof(rx));
+  msg_t status = bq40z60_read_dataflash(bq, addr, rx, sizeof(rx));
   if(status != ERR_OK){
     return status;
   }
 
-  if(rx[0] != 0 || rx[1] != 0 || rx[2] != 0 || rx[3] != 0){
-    return ERR_INVAL;
+  for(int i=0; i<datalen; i++){
+    if(rx[i] != data[i]){
+      return ERR_INVAL;
+    }
+  }
+
+  return ERR_OK;
+}
+
+uint8_t bq40z60_write_and_verify_dataflash(BQ40Z60 *bq, uint16_t addr, uint8_t *data, uint8_t datalen){
+  chDbgAssert(datalen <= 32, "datalen > 32");
+  chDbgAssert(addr >= 0x4000 && addr <= 0x5FFF, "DF address OOB");
+
+  msg_t status = bq40z60_write_dataflash(bq, addr, data, datalen);
+  if(status != ERR_OK){
+    return status;
+  }
+
+  return bq40z60_verify_dataflash(bq, addr, data, datalen);
+}
+
+uint8_t bq40z60_disable_all_protections(BQ40Z60 *bq){
+  uint8_t zeroes[4] = {0,0,0,0}; // All protections disabled
+  msg_t status = bq40z60_write_and_verify_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, zeroes, sizeof(zeroes));
+  if(status != ERR_OK){
+    return status;
+  }
+
+  uint8_t aold_threshold[1] = {0xfb}; // 8A current limit for 31ms
+  status = bq40z60_write_and_verify_dataflash(bq, BQ40Z60_DF_AOLD_THRESHOLD, aold_threshold, sizeof(aold_threshold));
+  if(status != ERR_OK){
+    return status;
   }
 
   return ERR_OK;
 }
 
 uint8_t bq40z60_enable_default_protections(BQ40Z60 *bq){
-  uint8_t defaults[4] = {0xff, 0x7f, 0xd5, 0x2f};
-  msg_t status = bq40z60_write_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, defaults, sizeof(defaults));
+  uint8_t defaults[4] = {0xff, 0x7f, 0xd5, 0x2f}; // All protections enabled
+  msg_t status = bq40z60_write_and_verify_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, defaults, sizeof(defaults));
   if(status != ERR_OK){
     return status;
   }
 
-  uint8_t rx[32];
-  status = bq40z60_read_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, rx, sizeof(rx));
+  uint8_t aold_threshold[1] = {0xf4}; // 4A current limit for 31ms
+  status = bq40z60_write_and_verify_dataflash(bq, BQ40Z60_DF_AOLD_THRESHOLD, aold_threshold, sizeof(aold_threshold));
   if(status != ERR_OK){
     return status;
-  }
-
-  if(rx[0] != 0xff || rx[1] != 0x7f || rx[2] != 0xd5 || rx[3] != 0x2f){
-    return ERR_INVAL;
   }
 
   return ERR_OK;
 }
 
+uint8_t bq40z60_are_default_protections_enabled(BQ40Z60 *bq, bool *enabled){
+  uint8_t defaults[4] = {0xff, 0x7f, 0xd5, 0x2f};
+
+  msg_t status = bq40z60_verify_dataflash(bq, BQ40Z60_DF_ENABLED_PROTECTIONS_A, defaults, sizeof(defaults));
+  if(status == ERR_INVAL){
+    *enabled = false;
+    return ERR_OK;
+  }else if(status != ERR_OK){
+    return status;
+  }
+
+  uint8_t aold_threshold[1] = {0xf4};
+  status = bq40z60_verify_dataflash(bq, BQ40Z60_DF_AOLD_THRESHOLD, aold_threshold, sizeof(aold_threshold));
+  if(status == ERR_INVAL){
+    *enabled = false;
+    return ERR_OK;
+  }else if(status != ERR_OK){
+    return status;
+  }
+
+  *enabled = true;
+  return ERR_OK;
+}
+
 uint8_t bq40z60_device_reset(BQ40Z60 *bq){
-    return bq40z60_mac_write(bq, 0x0041, NULL, 0);
+  return bq40z60_mac_write(bq, 0x0041, NULL, 0);
 }
 
 uint8_t bq40z60_init(BQ40Z60 *bq, I2CDriver *i2c, i2caddr_t address){
