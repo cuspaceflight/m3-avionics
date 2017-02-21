@@ -1,4 +1,4 @@
-update=Mon 27 Jun 2016 22:44:08 BST
+update=Tue 21 Feb 2017 20:37:59 GMT
 version=1
 last_client=kicad
 [pcbnew]
@@ -25,7 +25,7 @@ version=1
 NetIExt=net
 [eeschema]
 version=1
-LibDir=
+LibDir=../../agg-kicad
 [eeschema/libraries]
 LibName1=power
 LibName2=device
@@ -56,6 +56,6 @@ LibName26=opto
 LibName27=atmel
 LibName28=contrib
 LibName29=valves
-LibName30=/home/matt/Documents/CUSF/agg-kicad/agg-kicad
+LibName30=/home/cusf/m3-avionics/agg-kicad/agg-kicad
 [general]
 version=1
