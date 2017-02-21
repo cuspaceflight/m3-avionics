@@ -26,6 +26,7 @@ typedef enum {
 struct instance_data {
     systime_t t_launch;
     systime_t t_apogee;
+    systime_t t_land;
     float h_ground;
     state_estimate_t state;
 };
@@ -252,6 +253,9 @@ static state_t do_state_land(instance_data_t *data)
      * cameras and entering power saving modes, but for now we just proceed
      * directly to landed.
      */
+
+    data->state.t_land = chVTGetSystemTimeX();
+
     return STATE_LANDED;
 }
 
@@ -260,6 +264,9 @@ static state_t do_state_landed(instance_data_t *data)
     m3fc_state_estimation_trust_barometer = true;
     (void)data;
 
+    if (ST2S(chVTTimeElapsedSinceX(data->t_land)) > 300 ){
+        m3fc_mission_enable_low_power_mode();
+    }
     /* Not much to do now. */
     return STATE_LANDED;
 }
@@ -306,6 +313,11 @@ static void m3fc_mission_fire_main_pyro() {
 
 static void m3fc_mission_fire_dart_pyro() {
     m3fc_mission_fire_pyro(M3FC_CONFIG_PYRO_USAGE_DART);
+}
+
+static void m3fc_mission_enable_low_power_mode(){
+    uint8_t data[1] = {1};
+    m3can_send(CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER, false, data, 1);
 }
 
 static THD_WORKING_AREA(mission_thread_wa, 512);
