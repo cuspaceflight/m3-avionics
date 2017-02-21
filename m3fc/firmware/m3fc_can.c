@@ -60,5 +60,8 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen) {
     case CAN_MSG_ID_M3FC_FIRE:
         m3fc_mission_handle_fire(data, datalen);
         break;
+    case CAN_MSG_ID_M3PSU_CHARGER_STATUS:
+        m3fc_mission_handle_battleshort(data, datalen);
+        break;
     }
 }

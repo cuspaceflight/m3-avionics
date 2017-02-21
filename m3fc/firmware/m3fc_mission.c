@@ -13,6 +13,7 @@
 volatile bool m3fc_mission_pyro_armed = false;
 volatile bool m3fc_mission_pyro_supply_good = false;
 volatile bool m3fc_mission_pyro_cont_ok = false;
+volatile bool m3fc_mission_psu_battleshort = false;
 
 static volatile bool m3fc_mission_armed = false;
 
@@ -42,6 +43,7 @@ static void m3fc_mission_fire_main_pyro(void);
 static void m3fc_mission_fire_dart_pyro(void);
 static void m3fc_mission_lowpower(void);
 static void m3fc_mission_check_pyros(void);
+static void m3fc_mission_check_psu(void);
 
 state_t run_state(state_t cur_state, instance_data_t *data);
 static state_t do_state_init(instance_data_t *data);
@@ -73,6 +75,7 @@ static state_t do_state_init(instance_data_t *data) {
     data->h_ground = data->state.h;
 
     m3fc_mission_check_pyros();
+    m3fc_mission_check_psu();
 
     if(m3fc_mission_pyro_supply_good) {
         m3fc_ui_beeper_mode = M3FC_UI_BEEPER_FAST;
@@ -94,6 +97,7 @@ static state_t do_state_pad(instance_data_t *data)
     m3fc_state_estimation_trust_barometer = true;
 
     m3fc_mission_check_pyros();
+    m3fc_mission_check_psu();
 
     m3fc_ui_beeper_mode = M3FC_UI_BEEPER_OFF;
 
@@ -360,11 +364,28 @@ static THD_FUNCTION(mission_thread, arg) {
 void m3fc_mission_init() {
     m3status_set_init(M3FC_COMPONENT_MC);
     m3status_set_init(M3FC_COMPONENT_MC_PYRO);
+    m3status_set_init(M3FC_COMPONENT_MC_PSU);
     chThdCreateStatic(mission_thread_wa, sizeof(mission_thread_wa),
                       NORMALPRIO+5, mission_thread, NULL);
 }
 
-static void m3fc_mission_check_pyros(void) {
+void m3fc_mission_handle_battleshort(uint8_t* data, uint8_t datalen) {
+    if(datalen != 1) {
+        m3status_set_error(M3FC_COMPONENT_MC_PSU, M3FC_ERROR_MC_PSU_BATTLESHORT);
+        return;
+    }
+    m3fc_mission_psu_battleshort = data[2] & (1 << 5);
+}
+
+static void m3fc_mission_check_psu() {
+    if(!m3fc_mission_psu_battleshort) {
+        m3status_set_error(M3FC_COMPONENT_MC_PSU, M3FC_ERROR_MC_PSU_BATTLESHORT);
+    } else {
+        m3status_set_ok(M3FC_COMPONENT_MC_PSU);
+    }
+}
+
+static void m3fc_mission_check_pyros() {
     if(!m3fc_mission_pyro_supply_good) {
         m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_MC_PYRO_SUPPLY);
     } else if(!m3fc_mission_pyro_armed) {
