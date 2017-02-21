@@ -56,7 +56,6 @@ static THD_FUNCTION(leds_thd, arg) {
 static THD_WORKING_AREA(beeper_thd_wa, 128);
 static THD_FUNCTION(beeper_thd, arg) {
     (void)arg;
-    int delay = 0;
     chRegSetThreadName("ui_beeper");
     pwmStart(&PWMD5, &pwm_cfg);
     while(true) {
