@@ -1,0 +1,134 @@
+Bill Of Materials
+=================
+
+Source file: m3radio.xml
+Date: 2016-06-26T13:44:22.431429
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    TFML-110-02-L-D: 
+      J103   EAST TOP        agg:TFML-110-02-L-D
+      J101   WEST TOP        agg:TFML-110-02-L-D
+    SFML-110-02-L-D-LC: 
+      J104   EAST BOT        agg:SFML-110-02-L-D-LC
+      J102   WEST BOT        agg:SFML-110-02-L-D-LC
+  Farnell
+  ~~~~~~~
+    2496814: 
+      C106   1µ              agg:0402
+      C2     1uF             agg:0402
+      C3     1uF             agg:0402
+      C7     1uF             agg:0402
+      C8     1uF             agg:0402
+      C6     1u              agg:0402
+    2496792: 
+      C201   100p            agg:0402
+      C5     100pF           agg:0402
+    2496771: 
+      C113   100nF           agg:0402
+      C112   100n            agg:0402
+      C107   100n            agg:0402
+      C104   100n            agg:0402
+      C108   100n            agg:0402
+      C105   100n            agg:0402
+      C109   100n            agg:0402
+      C202   100n            agg:0402
+    2496790: 
+      C102   10p             agg:0402
+      C207   10pF            agg:0402
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+2434644,1,1x 4.7pF 0402
+2496790,3,3x 10pF 10p 0402
+2314404,1,1x RED 0603-LED
+1414575,1,1x 10nF 0402
+2210752,1,1x 3pF 0402
+2464412,1,1x NCP380 DFN-6-EP-ONSEMI
+2496814,6,6x 1u 1µ 1uF 0402
+1865427,1,1x 36pF 0402
+2426952,1,1x 4µ7 0402
+2462635,1,1x Si4460 QFN-20-EP-SI
+2464259,1,1x NCP4620 SC-70-5
+2290363,1,1x GRN 0603-LED
+2362088,2,2x 2µ2 0402
+2506952,1,1x 26M XTAL-20x16
+2434610,1,1x 3.3pF 0402
+1865812,1,1x 120nH 0603-L
+2218843,1,1x 1.2pF 0402
+2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
+2405785,1,1x TCXO TG-5006CG
+2496771,9,9x 100nF 100n 0402
+1515395,3,3x 6.8nH 0603-L
+1711755,1,1x 22nH 0603-L
+9239111,3,3x 100 0402
+2502502,1,1x 110k 0402
+2424720,1,1x 18nH 0603-L
+2064363,1,1x STM32F405RxTx LQFP-64
+2368169,2,2x ESD_DIODE 0402
+2470339,3,3x 91nH 0402-L
+3908021,2,2x COAX U.FL-R-SMT-1
+2496792,2,2x 100p 100pF 0402
+1738878,1,1x 10 0603
+
+
+  Samtec
+  ~~~~~~
+TFML-110-02-L-D,2,2x J103 J101 TFML-110-02-L-D
+SFML-110-02-L-D-LC,2,2x J104 J102 SFML-110-02-L-D-LC
+
+
+  HabSupplies
+  ~~~~~~~~~~~
+MAX-7Q,1,1x IC103 MAX-7Q
+
+
+Assembly BOM
+------------
+2434644              1   4.7pF           0402            C208
+2496790              3   10pF,10p        0402            C101 C102 C207
+2314404              1   RED             0603-LED        D101
+1414575              1   10nF            0402            C4
+2210752              1   3pF             0402            C203
+2464412              1   NCP380          DFN-6-EP-ONSEMI IC1
+2496814              6   1u,1µ,1uF       0402            C106 C2 C3 C6 C7 C8
+1865427              1   36pF            0402            C204
+2426952              1   4µ7             0402            C103
+2462635              1   Si4460          QFN-20-EP-SI    IC201
+2464259              1   NCP4620         SC-70-5         U1
+2290363              1   GRN             0603-LED        D102
+2362088              2   2µ2             0402            C110 C111
+2506952              1   26M             XTAL-20x16      Y101
+2434610              1   3.3pF           0402            C206
+1865812              1   120nH           0603-L          L201
+2218843              1   1.2pF           0402            C205
+2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC102
+2405785              1   TCXO            TG-5006CG       Y201
+2496771              9   100nF,100n      0402            C1 C104 C105 C107 C108 C109 C112 C113 C202
+1515395              3   6.8nH           0603-L          L204 L205 L206
+1711755              1   22nH            0603-L          L203
+9239111              3   100             0402            R101 R102 R103
+2502502              1   110k            0402            R2
+2424720              1   18nH            0603-L          L202
+2064363              1   STM32F405RxTx   LQFP-64         IC101
+2368169              2   ESD_DIODE       0402            D1 D2
+2470339              3   91nH            0402-L          L1 L2 L3
+3908021              2   COAX            U.FL-R-SMT-1    P101 P201
+2496792              2   100p,100pF      0402            C201 C5
+1738878              1   10              0603            R1
+TFML-110-02-L-D      2   EAST TOP,WEST TOP TFML-110-02-L-D J101 J103
+SFML-110-02-L-D-LC   2   EAST BOT,WEST BOT SFML-110-02-L-D-LC J102 J104
+MAX-7Q               1   MAX-7Q          MAX-7Q          IC103
+
