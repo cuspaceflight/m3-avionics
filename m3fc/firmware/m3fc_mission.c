@@ -26,6 +26,7 @@ typedef enum {
 struct instance_data {
     systime_t t_launch;
     systime_t t_apogee;
+    systime_t t_land;
     float h_ground;
     state_estimate_t state;
 };
@@ -39,6 +40,7 @@ static void m3fc_mission_fire_pyro(int pyro_usage);
 static void m3fc_mission_fire_drogue_pyro(void);
 static void m3fc_mission_fire_main_pyro(void);
 static void m3fc_mission_fire_dart_pyro(void);
+static void m3fc_mission_lowpower(void);
 static void m3fc_mission_check_pyros(void);
 
 state_t run_state(state_t cur_state, instance_data_t *data);
@@ -245,8 +247,9 @@ static state_t do_state_main_descent(instance_data_t *data)
 
 static state_t do_state_land(instance_data_t *data)
 {
-    (void)data;
     m3fc_state_estimation_trust_barometer = true;
+
+    data->t_land = ST2MS(chVTGetSystemTimeX());
 
     /* In the future we might want to trigger events on landing, like disabling
      * cameras and entering power saving modes, but for now we just proceed
@@ -258,7 +261,10 @@ static state_t do_state_land(instance_data_t *data)
 static state_t do_state_landed(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
-    (void)data;
+
+    if (ST2MS(chVTGetSystemTimeX()) >= data->t_land + (5 * 60000)) {
+        m3fc_mission_lowpower();
+    }
 
     /* Not much to do now. */
     return STATE_LANDED;
@@ -308,6 +314,11 @@ static void m3fc_mission_fire_dart_pyro() {
     m3fc_mission_fire_pyro(M3FC_CONFIG_PYRO_USAGE_DART);
 }
 
+static void m3fc_mission_lowpower() {
+    uint8_t data[1] = {1};
+    m3can_send(CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER, false, data, 1);
+}
+
 static THD_WORKING_AREA(mission_thread_wa, 512);
 static THD_FUNCTION(mission_thread, arg) {
     (void)arg;
@@ -317,6 +328,7 @@ static THD_FUNCTION(mission_thread, arg) {
     instance_data_t data;
     data.t_launch = 0;
     data.t_apogee = 0;
+    data.t_land = 0;
     data.h_ground = 0.0f;
 
     while(true) {
