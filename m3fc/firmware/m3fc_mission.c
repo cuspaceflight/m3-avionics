@@ -13,6 +13,7 @@
 volatile bool m3fc_mission_pyro_armed = false;
 volatile bool m3fc_mission_pyro_supply_good = false;
 volatile bool m3fc_mission_pyro_cont_ok = false;
+volatile bool m3fc_mission_war_mode = false;
 
 static volatile bool m3fc_mission_armed = false;
 
@@ -41,6 +42,7 @@ static void m3fc_mission_fire_drogue_pyro(void);
 static void m3fc_mission_fire_main_pyro(void);
 static void m3fc_mission_fire_dart_pyro(void);
 static void m3fc_mission_check_pyros(void);
+static void m3fc_mission_enable_low_power_mode(void);
 
 state_t run_state(state_t cur_state, instance_data_t *data);
 static state_t do_state_init(instance_data_t *data);
@@ -254,7 +256,7 @@ static state_t do_state_land(instance_data_t *data)
      * directly to landed.
      */
 
-    data->state.t_land = chVTGetSystemTimeX();
+    data->t_land = chVTGetSystemTimeX();
 
     return STATE_LANDED;
 }
@@ -417,6 +419,17 @@ void m3fc_mission_handle_pyro_continuity(uint8_t* data, uint8_t datalen){
         m3fc_mission_pyro_cont_ok = false;
     } else {
         m3fc_mission_pyro_cont_ok = true;
+    }
+}
+
+void m3fc_mission_handle_battle_shorts(uint8_t* data, uint8_t datalen){
+    if(datalen != 5){
+        m3status_set_error(M3FC_COMPONENT_MC_PSU, M3FC_ERROR_CAN_BAD_COMMAND);
+        return;
+    }
+
+    if(((data[2] >>5) & (1) ) == 1){
+        m3fc_mission_war_mode = true;
     }
 }
 
