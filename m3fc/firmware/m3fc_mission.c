@@ -409,7 +409,6 @@ void m3fc_mission_handle_battleshorts(uint8_t* data, uint8_t datalen){
         m3fc_battleshort_on = true;   
         return;     
     }
-
 }
 //
 
