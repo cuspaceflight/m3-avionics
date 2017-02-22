@@ -8,7 +8,13 @@
 void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen) {
     (void)rtr;
 
+//need power supply case - already a can id for this, see m3can.h
+
     switch(msg_id) {
+
+    case CAN_MSG_ID_M3PSU_CHARGER_STATUS:
+        m3fc_mission_handle_battleshorts(data, datalen);
+        break;
     case CAN_MSG_ID_M3PYRO_SUPPLY_STATUS:
         m3fc_mission_handle_pyro_supply(data, datalen);
         break;

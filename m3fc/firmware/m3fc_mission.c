@@ -13,6 +13,7 @@
 volatile bool m3fc_mission_pyro_armed = false;
 volatile bool m3fc_mission_pyro_supply_good = false;
 volatile bool m3fc_mission_pyro_cont_ok = false;
+volatile bool m3fc_battleshort_on = false;
 
 static volatile bool m3fc_mission_armed = false;
 
@@ -28,6 +29,7 @@ struct instance_data {
     systime_t t_apogee;
     float h_ground;
     state_estimate_t state;
+    systime_t t_land;
 };
 
 typedef struct instance_data instance_data_t;
@@ -40,6 +42,8 @@ static void m3fc_mission_fire_drogue_pyro(void);
 static void m3fc_mission_fire_main_pyro(void);
 static void m3fc_mission_fire_dart_pyro(void);
 static void m3fc_mission_check_pyros(void);
+static void m3fc_mission_powermode(void);
+static void m3fc_check_battleshort_on(void);
 
 state_t run_state(state_t cur_state, instance_data_t *data);
 static state_t do_state_init(instance_data_t *data);
@@ -71,6 +75,7 @@ static state_t do_state_init(instance_data_t *data) {
     data->h_ground = data->state.h;
 
     m3fc_mission_check_pyros();
+	
 
     if(m3fc_mission_pyro_supply_good) {
         m3fc_ui_beeper_mode = M3FC_UI_BEEPER_FAST;
@@ -90,6 +95,8 @@ static state_t do_state_init(instance_data_t *data) {
 static state_t do_state_pad(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
+
+    m3fc_check_battleshort_on();
 
     m3fc_mission_check_pyros();
 
@@ -252,13 +259,22 @@ static state_t do_state_land(instance_data_t *data)
      * cameras and entering power saving modes, but for now we just proceed
      * directly to landed.
      */
+
+    data->t_land = chVTGetSystemTimeX();
+
     return STATE_LANDED;
+    
 }
 
+   
 static state_t do_state_landed(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
     (void)data;
+
+    if (ST2S(chVTTimeElapsedSinceX(data->t_land) > 300)) {
+	m3fc_mission_powermode();
+    }
 
     /* Not much to do now. */
     return STATE_LANDED;
@@ -306,6 +322,11 @@ static void m3fc_mission_fire_main_pyro() {
 
 static void m3fc_mission_fire_dart_pyro() {
     m3fc_mission_fire_pyro(M3FC_CONFIG_PYRO_USAGE_DART);
+}
+
+static void m3fc_mission_powermode() {
+uint8_t power[1]={1};
+m3can_send(CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER, false, power, 1);
 }
 
 static THD_WORKING_AREA(mission_thread_wa, 512);
@@ -363,6 +384,34 @@ static void m3fc_mission_check_pyros(void) {
         m3status_set_ok(M3FC_COMPONENT_MC_PYRO);
     }
 }
+
+
+//mine
+
+static void m3fc_check_battleshort_on(void) {
+    if (!m3fc_battleshort_on) {
+        m3status_set_error(M3FC_COMPONENT_MC_PSU, M3FC_ERROR_MC_BATTLESHORT);
+    }
+
+    else m3status_set_ok(M3FC_COMPONENT_MC_PSU);
+}
+
+// ^^ power supply battle short part needs adding, check battleshort function
+
+
+void m3fc_mission_handle_battleshorts(uint8_t* data, uint8_t datalen){
+    if(datalen <=2) {
+        m3status_set_error(M3FC_COMPONENT_MC_PSU, M3FC_ERROR_CAN_BAD_COMMAND);
+        return;
+    }
+
+    if ((data[2] >> 5) & 0x01 ) {
+        m3fc_battleshort_on = true;   
+        return;     
+    }
+
+}
+//
 
 void m3fc_mission_handle_pyro_supply(uint8_t* data, uint8_t datalen){
     if(datalen != 1) {
