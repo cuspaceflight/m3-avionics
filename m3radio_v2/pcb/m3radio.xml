@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>/home/adam/Projects/m3-avionics/m3radio/m3radio_pcb/m3radio.sch</source>
+    <source>/home/adam/Projects/m3-avionics/m3radio_v2/pcb/m3radio.sch</source>
     <date>Sun 26 Jun 2016 13:44:28 BST</date>
     <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
     <sheet number="1" name="/" tstamps="/">
@@ -970,7 +970,7 @@
       <uri>/home/adam/Projects/m3-avionics/agg-kicad/agg-kicad.lib</uri>
     </library>
     <library logical="m3radio-cache">
-      <uri>/home/adam/Projects/m3-avionics/m3radio/m3radio_pcb/m3radio-cache.lib</uri>
+      <uri>/home/adam/Projects/m3-avionics/m3radio_v2/pcb/m3radio-cache.lib</uri>
     </library>
   </libraries>
   <nets>
