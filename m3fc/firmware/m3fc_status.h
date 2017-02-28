@@ -13,7 +13,7 @@
 #define M3FC_COMPONENT_FLASH        (8)
 #define M3FC_COMPONENT_MC_PYRO      (9)
 #define M3FC_COMPONENT_MOCK         (10)
-#define M3FC_COMPONENT_MC_PSU     (11)
+#define M3FC_COMPONENT_MC_PSU       (11)
 
 #define M3FC_ERROR_FLASH_CRC        (1)
 #define M3FC_ERROR_FLASH_WRITE      (2)
@@ -33,6 +33,7 @@
 #define M3FC_ERROR_CFG_CHK_ACCEL_CAL  (18)
 #define M3FC_ERROR_CFG_CHK_RADIO_FREQ (19)
 #define M3FC_ERROR_CFG_CHK_CRC        (20)
+#define M3FC_ERROR_MC_PSU_WARMODE   (21)
 
 
 #endif
