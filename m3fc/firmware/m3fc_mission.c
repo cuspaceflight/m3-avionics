@@ -370,7 +370,7 @@ void m3fc_mission_init() {
 }
 
 void m3fc_mission_handle_battleshort(uint8_t* data, uint8_t datalen) {
-    if(datalen != 1) {
+    if(datalen != 5) {
         m3status_set_error(M3FC_COMPONENT_MC_PSU, M3FC_ERROR_MC_PSU_BATTLESHORT);
         return;
     }
