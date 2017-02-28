@@ -1,8 +1,8 @@
 (export (version D)
   (design
-    (source I:/GitHub/m3-avionics/m3psu/pcb/DCDC-5V/DCDC-5V.sch)
-    (date "28/02/2017 12:45:08")
-    (tool "Eeschema (2016-12-10 revision 9c758c4)-makepkg")
+    (source /home/jamie/m3-avionics/m3psu/pcb/DCDC-5V/DCDC-5V.sch)
+    (date "Tue 28 Feb 2017 20:45:29 GMT")
+    (tool "Eeschema no-vcs-found-be10de8~57~ubuntu16.04.1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
         (title "M3PSU - DC/DC 5V Converter Board")
@@ -283,7 +283,7 @@
       (tstamp 58B5B67B))
     (comp (ref L1)
       (value 2µ2)
-      (footprint agg:TYS5040)
+      (footprint agg:XFL4020)
       (fields
         (field (name Farnell) 2289216))
       (libsource (lib agg-kicad) (part L))
@@ -554,7 +554,7 @@
         (pin (num EP) (name EP) (type power_in)))))
   (libraries
     (library (logical agg-kicad)
-      (uri I:\GitHub\m3-avionics\m3psu\pcb\DCDC-5V\..\..\..\agg-kicad\agg-kicad.lib)))
+      (uri /home/jamie/m3-avionics/m3psu/pcb/DCDC-5V/../../../agg-kicad/agg-kicad.lib)))
   (nets
     (net (code 1) (name /ISNS3+)
       (node (ref R20) (pin 2))
