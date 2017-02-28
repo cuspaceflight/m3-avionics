@@ -1,6 +1,6 @@
 (export (version D)
   (design
-    (source /home/adam/Projects/m3-avionics/m3radio/gps-preamp/gps-preamp.sch)
+    (source /home/adam/Projects/m3-avionics/m3radio_v1/gps-preamp/gps-preamp.sch)
     (date "Sun 29 May 2016 21:16:40 BST")
     (tool "Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product")
     (sheet (number 1) (name /) (tstamps /)
