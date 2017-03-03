@@ -34,7 +34,8 @@ static const float Tb[7] = {
 static const float Hb[7] = {
     0.0f, 11000.0f, 20000.0f, 32000.0f, 47000.0f, 51000.0f, 71000.0f};
 
-volatile bool m3fc_state_estimation_trust_barometer;
+volatile bool m3fc_state_estimation_trust_barometer = true;
+volatile bool m3fc_state_estimation_dynamic_event_expected = false;
 
 /* Functions to convert pressures to altitudes via the
  * US Standard Atmosphere
@@ -141,8 +142,11 @@ state_estimate_t m3fc_state_estimation_get_state()
     float q, dt;
     state_estimate_t x_out;
 
-    /* TODO Determine best q-value, probably changes during flight */
-    q = 500.0f;
+    if(m3fc_state_estimation_dynamic_event_expected) {
+        q = 2000.0f;
+    } else {
+        q = 500.0f;
+    }
 
     /* Acquire lock */
     chBSemWait(&kalman_bsem);
