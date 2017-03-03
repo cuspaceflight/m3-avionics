@@ -18,6 +18,9 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen) {
     case CAN_MSG_ID_M3PYRO_CONTINUITY:
         m3fc_mission_handle_pyro_continuity(data, datalen);
         break;
+    case CAN_MSG_ID_M3PSU_CHARGER_STATUS:
+        m3fc_mission_handle_psu_charger_status(data, datalen);
+        break;
     case CAN_MSG_ID_M3FC_SET_CFG_PROFILE:
         m3fc_config_handle_set_profile(data, datalen);
         break;
