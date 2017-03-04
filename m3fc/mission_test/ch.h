@@ -9,6 +9,7 @@ extern uint32_t current_time;
 #define ST2MS(x)                    (x/10)
 #define ST2US(x)                    (x*100)
 #define MS2ST(x)                    (x*10)
+#define ST2S(x)                     (x/10000)
 #define chVTGetSystemTime()         (current_time)
 #define chVTGetSystemTimeX()        (current_time)
 #define chVTTimeElapsedSinceX(x)    (current_time - x)

@@ -13,6 +13,7 @@
 volatile bool m3fc_mission_pyro_armed = false;
 volatile bool m3fc_mission_pyro_supply_good = false;
 volatile bool m3fc_mission_pyro_cont_ok = false;
+volatile bool m3fc_mission_psu_battleshort = false;
 
 static volatile bool m3fc_mission_armed = false;
 
@@ -26,6 +27,7 @@ typedef enum {
 struct instance_data {
     systime_t t_launch;
     systime_t t_apogee;
+    systime_t t_land;
     float h_ground;
     state_estimate_t state;
 };
@@ -40,6 +42,8 @@ static void m3fc_mission_fire_drogue_pyro(void);
 static void m3fc_mission_fire_main_pyro(void);
 static void m3fc_mission_fire_dart_pyro(void);
 static void m3fc_mission_check_pyros(void);
+static void m3fc_mission_check_psu(void);
+static void m3fc_mission_enable_low_power_mode(void);
 
 state_t run_state(state_t cur_state, instance_data_t *data);
 static state_t do_state_init(instance_data_t *data);
@@ -68,15 +72,19 @@ state_t run_state(state_t cur_state, instance_data_t *data) {
 
 static state_t do_state_init(instance_data_t *data) {
     m3fc_state_estimation_trust_barometer = true;
+    m3fc_state_estimation_dynamic_event_expected = false;
+
     data->h_ground = data->state.h;
 
     m3fc_mission_check_pyros();
+    m3fc_mission_check_psu();
 
     if(m3fc_mission_pyro_supply_good) {
         m3fc_ui_beeper_mode = M3FC_UI_BEEPER_FAST;
     } else {
         m3fc_ui_beeper_mode = M3FC_UI_BEEPER_SLOW;
     }
+        m3fc_ui_beeper_mode = M3FC_UI_BEEPER_OFF;
 
     /* We only proceed to the pad state after receiving an ARM command. */
     if(!m3fc_mission_armed) {
@@ -90,8 +98,10 @@ static state_t do_state_init(instance_data_t *data) {
 static state_t do_state_pad(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
+    m3fc_state_estimation_dynamic_event_expected = true;
 
     m3fc_mission_check_pyros();
+    m3fc_mission_check_psu();
 
     m3fc_ui_beeper_mode = M3FC_UI_BEEPER_OFF;
 
@@ -113,6 +123,8 @@ static state_t do_state_pad(instance_data_t *data)
 static state_t do_state_ignition(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = false;
+    m3fc_state_estimation_dynamic_event_expected = false;
+
     data->t_launch = chVTGetSystemTimeX();
 
     /* After ignition we proceed immediately to powered ascent
@@ -125,6 +137,7 @@ static state_t do_state_ignition(instance_data_t *data)
 static state_t do_state_powered_ascent(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = false;
+    m3fc_state_estimation_dynamic_event_expected = false;
 
     /* We detect burnout as either negative acceleration (we've started to slow
      * down due to drag) or configured timeout since launch.
@@ -144,6 +157,7 @@ static state_t do_state_burnout(instance_data_t *data)
 {
     (void)data;
     m3fc_state_estimation_trust_barometer = true;
+    m3fc_state_estimation_dynamic_event_expected = false;
 
     if(data->state.h > (data->h_ground + 20.0f) &&
        ST2MS(chVTTimeElapsedSinceX(data->t_launch)) > 200)
@@ -164,6 +178,7 @@ static state_t do_state_burnout(instance_data_t *data)
 static state_t do_state_free_ascent(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
+    m3fc_state_estimation_dynamic_event_expected = false;
 
     /* We detect apogee as negative velocity (we've started to fall) or the
      * configured timeout since launch.
@@ -183,6 +198,8 @@ static state_t do_state_free_ascent(instance_data_t *data)
 static state_t do_state_apogee(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
+    m3fc_state_estimation_dynamic_event_expected = false;
+
     data->t_apogee = chVTGetSystemTimeX();
     m3fc_mission_fire_drogue_pyro();
 
@@ -193,6 +210,7 @@ static state_t do_state_apogee(instance_data_t *data)
 static state_t do_state_drogue_descent(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
+    m3fc_state_estimation_dynamic_event_expected = false;
 
     /* We detect time to release the main based either on the configured
      * altitude above ground or on the configured timeout since apogee.
@@ -212,6 +230,7 @@ static state_t do_state_release_main(instance_data_t *data)
 {
     (void)data;
     m3fc_state_estimation_trust_barometer = true;
+    m3fc_state_estimation_dynamic_event_expected = false;
     m3fc_mission_fire_main_pyro();
 
     /* Start beeping again once we're coming down under parachute,
@@ -220,6 +239,7 @@ static state_t do_state_release_main(instance_data_t *data)
      * not important after main parachute is released.
      */
     m3fc_ui_beeper_mode = M3FC_UI_BEEPER_FAST;
+    m3fc_ui_beeper_mode = M3FC_UI_BEEPER_OFF;
 
     /* At main release we fire the main and move directly into main descent. */
     return STATE_MAIN_DESCENT;
@@ -228,6 +248,7 @@ static state_t do_state_release_main(instance_data_t *data)
 static state_t do_state_main_descent(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
+    m3fc_state_estimation_dynamic_event_expected = false;
 
     /* Landing is detected based on the configured timeout (probably) or on the
      * velocity being suitably small.
@@ -245,20 +266,29 @@ static state_t do_state_main_descent(instance_data_t *data)
 
 static state_t do_state_land(instance_data_t *data)
 {
-    (void)data;
     m3fc_state_estimation_trust_barometer = true;
+    m3fc_state_estimation_dynamic_event_expected = false;
 
-    /* In the future we might want to trigger events on landing, like disabling
-     * cameras and entering power saving modes, but for now we just proceed
-     * directly to landed.
+    /* Record landing time so we can later trigger events some time after
+     * landing.
      */
+    data->t_land = chVTGetSystemTimeX();
+
     return STATE_LANDED;
 }
 
 static state_t do_state_landed(instance_data_t *data)
 {
     m3fc_state_estimation_trust_barometer = true;
-    (void)data;
+    m3fc_state_estimation_dynamic_event_expected = false;
+
+    /* After 5 minutes landed, tell the PSU to enter low-power mode, shutting
+     * off m3fc and most other boards and cameras, only occasionally waking up
+     * the radio to transmit our position.
+     */
+    if (ST2S(chVTTimeElapsedSinceX(data->t_land)) > 300 ){
+        m3fc_mission_enable_low_power_mode();
+    }
 
     /* Not much to do now. */
     return STATE_LANDED;
@@ -308,6 +338,11 @@ static void m3fc_mission_fire_dart_pyro() {
     m3fc_mission_fire_pyro(M3FC_CONFIG_PYRO_USAGE_DART);
 }
 
+static void m3fc_mission_enable_low_power_mode() {
+    uint8_t data[1] = {1};
+    m3can_send(CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER, false, data, 1);
+}
+
 static THD_WORKING_AREA(mission_thread_wa, 512);
 static THD_FUNCTION(mission_thread, arg) {
     (void)arg;
@@ -317,6 +352,7 @@ static THD_FUNCTION(mission_thread, arg) {
     instance_data_t data;
     data.t_launch = 0;
     data.t_apogee = 0;
+    data.t_land = 0;
     data.h_ground = 0.0f;
 
     while(true) {
@@ -348,11 +384,33 @@ static THD_FUNCTION(mission_thread, arg) {
 void m3fc_mission_init() {
     m3status_set_init(M3FC_COMPONENT_MC);
     m3status_set_init(M3FC_COMPONENT_MC_PYRO);
+    m3status_set_init(M3FC_COMPONENT_MC_PSU);
     chThdCreateStatic(mission_thread_wa, sizeof(mission_thread_wa),
                       NORMALPRIO+5, mission_thread, NULL);
 }
 
-static void m3fc_mission_check_pyros(void) {
+void m3fc_mission_handle_psu_charger_status(uint8_t* data, uint8_t datalen) {
+    if(datalen <= 2) {
+        m3status_set_error(M3FC_COMPONENT_MC_PSU, M3FC_ERROR_CAN_BAD_COMMAND);
+        return;
+    }
+
+    if(data[2] & (1<<5)) {
+        m3fc_mission_psu_battleshort = true;
+    } else {
+        m3fc_mission_psu_battleshort = false;
+    }
+}
+
+static void m3fc_mission_check_psu() {
+    if(!m3fc_mission_psu_battleshort) {
+        m3status_set_error(M3FC_COMPONENT_MC_PSU, M3FC_ERROR_MC_PSU_BATTLESHORT);
+    } else {
+        m3status_set_ok(M3FC_COMPONENT_MC_PSU);
+    }
+}
+
+static void m3fc_mission_check_pyros() {
     if(!m3fc_mission_pyro_supply_good) {
         m3status_set_error(M3FC_COMPONENT_MC_PYRO, M3FC_ERROR_MC_PYRO_SUPPLY);
     } else if(!m3fc_mission_pyro_armed) {

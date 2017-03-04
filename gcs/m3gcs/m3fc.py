@@ -43,7 +43,8 @@ components = {
     7: "Barometer",
     8: "Flash",
     9: "Pyros",
-    10: "Mock"
+    10: "Mock",
+    11: "PSU",
 }
 
 component_errors = {
@@ -54,7 +55,7 @@ component_errors = {
     13: "Accel Axis", 14: "SE Pressure", 15: "Pyro Arm", 4: "Pyro Continuity",
     5: "Pyro Supply", 16: "Mock Enabled", 17: "CAN Bad Command",
     18: "Config Check Accel Cal", 19: "Config Check Radio Freq",
-    20: "Config Check CRC",
+    20: "Config Check CRC", 21: "Battleshort",
 }
 
 compstatus = {k: {"state": 0, "reason": "Unknown"} for k in components}
