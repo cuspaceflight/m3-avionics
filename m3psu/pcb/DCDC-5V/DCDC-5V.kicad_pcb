@@ -3,7 +3,7 @@
   (general
     (links 280)
     (no_connects 0)
-    (area 80.149999 80.149999 119.850001 119.850001)
+    (area 79.9575 79.4575 120.1775 121.1875)
     (thickness 1.6)
     (drawings 5)
     (tracks 867)
@@ -14,11 +14,11 @@
 
   (page A4)
   (title_block
-    (title "M3PSU - DC/DC Converter Board 2")
-    (date 2016-06-28)
+    (title "M3PSU - DC/DC 5V Board")
+    (date 2017-02-28)
     (rev 1)
     (company "CU Spaceflight")
-    (comment 1 "Drawn by: Levin Tan, Jamie Wood")
+    (comment 1 "Drawn by: Jamie Wood")
   )
 
   (layers
