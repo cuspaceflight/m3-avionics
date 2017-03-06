@@ -30,7 +30,7 @@ LIBS:contrib
 LIBS:valves
 LIBS:agg-kicad
 LIBS:TOAD-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
@@ -2129,17 +2129,6 @@ External Connectors:
 Text Notes 15350 3550 0    69   Italic 0
 Incomplete
 $Comp
-L CONN_01x02 J5
-U 1 1 588652F7
-P 10800 4200
-F 0 "J5" H 10750 4300 50  0000 L CNN
-F 1 "BATT" H 10750 4000 50  0000 L CNN
-F 2 "agg:S02B-PASK-2" H 10800 4200 50  0001 C CNN
-F 3 "" H 10800 4200 50  0001 C CNN
-	1    10800 4200
-	1    0    0    -1  
-$EndComp
-$Comp
 L GND #PWR87
 U 1 1 58865D60
 P 11500 4350
@@ -3804,4 +3793,19 @@ Wire Wire Line
 Wire Wire Line
 	9850 8300 9850 8400
 Connection ~ 8500 8350
+$Comp
+L CONN_01x03 J?
+U 1 1 58B64BD0
+P 10800 4200
+F 0 "J?" H 10800 4300 50  0000 C CNN
+F 1 "BATT" H 10800 3900 50  0000 C CNN
+F 2 "" H 400 -400 50  0001 C CNN
+F 3 "" H 400 -400 50  0001 C CNN
+	1    10800 4200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10900 4400 11050 4400
+Text Label 11050 4400 0    60   ~ 0
+B_TEMP
 $EndSCHEMATC
