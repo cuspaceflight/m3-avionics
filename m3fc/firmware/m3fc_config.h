@@ -60,6 +60,19 @@ struct m3fc_config {
         /* Pyro channel type, 0=NONE 1=EMATCH 2=TALON 3=METRON */
         uint8_t pyro_1_type, pyro_2_type, pyro_3_type, pyro_4_type;
     } __attribute__((packed)) pyros;
+
+    struct {
+        /* Accelerometer scale in g/LSB and 0g offset in LSB for each axis */
+        float x_scale, x_offset;
+        float y_scale, y_offset;
+        float z_scale, z_offset;
+    } __attribute__((packed)) accel_cal;
+
+    /* Radio carrier frequency in Hz */
+    uint32_t radio_freq;
+
+    /* CRC32 of the whole config */
+    uint32_t crc;
 } __attribute__((packed)) __attribute__((aligned(4)));
 
 extern struct m3fc_config m3fc_config;
@@ -72,6 +85,11 @@ bool m3fc_config_check(void);
 /* CAN packet handling routines */
 void m3fc_config_handle_set_profile(uint8_t* data, uint8_t datalen);
 void m3fc_config_handle_set_pyros(uint8_t* data, uint8_t datalen);
+void m3fc_config_handle_set_accel_cal_x(uint8_t* data, uint8_t datalen);
+void m3fc_config_handle_set_accel_cal_y(uint8_t* data, uint8_t datalen);
+void m3fc_config_handle_set_accel_cal_z(uint8_t* data, uint8_t datalen);
+void m3fc_config_handle_set_radio_freq(uint8_t* data, uint8_t datalen);
+void m3fc_config_handle_set_crc(uint8_t* data, uint8_t datalen);
 void m3fc_config_handle_load(uint8_t* data, uint8_t datalen);
 void m3fc_config_handle_save(uint8_t* data, uint8_t datalen);
 

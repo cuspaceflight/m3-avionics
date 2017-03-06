@@ -22,46 +22,15 @@
 #include "config.h"
 #include "powermanager.h"
 #include "chargecontroller.h"
+#include "lowpower.h"
 #include "smbus.h"
 #include "m3can.h"
 
 static THD_WORKING_AREA(waPowerManager, 1024);
 static THD_WORKING_AREA(waChargeController, 1024);
-static THD_WORKING_AREA(waChargerWatchdog, 512);
 //static THD_WORKING_AREA(waPowerAlert, 512);
-
-void enable_internal_power(void){
-  palClearLine(LINE_EN_INT_PWR);
-}
-void disable_internal_power(void){
-  palSetLine(LINE_EN_INT_PWR);
-}
-
-void enable_external_power(void){
-  palClearLine(LINE_EN_EXT_PWR);
-}
-void disable_external_power(void){
-  palSetLine(LINE_EN_EXT_PWR);
-}
-
-void enable_pyros(void){
-  palSetLine(LINE_EN_PYRO);
-}
-void disable_pyros(void){
-  palClearLine(LINE_EN_PYRO);
-}
-
-void switch_to_external_power(void){
-  enable_external_power();
-  chThdSleepMilliseconds(5);
-  ChargeController_enable_charger();
-}
-
-void switch_to_internal_power(void){
-  ChargeController_disable_charger();
-  chThdSleepMilliseconds(5);
-  disable_external_power();
-}
+static THD_WORKING_AREA(waPowerCheck, 512);
+static THD_WORKING_AREA(waAwakeTime, 128);
 
 void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   (void)rtr;
@@ -69,9 +38,9 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
   if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_PYROS){
     if(datalen >= 1){
       if(data[0] == 0){
-        disable_pyros();
+        PowerManager_disable_pyros();
       }else if(data[0] == 1){
-        enable_pyros();
+        PowerManager_enable_pyros();
       }
     }
   }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL){
@@ -79,7 +48,11 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
       if(data[0] == 1){
         PowerManager_switch_on(data[1]);
       }else if(data[0] == 0){
-        PowerManager_switch_off(data[1]);
+        if(data[1] == 4 || data[1] == 7 || data[1] == 11){
+          // Ignore turning off the radio or CAN!
+        }else{
+          PowerManager_switch_off(data[1]);
+        }
       }
     }
   }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_CHARGER){
@@ -90,93 +63,91 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
         ChargeController_disable_charger();
       }
     }
-  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_BALANCE){
+  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER){
     if(datalen >= 1){
       if(data[0] == 1){
-        ChargeController_enable_balancing();
+        lowpower_enable();
       }else if(data[0] == 0){
-        ChargeController_disable_balancing();
+        lowpower_disable();
       }
     }
-  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_INTEXT){
+  }else if(msg_id == CAN_MSG_ID_M3PSU_TOGGLE_BATTLESHORT){
     if(datalen >= 1){
       if(data[0] == 1){
-        switch_to_external_power();
+        ChargeController_enable_battleshort();
       }else if(data[0] == 0){
-        switch_to_internal_power();
+        ChargeController_disable_battleshort();
       }
     }
   }
 }
 
-static THD_WORKING_AREA(waStatusReporter, 256);
-THD_FUNCTION(power_status_reporter, arg){
+THD_FUNCTION(awake_time_thread, arg){
   (void)arg;
-  chRegSetThreadName("Int/Ext Power Reporter");
+  while(true){
+    systime_t time_now = chVTGetSystemTime();
+    uint16_t secs_awake = (uint16_t)(time_now / CH_CFG_ST_FREQUENCY);
+    uint8_t data[3];
+    data[0] = secs_awake & 0xff;
+    data[1] = (secs_awake >> 8) & 0xff;
 
-  uint8_t can_data[1];
+    data[2] = lowpower_get_mode_flag() ? 1 : 0;
 
-  while(TRUE){
-    can_data[0] = (palReadLine(LINE_EN_INT_PWR) << 1) |
-                  (palReadLine(LINE_EN_EXT_PWR));
-    m3can_send(CAN_MSG_ID_M3PSU_INTEXT_STATUS, false, can_data, 1);
-    chThdSleepMilliseconds(1000);
-  }
-}
+    m3can_send(CAN_MSG_ID_M3PSU_AWAKE_TIME, false, data, sizeof(data));
 
-static THD_WORKING_AREA(waPowerCheck, 512);
-THD_FUNCTION(power_check, arg){
-  (void)arg;
-  chRegSetThreadName("Power Switch Checker");
-
-  while(TRUE){
-    bool switch_open = palReadLine(LINE_PWR);
-    if(switch_open){
-      //int i;
-      // Shutdown all channels and go to sleep
-      /*for(i = 0; i < 12; i++){
-          PowerManager_switch_off(i);
-      }*/
-      //disable_external_power();
-      //disable_internal_power();
-      //disable_pyros();
-      //TODO enter deep sleep
-    }
-    else
-    {
-      //enable_pyros(); // For debugging, light the LED on the debug board
-    }
-    chThdSleepMilliseconds(1000);
+    chThdSleepMilliseconds(500);
   }
 }
 
 int main(void) {
+  /* Allow debug access during sleep mode */
+  DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
 
   halInit();
+
+  lowpower_early_wakeup_check();
+
   chSysInit();
 
-  enable_pyros();
+  lowpower_init();
 
-  enable_internal_power();
+  PowerManager_enable_system_power();
 
-  smbus_init();
+  smbus_init(&I2C_DRIVER);
 
   uint16_t listen_to_ids[] = { CAN_ID_M3PSU };
   m3can_init(CAN_ID_M3PSU, listen_to_ids, 1);
 
-  // Stay powered on all the time
-  //palSetLine(LINE_NSHUTDOWN);
-
   PowerManager_init();
   ChargeController_init();
 
-  switch_to_external_power();
+  if(lowpower_get_mode_flag()){ // We're supposed to be in low-power mode
+    PowerManager_switch_on(4); // Start the Radio
+    PowerManager_switch_on(7);
+    PowerManager_switch_on(11); // Start the CAN transceivers
 
-  chThdCreateStatic(waStatusReporter, sizeof(waStatusReporter), NORMALPRIO,
-                    power_status_reporter, NULL);
+    lowpower_start_awake_timer();
+  }else{
+    lowpower_set_mode_flag(0); // Make sure the flag is cleared
+
+    PowerManager_enable_pyros();
+
+    //PowerManager_switch_on(0); // Start the IMU
+    PowerManager_switch_on(3);
+    PowerManager_switch_on(2); // Start the Flight Computer
+    PowerManager_switch_on(4); // Start the Radio
+    PowerManager_switch_on(7);
+    PowerManager_switch_on(6); // Start the Pyro
+    PowerManager_switch_on(10); // Start the DL including base board for USB
+    PowerManager_switch_on(11); // Start the CAN transceivers
+  }
+
+  ChargeController_enable_charger();
+
+  chThdCreateStatic(waAwakeTime, sizeof(waAwakeTime), NORMALPRIO, awake_time_thread, NULL);
 
   chThdCreateStatic(waPowerCheck, sizeof(waPowerCheck), NORMALPRIO,
-                    power_check, NULL);
+                    lowpower_power_check_thread, NULL);
   //chThdCreateStatic(waPowerAlert, sizeof(waPowerAlert), NORMALPRIO + 3,
   //                  powermanager_alert, NULL);
   chThdCreateStatic(waPowerManager, sizeof(waPowerManager), NORMALPRIO + 4,
@@ -184,8 +155,6 @@ int main(void) {
 
   chThdCreateStatic(waChargeController, sizeof(waChargeController), NORMALPRIO + 2,
                     chargecontroller_thread, NULL);
-  chThdCreateStatic(waChargerWatchdog, sizeof(waChargerWatchdog), NORMALPRIO + 1,
-                    charger_watchdog_thread, NULL);
 
   // All done, go to sleep forever
   chThdSleep(TIME_INFINITE);

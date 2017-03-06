@@ -376,7 +376,7 @@ ltc3887_fault_status ltc3887_get_fault_status(LTC3887 *ltc, uint8_t page) {
     fault_status.other_memory_or_logic_fault = 0;
   }
 
-  if ((status_word && LTC3887_STATUS_OTHER) != 0) {
+  if ((status_word & LTC3887_STATUS_OTHER) != 0) {
     fault_status.other = 1;
   }
   else {
@@ -432,7 +432,7 @@ uint8_t ltc3887_check_comms(LTC3887 *ltc) {
     return ERR_COMMS;
   }
   // We expect 0x470X, where X can be changed by manufacturer
-  if (rxdat[0] == 0x47 && ((rxdat[1] && 0xf0) == 0x00)) {
+  if (rxdat[0] == 0x47 && ((rxdat[1] & 0xf0) == 0x00)) {
     return ERR_OK;
   }
   return ERR_COMMS;

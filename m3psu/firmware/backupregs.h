@@ -1,0 +1,19 @@
+/*
+ * Backup Registers
+ * Cambridge University Spaceflight
+ */
+
+#ifndef BACKUPREGS_H_
+#define BACKUPREGS_H_
+
+#include "ch.h"
+
+#define LOWPOWER_MODE_FLAG_ADDR (BKPSRAM_BASE + 0)
+#define LOWPOWER_ENTRY_FLAG_ADDR (BKPSRAM_BASE + 4)
+#define LOWPOWER_WAKEUP_COUNT_ADDR (BKPSRAM_BASE + 8)
+
+#define CHARGECONTROLLER_BATTLESHORT_FLAG_ADDR (BKPSRAM_BASE + 12)
+
+#define BACKUPREG_FLAG_MAGIC (0x12345678)
+
+#endif /* BACKUPREGS_H_ */
