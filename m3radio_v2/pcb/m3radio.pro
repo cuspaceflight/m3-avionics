@@ -1,4 +1,4 @@
-update=21/06/2016 15:22:54
+update=07/03/2017 21:22:54
 version=1
 last_client=kicad
 [pcbnew]
@@ -30,3 +30,7 @@ version=1
 LibDir=../../agg-kicad;../../agg-kicad/lib/ic/microcontroller;../../agg-kicad
 [eeschema/libraries]
 LibName1=agg-kicad
+LibName2=TOAD
+LibName3=m3pwramp-cache
+LibName4=TOAD-cache
+LibName5=max-8q
