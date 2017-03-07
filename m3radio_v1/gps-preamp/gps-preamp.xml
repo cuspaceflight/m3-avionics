@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/adam/Projects/m3-avionics/m3radio_v1/gps-preamp/gps-preamp.sch</source>
+    <date>Sun 29 May 2016 22:06:04 BST</date>
+    <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>GPS Filter &amp; Preamp</title>
+        <company>CU Spaceflight</company>
+        <rev>1</rev>
+        <date>2016-05-29</date>
+        <source>gps-preamp.sch</source>
+        <comment number="1" value="Drawn By: Adam Greig"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="IC1">
+      <value>BGM1043N7</value>
+      <footprint>agg:DFN-6-EP-BGM</footprint>
+      <datasheet>http://www.infineon.com/dgdl/bgm1043n7.pdf?folderId=db3a30431f848401011fcbf2ab4c04c4&amp;fileId=db3a304336415dec01365e4465443c72</datasheet>
+      <fields>
+        <field name="DigiKey">BGM1043N7E6327XUSA1CT-ND</field>
+      </fields>
+      <libsource lib="agg-kicad" part="BGM1043N7"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B34E4</tstamp>
+    </comp>
+    <comp ref="P2">
+      <value>ANTENNA</value>
+      <footprint>agg:SMA-PTH</footprint>
+      <fields>
+        <field name="Farnell">2135970</field>
+      </fields>
+      <libsource lib="agg-kicad" part="COAX"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B353C</tstamp>
+    </comp>
+    <comp ref="P3">
+      <value>RECEIVER</value>
+      <footprint>agg:SMA-EDGE</footprint>
+      <fields>
+        <field name="Farnell">1608592</field>
+      </fields>
+      <libsource lib="agg-kicad" part="COAX"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B3587</tstamp>
+    </comp>
+    <comp ref="L1">
+      <value>9n1</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1762616</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B367B</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">8819742</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B3698</tstamp>
+    </comp>
+    <comp ref="L2">
+      <value>8n2</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1762614</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B38A5</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>1µ</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1845729</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B3A04</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>200p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1865434</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B3B1F</tstamp>
+    </comp>
+    <comp ref="L5">
+      <value>92n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2470339</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B3BD7</tstamp>
+    </comp>
+    <comp ref="L4">
+      <value>92n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2470339</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B3CD1</tstamp>
+    </comp>
+    <comp ref="L3">
+      <value>92n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2470339</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>574B4340</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="agg-kicad" part="BGM1043N7">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">BGM1043N7</field>
+        <field name="Footprint">agg:DFN-6-EP-BGM</field>
+        <field name="Datasheet">http://www.infineon.com/dgdl/bgm1043n7.pdf?folderId=db3a30431f848401011fcbf2ab4c04c4&amp;fileId=db3a304336415dec01365e4465443c72</field>
+        <field name="DigiKey">BGM1043N7E6327XUSA1CT-ND</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VCC" type="power_in"/>
+        <pin num="2" name="PON" type="input"/>
+        <pin num="3" name="RFIN" type="input"/>
+        <pin num="4" name="SO" type="output"/>
+        <pin num="5" name="AI" type="input"/>
+        <pin num="6" name="RFOUT" type="output"/>
+        <pin num="EP" name="GND" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="C">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="COAX">
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">COAX</field>
+        <field name="Footprint">agg-unchecked:SMA-142-0701-801</field>
+        <field name="Farnell">1608592</field>
+      </fields>
+      <pins>
+        <pin num="1" name="RF" type="BiDi"/>
+        <pin num="2" name="GND" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="L">
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">L</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="agg-kicad">
+      <uri>/home/adam/Projects/m3-avionics/agg-kicad/agg-kicad.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="GND">
+      <node ref="C2" pin="2"/>
+      <node ref="L1" pin="2"/>
+      <node ref="P3" pin="2"/>
+      <node ref="P2" pin="2"/>
+      <node ref="IC1" pin="EP"/>
+      <node ref="C1" pin="2"/>
+    </net>
+    <net code="2" name="Net-(C3-Pad1)">
+      <node ref="IC1" pin="6"/>
+      <node ref="C3" pin="1"/>
+    </net>
+    <net code="3" name="Net-(L4-Pad2)">
+      <node ref="L4" pin="2"/>
+      <node ref="L5" pin="1"/>
+    </net>
+    <net code="4" name="Net-(L3-Pad2)">
+      <node ref="L4" pin="1"/>
+      <node ref="L3" pin="2"/>
+    </net>
+    <net code="5" name="Net-(IC1-Pad5)">
+      <node ref="L2" pin="2"/>
+      <node ref="IC1" pin="5"/>
+    </net>
+    <net code="6" name="Net-(C3-Pad2)">
+      <node ref="C3" pin="2"/>
+      <node ref="L5" pin="2"/>
+      <node ref="P3" pin="1"/>
+    </net>
+    <net code="7" name="Net-(C1-Pad1)">
+      <node ref="IC1" pin="1"/>
+      <node ref="C1" pin="1"/>
+      <node ref="L3" pin="1"/>
+      <node ref="IC1" pin="2"/>
+      <node ref="C2" pin="1"/>
+    </net>
+    <net code="8" name="Net-(IC1-Pad4)">
+      <node ref="L2" pin="1"/>
+      <node ref="IC1" pin="4"/>
+    </net>
+    <net code="9" name="Net-(IC1-Pad3)">
+      <node ref="P2" pin="1"/>
+      <node ref="IC1" pin="3"/>
+      <node ref="L1" pin="1"/>
+    </net>
+  </nets>
+</export>

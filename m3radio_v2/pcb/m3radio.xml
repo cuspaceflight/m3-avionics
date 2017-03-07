@@ -1,0 +1,1520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/adam/Projects/m3-avionics/m3radio_v2/pcb/m3radio.sch</source>
+    <date>Sun 26 Jun 2016 13:44:28 BST</date>
+    <tool>Eeschema 4.1.0-alpha+201605071002+6776~44~ubuntu14.04.1-product</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>M3 Radio board schematic</title>
+        <company>Cambridge University Spaceflight</company>
+        <rev>Rev 1</rev>
+        <date>8 feb 2016</date>
+        <source>m3radio.sch</source>
+        <comment number="1" value="G Brooks"/>
+        <comment number="2" value="A Raghu"/>
+        <comment number="3" value="E R Eide"/>
+        <comment number="4" value="Drawn by:"/>
+      </title_block>
+    </sheet>
+    <sheet number="2" name="/Radio/" tstamps="/56B202F6/">
+      <title_block>
+        <title>M3 Radio Transceiver Schematic</title>
+        <company>Cambridge University Spaceflight</company>
+        <rev>Rev 1</rev>
+        <date>8 feb 2016</date>
+        <source>radio_schematics.sch</source>
+        <comment number="1" value="G Brooks"/>
+        <comment number="2" value="A Raghu"/>
+        <comment number="3" value="E R Eide"/>
+        <comment number="4" value="Drawn by:"/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="IC103">
+      <value>MAX-7Q</value>
+      <footprint>M3radio:MAX-7Q</footprint>
+      <fields>
+        <field name="HabSupplies">MAX-7Q</field>
+      </fields>
+      <libsource lib="agg-kicad" part="MAX-7Q"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56B20C81</tstamp>
+    </comp>
+    <comp ref="C113">
+      <value>100nF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56B2157D</tstamp>
+    </comp>
+    <comp ref="J103">
+      <value>EAST TOP</value>
+      <footprint>agg:TFML-110-02-L-D</footprint>
+      <fields>
+        <field name="Samtec">TFML-110-02-L-D</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5637A</tstamp>
+    </comp>
+    <comp ref="IC102">
+      <value>MCP2562</value>
+      <footprint>agg:DFN-8-EP-MICROCHIP</footprint>
+      <datasheet>http://ww1.microchip.com/downloads/en/DeviceDoc/20005167C.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2448755</field>
+      </fields>
+      <libsource lib="agg-kicad" part="MCP2562"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5639A</tstamp>
+    </comp>
+    <comp ref="J104">
+      <value>EAST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <fields>
+        <field name="Samtec">SFML-110-02-L-D-LC</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5641A</tstamp>
+    </comp>
+    <comp ref="C112">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5646F</tstamp>
+    </comp>
+    <comp ref="R102">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">9239111</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C564D7</tstamp>
+    </comp>
+    <comp ref="R103">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">9239111</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C564E7</tstamp>
+    </comp>
+    <comp ref="D102">
+      <value>GRN</value>
+      <footprint>agg:0603-LED</footprint>
+      <fields>
+        <field name="Farnell">2290363</field>
+      </fields>
+      <libsource lib="agg-kicad" part="LED"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C564F7</tstamp>
+    </comp>
+    <comp ref="J101">
+      <value>WEST TOP</value>
+      <footprint>agg:TFML-110-02-L-D</footprint>
+      <fields>
+        <field name="Samtec">TFML-110-02-L-D</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C56524</tstamp>
+    </comp>
+    <comp ref="J102">
+      <value>WEST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <fields>
+        <field name="Samtec">SFML-110-02-L-D-LC</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5652C</tstamp>
+    </comp>
+    <comp ref="IC101">
+      <value>STM32F405RxTx</value>
+      <footprint>agg:LQFP-64</footprint>
+      <datasheet>http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00037051.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2064363</field>
+      </fields>
+      <libsource lib="agg-kicad" part="STM32F405RxTx"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5653C</tstamp>
+    </comp>
+    <comp ref="C111">
+      <value>2µ2</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2362088</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C56551</tstamp>
+    </comp>
+    <comp ref="C110">
+      <value>2µ2</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2362088</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C56559</tstamp>
+    </comp>
+    <comp ref="Y101">
+      <value>26M</value>
+      <footprint>agg:XTAL-20x16</footprint>
+      <fields>
+        <field name="Farnell">2506952</field>
+      </fields>
+      <libsource lib="agg-kicad" part="SMD_XTAL"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5656D</tstamp>
+    </comp>
+    <comp ref="C102">
+      <value>10p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496790</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C56575</tstamp>
+    </comp>
+    <comp ref="C101">
+      <value>10p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496790</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5657D</tstamp>
+    </comp>
+    <comp ref="C107">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5665D</tstamp>
+    </comp>
+    <comp ref="C106">
+      <value>1µ</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496814</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C56665</tstamp>
+    </comp>
+    <comp ref="C103">
+      <value>4µ7</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2426952</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5666D</tstamp>
+    </comp>
+    <comp ref="C104">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C56675</tstamp>
+    </comp>
+    <comp ref="C108">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5667D</tstamp>
+    </comp>
+    <comp ref="C105">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C56685</tstamp>
+    </comp>
+    <comp ref="C109">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C5668D</tstamp>
+    </comp>
+    <comp ref="R101">
+      <value>100</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">9239111</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C566CE</tstamp>
+    </comp>
+    <comp ref="D101">
+      <value>RED</value>
+      <footprint>agg:0603-LED</footprint>
+      <fields>
+        <field name="Farnell">2314404</field>
+      </fields>
+      <libsource lib="agg-kicad" part="LED"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C564CF</tstamp>
+    </comp>
+    <comp ref="P101">
+      <value>COAX</value>
+      <footprint>M3radio:U.FL-R-SMT-1</footprint>
+      <datasheet>http://www.farnell.com/datasheets/1947917.pdf</datasheet>
+      <fields>
+        <field name="Farnell">3908021</field>
+      </fields>
+      <libsource lib="agg-kicad" part="COAX"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56C710D6</tstamp>
+    </comp>
+    <comp ref="L1">
+      <value>91nH</value>
+      <footprint>agg:0402-L</footprint>
+      <fields>
+        <field name="Farnell">2470339</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5769F0D4</tstamp>
+    </comp>
+    <comp ref="IC1">
+      <value>NCP380</value>
+      <footprint>agg:DFN-6-EP-ONSEMI</footprint>
+      <datasheet>http://www.onsemi.com/pub_link/Collateral/NCP380-D.PDF</datasheet>
+      <fields>
+        <field name="Farnell">2464412</field>
+      </fields>
+      <libsource lib="agg-kicad" part="NCP380"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>57698750</tstamp>
+    </comp>
+    <comp ref="L2">
+      <value>91nH</value>
+      <footprint>agg:0402-L</footprint>
+      <fields>
+        <field name="Farnell">2470339</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5769CCBE</tstamp>
+    </comp>
+    <comp ref="L3">
+      <value>91nH</value>
+      <footprint>agg:0402-L</footprint>
+      <fields>
+        <field name="Farnell">2470339</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5769CD52</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>100nF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5769FA14</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>10</value>
+      <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">1738878</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5769F81C</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>110k</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2502502</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>576A742B</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>1uF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496814</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>576A78E8</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>1uF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496814</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>576A7B2F</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>576B6469</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>NCP4620</value>
+      <footprint>agg:SC-70-5</footprint>
+      <datasheet>http://www.farnell.com/datasheets/1878393.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2464259</field>
+      </fields>
+      <libsource lib="m3radio-cache" part="NCP4620"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>576F086E</tstamp>
+    </comp>
+    <comp ref="C7">
+      <value>1uF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496814</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>576F3062</tstamp>
+    </comp>
+    <comp ref="C8">
+      <value>1uF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496814</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>576F3ED0</tstamp>
+    </comp>
+    <comp ref="IC201">
+      <value>Si4460</value>
+      <footprint>agg:QFN-20-EP-SI</footprint>
+      <fields>
+        <field name="Farnell">2462635</field>
+      </fields>
+      <libsource lib="agg-kicad" part="Si4460"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B20B0C</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>1u</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496814</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B2293A</tstamp>
+    </comp>
+    <comp ref="C202">
+      <value>100n</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B2297D</tstamp>
+    </comp>
+    <comp ref="C201">
+      <value>100p</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496792</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B229B8</tstamp>
+    </comp>
+    <comp ref="L201">
+      <value>120nH</value>
+      <footprint>agg:0603-L</footprint>
+      <datasheet>http://www.farnell.com/datasheets/1327494.pdf</datasheet>
+      <fields>
+        <field name="Farnell">1865812</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B2381E</tstamp>
+    </comp>
+    <comp ref="C204">
+      <value>36pF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1865427</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B23AF0</tstamp>
+    </comp>
+    <comp ref="L204">
+      <value>6.8nH</value>
+      <footprint>agg:0603-L</footprint>
+      <datasheet>http://www.farnell.com/datasheets/321058.pdf</datasheet>
+      <fields>
+        <field name="Farnell">1515395</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B23B31</tstamp>
+    </comp>
+    <comp ref="C205">
+      <value>1.2pF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2218843</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B23C5B</tstamp>
+    </comp>
+    <comp ref="L202">
+      <value>18nH</value>
+      <footprint>agg:0603-L</footprint>
+      <fields>
+        <field name="Farnell">2424720</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B23D7C</tstamp>
+    </comp>
+    <comp ref="L203">
+      <value>22nH</value>
+      <footprint>agg:0603-L</footprint>
+      <datasheet>http://www.farnell.com/datasheets/360119.pdf</datasheet>
+      <fields>
+        <field name="Farnell">1711755</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B23E07</tstamp>
+    </comp>
+    <comp ref="C203">
+      <value>3pF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2210752</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B23FB7</tstamp>
+    </comp>
+    <comp ref="C206">
+      <value>3.3pF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2434610</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B241BD</tstamp>
+    </comp>
+    <comp ref="C207">
+      <value>10pF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496790</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B24202</tstamp>
+    </comp>
+    <comp ref="C208">
+      <value>4.7pF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2434644</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B24243</tstamp>
+    </comp>
+    <comp ref="L206">
+      <value>6.8nH</value>
+      <footprint>agg:0603-L</footprint>
+      <datasheet>http://www.farnell.com/datasheets/321058.pdf</datasheet>
+      <fields>
+        <field name="Farnell">1515395</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B242F1</tstamp>
+    </comp>
+    <comp ref="L205">
+      <value>6.8nH</value>
+      <footprint>agg:0603-L</footprint>
+      <datasheet>http://www.farnell.com/datasheets/321058.pdf</datasheet>
+      <fields>
+        <field name="Farnell">1515395</field>
+      </fields>
+      <libsource lib="agg-kicad" part="L"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B24388</tstamp>
+    </comp>
+    <comp ref="P201">
+      <value>COAX</value>
+      <footprint>M3radio:U.FL-R-SMT-1</footprint>
+      <datasheet>http://www.farnell.com/datasheets/1947917.pdf</datasheet>
+      <fields>
+        <field name="Farnell">3908021</field>
+      </fields>
+      <libsource lib="agg-kicad" part="COAX"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56B306EE</tstamp>
+    </comp>
+    <comp ref="Y201">
+      <value>TCXO</value>
+      <footprint>agg:TG-5006CG</footprint>
+      <datasheet>http://www.farnell.com/datasheets/1804153.pdf</datasheet>
+      <fields>
+        <field name="Farnell">2405785</field>
+      </fields>
+      <libsource lib="agg-kicad" part="TCXO"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>56C5879C</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>576B5135</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>10nF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1414575</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>576B8629</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>100pF</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496792</field>
+      </fields>
+      <libsource lib="agg-kicad" part="C"/>
+      <sheetpath names="/Radio/" tstamps="/56B202F6/"/>
+      <tstamp>576B8ADE</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="agg-kicad" part="C">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="COAX">
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">COAX</field>
+        <field name="Footprint">agg-unchecked:SMA-142-0701-801</field>
+        <field name="Farnell">1608592</field>
+      </fields>
+      <pins>
+        <pin num="1" name="RF" type="BiDi"/>
+        <pin num="2" name="GND" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="CONN_02x10">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_02x10</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+        <pin num="7" name="7" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+        <pin num="9" name="9" type="passive"/>
+        <pin num="10" name="10" type="passive"/>
+        <pin num="11" name="11" type="passive"/>
+        <pin num="12" name="12" type="passive"/>
+        <pin num="13" name="13" type="passive"/>
+        <pin num="14" name="14" type="passive"/>
+        <pin num="15" name="15" type="passive"/>
+        <pin num="16" name="16" type="passive"/>
+        <pin num="17" name="17" type="passive"/>
+        <pin num="18" name="18" type="passive"/>
+        <pin num="19" name="19" type="passive"/>
+        <pin num="20" name="20" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="ESD_DIODE">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">ESD_DIODE</field>
+        <field name="Footprint">agg:0402</field>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="L">
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">L</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="LED">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">LED</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="MAX-7Q">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">MAX-7Q</field>
+        <field name="Footprint">agg-unchecked:MAX-7Q</field>
+        <field name="HabSupplies">MAX-7Q</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="power_in"/>
+        <pin num="2" name="TX" type="output"/>
+        <pin num="3" name="RX" type="input"/>
+        <pin num="4" name="TIMEPULSE" type="output"/>
+        <pin num="5" name="EXTINT" type="input"/>
+        <pin num="6" name="V_BCKP" type="power_in"/>
+        <pin num="7" name="VCC_IO" type="power_in"/>
+        <pin num="8" name="VCC" type="power_in"/>
+        <pin num="9" name="RESET_N" type="input"/>
+        <pin num="10" name="GND" type="power_in"/>
+        <pin num="11" name="RF_IN" type="input"/>
+        <pin num="12" name="GND" type="power_in"/>
+        <pin num="13" name="ANT_ON" type="output"/>
+        <pin num="14" name="VCC_RF" type="power_in"/>
+        <pin num="15" name="NC" type="NotConnected"/>
+        <pin num="16" name="SDA" type="BiDi"/>
+        <pin num="17" name="SCL" type="BiDi"/>
+        <pin num="18" name="NC" type="NotConnected"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="MCP2562">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">MCP2562</field>
+        <field name="Footprint">agg:DFN-8-EP-MICROCHIP</field>
+        <field name="Datasheet">http://ww1.microchip.com/downloads/en/DeviceDoc/20005167C.pdf</field>
+        <field name="RS">824-3135</field>
+      </fields>
+      <pins>
+        <pin num="1" name="TXD" type="input"/>
+        <pin num="2" name="VSS" type="power_in"/>
+        <pin num="3" name="VDD" type="power_in"/>
+        <pin num="4" name="RXD" type="output"/>
+        <pin num="5" name="VIO" type="power_in"/>
+        <pin num="6" name="CANL" type="3state"/>
+        <pin num="7" name="CANH" type="3state"/>
+        <pin num="8" name="STBY" type="input"/>
+        <pin num="EP" name="VSS" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="NCP380">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">NCP380</field>
+        <field name="Footprint">agg:DFN-6-EP-ONSEMI</field>
+        <field name="Datasheet">http://www.onsemi.com/pub_link/Collateral/NCP380-D.PDF</field>
+        <field name="Farnell">2464412</field>
+      </fields>
+      <pins>
+        <pin num="1" name="OUT" type="power_out"/>
+        <pin num="2" name="ILIM" type="input"/>
+        <pin num="3" name="~FLAG" type="openCol"/>
+        <pin num="4" name="~EN" type="input"/>
+        <pin num="5" name="GND" type="power_in"/>
+        <pin num="6" name="IN" type="power_in"/>
+        <pin num="EP" name="GND" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="m3radio-cache" part="NCP4620">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">NCP4620</field>
+        <field name="Footprint">agg:SC-70-5</field>
+        <field name="Datasheet">http://www.farnell.com/datasheets/1878393.pdf</field>
+        <field name="Farnell">2464259</field>
+        <field name="Fieldname">Value</field>
+        <field name="Digikey">Value</field>
+      </fields>
+      <pins>
+        <pin num="1" name="CE" type="input"/>
+        <pin num="2" name="NC" type="NotConnected"/>
+        <pin num="3" name="GND" type="power_in"/>
+        <pin num="4" name="VOUT" type="power_out"/>
+        <pin num="5" name="VIN" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="R">
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="SMD_XTAL">
+      <fields>
+        <field name="Reference">Y</field>
+        <field name="Value">SMD_XTAL</field>
+        <field name="Footprint">agg:XTAL-20x16</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="STM32F405RxTx">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">STM32F405RxTx</field>
+        <field name="Footprint">agg:LQFP-64</field>
+        <field name="Datasheet">http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00037051.pdf</field>
+        <field name="Farnell">2064363</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VBAT" type="power_in"/>
+        <pin num="2" name="PC13" type="BiDi"/>
+        <pin num="3" name="PC14" type="BiDi"/>
+        <pin num="4" name="PC15" type="BiDi"/>
+        <pin num="5" name="PH0" type="BiDi"/>
+        <pin num="6" name="PH1" type="BiDi"/>
+        <pin num="7" name="NRST" type="input"/>
+        <pin num="8" name="PC0" type="BiDi"/>
+        <pin num="9" name="PC1" type="BiDi"/>
+        <pin num="10" name="PC2" type="BiDi"/>
+        <pin num="11" name="PC3" type="BiDi"/>
+        <pin num="12" name="VSSA" type="power_in"/>
+        <pin num="13" name="VDDA" type="power_in"/>
+        <pin num="14" name="PA0" type="BiDi"/>
+        <pin num="15" name="PA1" type="BiDi"/>
+        <pin num="16" name="PA2" type="BiDi"/>
+        <pin num="17" name="PA3" type="BiDi"/>
+        <pin num="18" name="VSS" type="power_in"/>
+        <pin num="19" name="VDD" type="power_in"/>
+        <pin num="20" name="PA4" type="BiDi"/>
+        <pin num="21" name="PA5" type="BiDi"/>
+        <pin num="22" name="PA6" type="BiDi"/>
+        <pin num="23" name="PA7" type="BiDi"/>
+        <pin num="24" name="PC4" type="BiDi"/>
+        <pin num="25" name="PC5" type="BiDi"/>
+        <pin num="26" name="PB0" type="BiDi"/>
+        <pin num="27" name="PB1" type="BiDi"/>
+        <pin num="28" name="PB2" type="BiDi"/>
+        <pin num="29" name="PB10" type="BiDi"/>
+        <pin num="30" name="PB11" type="BiDi"/>
+        <pin num="31" name="VCAP_1" type="passive"/>
+        <pin num="32" name="VDD" type="power_in"/>
+        <pin num="33" name="PB12" type="BiDi"/>
+        <pin num="34" name="PB13" type="BiDi"/>
+        <pin num="35" name="PB14" type="BiDi"/>
+        <pin num="36" name="PB15" type="BiDi"/>
+        <pin num="37" name="PC6" type="BiDi"/>
+        <pin num="38" name="PC7" type="BiDi"/>
+        <pin num="39" name="PC8" type="BiDi"/>
+        <pin num="40" name="PC9" type="BiDi"/>
+        <pin num="41" name="PA8" type="BiDi"/>
+        <pin num="42" name="PA9" type="BiDi"/>
+        <pin num="43" name="PA10" type="BiDi"/>
+        <pin num="44" name="PA11" type="BiDi"/>
+        <pin num="45" name="PA12" type="BiDi"/>
+        <pin num="46" name="PA13" type="BiDi"/>
+        <pin num="47" name="VCAP_2" type="passive"/>
+        <pin num="48" name="VDD" type="power_in"/>
+        <pin num="49" name="PA14" type="BiDi"/>
+        <pin num="50" name="PA15" type="BiDi"/>
+        <pin num="51" name="PC10" type="BiDi"/>
+        <pin num="52" name="PC11" type="BiDi"/>
+        <pin num="53" name="PC12" type="BiDi"/>
+        <pin num="54" name="PD2" type="BiDi"/>
+        <pin num="55" name="PB3" type="BiDi"/>
+        <pin num="56" name="PB4" type="BiDi"/>
+        <pin num="57" name="PB5" type="BiDi"/>
+        <pin num="58" name="PB6" type="BiDi"/>
+        <pin num="59" name="PB7" type="BiDi"/>
+        <pin num="60" name="BOOT0" type="input"/>
+        <pin num="61" name="PB8" type="BiDi"/>
+        <pin num="62" name="PB9" type="BiDi"/>
+        <pin num="63" name="VSS" type="power_in"/>
+        <pin num="64" name="VDD" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="Si4460">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">Si4460</field>
+        <field name="Footprint">agg:QFN-20-EP-SI</field>
+        <field name="Farnell">2462635</field>
+      </fields>
+      <pins>
+        <pin num="1" name="SDN" type="input"/>
+        <pin num="2" name="RXp" type="input"/>
+        <pin num="3" name="RXn" type="input"/>
+        <pin num="4" name="TX" type="output"/>
+        <pin num="5" name="NC" type="NotConnected"/>
+        <pin num="6" name="VDD" type="power_in"/>
+        <pin num="7" name="TXRAMP" type="output"/>
+        <pin num="8" name="VDD" type="power_in"/>
+        <pin num="9" name="GPIO0" type="BiDi"/>
+        <pin num="10" name="GPIO1" type="BiDi"/>
+        <pin num="11" name="nIRQ" type="output"/>
+        <pin num="12" name="SCLK" type="input"/>
+        <pin num="13" name="SDO" type="output"/>
+        <pin num="14" name="SDI" type="input"/>
+        <pin num="15" name="nSEL" type="input"/>
+        <pin num="16" name="XOUT" type="output"/>
+        <pin num="17" name="XIN" type="input"/>
+        <pin num="18" name="GND" type="power_in"/>
+        <pin num="19" name="GPIO2" type="BiDi"/>
+        <pin num="20" name="GPIO3" type="BiDi"/>
+        <pin num="EP" name="GND" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="TCXO">
+      <fields>
+        <field name="Reference">Y</field>
+        <field name="Value">TCXO</field>
+        <field name="Farnell">2405785</field>
+      </fields>
+      <pins>
+        <pin num="1" name="NC" type="NotConnected"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="OUT" type="output"/>
+        <pin num="4" name="VCC" type="power_in"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="agg-kicad">
+      <uri>/home/adam/Projects/m3-avionics/agg-kicad/agg-kicad.lib</uri>
+    </library>
+    <library logical="m3radio-cache">
+      <uri>/home/adam/Projects/m3-avionics/m3radio_v2/pcb/m3radio-cache.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="/JTMS">
+      <node ref="J102" pin="4"/>
+      <node ref="J101" pin="4"/>
+      <node ref="IC101" pin="46"/>
+    </net>
+    <net code="2" name="/PYRO_SO">
+      <node ref="J104" pin="3"/>
+      <node ref="J104" pin="4"/>
+      <node ref="J103" pin="4"/>
+      <node ref="J103" pin="3"/>
+    </net>
+    <net code="3" name="/PYRO_SI">
+      <node ref="J103" pin="6"/>
+      <node ref="J103" pin="5"/>
+      <node ref="J104" pin="5"/>
+      <node ref="J104" pin="6"/>
+    </net>
+    <net code="4" name="/5v_RADIO">
+      <node ref="J103" pin="7"/>
+      <node ref="J104" pin="7"/>
+    </net>
+    <net code="5" name="/5v_IMU">
+      <node ref="J104" pin="9"/>
+      <node ref="J103" pin="9"/>
+    </net>
+    <net code="6" name="/5v_AUX1">
+      <node ref="J103" pin="11"/>
+      <node ref="J104" pin="11"/>
+    </net>
+    <net code="7" name="/5v_AUX2">
+      <node ref="J103" pin="13"/>
+      <node ref="J104" pin="13"/>
+    </net>
+    <net code="8" name="/5v_CAM">
+      <node ref="J104" pin="15"/>
+      <node ref="J103" pin="15"/>
+    </net>
+    <net code="9" name="/CHARGE">
+      <node ref="J104" pin="17"/>
+      <node ref="J104" pin="18"/>
+      <node ref="J103" pin="17"/>
+      <node ref="J103" pin="18"/>
+    </net>
+    <net code="10" name="/JTCK">
+      <node ref="J101" pin="6"/>
+      <node ref="J102" pin="6"/>
+      <node ref="IC101" pin="49"/>
+    </net>
+    <net code="11" name="/PYRO3">
+      <node ref="J103" pin="12"/>
+      <node ref="J104" pin="12"/>
+    </net>
+    <net code="12" name="/PYRO2">
+      <node ref="J103" pin="10"/>
+      <node ref="J104" pin="10"/>
+    </net>
+    <net code="13" name="/PYRO1">
+      <node ref="J104" pin="8"/>
+      <node ref="J103" pin="8"/>
+    </net>
+    <net code="14" name="/JTDO">
+      <node ref="J101" pin="8"/>
+      <node ref="IC101" pin="55"/>
+    </net>
+    <net code="15" name="/3v3_IMU">
+      <node ref="J101" pin="3"/>
+      <node ref="J102" pin="3"/>
+    </net>
+    <net code="16" name="/3v3_FC">
+      <node ref="J101" pin="7"/>
+      <node ref="J102" pin="7"/>
+    </net>
+    <net code="17" name="/3v3_PYRO">
+      <node ref="J101" pin="9"/>
+      <node ref="J102" pin="9"/>
+    </net>
+    <net code="18" name="/CAN+">
+      <node ref="IC102" pin="7"/>
+      <node ref="J101" pin="18"/>
+      <node ref="J102" pin="18"/>
+    </net>
+    <net code="19" name="/CAN-">
+      <node ref="J102" pin="16"/>
+      <node ref="J101" pin="16"/>
+      <node ref="IC102" pin="6"/>
+    </net>
+    <net code="20" name="/5v_CAN">
+      <node ref="J102" pin="14"/>
+      <node ref="C112" pin="1"/>
+      <node ref="J101" pin="14"/>
+      <node ref="IC102" pin="3"/>
+    </net>
+    <net code="21" name="/JTDR">
+      <node ref="J102" pin="10"/>
+      <node ref="J101" pin="10"/>
+    </net>
+    <net code="22" name="/JTDI">
+      <node ref="IC101" pin="50"/>
+      <node ref="J102" pin="8"/>
+    </net>
+    <net code="23" name="Net-(D101-Pad2)">
+      <node ref="R102" pin="2"/>
+      <node ref="D101" pin="2"/>
+    </net>
+    <net code="24" name="Net-(D102-Pad2)">
+      <node ref="D102" pin="2"/>
+      <node ref="R103" pin="2"/>
+    </net>
+    <net code="25" name="/3v3_DL">
+      <node ref="J101" pin="11"/>
+      <node ref="J102" pin="11"/>
+    </net>
+    <net code="26" name="/3v3_AUX1">
+      <node ref="J101" pin="13"/>
+      <node ref="J102" pin="13"/>
+    </net>
+    <net code="27" name="/3v3_AUX2">
+      <node ref="J101" pin="15"/>
+      <node ref="J102" pin="15"/>
+    </net>
+    <net code="28" name="/PYRO4">
+      <node ref="J103" pin="14"/>
+      <node ref="J104" pin="14"/>
+    </net>
+    <net code="29" name="/PWR">
+      <node ref="J103" pin="16"/>
+      <node ref="J104" pin="16"/>
+    </net>
+    <net code="30" name="/GPS_RESET_N">
+      <node ref="IC101" pin="16"/>
+      <node ref="IC103" pin="9"/>
+    </net>
+    <net code="31" name="Net-(IC101-Pad26)">
+      <node ref="IC101" pin="26"/>
+    </net>
+    <net code="32" name="Net-(IC101-Pad20)">
+      <node ref="IC101" pin="20"/>
+    </net>
+    <net code="33" name="Net-(IC101-Pad24)">
+      <node ref="IC101" pin="24"/>
+    </net>
+    <net code="34" name="Net-(IC101-Pad23)">
+      <node ref="IC101" pin="23"/>
+    </net>
+    <net code="35" name="Net-(D1-Pad1)">
+      <node ref="P101" pin="1"/>
+      <node ref="D1" pin="1"/>
+      <node ref="IC103" pin="11"/>
+      <node ref="L1" pin="2"/>
+    </net>
+    <net code="36" name="Net-(L1-Pad1)">
+      <node ref="L2" pin="2"/>
+      <node ref="L1" pin="1"/>
+    </net>
+    <net code="37" name="Net-(IC101-Pad25)">
+      <node ref="IC101" pin="25"/>
+    </net>
+    <net code="38" name="/LED_RED">
+      <node ref="IC101" pin="21"/>
+      <node ref="R102" pin="1"/>
+    </net>
+    <net code="39" name="Net-(IC101-Pad41)">
+      <node ref="IC101" pin="41"/>
+    </net>
+    <net code="40" name="Net-(IC101-Pad42)">
+      <node ref="IC101" pin="42"/>
+    </net>
+    <net code="41" name="Net-(IC101-Pad43)">
+      <node ref="IC101" pin="43"/>
+    </net>
+    <net code="42" name="Net-(IC101-Pad54)">
+      <node ref="IC101" pin="54"/>
+    </net>
+    <net code="43" name="Net-(IC101-Pad2)">
+      <node ref="IC101" pin="2"/>
+    </net>
+    <net code="44" name="Net-(IC101-Pad53)">
+      <node ref="IC101" pin="53"/>
+    </net>
+    <net code="45" name="Net-(IC101-Pad52)">
+      <node ref="IC101" pin="52"/>
+    </net>
+    <net code="46" name="Net-(IC101-Pad51)">
+      <node ref="IC101" pin="51"/>
+    </net>
+    <net code="47" name="Net-(IC101-Pad40)">
+      <node ref="IC101" pin="40"/>
+    </net>
+    <net code="48" name="Net-(IC101-Pad39)">
+      <node ref="IC101" pin="39"/>
+    </net>
+    <net code="49" name="Net-(IC101-Pad11)">
+      <node ref="IC101" pin="11"/>
+    </net>
+    <net code="50" name="Net-(IC101-Pad10)">
+      <node ref="IC101" pin="10"/>
+    </net>
+    <net code="51" name="Net-(IC101-Pad9)">
+      <node ref="IC101" pin="9"/>
+    </net>
+    <net code="52" name="Net-(IC101-Pad8)">
+      <node ref="IC101" pin="8"/>
+    </net>
+    <net code="53" name="Net-(IC101-Pad29)">
+      <node ref="IC101" pin="29"/>
+    </net>
+    <net code="54" name="Net-(IC101-Pad59)">
+      <node ref="IC101" pin="59"/>
+    </net>
+    <net code="55" name="Net-(IC101-Pad58)">
+      <node ref="IC101" pin="58"/>
+    </net>
+    <net code="56" name="Net-(IC101-Pad57)">
+      <node ref="IC101" pin="57"/>
+    </net>
+    <net code="57" name="Net-(IC101-Pad28)">
+      <node ref="IC101" pin="28"/>
+    </net>
+    <net code="58" name="Net-(IC101-Pad27)">
+      <node ref="IC101" pin="27"/>
+    </net>
+    <net code="59" name="Net-(L2-Pad1)">
+      <node ref="L3" pin="2"/>
+      <node ref="L2" pin="1"/>
+    </net>
+    <net code="60" name="/GPS_TX">
+      <node ref="IC101" pin="15"/>
+      <node ref="IC103" pin="2"/>
+    </net>
+    <net code="61" name="/GPS_RX">
+      <node ref="IC103" pin="3"/>
+      <node ref="IC101" pin="14"/>
+    </net>
+    <net code="62" name="/RSVD1">
+      <node ref="J102" pin="12"/>
+      <node ref="J101" pin="12"/>
+    </net>
+    <net code="63" name="/Radio_SCLK">
+      <node ref="IC201" pin="12"/>
+      <node ref="IC101" pin="34"/>
+    </net>
+    <net code="64" name="/Radio_SDI">
+      <node ref="IC201" pin="14"/>
+      <node ref="IC101" pin="36"/>
+    </net>
+    <net code="65" name="/Radio_SDO">
+      <node ref="IC101" pin="35"/>
+      <node ref="IC201" pin="13"/>
+    </net>
+    <net code="66" name="/Radio_nIRQ">
+      <node ref="IC101" pin="44"/>
+      <node ref="IC201" pin="11"/>
+    </net>
+    <net code="67" name="/Radio_nSEL">
+      <node ref="IC201" pin="15"/>
+      <node ref="IC101" pin="33"/>
+    </net>
+    <net code="68" name="GND">
+      <node ref="IC201" pin="18"/>
+      <node ref="C202" pin="2"/>
+      <node ref="IC103" pin="1"/>
+      <node ref="C201" pin="2"/>
+      <node ref="Y201" pin="2"/>
+      <node ref="J102" pin="19"/>
+      <node ref="C206" pin="2"/>
+      <node ref="C203" pin="2"/>
+      <node ref="J104" pin="20"/>
+      <node ref="C4" pin="2"/>
+      <node ref="C207" pin="2"/>
+      <node ref="C113" pin="2"/>
+      <node ref="P201" pin="2"/>
+      <node ref="C208" pin="2"/>
+      <node ref="C103" pin="1"/>
+      <node ref="C107" pin="1"/>
+      <node ref="C105" pin="1"/>
+      <node ref="C108" pin="1"/>
+      <node ref="C104" pin="1"/>
+      <node ref="C106" pin="1"/>
+      <node ref="C109" pin="1"/>
+      <node ref="IC101" pin="63"/>
+      <node ref="J101" pin="20"/>
+      <node ref="IC101" pin="12"/>
+      <node ref="C6" pin="2"/>
+      <node ref="C102" pin="2"/>
+      <node ref="J101" pin="2"/>
+      <node ref="J101" pin="1"/>
+      <node ref="C101" pin="1"/>
+      <node ref="D2" pin="2"/>
+      <node ref="Y101" pin="4"/>
+      <node ref="Y101" pin="2"/>
+      <node ref="C110" pin="2"/>
+      <node ref="C111" pin="2"/>
+      <node ref="IC102" pin="EP"/>
+      <node ref="IC102" pin="8"/>
+      <node ref="J102" pin="2"/>
+      <node ref="IC102" pin="2"/>
+      <node ref="J103" pin="19"/>
+      <node ref="IC103" pin="12"/>
+      <node ref="IC201" pin="EP"/>
+      <node ref="J102" pin="20"/>
+      <node ref="IC101" pin="18"/>
+      <node ref="C112" pin="2"/>
+      <node ref="J103" pin="20"/>
+      <node ref="D102" pin="1"/>
+      <node ref="IC103" pin="10"/>
+      <node ref="J103" pin="2"/>
+      <node ref="J103" pin="1"/>
+      <node ref="IC101" pin="60"/>
+      <node ref="J101" pin="19"/>
+      <node ref="J102" pin="1"/>
+      <node ref="R2" pin="1"/>
+      <node ref="C1" pin="1"/>
+      <node ref="C8" pin="1"/>
+      <node ref="C7" pin="1"/>
+      <node ref="D1" pin="2"/>
+      <node ref="C2" pin="2"/>
+      <node ref="C3" pin="1"/>
+      <node ref="J104" pin="19"/>
+      <node ref="J104" pin="1"/>
+      <node ref="IC1" pin="5"/>
+      <node ref="U1" pin="3"/>
+      <node ref="IC1" pin="EP"/>
+      <node ref="J104" pin="2"/>
+      <node ref="D101" pin="1"/>
+      <node ref="P101" pin="2"/>
+    </net>
+    <net code="69" name="Net-(IC101-Pad7)">
+      <node ref="IC101" pin="7"/>
+    </net>
+    <net code="70" name="/Radio_GPIO1">
+      <node ref="IC201" pin="10"/>
+      <node ref="IC101" pin="45"/>
+    </net>
+    <net code="71" name="/Radio_SDN">
+      <node ref="IC101" pin="37"/>
+      <node ref="IC201" pin="1"/>
+    </net>
+    <net code="72" name="Net-(C1-Pad2)">
+      <node ref="C1" pin="2"/>
+      <node ref="L3" pin="1"/>
+      <node ref="R1" pin="2"/>
+    </net>
+    <net code="73" name="Net-(C3-Pad2)">
+      <node ref="C3" pin="2"/>
+      <node ref="R1" pin="1"/>
+      <node ref="IC1" pin="1"/>
+    </net>
+    <net code="74" name="/ANT_~EN">
+      <node ref="IC101" pin="4"/>
+      <node ref="IC1" pin="4"/>
+    </net>
+    <net code="75" name="Net-(IC1-Pad2)">
+      <node ref="IC1" pin="2"/>
+      <node ref="R2" pin="2"/>
+    </net>
+    <net code="76" name="3v3">
+      <node ref="C103" pin="2"/>
+      <node ref="IC101" pin="64"/>
+      <node ref="C107" pin="2"/>
+      <node ref="C106" pin="2"/>
+      <node ref="C104" pin="2"/>
+      <node ref="IC101" pin="1"/>
+      <node ref="C108" pin="2"/>
+      <node ref="C105" pin="2"/>
+      <node ref="IC101" pin="48"/>
+      <node ref="IC101" pin="19"/>
+      <node ref="IC101" pin="32"/>
+      <node ref="IC101" pin="13"/>
+      <node ref="J102" pin="5"/>
+      <node ref="J101" pin="5"/>
+      <node ref="C202" pin="1"/>
+      <node ref="C201" pin="1"/>
+      <node ref="U1" pin="5"/>
+      <node ref="IC201" pin="8"/>
+      <node ref="L201" pin="1"/>
+      <node ref="C7" pin="2"/>
+      <node ref="IC201" pin="6"/>
+      <node ref="IC103" pin="8"/>
+      <node ref="IC103" pin="7"/>
+      <node ref="U1" pin="1"/>
+      <node ref="IC103" pin="6"/>
+      <node ref="C113" pin="1"/>
+      <node ref="C109" pin="2"/>
+      <node ref="IC102" pin="5"/>
+      <node ref="C6" pin="1"/>
+    </net>
+    <net code="77" name="Net-(IC101-Pad30)">
+      <node ref="IC101" pin="30"/>
+    </net>
+    <net code="78" name="Net-(IC101-Pad38)">
+      <node ref="IC101" pin="38"/>
+    </net>
+    <net code="79" name="/ANT_~FLAG">
+      <node ref="IC1" pin="3"/>
+      <node ref="IC101" pin="3"/>
+    </net>
+    <net code="80" name="Net-(IC101-Pad17)">
+      <node ref="IC101" pin="17"/>
+    </net>
+    <net code="81" name="Net-(C2-Pad1)">
+      <node ref="IC1" pin="6"/>
+      <node ref="C2" pin="1"/>
+      <node ref="IC103" pin="14"/>
+    </net>
+    <net code="82" name="Net-(U1-Pad2)">
+      <node ref="U1" pin="2"/>
+    </net>
+    <net code="83" name="1v8">
+      <node ref="Y201" pin="4"/>
+      <node ref="C4" pin="1"/>
+      <node ref="U1" pin="4"/>
+      <node ref="C8" pin="2"/>
+    </net>
+    <net code="84" name="Net-(C101-Pad2)">
+      <node ref="IC101" pin="5"/>
+      <node ref="C101" pin="2"/>
+      <node ref="Y101" pin="1"/>
+    </net>
+    <net code="85" name="Net-(C110-Pad1)">
+      <node ref="IC101" pin="47"/>
+      <node ref="C110" pin="1"/>
+    </net>
+    <net code="86" name="/RSVD2">
+      <node ref="J101" pin="17"/>
+      <node ref="J102" pin="17"/>
+    </net>
+    <net code="87" name="Net-(C111-Pad1)">
+      <node ref="IC101" pin="31"/>
+      <node ref="C111" pin="1"/>
+    </net>
+    <net code="88" name="/LED_GRN">
+      <node ref="R103" pin="1"/>
+      <node ref="IC101" pin="22"/>
+    </net>
+    <net code="89" name="Net-(C102-Pad1)">
+      <node ref="Y101" pin="3"/>
+      <node ref="R101" pin="1"/>
+      <node ref="C102" pin="1"/>
+    </net>
+    <net code="90" name="/CAN_RXD">
+      <node ref="IC101" pin="61"/>
+      <node ref="IC102" pin="4"/>
+    </net>
+    <net code="91" name="Net-(IC101-Pad6)">
+      <node ref="IC101" pin="6"/>
+      <node ref="R101" pin="2"/>
+    </net>
+    <net code="92" name="/CAN_TXD">
+      <node ref="IC102" pin="1"/>
+      <node ref="IC101" pin="62"/>
+    </net>
+    <net code="93" name="Net-(IC103-Pad13)">
+      <node ref="IC103" pin="13"/>
+    </net>
+    <net code="94" name="Net-(IC103-Pad16)">
+      <node ref="IC103" pin="16"/>
+    </net>
+    <net code="95" name="Net-(IC103-Pad17)">
+      <node ref="IC103" pin="17"/>
+    </net>
+    <net code="96" name="Net-(IC103-Pad4)">
+      <node ref="IC103" pin="4"/>
+    </net>
+    <net code="97" name="Net-(IC103-Pad18)">
+      <node ref="IC103" pin="18"/>
+    </net>
+    <net code="98" name="Net-(IC103-Pad5)">
+      <node ref="IC103" pin="5"/>
+    </net>
+    <net code="99" name="Net-(IC103-Pad15)">
+      <node ref="IC103" pin="15"/>
+    </net>
+    <net code="100" name="Net-(IC101-Pad56)">
+      <node ref="IC101" pin="56"/>
+    </net>
+    <net code="101" name="Net-(C204-Pad2)">
+      <node ref="L204" pin="1"/>
+      <node ref="C204" pin="2"/>
+    </net>
+    <net code="102" name="Net-(C205-Pad2)">
+      <node ref="L204" pin="2"/>
+      <node ref="C205" pin="2"/>
+      <node ref="C206" pin="1"/>
+      <node ref="L203" pin="2"/>
+      <node ref="L205" pin="1"/>
+    </net>
+    <net code="103" name="Net-(C207-Pad1)">
+      <node ref="L205" pin="2"/>
+      <node ref="L206" pin="1"/>
+      <node ref="C207" pin="1"/>
+    </net>
+    <net code="104" name="/Radio/RXp">
+      <node ref="IC201" pin="2"/>
+      <node ref="C203" pin="1"/>
+      <node ref="L203" pin="1"/>
+      <node ref="L202" pin="2"/>
+    </net>
+    <net code="105" name="/Radio/RXn">
+      <node ref="L202" pin="1"/>
+      <node ref="C205" pin="1"/>
+      <node ref="IC201" pin="3"/>
+    </net>
+    <net code="106" name="/Radio/TX_pin">
+      <node ref="C204" pin="1"/>
+      <node ref="L201" pin="2"/>
+      <node ref="IC201" pin="4"/>
+    </net>
+    <net code="107" name="Net-(C5-Pad1)">
+      <node ref="C5" pin="1"/>
+      <node ref="IC201" pin="17"/>
+    </net>
+    <net code="108" name="Net-(C5-Pad2)">
+      <node ref="Y201" pin="3"/>
+      <node ref="C5" pin="2"/>
+    </net>
+    <net code="109" name="Net-(C208-Pad1)">
+      <node ref="D2" pin="1"/>
+      <node ref="C208" pin="1"/>
+      <node ref="P201" pin="1"/>
+      <node ref="L206" pin="2"/>
+    </net>
+    <net code="110" name="Net-(Y201-Pad1)">
+      <node ref="Y201" pin="1"/>
+    </net>
+    <net code="111" name="Net-(IC201-Pad16)">
+      <node ref="IC201" pin="16"/>
+    </net>
+    <net code="112" name="Net-(IC201-Pad20)">
+      <node ref="IC201" pin="20"/>
+    </net>
+    <net code="113" name="Net-(IC201-Pad5)">
+      <node ref="IC201" pin="5"/>
+    </net>
+    <net code="114" name="Net-(IC201-Pad7)">
+      <node ref="IC201" pin="7"/>
+    </net>
+    <net code="115" name="Net-(IC201-Pad9)">
+      <node ref="IC201" pin="9"/>
+    </net>
+    <net code="116" name="Net-(IC201-Pad19)">
+      <node ref="IC201" pin="19"/>
+    </net>
+  </nets>
+</export>
