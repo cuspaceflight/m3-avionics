@@ -1102,7 +1102,7 @@ SPI1_MOSI
 Text Label 1800 2150 2    60   ~ 0
 SPI1_MISO
 Text Label 1800 2350 2    60   ~ 0
-PR_nSS
+PR_CS
 Text Label 1800 2050 2    60   ~ 0
 SPI1_SCK
 Text Label 3250 9600 0    60   ~ 0
@@ -3929,10 +3929,62 @@ NoConn ~ 3500 4000
 NoConn ~ 3500 4100
 NoConn ~ 3500 4200
 NoConn ~ 3500 4300
-Text Label 5000 2750 0    60   ~ 0
+Text Label 5650 2950 2    60   ~ 0
 PR_nSS
-Text Label 5000 2900 0    60   ~ 0
+Text Label 5650 2850 2    60   ~ 0
 GATE
-Text Label 5000 3050 0    60   ~ 0
+Text Label 5650 2750 2    60   ~ 0
 GPS_PPS
+$Comp
+L SN74LVC1G0832 IC?
+U 1 1 58BF7F01
+P 6050 2750
+F 0 "IC?" H 6050 3175 50  0000 C CNN
+F 1 "SN74LVC1G0832" H 6050 3084 50  0000 C CNN
+F 2 "agg:SC-70-6" H -500 -400 50  0001 L CNN
+F 3 "http://www.ti.com/lit/ds/symlink/sn74lvc1g0832.pdf" H -500 -500 50  0001 L CNN
+F 4 "2406965" H -500 -600 50  0001 L CNN "Farnell"
+	1    6050 2750
+	1    0    0    -1  
+$EndComp
+Text Label 6450 2550 0    60   ~ 0
+PR_CS
+Wire Wire Line
+	6350 2750 6450 2750
+Wire Wire Line
+	6450 2750 6450 3000
+$Comp
+L GND #PWR?
+U 1 1 58BFC1CC
+P 6450 3000
+F 0 "#PWR?" H 6450 2750 50  0001 C CNN
+F 1 "GND" H 6450 2850 50  0000 C CNN
+F 2 "" H 6450 3000 50  0000 C CNN
+F 3 "" H 6450 3000 50  0000 C CNN
+	1    6450 3000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5750 2550 5650 2550
+Wire Wire Line
+	5650 2550 5650 2450
+$Comp
+L 3v3 #PWR?
+U 1 1 58BFC938
+P 5650 2450
+F 0 "#PWR?" H 5650 2560 50  0001 L CNN
+F 1 "3v3" H 5650 2540 50  0000 C CNN
+F 2 "" H 5650 2450 60  0000 C CNN
+F 3 "" H 5650 2450 60  0000 C CNN
+	1    5650 2450
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	5650 2750 5750 2750
+Wire Wire Line
+	5650 2850 5750 2850
+Wire Wire Line
+	5650 2950 5750 2950
+Wire Wire Line
+	6350 2550 6450 2550
 $EndSCHEMATC
