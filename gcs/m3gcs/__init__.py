@@ -2,6 +2,7 @@ import glob
 import os.path
 import argparse
 import multiprocessing
+import asyncio
     
 from . import command_processor
 from . import webapp
@@ -35,4 +36,14 @@ def run():
                 args.port = os.path.realpath(port[0])
         command_processor.run(port=args.port, queue=packet_queue)
 
-    webapp.run(queue=packet_queue)
+    webapp.setup_server(queue=packet_queue)
+
+    loop = asyncio.get_event_loop()
+    # Run the main loop
+    try:
+        loop.run_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        webapp.shutdown()
+    loop.close()
