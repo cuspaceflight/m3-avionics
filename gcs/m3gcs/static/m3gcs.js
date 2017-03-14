@@ -10,6 +10,7 @@ var GCS = function(){
     this.handlers = {};
     this.m3psu = new M3PSU(this);
     this.m3dl = new M3DL(this);
+    this.m3fc = new M3FC(this);
 
     // e.g. gcs.struct.Unpack( .. )
     this.struct = new JSPack();
@@ -25,6 +26,7 @@ var GCS = function(){
     this.render = setInterval(function(){
         $("#display-m3psu").html('<pre>' + JSON.stringify(_this.m3psu, null, '\t') + '</pre>');
         $("#display-m3dl").html('<pre>' + JSON.stringify(_this.m3dl, null, '\t') + '</pre>');
+        $("#display-m3fc").html('<pre>' + JSON.stringify(_this.m3fc, null, '\t') + '</pre>');
     }, 100);
 }
 GCS.prototype.registerPacket = function(canID, handler){
