@@ -51,11 +51,11 @@ static mailbox_t log_mailbox;
 /* Statically allocated memory used for the memory pool */
 static volatile char mempool_buffer[LOG_MEMPOOL_ITEMS * sizeof(DLPacket)]
                      __attribute__((aligned(sizeof(stkalign_t))))
-                     __attribute__((section(".MAIN_STACK_RAM")));
+                     __attribute__((section(".ccm")));
 
 /* Statically allocated memory used for the queue in mailbox */
 static volatile msg_t mailbox_buffer[LOG_MEMPOOL_ITEMS]
-                      __attribute__((section(".MAIN_STACK_RAM")));
+                      __attribute__((section(".ccm")));
 
 
 /* Datalogging Thread */
@@ -135,7 +135,7 @@ THD_FUNCTION(datalogging_thread, arg) {
                 
             /* Report Free Space Over CAN */
             if(f_getfree("/", &free_clusters, &fsp) == FR_OK) {    
-                can_send(CAN_MSG_ID_M3DL_FREE_SPACE, FALSE, (uint8_t*)(&free_clusters), 4);
+                m3can_send(CAN_MSG_ID_M3DL_FREE_SPACE, FALSE, (uint8_t*)(&free_clusters), 4);
             }
             
             /* Cache written to SD card succesfully */

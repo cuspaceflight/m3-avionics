@@ -5,13 +5,12 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16 \
-			-fsingle-precision-constant -std=gnu99
+  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16
 endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT =
+  USE_COPT = 
 endif
 
 # C++ specific options here (added to USE_OPT).
@@ -26,12 +25,12 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT =
+  USE_LDOPT = 
 endif
 
 # Enable this if you want link time optimizations (LTO)
 ifeq ($(USE_LTO),)
-  USE_LTO = no
+  USE_LTO = yes
 endif
 
 # If enabled, this option allows to compile the application in THUMB mode.
@@ -44,6 +43,12 @@ ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = no
 endif
 
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = yes
+endif
+
 #
 # Build global options
 ##############################################################################
@@ -51,6 +56,18 @@ endif
 ##############################################################################
 # Architecture or project specific options
 #
+
+# Stack size to be allocated to the Cortex-M process stack. This stack is
+# the stack used by the main() thread.
+ifeq ($(USE_PROCESS_STACKSIZE),)
+  USE_PROCESS_STACKSIZE = 0x400
+endif
+
+# Stack size to the allocated to the Cortex-M main/exceptions stack. This
+# stack is used for processing interrupts and exceptions.
+ifeq ($(USE_EXCEPTIONS_STACKSIZE),)
+  USE_EXCEPTIONS_STACKSIZE = 0x400
+endif
 
 # Enables the use of FPU on Cortex-M4 (no, softfp, hard).
 ifeq ($(USE_FPU),)
@@ -66,35 +83,57 @@ endif
 #
 
 # Define project name here
-PROJECT = m2fc
+PROJECT = m3radio
 
 # Imported source files and paths
-CHIBIOS = ../../ChibiOS
-include board/board.mk
-include $(CHIBIOS)/os/ports/STM32/STM32F4xx/platform.mk
+CHIBIOS = ../../shared/ChibiOS
+# Startup files.
+include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
+# HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
-include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32F4xx/port.mk
-include $(CHIBIOS)/os/kernel/kernel.mk
-include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
-include $(CHIBIOS)/test/test.mk
+include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+# RTOS files (optional).
+include $(CHIBIOS)/os/rt/rt.mk
+include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+# Other files (optional).
+include $(CHIBIOS)/test/rt/test.mk
+
+# Pull in Labrador stuff
+LABRADOR_DIR = ../labrador
+LABRADOR_SRC = $(LABRADOR_DIR)/labrador/src/labrador.c \
+               $(LABRADOR_DIR)/radios/src/si446x.c \
+               $(LABRADOR_DIR)/ldpc/src/ldpc_codes.c \
+               $(LABRADOR_DIR)/ldpc/src/ldpc_encoder.c \
+               $(LABRADOR_DIR)/ldpc/src/ldpc_decoder.c
+LABRADOR_INC = $(LABRADOR_DIR)/labrador/include \
+               $(LABRADOR_DIR)/radios/include \
+               $(LABRADOR_DIR)/ldpc/include
+
+BOARDSRC=board.c
+BOARDINC=.
 
 # Define linker script file here
-LDSCRIPT= STM32F407xG_CCM.ld
+LDSCRIPT= STM32F405xG.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC = $(PORTSRC) \
+CSRC = $(STARTUPSRC) \
        $(KERNSRC) \
-       $(TESTSRC) \
+       $(PORTSRC) \
+       $(OSALSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
-	   $(FATFSSRC) \
-       $(CHIBIOS)/os/various/chprintf.c \
-	   $(CHIBIOS)/os/various/evtimer.c \
-	   $(CHIBIOS)/os/various/shell.c \
-	   $(CHIBIOS)/os/various/syscalls.c \
-	   $(CHIBIOS)/os/various/memstreams.c \
+       $(TESTSRC) \
+       $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+       $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+       ../../shared/m3can/m3can.c \
+       ../../shared/m3status/m3status.c \
+       ublox.c \
+       m3radio_status.c m3radio_can.c m3radio_gps_ant.c \
+       m3radio_router.c m3radio_router_slots.c \
+       m3radio_labrador.c $(LABRADOR_SRC) \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -122,12 +161,12 @@ TCSRC =
 TCPPSRC =
 
 # List ASM source files here
-ASMSRC = $(PORTASM)
+ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
-INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
-         $(HALINC) $(PLATFORMINC) $(BOARDINC) \
-		 $(FATFSINC) \
-         $(CHIBIOS)/os/various
+INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
+         $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
+         $(LABRADOR_INC) $(CHIBIOS)/os/various \
+         $(CHIBIOS)/os/hal/lib/streams
 
 #
 # Project, sources and paths
@@ -150,6 +189,7 @@ LD   = $(TRGT)gcc
 #LD   = $(TRGT)g++
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
+AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 HEX  = $(CP) -O ihex
@@ -162,37 +202,13 @@ AOPT =
 TOPT = -mthumb -DTHUMB
 
 # Define C warning options here
-CWARN = -Wall -Wextra -Wshadow -Wimplicit-function-declaration               \
-		-Wstrict-prototypes -Wredundant-decls -Wundef -Wdouble-promotion
+CWARN = -Wall -Wextra -Werror -Wundef -Wstrict-prototypes
 
 # Define C++ warning options here
-CPPWARN = -Wall -Wextra
+CPPWARN = -Wall -Wextra -Wundef
 
 #
 # Compiler settings
-##############################################################################
-
-##############################################################################
-# Start of default section
-#
-
-# List all default C defines here, like -D_DEBUG=1
-DDEFS =
-
-# List all default ASM defines here, like -D_DEBUG=1
-DADEFS =
-
-# List all default directories to look for include files here
-DINCDIR =
-
-# List the default directory to look for the libraries here
-DLIBDIR =
-
-# List all default libraries here
-DLIBS =
-
-#
-# End of default section
 ##############################################################################
 
 ##############################################################################
@@ -201,13 +217,13 @@ DLIBS =
 
 # List all user C define here, like -D_DEBUG=1
 GITVERSION := $(shell git describe --abbrev=8 --always)
-UDEFS = -DM2FC_FIRMWARE_VERSION=\"$(GITVERSION)\"
+UDEFS = -DFIRMWARE_VERSION=\"$(GITVERSION)\"
 
 # Define ASM defines here
 UADEFS =
 
 # List all user directories here
-UINCDIR = ../../sbp/ ../../m2telem/ ../../m2status/ ../../m2serial/ ../../m2rl/
+UINCDIR = ../../shared/m3can/ ../../shared/m3status/
 
 # List the user directory to look for the libraries here
 ULIBDIR =
@@ -215,34 +231,33 @@ ULIBDIR =
 # List all user libraries here
 ULIBS = -lm
 
-
 #
 # End of user defines
 ##############################################################################
 
-RULESPATH = $(CHIBIOS)/os/ports/GCC/ARMCMx
+RULESPATH = $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC
 include $(RULESPATH)/rules.mk
 
-##############################################################################
-# Black Magic Probe flashing via GDB
+##############################################################################
+# M3Debug flashing via GDB
 #
-flash: build/$(PROJECT).dmp
+BMP_PORT = $(wildcard /dev/serial/by-id/*m3debug*-if00)
+JTAG_SCAN = python3 ../../shared/jtag_scan/jtag_scan.py
+flash: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb --batch \
-		              -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'target extended-remote $(BMP_PORT)' \
 					  -ex 'monitor version' \
-					  -ex 'monitor swdp_scan' \
-					  -ex 'attach 1' \
-					  -ex 'load' build/$(PROJECT).elf
+					  -ex 'monitor jtag_scan' \
+					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
+					  -ex 'load' \
+					  -ex 'compare-sections' build/$(PROJECT).elf
 
-debug: build/$(PROJECT).dmp
-	arm-none-eabi-gdb -ex 'target extended-remote /dev/ttyACM0' \
-		              -ex 'monitor swdp_scan' \
-					  -ex 'attach 1' \
+debug: build/$(PROJECT).elf $(OUTFILES)
+	arm-none-eabi-gdb -ex 'target extended-remote $(BMP_PORT)' \
+		              -ex 'monitor jtag_scan' \
+					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
 					  -ex "file build/$(PROJECT).elf"
+
 #
 # End BMP flashing
 ##############################################################################
-
-size: build/$(PROJECT).elf
-	arm-none-eabi-size -A $<
-	arm-none-eabi-size -B $<

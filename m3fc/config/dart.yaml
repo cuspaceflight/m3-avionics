@@ -1,0 +1,33 @@
+profile:
+  m3fc_position: dart
+  accel_axis: z
+  ignition_accel: 25
+  burnout_timeout: 1.8
+  apogee_timeout: 30
+  main_altitude: 250
+  main_timeout: 60
+  land_timeout: 600
+
+pyros:
+  pyro_1_usage: drogue
+  pyro_1_type: ematch
+  pyro_2_usage: main
+  pyro_2_type: talon
+  pyro_3_usage: unused
+  pyro_3_type: none
+  pyro_4_usage: unused
+  pyro_4_type: none
+
+accel_cal_x:
+  scale: 0.0039
+  offset: 7
+
+accel_cal_y:
+  scale: 0.0039
+  offset: 2
+
+accel_cal_z:
+  scale: 0.003984
+  offset: -23.7
+
+radio_freq: 869500000

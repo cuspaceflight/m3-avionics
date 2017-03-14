@@ -19,7 +19,8 @@ int main(void) {
     halInit();
     chSysInit();
 
-    can_init(CAN_ID_M3PYRO);
+    uint16_t filter_ids[] = { CAN_ID_M3PYRO };
+    m3can_init(CAN_ID_M3PYRO, filter_ids, 1);
 
     palClearLine(LINE_FIRE1);
     palClearLine(LINE_FIRE2);
@@ -38,9 +39,9 @@ int main(void) {
     }
 }
 
-void can_recv(uint16_t msg_id, bool can_rtr, uint8_t *data, uint8_t datalen) {
+void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen) {
     (void)msg_id;
-    (void)can_rtr;
+    (void)rtr;
     (void)data;
     (void)datalen;
 

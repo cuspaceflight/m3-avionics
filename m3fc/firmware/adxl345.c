@@ -108,7 +108,7 @@ static bool adxl345_self_test()
     int16_t accels[3], st_accels[3];
     int32_t accel_sums[3] = {0, 0, 0};
 
-    /* Set 800Hz ODR and disable low powder mode */
+    /* Set 800Hz ODR and disable low power mode */
     adxl345_write_u8(ADXL345_REG_BWRATE, ADXL345_BWRATE_RATE_800HZ);
 
     /* Set +-16G range and full resolution */
@@ -192,7 +192,7 @@ static bool adxl345_check_id()
  */
 static void adxl345_configure()
 {
-    /* Set 800Hz ODR and disable low powder mode */
+    /* Set 800Hz ODR and disable low power mode */
     adxl345_write_u8(ADXL345_REG_BWRATE, ADXL345_BWRATE_RATE_800HZ);
 
     /* Set +-16G range and full resolution */
@@ -211,10 +211,17 @@ static void adxl345_configure()
 }
 
 static void adxl345_accels_to_mss(int16_t accels[3], float faccels[3]) {
-    int i;
-    for(i=0; i<3; i++) {
-        faccels[i] = accels[i] * ((3.9f / 1000.0f) * 9.80665f);
-    }
+    const float g = 9.80665f;
+
+    /* Use configured scale factor and 0g offset to convert
+     * raw accelerometer readings into values in m/s/s.
+     */
+    faccels[0] = ((float)accels[0] - m3fc_config.accel_cal.x_offset)
+                 * m3fc_config.accel_cal.x_scale * g;
+    faccels[1] = ((float)accels[1] - m3fc_config.accel_cal.y_offset)
+                 * m3fc_config.accel_cal.y_scale * g;
+    faccels[2] = ((float)accels[2] - m3fc_config.accel_cal.z_offset)
+                 * m3fc_config.accel_cal.z_scale * g;
 }
 
 /* ISR triggered by the EXTI peripheral when DRDY gets asserted.
@@ -277,7 +284,7 @@ static THD_FUNCTION(adxl345_thd, arg)
          */
         m3fc_state_estimation_new_accels(faccels, 156.96f, 0.1186f);
 
-        can_send(CAN_MSG_ID_M3FC_ACCEL, false, (uint8_t*)accels, 6);
+        m3can_send(CAN_MSG_ID_M3FC_ACCEL, false, (uint8_t*)accels, 6);
 
         wait_result = chBSemWaitTimeout(&adxl345_thd_sem, MS2ST(100));
 

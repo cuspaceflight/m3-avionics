@@ -19,7 +19,7 @@ int main(void) {
     chSysInit();
 
     /* Turn on the CAN system and send a packet with our firmware version */
-    can_init(CAN_ID_M3TEMPLATE);
+    m3can_init(CAN_ID_M3TEMPLATE);
 
     /* Inside each thread, do this: */
     /* m3status_set_init(M3TEMPLATE_COMPONENT_BLA); */

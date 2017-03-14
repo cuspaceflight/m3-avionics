@@ -12,7 +12,7 @@ static THD_FUNCTION(m3pyro_arming_thd, arg) {
     (void)arg;
 
     while(true) {
-        can_send(CAN_MSG_ID_M3PYRO_ARM_STATUS, false,
+        m3can_send(CAN_MSG_ID_M3PYRO_ARM_STATUS, false,
                  (uint8_t*)&m3pyro_armed, 1);
         m3status_set_ok(M3PYRO_COMPONENT_ARMING);
         chThdSleepMilliseconds(500);
@@ -30,7 +30,8 @@ void m3pyro_arming_set(bool armed) {
         m3pyro_firing_fire(0, 0, 0, 0);
     }
     m3pyro_armed = armed;
-    can_send(CAN_MSG_ID_M3PYRO_ARM_STATUS, false, (uint8_t*)&m3pyro_armed, 1);
+    m3can_send(CAN_MSG_ID_M3PYRO_ARM_STATUS, false,
+               (uint8_t*)&m3pyro_armed, 1);
 }
 
 bool m3pyro_arming_armed() {

@@ -12,6 +12,7 @@
 #define M3FC_COMPONENT_BARO         (7)
 #define M3FC_COMPONENT_FLASH        (8)
 #define M3FC_COMPONENT_MC_PYRO      (9)
+#define M3FC_COMPONENT_MC_PSU       (11)
 #define M3FC_COMPONENT_MOCK         (10)
 
 #define M3FC_ERROR_FLASH_CRC        (1)
@@ -27,7 +28,12 @@
 #define M3FC_ERROR_MC_PYRO_ARM      (15)
 #define M3FC_ERROR_MC_PYRO_CONT     (4)
 #define M3FC_ERROR_MC_PYRO_SUPPLY   (5)
+#define M3FC_ERROR_MC_PSU_BATTLESHORT (21)
 #define M3FC_ERROR_MOCK_ENABLED     (16)
 #define M3FC_ERROR_CAN_BAD_COMMAND  (17)
+#define M3FC_ERROR_CFG_CHK_ACCEL_CAL  (18)
+#define M3FC_ERROR_CFG_CHK_RADIO_FREQ (19)
+#define M3FC_ERROR_CFG_CHK_CRC        (20)
+
 
 #endif

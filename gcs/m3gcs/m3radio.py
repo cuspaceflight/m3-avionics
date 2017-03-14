@@ -7,11 +7,17 @@ def msg_id(x):
 
 
 CAN_ID_M3RADIO = 4
+CAN_ID_GROUND = 7
 CAN_MSG_ID_M3RADIO_STATUS = CAN_ID_M3RADIO | msg_id(0)
 CAN_MSG_ID_M3RADIO_GPS_LATLNG = CAN_ID_M3RADIO | msg_id(48)
 CAN_MSG_ID_M3RADIO_GPS_ALT = CAN_ID_M3RADIO | msg_id(49)
 CAN_MSG_ID_M3RADIO_GPS_TIME = CAN_ID_M3RADIO | msg_id(50)
 CAN_MSG_ID_M3RADIO_GPS_STATUS = CAN_ID_M3RADIO | msg_id(51)
+CAN_MSG_ID_M3RADIO_PACKET_COUNT = CAN_ID_M3RADIO | msg_id(53)
+CAN_MSG_ID_M3RADIO_PACKET_STATS = CAN_ID_M3RADIO | msg_id(54)
+CAN_MSG_ID_M3RADIO_PACKET_PING = CAN_ID_M3RADIO | msg_id(55)
+CAN_MSG_ID_GROUND_PACKET_COUNT = CAN_ID_GROUND | msg_id(53)
+CAN_MSG_ID_GROUND_PACKET_STATS = CAN_ID_GROUND | msg_id(54)
 
 components = {
     1: "uBlox",
@@ -42,9 +48,9 @@ def status(data):
         "BBBB", bytes(data[:4]))
 
     # Display the state (and error) of the component that sent the message
-    string = "{} ({} {}".format(statuses.get(overall, "Unknown"),
-                                components.get(comp, "Unknown"),
-                                statuses.get(comp_state, "Unknown"))
+    string = "{}: ({} {}".format(statuses.get(overall, "Unknown"),
+                                 components.get(comp, "Unknown"),
+                                 statuses.get(comp_state, "Unknown"))
     if comp_error != 0:
         string += " {})".format(component_errors.get(comp_error, "Unknown"))
     else:
@@ -94,3 +100,23 @@ def gpsstatus(data):
     fix_types = {0: "No fix", 2: "2d fix", 3: "3d fix"}
     return "{}, {} satellites, flags: {:08b}".format(
         fix_types[fix_type], num_sv, flags)
+
+
+@register_packet("m3radio", CAN_MSG_ID_M3RADIO_PACKET_COUNT, "Packet Count")
+@register_packet("ground", CAN_MSG_ID_GROUND_PACKET_COUNT, "Packet Count")
+def packet_count(data):
+    txcount, rxcount = struct.unpack("II", bytes(data))
+    return "TX {}, RX {}".format(txcount, rxcount)
+
+
+@register_packet("m3radio", CAN_MSG_ID_M3RADIO_PACKET_STATS, "Packet Stats")
+@register_packet("ground", CAN_MSG_ID_GROUND_PACKET_STATS, "Packet Stats")
+def packet_stats(data):
+    rssi, freqoff, biterrs, iters = struct.unpack("hhHH", bytes(data))
+    return "RSSI {}dBm, Freq Offset {}Hz, Bit Errs {}, LDPC Iters {}".format(
+        rssi, freqoff, biterrs, iters)
+
+
+@register_command("ground", "Ping", ["Ping"])
+def ping_cmd(data):
+    return CAN_MSG_ID_M3RADIO_PACKET_PING, []

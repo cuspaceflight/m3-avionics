@@ -15,29 +15,25 @@ from sexp import generate
 # Telemetry: 869.5MHz
 
 # Board constants (for reference only)
-# dielectric constant: 2.67
+# dielectric constant: 2.2
 
 # Microstrip line widths for various impedances [m]
-strip_w_50r = 1.90e-3
-strip_w_70r71 = 1.07e-3
-#strip_w_100r = 0.527e-3
-#strip_w_112r91 = 0.39e-3
-# wider for home etching ;(
-strip_w_100r = 0.8e-3
-strip_w_112r91 = 0.8e-3
+strip_w_50r = 1.54e-3
+strip_w_70r71 = 0.884e-3
+strip_w_100r = 0.448e-3
+strip_w_122r5 = 0.275e-3
 
 # Feed networks. Entries are (width [m], length [m]).
 # Lengths of None imply "continue to junction".
 feed_booster_gps = [
     [  # Patch to first T-junction
         [  # Vertical section
-            (strip_w_112r91, 22.32e-3),  # Part of L/4, 255 to 100R
+            (strip_w_122r5, 10.0e-3),  # Part of L/4, 150R to 100R
         ],
 
         [  # Horizontal section
-            (strip_w_112r91, 11.25e-3),  # Rest of L/4, 255 to 100R
-            (strip_w_70r71, None),  # Complete L/4, 100 to 50R.
-                                    # Will be 32.73e-3 long.
+            (strip_w_122r5, 26.24e-3),   # Rest of L/4, 150R to 100R
+            (strip_w_100r, None),        # Complete L/4, 100 to 50R.
         ],
     ],
 
@@ -47,7 +43,7 @@ feed_booster_gps = [
         ],
 
         [  # Horizontal section
-            (strip_w_70r71, 12.73e-3),  # Rest of L/4, 50 to 100R
+            (strip_w_70r71, 15.33e-3),  # Rest of L/4, 50 to 100R
             (strip_w_100r, None),  # Normal stripline for remaining length
         ],
     ]
@@ -56,7 +52,7 @@ feed_booster_gps = [
 feed_booster_telemetry = [
     [  # Patch to first T-junction at feedpoint
         [  # Vertical section
-            (strip_w_100r, 50e-3),  # Plain 100R feedline
+            (strip_w_100r, 40e-3),  # Plain 100R feedline
         ],
 
         [  # Horizontal section
@@ -69,13 +65,12 @@ feed_booster_telemetry = [
 feed_dart_gps = [
     [  # Patch to first T-junction at feedpoint
         [  # Vertical
-            (strip_w_112r91, 31.75e-3),  # Part of L/4 255 to 50R
+            (strip_w_122r5, 10.0e-3),  # Part of L/4 150R to 100R
         ],
 
         [  # Horizontal
-            (strip_w_112r91, 1.82e-3),  # Rest of L/4 255 to 50R
-            (strip_w_70r71, None),  # Complete L/4 50 to 100R
-                                    # Will be 32.73e-3 long
+            (strip_w_122r5, 26.24e-3),  # Rest of L/4 150R to 100R
+            (strip_w_100r, None),       # 100R to feed point
         ]
     ],
     [[], []]
@@ -84,12 +79,18 @@ feed_dart_gps = [
 feed_dart_telemetry = [
     [  # Patch to feed directly
         [  # Vertical
-            (strip_w_50r, 30e-3),  # Plain 50R feedline up to the feedpoint
+            (strip_w_50r, 35e-3),  # Plain 50R feedline up to the feedpoint
         ],
         [],
     ],
     [[], []]
 ]
+
+
+def inset_length(e, l):
+    return (0.001699 * e**7 + 0.137610 * e**6 - 6.178300 * e**5
+            + 93.18700 * e**4 - 682.6900 * e**3 + 2561.900 * e**2
+            - 4043.000 * e**1 + 6697.000) * l/2 * 1e-4
 
 # Antennas to make
 # Each should specify:
@@ -104,99 +105,47 @@ feed_dart_telemetry = [
 antennas = [
     # Dart telemetry
     {
-        "w_array": 44e-3 * np.pi,
+        "w_array": 134e-3,
         "feed": feed_dart_telemetry,
-        "w_patch": 134e-3,
-        "l_patch": 120e-3,
-        "w_inset": 10e-3,
-        "l_inset": 21.36e-3,
+        "w_patch": 133.0e-3,
+        "l_patch": 115.0e-3,
+        "w_inset": 5e-3,
+        "l_inset": 30.0e-3,
         "r_corner": None,
-        "h": 0.7e-3,
+        "h": 0.5e-3,
     },
     # Dart GPS
     {
-        "w_array": 44e-3 * np.pi,
+        "w_array": 134e-3,
         "feed": feed_dart_gps,
-        "w_patch": 62e-3,
-        "l_patch": 62e-3,
+        "w_patch": 63.0e-3,
+        "l_patch": 63.0e-3,
         "w_inset": 0,
         "l_inset": 0,
-        "r_corner": 2e-3,
-        "h": 0.7e-3,
+        "r_corner": 2.5e-3,
+        "h": 0.5e-3,
     },
     # Booster telemetry
     {
         "w_array": 112e-3 * np.pi,
         "feed": feed_booster_telemetry,
-        "w_patch": 114e-3,
-        "l_patch": 102.2e-3,
-        #"w_inset": 3e-3,
+        "w_patch": 110e-3,
+        "l_patch": 115.0e-3,
         "w_inset": 5e-3,
-        "l_inset": 30e-3,
+        "l_inset": inset_length(e=2.2, l=111.6e-3),
         "r_corner": None,
-        "h": 0.7e-3,
+        "h": 0.5e-3,
     },
     # Booster GPS
     {
         "w_array": 112e-3 * np.pi,
         "feed": feed_booster_gps,
-        "w_patch": 57.48e-3,
-        "l_patch": 57.48e-3,
+        "w_patch": 63.0e-3,
+        "l_patch": 63.0e-3,
         "w_inset": 0,
         "l_inset": 0,
-        "r_corner": 2e-3,
-        "h": 0.7e-3,
-    },
-]
-
-test_antennas = [
-
-    # 8-big panel of GPS antennas
-    {
-        "w_array": 224e-3 * np.pi,
-        "feed": feed_booster_gps,
-        "w_patch": 57.48e-3,
-        "l_patch": 57.48e-3,
-        "w_inset": 0,
-        "l_inset": 0,
-        "r_corner": 2e-3,
-        "h": 0.7e-3,
-    },
-
-    # 4-big panel of telem antennas
-    {
-        "w_array": 112e-3 * np.pi,
-        "feed": feed_booster_telemetry,
-        "w_patch": 114e-3,
-        "l_patch": 104e-3,
-        "w_inset": 3e-3,
-        "l_inset": 30e-3,
-        "r_corner": None,
-        "h": 0.7e-3,
-    },
-
-    # Tuned flat GPS patch at e=2.67
-    {
-        "w_array": 22e-3 * np.pi,
-        "w_patch": 57.48e-3,
-        "l_patch": 57.48e-3,
-        "w_inset": 0e-3,
-        "l_inset": 0e-3,
-        "r_corner": 2e-3,
-        "h": 0.7e-3,
-        "feed": [[[(strip_w_112r91, 33.57e-3)], []], [[], []]]
-    },
-
-    # Tuned flat telemetry patch at e=2.67 (still being tuned)
-    {
-        "w_array": 44e-3 * np.pi,
-        "w_patch": 114e-3,
-        "l_patch": 104e-3,
-        "w_inset": 5e-3,
-        "l_inset": 37e-3,
-        "r_corner": 0,
-        "h": 0.7e-3,
-        "feed": [[[(strip_w_50r, 50e-3)], []], [[], []]]
+        "r_corner": 2.5e-3,
+        "h": 0.5e-3,
     },
 ]
 
@@ -422,10 +371,11 @@ def generate_feedline(points, w, h):
         ]
 
     # Compute mitre related constants for three or more points (hard mode)
+    # We put a fudge factor of 0.8 in to make the mitres a bit less thin.
     assert w/h >= 1/4, "Microstrip W/H must >= 1/4 for mitres to be correct"
     m = (52 + 65 * np.exp(-27/20 * w/h)) / 100
     d = w * np.sqrt(2)
-    x = d * m
+    x = 0.8 * (d * m)
     a = x * np.sqrt(2)
 
     line = []
@@ -633,5 +583,5 @@ if __name__ == "__main__":
     feedpoints, cutouts, zones = make_arrays(antennas)
     pcb = generate_pcb(feedpoints, cutouts, zones, [])
 
-    with open("test_patch.kicad_pcb", "w") as f:
+    with open("antennas.kicad_pcb", "w") as f:
         f.write(pcb)

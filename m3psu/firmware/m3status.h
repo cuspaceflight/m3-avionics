@@ -15,7 +15,6 @@
 #define M3STATUS_COMPONENT_DCDC6    (5)
 #define M3STATUS_COMPONENT_CHARGER  (6)
 #define M3STATUS_COMPONENT_PYRO_MON (7)
-#define M3STATUS_COMPONENT_ADC      (8)
 
 #define M3STATUS_DCDC_ERROR_INIT      (1)
 #define M3STATUS_DCDC_ERROR_CH1_ALERT (2)
@@ -27,8 +26,6 @@
 
 #define M3STATUS_PYRO_MON_ERROR_INIT  (1)
 #define M3STATUS_PYRO_MON_ERROR_COMMS (2)
-
-#define M3STATUS_ADC_ERROR_READ       (1)
 
 /* Call to update status, with optional error code.
  * Call initialising() for each component to start including that component ID

@@ -18,6 +18,11 @@ CAN_MSG_ID_M3FC_SE_VAR_H = CAN_ID_M3FC | msg_id(52)
 CAN_MSG_ID_M3FC_SE_VAR_V_A = CAN_ID_M3FC | msg_id(53)
 CAN_MSG_ID_M3FC_CFG_PROFILE = CAN_ID_M3FC | msg_id(54)
 CAN_MSG_ID_M3FC_CFG_PYROS = CAN_ID_M3FC | msg_id(55)
+CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_X = CAN_ID_M3FC | msg_id(56)
+CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Y = CAN_ID_M3FC | msg_id(57)
+CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Z = CAN_ID_M3FC | msg_id(58)
+CAN_MSG_ID_M3FC_CFG_RADIO_FREQ = CAN_ID_M3FC | msg_id(59)
+CAN_MSG_ID_M3FC_CFG_CRC = CAN_ID_M3FC | msg_id(60)
 CAN_MSG_ID_M3FC_SET_CFG_PROFILE = CAN_ID_M3FC | msg_id(1)
 CAN_MSG_ID_M3FC_SET_CFG_PYROS = CAN_ID_M3FC | msg_id(2)
 CAN_MSG_ID_M3FC_LOAD_CFG = CAN_ID_M3FC | msg_id(3)
@@ -26,6 +31,7 @@ CAN_MSG_ID_M3FC_MOCK_ENABLE = CAN_ID_M3FC | msg_id(5)
 CAN_MSG_ID_M3FC_MOCK_ACCEL = CAN_ID_M3FC | msg_id(6)
 CAN_MSG_ID_M3FC_MOCK_BARO = CAN_ID_M3FC | msg_id(7)
 CAN_MSG_ID_M3FC_ARM = CAN_ID_M3FC | msg_id(8)
+CAN_MSG_ID_M3FC_FIRE = CAN_ID_M3FC | msg_id(9)
 
 components = {
     1: "Mission Control",
@@ -37,7 +43,8 @@ components = {
     7: "Barometer",
     8: "Flash",
     9: "Pyros",
-    10: "Mock"
+    10: "Mock",
+    11: "PSU",
 }
 
 component_errors = {
@@ -46,7 +53,9 @@ component_errors = {
     3: "Config Read", 8: "Config Check Profile", 9: "Config Check Pyros",
     10: "Accel Bad ID", 11: "Accel Self Test", 12: "Accel Timeout",
     13: "Accel Axis", 14: "SE Pressure", 15: "Pyro Arm", 4: "Pyro Continuity",
-    5: "Pyro Supply", 16: "Mock Enabled", 17: "CAN Bad Command"
+    5: "Pyro Supply", 16: "Mock Enabled", 17: "CAN Bad Command",
+    18: "Config Check Accel Cal", 19: "Config Check Radio Freq",
+    20: "Config Check CRC", 21: "Battleshort",
 }
 
 compstatus = {k: {"state": 0, "reason": "Unknown"} for k in components}
@@ -179,6 +188,26 @@ def cfg_pyros(data):
                                   pyro_4_usage, pyro_4_type))
 
 
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_X, "Accel Cal X")
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Y, "Accel Cal Y")
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Z, "Accel Cal Z")
+def cfg_accel_cal(data):
+    scale, offset = struct.unpack("<ff", bytes(data))
+    return "Scale {:.6f}g/LSB, Offset {:.3f}LSB".format(scale, offset)
+
+
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_RADIO_FREQ, "Radio Freq")
+def cfg_radio_freq(data):
+    freq = struct.unpack("<I", bytes(data[:4]))[0]
+    return "{:.6f} MHz".format(freq/1e6)
+
+
+@register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_CRC, "Config CRC")
+def cfg_crc(data):
+    crc = struct.unpack("<I", bytes(data[:4]))[0]
+    return hex(crc)
+
+
 @register_packet("m3fc", CAN_MSG_ID_M3FC_LOAD_CFG, "Load config")
 def load_config(data):
     return "Load config from flash"
@@ -202,3 +231,11 @@ def arm(data):
 @register_command("m3fc", "Arm", ["Arm"])
 def arm_cmd(data):
     return CAN_MSG_ID_M3FC_ARM, []
+
+
+@register_command("m3fc", "Fire Drogue", ["Fire Drogue"])
+@register_command("m3fc", "Fire Main", ["Fire Main"])
+@register_command("m3fc", "Fire Dart", ["Fire Dart"])
+def fire_cmd(data):
+    pyros = {"Fire Drogue": 1, "Fire Main": 2, "Fire Dart": 3}
+    return CAN_MSG_ID_M3FC_FIRE, [pyros.get(data, 0)]

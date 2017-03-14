@@ -34,7 +34,8 @@ static const float Tb[7] = {
 static const float Hb[7] = {
     0.0f, 11000.0f, 20000.0f, 32000.0f, 47000.0f, 51000.0f, 71000.0f};
 
-volatile bool m3fc_state_estimation_trust_barometer;
+volatile bool m3fc_state_estimation_trust_barometer = true;
+volatile bool m3fc_state_estimation_dynamic_event_expected = false;
 
 /* Functions to convert pressures to altitudes via the
  * US Standard Atmosphere
@@ -55,62 +56,70 @@ static void m3fc_state_estimation_update_accel(float accel, float r);
  * Our Kalman state is x_k = [x_0  x_1  x_2] = [x  dx/dt  d²x/dt²]
  * i.e. [position  velocity  acceleration].
  *
- * The state transition matrix F is therefore (by integration):
- * F = [ 1  dt  dt²/2 ]
+ * The state transition matrix F is therefore:
+ * F = [ 1  dt   0    ]
  *     [ 0   1  dt    ]
  *     [ 0   0   1    ]
+ *
+ * Note integration would suggest a dt²/2 entry in the top right (suggesting
+ * that acceleration at the current time leads to a change in position in the
+ * next timestep) but we zero this; the current acceleration will lead to a
+ * change in velocity next timestep which will lead to a change in position
+ * the timestep after that.
  *
  * We model the system as undergoing a jerk d³x/dt³ whose value
  * j ~ N(0, q) which realises a constant value over each integration
  * period dt. This leads to a process noise w_k:
  *
  * delta acceleration = j dt
- * delta velocity     = j dt²/2
- * delta position     = j dt³/6
- * 
- * w_k = [j.dt  j.dt²/2  j.dt³/6]'
+ * delta velocity     = 0
+ * delta position     = 0
+ *
+ * w_k = [0 0 j.dt]'
+ *
+ * Again you might expect j dt²/2 for velocity, etc, but we set to 0 so the
+ * process noise only affects acceleration directly. The state transition
+ * matrix will map this onto the velocity and position.
  *
  * We then find Q as E[w_k . w_k']:
- * Q = [ q dt^6 /36    q dt^5 /12    q dt^4 /6 ]
- *     [ q dt^5 /12    q dt^4 /4     q dt^3 /2 ]
- *     [ q dt^4 /6     q dt^3 /2     q dt^2 /1 ]
+ * Q = [ 0   0    0   ]
+ *     [ 0   0    0   ]
+ *     [ 0   0  q.dt² ]
  *
  * We do not model any control input (there is none) so B.u=0.
  *
  * F.P.F' is the final quantity of interest for Kalman prediction.
  *
- * F.P.F' = [ 1  dt  dt²/2 ][ P00 P01 P02 ][ 1      0   0 ]
- *          [ 0   1  dt    ][ P10 P11 P12 ][ dt     1   0 ]
- *          [ 0   0   1    ][ P20 P21 P22 ][ dt²/2  dt  1 ]
+ * F.P.F' = [ 1  dt   0 ][ P00 P01 P02 ][ 1   0   0 ]
+ *          [ 0   1  dt ][ P10 P11 P12 ][ dt  1   0 ]
+ *          [ 0   0   1 ][ P20 P21 P22 ][ 0   dt  1 ]
  *
  *        = [
- *           [P00 + dt P10 + dt²/2 P20,
- *            P01 + dt P11 + dt²/2 P21,
- *            P02 + dt P12 + dt²/2 P22
+ *           [ P00 + dt P10,
+ *             P01 + dt P11,
+ *             P02 + dt P12
  *           ],
- *           [         P10 + dt    P20,
- *                     P11 + dt    P21,
- *                     P12 + dt    P22
+ *           [ P10 + dt P20,
+ *             P11 + dt P21,
+ *             P12 + dt P22
  *           ],
- *           [                     P20,
- *                                 P21,
- *                                 P22
+ *           [ P20,
+ *             P21,
+ *             P22
  *           ]
  *          ] . F'
  *
  *        = [
- *           [         P00 + dt P10 + dt²/2 P20
- *             +    dt(P01 + dt P11 + dt²/2 P21)
- *             + dt²/2(P02 + dt P12 + dt²/2 P22),
+ *           [         P00 + dt P10
+ *             +    dt(P01 + dt P11)
  *
- *                     P01 + dt P11 + dt²/2 P21
- *             +    dt(P02 + dt P12 + dt²/2 P22),
+ *                     P01 + dt P11
+ *             +    dt(P02 + dt P12),
  *
- *                     P02 + dt P12 + dt²/2 P22
+ *                     P02 + dt P12
  *           ],
  *           [         P10 + dt P20
  *             +    dt(P11 + dt P21)
- *             + dt²/2(P12 + dt P22),
  *
  *                     P11 + dt P21
  *             +    dt(P12 + dt P22),
@@ -118,11 +127,11 @@ static void m3fc_state_estimation_update_accel(float accel, float r);
  *                     P12 + dt P22
  *           ],
  *           [
- *                     P20 + dt P21 + dt²/2 P22,
+ *                     P20 + dt P21,
  *
- *                              P21 + dt    P22,
+ *                     P21 + dt P22,
  *
- *                                          P22
+ *                     P22
  *           ]
  *          ]
  *
@@ -130,11 +139,14 @@ static void m3fc_state_estimation_update_accel(float accel, float r);
  */
 state_estimate_t m3fc_state_estimation_get_state()
 {
-    float q, dt, dt2, dt3, dt4, dt5, dt6, dt2_2;
+    float q, dt;
     state_estimate_t x_out;
 
-    /* TODO Determine best q-value */
-    q = 500.0;
+    if(m3fc_state_estimation_dynamic_event_expected) {
+        q = 2000.0f;
+    } else {
+        q = 500.0f;
+    }
 
     /* Acquire lock */
     chBSemWait(&kalman_bsem);
@@ -143,20 +155,13 @@ state_estimate_t m3fc_state_estimation_get_state()
     dt = (float)(ST2US(chVTTimeElapsedSinceX(t_clk))) / 1e6f;
     t_clk = chVTGetSystemTimeX();
 
-    dt2 = dt * dt;
-    dt3 = dt * dt2;
-    dt4 = dt * dt3;
-    dt5 = dt * dt4;
-    dt6 = dt * dt5;
-    dt2_2 = dt2 / 2.0f;
-
     /* Update state
      * x_{k|k-1} = F_k x_{k-1|k-1}
-     *           = [x_0 + dt x_1 + dt²/2 x_2]
+     *           = [x_0 + dt x_1            ]
      *             [         x_1 + dt    x_2]
      *             [                     x_2]
      */
-    x[0] = x[0] + dt * x[1] + dt * dt * x[2] / 2.0f;
+    x[0] = x[0] + dt * x[1];
     x[1] = x[1] + dt * x[2];
     x[2] = x[2];
 
@@ -165,35 +170,25 @@ state_estimate_t m3fc_state_estimation_get_state()
      * Uses F.P.F' from above. We'll add Q later, this is just the FPF'.
      * Conveniently the form means we can update each element in-place.
      */
-    p[0][0] += (   dt    *  p[1][0] + dt2_2 * p[2][0]
-                 + dt    * (p[0][1] + dt    * p[1][1] * dt2_2 * p[2][1])
-                 + dt2_2 * (p[0][2] + dt    * p[1][2] + dt2_2 * p[2][2]));
-    p[0][1] += (   dt    *  p[1][1] + dt2_2 * p[2][1]
-                 + dt    * (p[0][2] + dt    * p[1][2] + dt2_2 * p[2][2]));
-    p[0][2] += (   dt    *  p[1][2] + dt2_2 * p[2][2]);
+    p[0][0] += (   dt    *  p[1][0]
+                 + dt    * (p[0][1] + dt    * p[1][1]));
+    p[0][1] += (   dt    *  p[1][1]
+                 + dt    * (p[0][2] + dt    * p[1][2]));
+    p[0][2] += (   dt    *  p[1][2]);
 
     p[1][0] += (   dt    *  p[2][0]
-                 + dt    * (p[1][1] + dt    * p[2][1])
-                 + dt2_2 * (p[1][2] + dt    * p[2][2]));
+                 + dt    * (p[1][1] + dt    * p[2][1]));
     p[1][1] += (   dt    *  p[2][1]
                  + dt    * (p[1][2] + dt    * p[2][2]));
     p[1][2] += (   dt    *  p[2][2]);
 
-    p[2][0] += (   dt    *  p[2][1] + dt2_2 * p[2][2]);
+    p[2][0] += (   dt    *  p[2][1]);
     p[2][1] += (   dt    *  p[2][2]);
 
     /* Add process noise to matrix above.
      * P_{k|k-1} += Q
      */
-    p[0][0] += q * dt6 / 36.0f;
-    p[0][1] += q * dt5 / 12.0f;
-    p[0][2] += q * dt4 /  6.0f;
-    p[1][0] += q * dt5 / 12.0f;
-    p[1][1] += q * dt4 /  4.0f;
-    p[1][2] += q * dt3 /  2.0f;
-    p[2][0] += q * dt4 /  6.0f;
-    p[2][1] += q * dt3 /  2.0f;
-    p[2][2] += q * dt2 /  1.0f;
+    p[2][2] += q * dt * dt;
 
     /* Copy state to return struct */
     x_out.h = x[0];
@@ -207,15 +202,15 @@ state_estimate_t m3fc_state_estimation_get_state()
     float buf[2];
     buf[0] = dt;
     buf[1] = x[0];
-    can_send(CAN_MSG_ID_M3FC_SE_T_H, false, (uint8_t*)buf, 8);
+    m3can_send(CAN_MSG_ID_M3FC_SE_T_H, false, (uint8_t*)buf, 8);
     buf[0] = x[1];
     buf[1] = x[2];
-    can_send(CAN_MSG_ID_M3FC_SE_V_A, false, (uint8_t*)buf, 8);
+    m3can_send(CAN_MSG_ID_M3FC_SE_V_A, false, (uint8_t*)buf, 8);
     buf[0] = p[0][0];
-    can_send(CAN_MSG_ID_M3FC_SE_VAR_H, false, (uint8_t*)buf, 4);
+    m3can_send(CAN_MSG_ID_M3FC_SE_VAR_H, false, (uint8_t*)buf, 4);
     buf[0] = p[1][1];
     buf[1] = p[2][2];
-    can_send(CAN_MSG_ID_M3FC_SE_VAR_V_A, false, (uint8_t*)buf, 8);
+    m3can_send(CAN_MSG_ID_M3FC_SE_VAR_V_A, false, (uint8_t*)buf, 8);
 
     m3status_set_ok(M3FC_COMPONENT_SE);
 
@@ -265,7 +260,7 @@ void m3fc_state_estimation_init()
 void m3fc_state_estimation_new_pressure(float pressure, float rms)
 {
     float y, r, s_inv, k[3];
-    float h, hd;
+    float h, hp, hm;
 
     /* Discard data when mission control believes we are transonic. */
     if(!m3fc_state_estimation_trust_barometer)
@@ -276,17 +271,18 @@ void m3fc_state_estimation_new_pressure(float pressure, float rms)
      * of the current noise variance in altitude terms for the filter.
      */
     h = m3fc_state_estimation_pressure_to_altitude(pressure);
-    hd = m3fc_state_estimation_pressure_to_altitude(pressure + rms);
+    hp = m3fc_state_estimation_pressure_to_altitude(pressure + rms);
+    hm = m3fc_state_estimation_pressure_to_altitude(pressure - rms);
 
     /* If there was an error (couldn't find suitable altitude band) for this
      * pressure, just don't use it. It's probably wrong. */
-    if(h == -9999.0f || hd == -9999.0f) {
+    if(h == -9999.0f || hp == -9999.0f || hm == -9999.0f) {
         m3status_set_error(M3FC_COMPONENT_SE, M3FC_ERROR_SE_PRESSURE);
         return;
     }
 
     /* TODO: validate choice of r */
-    r = (h - hd) * (h - hd);
+    r = (hm - hp) * (hm - hp);
 
     /* Acquire lock */
     chBSemWait(&kalman_bsem);
@@ -404,23 +400,25 @@ void m3fc_state_estimation_new_accels(float accels[3], float max, float rms)
         m3status_set_error(M3FC_COMPONENT_ACCEL, M3FC_ERROR_ACCEL_AXIS);
     }
 
-    float overall_accel = fabsf(sqrtf(accels[0] * accels[0] +
-                                      accels[1] * accels[1] +
-                                      accels[2] * accels[2]));
+    float overall_accel = sqrtf(accels[0] * accels[0] +
+                                accels[1] * accels[1] +
+                                accels[2] * accels[2]);
 
-    if(fabsf(accel) > max) {
-        /* Update RMS if acceleration is above maximum. */
-        rms += fabsf(accel) - max;
-    } else if(overall_accel > 9.7f && overall_accel < 9.9f) {
-        /* Check if overall acceleration is near 1G, and treat as zero if so */
+    /* Check if overall acceleration is near 1G, and treat as zero if so */
+    if(overall_accel > 9.7f && overall_accel < 9.9f) {
         accel = 0.0f;
         rms += 9.80665f;
     } else {
-        /* Otherwise just subtract 1G from the "up" acceleration */
+        /* Update RMS if acceleration is above maximum. */
+        if(fabsf(accel) > max) {
+            rms += fabsf(accel) - max;
+        }
+
+        /* Subtract 1G from the "up" acceleration */
         accel -= 9.80665f;
     }
 
-    m3fc_state_estimation_update_accel(accel, sqrtf(rms));
+    m3fc_state_estimation_update_accel(accel, rms*rms);
 }
 
 

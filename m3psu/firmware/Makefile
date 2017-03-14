@@ -116,7 +116,8 @@ CSRC = $(STARTUPSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
        ../../shared/m3can/m3can.c \
-       main.c chargecontroller.c ltc3887.c ltc4151.c max17435.c pcal9538a.c powermanager.c smbus.c m3status.c
+       main.c chargecontroller.c ltc3887.c ltc4151.c bq40z60.c powermanager.c \
+       smbus.c m3status.c lowpower.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

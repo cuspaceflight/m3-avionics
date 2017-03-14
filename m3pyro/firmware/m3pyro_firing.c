@@ -33,7 +33,7 @@ static void set_timer(int channel, int fire_time_ms) {
      * after the required time.
      */
     chSysLock();
-    if(!chVTIsArmed(&channel_timers[channel])) {
+    if(!chVTIsArmedI(&channel_timers[channel])) {
        chVTDoSetI(&channel_timers[channel], MS2ST(fire_time_ms),
                   disable_channel, (void *)channel);
     }
@@ -49,7 +49,7 @@ static THD_WORKING_AREA(m3pyro_firing_reporter_thd_wa, 128);
 static THD_FUNCTION(m3pyro_firing_reporter_thd, arg) {
     (void)arg;
     while(true) {
-        can_send(CAN_MSG_ID_M3PYRO_FIRE_STATUS, false,
+        m3can_send(CAN_MSG_ID_M3PYRO_FIRE_STATUS, false,
                  (uint8_t*)channel_fire_state, sizeof(channel_fire_state));
         chBSemWaitTimeout(&firing_reporter_thd_sem, MS2ST(300));
     }

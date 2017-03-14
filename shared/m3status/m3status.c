@@ -46,7 +46,7 @@ static void m3status_set(uint8_t component, uint8_t status, uint8_t errorcode)
             len = 4;
         }
 
-        can_send(m3can_own_id | CAN_MSG_ID_STATUS, false, data, len);
+        m3can_send(m3can_own_id | CAN_MSG_ID_STATUS, false, data, len);
         last_transmit[component] = chVTGetSystemTimeX();
     }
 }

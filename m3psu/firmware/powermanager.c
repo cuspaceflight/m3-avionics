@@ -63,13 +63,6 @@ void PowerManager_init(){
     m3status_set_error(M3STATUS_COMPONENT_DCDC6, M3STATUS_DCDC_ERROR_INIT);
   }
 
-  PowerManager_switch_on(2); // Start the Flight Computer
-  PowerManager_switch_on(4); // Start the Radio
-  PowerManager_switch_on(7);
-  PowerManager_switch_on(6); // Start the Pyro
-  PowerManager_switch_on(10); // Start the DL including base board for USB
-  PowerManager_switch_on(11); // Start the CAN transceivers
-
   // Setup LTC4151
   if(ltc4151_init(&currentMonitor, &I2C_DRIVER, 0x6F, 0.01f) == ERR_OK){
     m3status_set_ok(M3STATUS_COMPONENT_PYRO_MON);
@@ -79,6 +72,30 @@ void PowerManager_init(){
 
   ltc4151_poll(&currentMonitor);
 
+}
+
+void PowerManager_shutdown(){
+  int i;
+  // Shutdown all channels
+  for(i = 0; i < 12; i++){
+    PowerManager_switch_off(i);
+  }
+  PowerManager_disable_pyros();
+  PowerManager_disable_system_power();
+}
+
+void PowerManager_enable_system_power(){
+  palSetLine(LINE_EN_POWER);
+}
+void PowerManager_disable_system_power(){
+  palClearLine(LINE_EN_POWER);
+}
+
+void PowerManager_enable_pyros(){
+  palSetLine(LINE_EN_PYRO);
+}
+void PowerManager_disable_pyros(){
+  palClearLine(LINE_EN_PYRO);
 }
 
 uint8_t PowerManager_switch_on(uint8_t channel){
@@ -162,7 +179,7 @@ THD_FUNCTION(powermanager_thread, arg){
         can_data[7] = 0;
 
         uint8_t base_id = CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12 >> 5;
-        can_send(CAN_ID_M3PSU | (CAN_MSG_ID((base_id + idx))), false, can_data, 8);
+        m3can_send(CAN_ID_M3PSU | (CAN_MSG_ID((base_id + idx))), false, can_data, 8);
 
         m3status_set_ok(M3STATUS_COMPONENT_DCDC1 + idx);
 
@@ -188,13 +205,13 @@ THD_FUNCTION(powermanager_thread, arg){
       can_data[6] = palReadLine(LINE_EN_PYRO);
       can_data[7] = 0;
 
-      can_send(CAN_MSG_ID_M3PSU_PYRO_STATUS, false, can_data, 8);
+      m3can_send(CAN_MSG_ID_M3PSU_PYRO_STATUS, false, can_data, 8);
 
       m3status_set_ok(M3STATUS_COMPONENT_PYRO_MON);
     }else{
       m3status_set_error(M3STATUS_COMPONENT_PYRO_MON, M3STATUS_PYRO_MON_ERROR_COMMS);
     }
 
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(100);
   }
 }

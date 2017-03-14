@@ -1,27 +1,17 @@
 /*
-    ChibiOS/RT - Copyright (C) 2006,2007,2008,2009,2010,2011 Giovanni Di Sirio.
+    ChibiOS - Copyright (C) 2006..2015 Giovanni Di Sirio
 
-    This file is part of ChibiOS/RT.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    ChibiOS/RT is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 3 of the License, or
-    (at your option) any later version.
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    ChibiOS/RT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
-
-                                      ---
-
-    A special exception to the GPL can be applied should you wish to distribute
-    a combined work that includes ChibiOS/RT, without being obliged to provide
-    the source code for any proprietary components. See the file exception.txt
-    for full details of how and when the exception can be applied.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 */
 
 /**
@@ -39,17 +29,46 @@
 #define _CHCONF_H_
 
 /*===========================================================================*/
-/* Kernel parameters.                                                        */
+/**
+ * @name System timers settings
+ * @{
+ */
 /*===========================================================================*/
+
+/**
+ * @brief   System time counter resolution.
+ * @note    Allowed values are 16 or 32 bits.
+ */
+#define CH_CFG_ST_RESOLUTION                32
 
 /**
  * @brief   System tick frequency.
  * @details Frequency of the system timer that drives the system ticks. This
  *          setting also defines the system tick time unit.
  */
-#if !defined(CH_FREQUENCY) || defined(__DOXYGEN__)
-#define CH_FREQUENCY                    1000
-#endif
+#define CH_CFG_ST_FREQUENCY                 10000
+
+/**
+ * @brief   Time delta constant for the tick-less mode.
+ * @note    If this value is zero then the system uses the classic
+ *          periodic tick. This value represents the minimum number
+ *          of ticks that is safe to specify in a timeout directive.
+ *          The value one is not valid, timeouts are rounded up to
+ *          this value.
+ */
+#define CH_CFG_ST_TIMEDELTA                 2
+
+/* Enable wait-for-interrupt sleep during idle */
+#define CORTEX_ENABLE_WFI_IDLE TRUE
+
+/** @} */
+
+/*===========================================================================*/
+/**
+ * @name Kernel parameters and options
+ * @{
+ */
+/*===========================================================================*/
 
 /**
  * @brief   Round robin interval.
@@ -58,28 +77,12 @@
  *          disables the preemption for threads with equal priority and the
  *          round robin becomes cooperative. Note that higher priority
  *          threads can still preempt, the kernel is always preemptive.
- *
  * @note    Disabling the round robin preemption makes the kernel more compact
  *          and generally faster.
+ * @note    The round robin preemption is not supported in tickless mode and
+ *          must be set to zero in that case.
  */
-#if !defined(CH_TIME_QUANTUM) || defined(__DOXYGEN__)
-#define CH_TIME_QUANTUM                 20
-#endif
-
-/**
- * @brief   Nested locks.
- * @details If enabled then the use of nested @p chSysLock() / @p chSysUnlock()
- *          operations is allowed.<br>
- *          For performance and code size reasons the recommended setting
- *          is to leave this option disabled.<br>
- *          You may use this option if you need to merge ChibiOS/RT with
- *          external libraries that require nested lock/unlock operations.
- *
- * @note    The default is @p FALSE.
- */
-#if !defined(CH_USE_NESTED_LOCKS) || defined(__DOXYGEN__)
-#define CH_USE_NESTED_LOCKS             FALSE
-#endif
+#define CH_CFG_TIME_QUANTUM                 0
 
 /**
  * @brief   Managed RAM size.
@@ -90,14 +93,26 @@
  *
  * @note    In order to let the OS manage the whole RAM the linker script must
  *          provide the @p __heap_base__ and @p __heap_end__ symbols.
- * @note    Requires @p CH_USE_COREMEM.
+ * @note    Requires @p CH_CFG_USE_MEMCORE.
  */
-#if !defined(CH_MEMCORE_SIZE) || defined(__DOXYGEN__)
-#define CH_MEMCORE_SIZE                 0
-#endif
+#define CH_CFG_MEMCORE_SIZE                 0
+
+/**
+ * @brief   Idle thread automatic spawn suppression.
+ * @details When this option is activated the function @p chSysInit()
+ *          does not spawn the idle thread. The application @p main()
+ *          function becomes the idle thread and must implement an
+ *          infinite loop.
+ */
+#define CH_CFG_NO_IDLE_THREAD               FALSE
+
+/** @} */
 
 /*===========================================================================*/
-/* Performance options.                                                      */
+/**
+ * @name Performance options
+ * @{
+ */
 /*===========================================================================*/
 
 /**
@@ -108,33 +123,25 @@
  * @note    This is not related to the compiler optimization options.
  * @note    The default is @p TRUE.
  */
-#if !defined(CH_OPTIMIZE_SPEED) || defined(__DOXYGEN__)
-#define CH_OPTIMIZE_SPEED               TRUE
-#endif
+#define CH_CFG_OPTIMIZE_SPEED               TRUE
+
+/** @} */
+
+/*===========================================================================*/
+/**
+ * @name Subsystem options
+ * @{
+ */
+/*===========================================================================*/
 
 /**
- * @brief   Exotic optimization.
- * @details If defined then a CPU register is used as storage for the global
- *          @p currp variable. Caching this variable in a register greatly
- *          improves both space and time OS efficiency. A side effect is that
- *          one less register has to be saved during the context switch
- *          resulting in lower RAM usage and faster context switch.
+ * @brief   Time Measurement APIs.
+ * @details If enabled then the time measurement APIs are included in
+ *          the kernel.
  *
- * @note    This option is only usable with the GCC compiler and is only useful
- *          on processors with many registers like ARM cores.
- * @note    If this option is enabled then ALL the libraries linked to the
- *          ChibiOS/RT code <b>must</b> be recompiled with the GCC option @p
- *          -ffixed-@<reg@>.
- * @note    This option must be enabled in the Makefile, it is listed here for
- *          documentation only.
+ * @note    The default is @p TRUE.
  */
-#if defined(__DOXYGEN__)
-#define CH_CURRP_REGISTER_CACHE         "reg"
-#endif
-
-/*===========================================================================*/
-/* Subsystem options.                                                        */
-/*===========================================================================*/
+#define CH_CFG_USE_TM                       TRUE
 
 /**
  * @brief   Threads registry APIs.
@@ -142,9 +149,7 @@
  *
  * @note    The default is @p TRUE.
  */
-#if !defined(CH_USE_REGISTRY) || defined(__DOXYGEN__)
-#define CH_USE_REGISTRY                 TRUE
-#endif
+#define CH_CFG_USE_REGISTRY                 TRUE
 
 /**
  * @brief   Threads synchronization APIs.
@@ -153,9 +158,7 @@
  *
  * @note    The default is @p TRUE.
  */
-#if !defined(CH_USE_WAITEXIT) || defined(__DOXYGEN__)
-#define CH_USE_WAITEXIT                 TRUE
-#endif
+#define CH_CFG_USE_WAITEXIT                 TRUE
 
 /**
  * @brief   Semaphores APIs.
@@ -163,33 +166,18 @@
  *
  * @note    The default is @p TRUE.
  */
-#if !defined(CH_USE_SEMAPHORES) || defined(__DOXYGEN__)
-#define CH_USE_SEMAPHORES               TRUE
-#endif
+#define CH_CFG_USE_SEMAPHORES               TRUE
 
 /**
  * @brief   Semaphores queuing mode.
  * @details If enabled then the threads are enqueued on semaphores by
  *          priority rather than in FIFO order.
  *
- * @note    The default is @p FALSE. Enable this if you have special requirements.
- * @note    Requires @p CH_USE_SEMAPHORES.
+ * @note    The default is @p FALSE. Enable this if you have special
+ *          requirements.
+ * @note    Requires @p CH_CFG_USE_SEMAPHORES.
  */
-#if !defined(CH_USE_SEMAPHORES_PRIORITY) || defined(__DOXYGEN__)
-#define CH_USE_SEMAPHORES_PRIORITY      FALSE
-#endif
-
-/**
- * @brief   Atomic semaphore API.
- * @details If enabled then the semaphores the @p chSemSignalWait() API
- *          is included in the kernel.
- *
- * @note    The default is @p TRUE.
- * @note    Requires @p CH_USE_SEMAPHORES.
- */
-#if !defined(CH_USE_SEMSW) || defined(__DOXYGEN__)
-#define CH_USE_SEMSW                    TRUE
-#endif
+#define CH_CFG_USE_SEMAPHORES_PRIORITY      FALSE
 
 /**
  * @brief   Mutexes APIs.
@@ -197,9 +185,17 @@
  *
  * @note    The default is @p TRUE.
  */
-#if !defined(CH_USE_MUTEXES) || defined(__DOXYGEN__)
-#define CH_USE_MUTEXES                  TRUE
-#endif
+#define CH_CFG_USE_MUTEXES                  TRUE
+
+/**
+ * @brief   Enables recursive behavior on mutexes.
+ * @note    Recursive mutexes are heavier and have an increased
+ *          memory footprint.
+ *
+ * @note    The default is @p FALSE.
+ * @note    Requires @p CH_CFG_USE_MUTEXES.
+ */
+#define CH_CFG_USE_MUTEXES_RECURSIVE        FALSE
 
 /**
  * @brief   Conditional Variables APIs.
@@ -207,11 +203,9 @@
  *          in the kernel.
  *
  * @note    The default is @p TRUE.
- * @note    Requires @p CH_USE_MUTEXES.
+ * @note    Requires @p CH_CFG_USE_MUTEXES.
  */
-#if !defined(CH_USE_CONDVARS) || defined(__DOXYGEN__)
-#define CH_USE_CONDVARS                 TRUE
-#endif
+#define CH_CFG_USE_CONDVARS                 TRUE
 
 /**
  * @brief   Conditional Variables APIs with timeout.
@@ -219,11 +213,9 @@
  *          specification are included in the kernel.
  *
  * @note    The default is @p TRUE.
- * @note    Requires @p CH_USE_CONDVARS.
+ * @note    Requires @p CH_CFG_USE_CONDVARS.
  */
-#if !defined(CH_USE_CONDVARS_TIMEOUT) || defined(__DOXYGEN__)
-#define CH_USE_CONDVARS_TIMEOUT         TRUE
-#endif
+#define CH_CFG_USE_CONDVARS_TIMEOUT         TRUE
 
 /**
  * @brief   Events Flags APIs.
@@ -231,9 +223,7 @@
  *
  * @note    The default is @p TRUE.
  */
-#if !defined(CH_USE_EVENTS) || defined(__DOXYGEN__)
-#define CH_USE_EVENTS                   TRUE
-#endif
+#define CH_CFG_USE_EVENTS                   TRUE
 
 /**
  * @brief   Events Flags APIs with timeout.
@@ -241,11 +231,9 @@
  *          are included in the kernel.
  *
  * @note    The default is @p TRUE.
- * @note    Requires @p CH_USE_EVENTS.
+ * @note    Requires @p CH_CFG_USE_EVENTS.
  */
-#if !defined(CH_USE_EVENTS_TIMEOUT) || defined(__DOXYGEN__)
-#define CH_USE_EVENTS_TIMEOUT           TRUE
-#endif
+#define CH_CFG_USE_EVENTS_TIMEOUT           TRUE
 
 /**
  * @brief   Synchronous Messages APIs.
@@ -254,21 +242,18 @@
  *
  * @note    The default is @p TRUE.
  */
-#if !defined(CH_USE_MESSAGES) || defined(__DOXYGEN__)
-#define CH_USE_MESSAGES                 TRUE
-#endif
+#define CH_CFG_USE_MESSAGES                 TRUE
 
 /**
  * @brief   Synchronous Messages queuing mode.
  * @details If enabled then messages are served by priority rather than in
  *          FIFO order.
  *
- * @note    The default is @p FALSE. Enable this if you have special requirements.
- * @note    Requires @p CH_USE_MESSAGES.
+ * @note    The default is @p FALSE. Enable this if you have special
+ *          requirements.
+ * @note    Requires @p CH_CFG_USE_MESSAGES.
  */
-#if !defined(CH_USE_MESSAGES_PRIORITY) || defined(__DOXYGEN__)
-#define CH_USE_MESSAGES_PRIORITY        FALSE
-#endif
+#define CH_CFG_USE_MESSAGES_PRIORITY        FALSE
 
 /**
  * @brief   Mailboxes APIs.
@@ -276,22 +261,17 @@
  *          included in the kernel.
  *
  * @note    The default is @p TRUE.
- * @note    Requires @p CH_USE_SEMAPHORES.
+ * @note    Requires @p CH_CFG_USE_SEMAPHORES.
  */
-#if !defined(CH_USE_MAILBOXES) || defined(__DOXYGEN__)
-#define CH_USE_MAILBOXES                TRUE
-#endif
+#define CH_CFG_USE_MAILBOXES                TRUE
 
 /**
  * @brief   I/O Queues APIs.
  * @details If enabled then the I/O queues APIs are included in the kernel.
  *
  * @note    The default is @p TRUE.
- * @note    Requires @p CH_USE_SEMAPHORES.
  */
-#if !defined(CH_USE_QUEUES) || defined(__DOXYGEN__)
-#define CH_USE_QUEUES                   TRUE
-#endif
+#define CH_CFG_USE_QUEUES                   TRUE
 
 /**
  * @brief   Core Memory Manager APIs.
@@ -300,9 +280,7 @@
  *
  * @note    The default is @p TRUE.
  */
-#if !defined(CH_USE_MEMCORE) || defined(__DOXYGEN__)
-#define CH_USE_MEMCORE                  TRUE
-#endif
+#define CH_CFG_USE_MEMCORE                  TRUE
 
 /**
  * @brief   Heap Allocator APIs.
@@ -310,27 +288,11 @@
  *          in the kernel.
  *
  * @note    The default is @p TRUE.
- * @note    Requires @p CH_USE_COREMEM and either @p CH_USE_MUTEXES or
- *          @p CH_USE_SEMAPHORES.
+ * @note    Requires @p CH_CFG_USE_MEMCORE and either @p CH_CFG_USE_MUTEXES or
+ *          @p CH_CFG_USE_SEMAPHORES.
  * @note    Mutexes are recommended.
  */
-#if !defined(CH_USE_HEAP) || defined(__DOXYGEN__)
-#define CH_USE_HEAP                     TRUE
-#endif
-
-/**
- * @brief   C-runtime allocator.
- * @details If enabled the the heap allocator APIs just wrap the C-runtime
- *          @p malloc() and @p free() functions.
- *
- * @note    The default is @p FALSE.
- * @note    Requires @p CH_USE_HEAP.
- * @note    The C-runtime may or may not require @p CH_USE_COREMEM, see the
- *          appropriate documentation.
- */
-#if !defined(CH_USE_MALLOC_HEAP) || defined(__DOXYGEN__)
-#define CH_USE_MALLOC_HEAP              FALSE
-#endif
+#define CH_CFG_USE_HEAP                     TRUE
 
 /**
  * @brief   Memory Pools Allocator APIs.
@@ -339,9 +301,7 @@
  *
  * @note    The default is @p TRUE.
  */
-#if !defined(CH_USE_MEMPOOLS) || defined(__DOXYGEN__)
-#define CH_USE_MEMPOOLS                 TRUE
-#endif
+#define CH_CFG_USE_MEMPOOLS                 TRUE
 
 /**
  * @brief   Dynamic Threads APIs.
@@ -349,16 +309,35 @@
  *          in the kernel.
  *
  * @note    The default is @p TRUE.
- * @note    Requires @p CH_USE_WAITEXIT.
- * @note    Requires @p CH_USE_HEAP and/or @p CH_USE_MEMPOOLS.
+ * @note    Requires @p CH_CFG_USE_WAITEXIT.
+ * @note    Requires @p CH_CFG_USE_HEAP and/or @p CH_CFG_USE_MEMPOOLS.
  */
-#if !defined(CH_USE_DYNAMIC) || defined(__DOXYGEN__)
-#define CH_USE_DYNAMIC                  TRUE
-#endif
+#define CH_CFG_USE_DYNAMIC                  TRUE
+
+/** @} */
 
 /*===========================================================================*/
-/* Debug options.                                                            */
+/**
+ * @name Debug options
+ * @{
+ */
 /*===========================================================================*/
+
+/**
+ * @brief   Debug option, kernel statistics.
+ *
+ * @note    The default is @p FALSE.
+ */
+#define CH_DBG_STATISTICS                   TRUE
+
+/**
+ * @brief   Debug option, system state check.
+ * @details If enabled the correct call protocol for system APIs is checked
+ *          at runtime.
+ *
+ * @note    The default is @p FALSE.
+ */
+#define CH_DBG_SYSTEM_STATE_CHECK           TRUE
 
 /**
  * @brief   Debug option, parameters checks.
@@ -367,9 +346,7 @@
  *
  * @note    The default is @p FALSE.
  */
-#if !defined(CH_DBG_ENABLE_CHECKS) || defined(__DOXYGEN__)
-#define CH_DBG_ENABLE_CHECKS            FALSE
-#endif
+#define CH_DBG_ENABLE_CHECKS                TRUE
 
 /**
  * @brief   Debug option, consistency checks.
@@ -379,9 +356,7 @@
  *
  * @note    The default is @p FALSE.
  */
-#if !defined(CH_DBG_ENABLE_ASSERTS) || defined(__DOXYGEN__)
-#define CH_DBG_ENABLE_ASSERTS           FALSE
-#endif
+#define CH_DBG_ENABLE_ASSERTS               TRUE
 
 /**
  * @brief   Debug option, trace buffer.
@@ -390,9 +365,7 @@
  *
  * @note    The default is @p FALSE.
  */
-#if !defined(CH_DBG_ENABLE_TRACE) || defined(__DOXYGEN__)
-#define CH_DBG_ENABLE_TRACE             FALSE
-#endif
+#define CH_DBG_ENABLE_TRACE                 FALSE
 
 /**
  * @brief   Debug option, stack checks.
@@ -404,9 +377,7 @@
  * @note    The default failure mode is to halt the system with the global
  *          @p panic_msg variable set to @p NULL.
  */
-#if !defined(CH_DBG_ENABLE_STACK_CHECK) || defined(__DOXYGEN__)
-#define CH_DBG_ENABLE_STACK_CHECK       FALSE
-#endif
+#define CH_DBG_ENABLE_STACK_CHECK           TRUE
 
 /**
  * @brief   Debug option, stacks initialization.
@@ -416,48 +387,45 @@
  *
  * @note    The default is @p FALSE.
  */
-#if !defined(CH_DBG_FILL_THREADS) || defined(__DOXYGEN__)
-#define CH_DBG_FILL_THREADS             FALSE
-#endif
+#define CH_DBG_FILL_THREADS                 TRUE
 
 /**
  * @brief   Debug option, threads profiling.
- * @details If enabled then a field is added to the @p Thread structure that
+ * @details If enabled then a field is added to the @p thread_t structure that
  *          counts the system ticks occurred while executing the thread.
  *
- * @note    The default is @p TRUE.
- * @note    This debug option is defaulted to TRUE because it is required by
- *          some test cases into the test suite.
+ * @note    The default is @p FALSE.
+ * @note    This debug option is not currently compatible with the
+ *          tickless mode.
  */
-#if !defined(CH_DBG_THREADS_PROFILING) || defined(__DOXYGEN__)
-#define CH_DBG_THREADS_PROFILING        TRUE
-#endif
+#define CH_DBG_THREADS_PROFILING            FALSE
+
+/** @} */
 
 /*===========================================================================*/
-/* Kernel hooks.                                                             */
+/**
+ * @name Kernel hooks
+ * @{
+ */
 /*===========================================================================*/
 
 /**
  * @brief   Threads descriptor structure extension.
- * @details User fields added to the end of the @p Thread structure.
+ * @details User fields added to the end of the @p thread_t structure.
  */
-#if !defined(THREAD_EXT_FIELDS) || defined(__DOXYGEN__)
-#define THREAD_EXT_FIELDS                                                   \
+#define CH_CFG_THREAD_EXTRA_FIELDS                                          \
   /* Add threads custom fields here.*/
-#endif
 
 /**
  * @brief   Threads initialization hook.
  * @details User initialization code added to the @p chThdInit() API.
  *
- * @note    It is invoked from within @p chThdInit() and implicitily from all
+ * @note    It is invoked from within @p chThdInit() and implicitly from all
  *          the threads creation APIs.
  */
-#if !defined(THREAD_EXT_INIT_HOOK) || defined(__DOXYGEN__)
-#define THREAD_EXT_INIT_HOOK(tp) {                                          \
+#define CH_CFG_THREAD_INIT_HOOK(tp) {                                       \
   /* Add threads initialization code here.*/                                \
 }
-#endif
 
 /**
  * @brief   Threads finalization hook.
@@ -467,43 +435,64 @@
  * @note    It is also invoked when the threads simply return in order to
  *          terminate.
  */
-#if !defined(THREAD_EXT_EXIT_HOOK) || defined(__DOXYGEN__)
-#define THREAD_EXT_EXIT_HOOK(tp) {                                          \
+#define CH_CFG_THREAD_EXIT_HOOK(tp) {                                       \
   /* Add threads finalization code here.*/                                  \
 }
-#endif
+
+/**
+ * @brief   Context switch hook.
+ * @details This hook is invoked just before switching between threads.
+ */
+#define CH_CFG_CONTEXT_SWITCH_HOOK(ntp, otp) {                              \
+  /* Context switch code here.*/                                            \
+}
+
+/**
+ * @brief   Idle thread enter hook.
+ * @note    This hook is invoked within a critical zone, no OS functions
+ *          should be invoked from here.
+ * @note    This macro can be used to activate a power saving mode.
+ */
+#define CH_CFG_IDLE_ENTER_HOOK() {                                          \
+}
+
+/**
+ * @brief   Idle thread leave hook.
+ * @note    This hook is invoked within a critical zone, no OS functions
+ *          should be invoked from here.
+ * @note    This macro can be used to deactivate a power saving mode.
+ */
+#define CH_CFG_IDLE_LEAVE_HOOK() {                                          \
+}
 
 /**
  * @brief   Idle Loop hook.
  * @details This hook is continuously invoked by the idle thread loop.
  */
-#if !defined(IDLE_LOOP_HOOK) || defined(__DOXYGEN__)
-#define IDLE_LOOP_HOOK() {                                                  \
+#define CH_CFG_IDLE_LOOP_HOOK() {                                           \
   /* Idle loop code here.*/                                                 \
 }
-#endif
 
 /**
  * @brief   System tick event hook.
  * @details This hook is invoked in the system tick handler immediately
  *          after processing the virtual timers queue.
  */
-#if !defined(SYSTEM_TICK_EVENT_HOOK) || defined(__DOXYGEN__)
-#define SYSTEM_TICK_EVENT_HOOK() {                                          \
+#define CH_CFG_SYSTEM_TICK_HOOK() {                                         \
   /* System tick event code here.*/                                         \
 }
-#endif
 
 /**
  * @brief   System halt hook.
  * @details This hook is invoked in case to a system halting error before
  *          the system is halted.
  */
-#if !defined(SYSTEM_HALT_HOOK) || defined(__DOXYGEN__)
-#define SYSTEM_HALT_HOOK() {                                                \
+#define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
   /* System halt code here.*/                                               \
+    GPIOA->ODR |= (1<<5); \
 }
-#endif
+
+/** @} */
 
 /*===========================================================================*/
 /* Port-specific settings (override port settings defaulted in chcore.h).    */

@@ -63,12 +63,12 @@ static THD_FUNCTION(m3pyro_continuity_thd, arg)
         continuities[1] = adc_to_resistance(sampbuf[1]);
         continuities[2] = adc_to_resistance(sampbuf[2]);
         continuities[3] = adc_to_resistance(sampbuf[3]);
-        can_send(CAN_MSG_ID_M3PYRO_CONTINUITY, false,
+        m3can_send(CAN_MSG_ID_M3PYRO_CONTINUITY, false,
                  continuities, sizeof(continuities));
 
         uint8_t supply;
         supply = adc_to_voltage(sampbuf[4]);
-        can_send(CAN_MSG_ID_M3PYRO_SUPPLY_STATUS, false,
+        m3can_send(CAN_MSG_ID_M3PYRO_SUPPLY_STATUS, false,
                  &supply, 1);
 
         m3status_set_ok(M3PYRO_COMPONENT_CONTINUITY);

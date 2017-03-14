@@ -1,92 +1,49 @@
-/*
- * A basic ChibiOS app.
- * Copyright Adam Greig 2011.
- * Released under the GNU GPL v3. Insert GPL boilerplate here.
- */
-
 #include "ch.h"
 #include "hal.h"
+#include "m3can.h"
+#include "m3radio_status.h"
+#include "m3radio_gps_ant.h"
+#include "m3radio_labrador.h"
+#include "m3radio_router.h"
+#include "ublox.h"
 
-/*
- * LED control server.
- */
-static WORKING_AREA(waLEDS, 128);
-static msg_t LEDS(void * arg) {
-    Mailbox* mbox = (Mailbox *)arg;
-    msg_t msg, result;
+#include <string.h>
 
-    while(TRUE) {
-        result = chMBFetch(mbox, &msg, TIME_INFINITE);
-        if(result == RDY_OK) {
-            if(msg & 1)
-                palSetPad(IOPORT2, LED1);
-            else
-                palClearPad(IOPORT2, LED1);
-            if(msg & 2)
-                palSetPad(IOPORT2, LED2);
-            else
-                palClearPad(IOPORT2, LED2);
-        }
-    }
-
-    return 0;
-}
-
-/*
- * LED request client.
- */
-static WORKING_AREA(waLEDC, 128);
-static msg_t LEDC(void * arg) {
-    Mailbox* mbox = (Mailbox *)arg;
-
-    while(TRUE) {
-        chMBPost(mbox, 0, TIME_INFINITE);
-        chThdSleepMilliseconds(500);
-        chMBPost(mbox, 1, TIME_INFINITE);
-        chThdSleepMilliseconds(500);
-        chMBPost(mbox, 2, TIME_INFINITE);
-        chThdSleepMilliseconds(500);
-        chMBPost(mbox, 3, TIME_INFINITE);
-        chThdSleepMilliseconds(500);
-    }
-
-    return 0;
-}
-
-/*
- * Application entry point.
- */
 int main(void) {
 
-    /*
-     * System initializations.
-     * - HAL initialization, this also initializes the configured device drivers
-     *   and performs the board-specific initializations.
-     * - Kernel initialization, the main() function becomes a thread and the
-     *   RTOS is active.
-     */
+    /* Allow debug access during WFI sleep */
+    DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
+
+    /* Turn on the watchdog timer, stopped in debug halt */
+    DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_IWDG_STOP;
+    IWDG->KR = 0x5555;
+    IWDG->PR = 3;
+    IWDG->KR = 0xCCCC;
+
+    /* Initialise ChibiOS */
     halInit();
     chSysInit();
 
-    /*
-     * Create a mailbox for IPC.
+    /* Turn on the CAN system and send a packet with our firmware version.
+     * We listen to all subsystems so don't set any filters.
      */
-    Mailbox mbox;
-    msg_t mbox_buffer[3];
-    chMBInit(&mbox, mbox_buffer, 3);
+    m3can_init(CAN_ID_M3RADIO, NULL, 0);
 
-    /*
-     * Create the LED server and client threads
-     */
-    chThdCreateStatic(waLEDS, sizeof(waLEDS), NORMALPRIO, LEDS, (void *)&mbox);
-    chThdCreateStatic(waLEDC, sizeof(waLEDC), NORMALPRIO, LEDC, (void *)&mbox);
+    /* We'll enable CAN loopback so we can send our own messages over
+     * the radio */
+    m3can_set_loopback(true);
 
-    /*
-     * Normal main() thread activity, in this demo it does nothing
-     */
-    while (TRUE) {
-        chThdSleepMilliseconds(500);
+    m3radio_status_init();
+
+    m3radio_gps_ant_init();
+    ublox_init(&SD4);
+    m3radio_router_init();
+    m3radio_labrador_init();
+
+    while (true) {
+        /* Clear the watchdog timer */
+        IWDG->KR = 0xAAAA;
+
+        chThdSleepMilliseconds(100);
     }
-
-    return 0;
 }
