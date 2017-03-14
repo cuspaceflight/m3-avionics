@@ -84,7 +84,6 @@ static state_t do_state_init(instance_data_t *data) {
     } else {
         m3fc_ui_beeper_mode = M3FC_UI_BEEPER_SLOW;
     }
-        m3fc_ui_beeper_mode = M3FC_UI_BEEPER_OFF;
 
     /* We only proceed to the pad state after receiving an ARM command. */
     if(!m3fc_mission_armed) {
