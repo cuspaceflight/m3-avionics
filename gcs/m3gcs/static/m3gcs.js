@@ -10,6 +10,9 @@ var GCS = function(){
     this.handlers = {};
     this.m3psu = new M3PSU(this);
 
+    // e.g. gcs.struct.Unpack( .. )
+    this.struct = new JSPack();
+
     var _this = this;
 
     this.ws = new WebSocket("ws://" + window.location.host + "/ws")
