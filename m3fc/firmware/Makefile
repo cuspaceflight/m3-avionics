@@ -117,7 +117,8 @@ CSRC = $(STARTUPSRC) \
        $(TESTSRC) \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
-       m3fc_ui.c m3fc_config.c m3fc_flash.c m3fc_can.c m3fc_mock.c \
+       ../../shared/m3flash/m3flash.c \
+       m3fc_ui.c m3fc_config.c m3fc_can.c m3fc_mock.c \
        m3fc_state_estimation.c m3fc_mission.c \
        ms5611.c adxl345.c main.c
 
@@ -208,7 +209,7 @@ UDEFS = -DFIRMWARE_VERSION=\"$(GITVERSION)\"
 UADEFS =
 
 # List all user directories here
-UINCDIR = ../../shared/m3can/ ../../shared/m3status/
+UINCDIR = ../../shared/m3can/ ../../shared/m3status/ ../../shared/m3flash/
 
 # List the user directory to look for the libraries here
 ULIBDIR =

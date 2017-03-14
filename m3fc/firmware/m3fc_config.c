@@ -1,7 +1,7 @@
 #include "m3fc_config.h"
 #include "m3can.h"
 #include "m3fc_status.h"
-#include "m3fc_flash.h"
+#include "m3flash.h"
 
 #define M3FC_CONFIG_FLASH (0x080e0000)
 
@@ -63,13 +63,23 @@ static THD_FUNCTION(m3fc_config_reporter_thd, arg) {
 }
 
 bool m3fc_config_load() {
-    return m3fc_flash_read((uint32_t*)M3FC_CONFIG_FLASH,
+    bool rv = m3flash_read((uint32_t*)M3FC_CONFIG_FLASH,
                            (uint32_t*)&m3fc_config, sizeof(m3fc_config)/4);
+
+    if(!rv) {
+        m3status_set_error(M3FC_COMPONENT_FLASH, M3FC_ERROR_FLASH_CRC);
+    }
+
+    return rv;
 }
 
 void m3fc_config_save() {
-    m3fc_flash_write((uint32_t*)&m3fc_config,
-                     (uint32_t*)M3FC_CONFIG_FLASH, sizeof(m3fc_config)/4);
+    bool rv = m3flash_write((uint32_t*)&m3fc_config,
+                            (uint32_t*)M3FC_CONFIG_FLASH,
+                            sizeof(m3fc_config)/4);
+    if(!rv) {
+        m3status_set_error(M3FC_COMPONENT_FLASH, M3FC_ERROR_FLASH_WRITE);
+    }
 }
 
 void m3fc_config_init() {
