@@ -53,7 +53,7 @@ var M3DL = function(gcs){
         c_status.state = comp_state;
         c_status.reason = component_errors[comp_error];
 
-        _this.status.overall = overall;
+        _this.status.overall = ["OK", "INIT", "ERROR"][overall];
     });
 
     gcs.registerPacket(CAN_MSG_ID_M3DL_FREE_SPACE, function(data){
