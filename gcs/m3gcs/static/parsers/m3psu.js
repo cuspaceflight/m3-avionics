@@ -1,5 +1,6 @@
 var M3PSU = function(gcs){
     var CAN_ID_M3PSU = 2;
+    var CAN_MSG_ID_M3PSU_STATUS = CAN_ID_M3PSU | msg_id(0);
     var CAN_MSG_ID_M3PSU_TOGGLE_PYROS = CAN_ID_M3PSU | msg_id(16);
     var CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL = CAN_ID_M3PSU | msg_id(17);
     var CAN_MSG_ID_M3PSU_TOGGLE_CHARGER = CAN_ID_M3PSU | msg_id(18);
@@ -15,7 +16,44 @@ var M3PSU = function(gcs){
     var CAN_MSG_ID_M3PSU_CAPACITY = CAN_ID_M3PSU | msg_id(57);
     var CAN_MSG_ID_M3PSU_AWAKE_TIME = CAN_ID_M3PSU | msg_id(58);
 
+    var components = {
+        0: "DCDC1",
+        1: "DCDC2",
+        2: "DCDC3",
+        3: "DCDC4",
+        4: "DCDC5",
+        5: "DCDC6",
+        6: "Charger",
+        7: "Pyro Monitor",
+    };
+
+    var dcdc_errors = {
+        0: "No Error",
+        1: "Init",
+        2: "Ch1 Alert",
+        3: "Ch2 Alert",
+        4: "Comms",
+    };
+
+    var charger_errors = {
+        0: "No Error",
+        1: "Init",
+        2: "Read",
+    };
+
+    var pyro_mon_errors = {
+        0: "No Error",
+        1: "Init",
+        2: "Comms",
+    };
+
     // State
+    this.status = {overall: 0, components: {}};
+    for(var i in components){
+        var c = components[i];
+        this.status.components[c] = {state: 0, reason: "Unknown"};
+    }
+
     this.channels = [];
     for(var i=0; i<12; i++){
         this.channels[i] = {v:0, i:0, p:0};
@@ -56,6 +94,22 @@ var M3PSU = function(gcs){
     gcs.registerPacket(CAN_MSG_ID_M3PSU_TOGGLE_CHARGER, function(data){} );
 
     // Packet parsers
+    gcs.registerPacket(CAN_MSG_ID_M3PSU_STATUS, function(data){
+        var [overall, comp, comp_state, comp_error] = gcs.struct.Unpack("BBBB", data);
+        var c = components[comp];
+        var c_status = _this.status.components[c];
+        c_status.state = comp_state;
+        if(comp >= 0 && comp <= 5){
+            c_status.reason = dcdc_errors[comp_error];
+        }else if(comp == 6){
+            c_status.reason = charger_errors[comp_error];
+        }else if(comp == 7){
+            c_status.reason = pyro_mon_errors[comp_error];
+        }
+
+        _this.status.overall = ["OK", "INIT", "ERROR"][overall];
+    });
+
     gcs.registerPacket(CAN_MSG_ID_M3PSU_PYRO_STATUS, function(data){
         var [v, i, p, state] = gcs.struct.Unpack("<HHHb", data);
         _this.pyro.v = v * 0.001;
