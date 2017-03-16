@@ -12,6 +12,7 @@ var GCS = function(){
     this.m3dl = new M3DL(this);
     this.m3fc = new M3FC(this);
     this.m3pyro = new M3Pyro(this);
+    this.m3radio = new M3Radio(this);
 
     // e.g. gcs.struct.Unpack( .. )
     this.struct = new JSPack();
@@ -29,6 +30,7 @@ var GCS = function(){
         $("#display-m3dl").html('<pre>' + JSON.stringify(_this.m3dl, null, '\t') + '</pre>');
         $("#display-m3fc").html('<pre>' + JSON.stringify(_this.m3fc, null, '\t') + '</pre>');
         $("#display-m3pyro").html('<pre>' + JSON.stringify(_this.m3pyro, null, '\t') + '</pre>');
+        $("#display-m3radio").html('<pre>' + JSON.stringify(_this.m3radio, null, '\t') + '</pre>');
     }, 100);
 }
 GCS.prototype.registerPacket = function(canID, handler){
