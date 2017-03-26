@@ -19,8 +19,8 @@ pins:
     ANT_FLAG_N: pc14
     ANT_EN_N: pc15, output, starthigh
 
-    LED_RED: pa5, output, startlow
-    LED_GRN: pa6, output, startlow
+    LED_RED: pa6, output, startlow
+    LED_GRN: pa5, output, startlow
 
     RADIO_IRQ_N: pa11
     RADIO_GPIO1: pa12

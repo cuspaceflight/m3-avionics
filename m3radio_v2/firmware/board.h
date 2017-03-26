@@ -60,8 +60,8 @@
 #define GPIOA_GPS_RESET_N              2U
 #define GPIOA_PIN3                     3U
 #define GPIOA_PIN4                     4U
-#define GPIOA_LED_RED                  5U
-#define GPIOA_LED_GRN                  6U
+#define GPIOA_LED_RED                  6U
+#define GPIOA_LED_GRN                  5U
 #define GPIOA_PIN7                     7U
 #define GPIOA_PIN8                     8U
 #define GPIOA_PIN9                     9U
@@ -223,8 +223,8 @@
 #define LINE_JTDI                      PAL_LINE(GPIOA, 15U)
 #define LINE_JTDO                      PAL_LINE(GPIOB, 3U)
 #define LINE_JTMS                      PAL_LINE(GPIOA, 13U)
-#define LINE_LED_GRN                   PAL_LINE(GPIOA, 6U)
-#define LINE_LED_RED                   PAL_LINE(GPIOA, 5U)
+#define LINE_LED_GRN                   PAL_LINE(GPIOA, 5U)
+#define LINE_LED_RED                   PAL_LINE(GPIOA, 6U)
 #define LINE_NJTRST                    PAL_LINE(GPIOB, 4U)
 #define LINE_RADIO_CS                  PAL_LINE(GPIOB, 12U)
 #define LINE_RADIO_GPIO1               PAL_LINE(GPIOA, 12U)
@@ -264,8 +264,8 @@
  * PA2  - GPS_RESET_N                  (output, starthigh).
  * PA3  - PIN3                         (unused).
  * PA4  - PIN4                         (unused).
- * PA5  - LED_RED                      (output, startlow).
- * PA6  - LED_GRN                      (output, startlow).
+ * PA6  - LED_RED                      (output, startlow).
+ * PA5  - LED_GRN                      (output, startlow).
  * PA7  - PIN7                         (unused).
  * PA8  - PIN8                         (unused).
  * PA9  - PIN9                         (unused).

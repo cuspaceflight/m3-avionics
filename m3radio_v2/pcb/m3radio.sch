@@ -808,10 +808,9 @@ CAN_TXD
 Text Label 2700 1750 0    60   ~ 0
 CAN_RXD
 Text Label 1500 3550 2    60   ~ 0
-LED_GRN
-Text Label 1500 3450 2    60   ~ 0
 LED_RED
-NoConn ~ 1600 3750
+Text Label 1500 3450 2    60   ~ 0
+LED_GRN
 NoConn ~ 1600 3850
 NoConn ~ 1600 3950
 NoConn ~ 2600 4350
@@ -2039,7 +2038,7 @@ F 4 "2406965" H 12000 4800 50  0001 L CNN "Farnell"
 	1    12200 5400
 	1    0    0    -1  
 $EndComp
-Text Label 2700 3350 0    60   ~ 0
+Text Label 1500 3750 2    60   ~ 0
 Radio_GATE
 Text Label 11750 5500 2    60   ~ 0
 Radio_GATE
@@ -2083,7 +2082,7 @@ Wire Wire Line
 	12500 5400 12600 5400
 Wire Wire Line
 	12600 5400 12600 5450
-Text Notes 2750 3400 0    60   ~ 0
+Text Notes 50   3800 0    60   ~ 0
 Put this wherever convenient
 Wire Notes Line
 	11100 3350 11100 6550
@@ -2096,8 +2095,6 @@ Timepulse is set to 4MHz to act as the frequency\nreference for the system clock
 Wire Wire Line
 	9200 4250 9200 5050
 NoConn ~ 9350 5150
-Wire Wire Line
-	2700 3350 2600 3350
 $Comp
 L 1v8 #PWR056
 U 1 1 58D3F267
@@ -2160,4 +2157,7 @@ Wire Wire Line
 	5600 4800 5600 4850
 Wire Wire Line
 	5600 4700 5600 4650
+NoConn ~ 2600 3350
+Wire Wire Line
+	1500 3750 1600 3750
 $EndSCHEMATC
