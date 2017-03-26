@@ -809,7 +809,7 @@ Text Label 2700 1750 0    60   ~ 0
 CAN_RXD
 Text Label 1500 3550 2    60   ~ 0
 LED_RED
-Text Label 1500 3450 2    60   ~ 0
+Text Label 1500 3350 2    60   ~ 0
 LED_GRN
 NoConn ~ 1600 3850
 NoConn ~ 1600 3950
@@ -863,7 +863,6 @@ F 3 "" H 750 6350 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 NoConn ~ 2600 950 
-NoConn ~ 1600 3350
 NoConn ~ 2600 3050
 $Comp
 L LED D101
@@ -1348,7 +1347,7 @@ Text Label 10800 2000 0    60   ~ 0
 GPS_PPS
 Text Label 10800 2100 0    60   ~ 0
 GPS_TIM1
-Text Label 2750 3950 0    60   ~ 0
+Text Label 1500 3450 2    60   ~ 0
 GPS_PPS
 $Comp
 L C C9
@@ -1475,8 +1474,6 @@ Wire Wire Line
 	6900 4450 7050 4450
 Wire Wire Line
 	6900 4500 6900 4450
-Wire Wire Line
-	2750 3950 2600 3950
 Wire Wire Line
 	10800 2100 10700 2100
 Wire Wire Line
@@ -1648,8 +1645,6 @@ Wire Wire Line
 	5650 1750 5750 1750
 Wire Wire Line
 	5700 1700 5700 1750
-Wire Wire Line
-	1500 3450 1600 3450
 Wire Wire Line
 	1600 3550 1500 3550
 Wire Wire Line
@@ -2160,4 +2155,9 @@ Wire Wire Line
 NoConn ~ 2600 3350
 Wire Wire Line
 	1500 3750 1600 3750
+Wire Wire Line
+	1600 3450 1500 3450
+Wire Wire Line
+	1500 3350 1600 3350
+NoConn ~ 2600 3950
 $EndSCHEMATC
