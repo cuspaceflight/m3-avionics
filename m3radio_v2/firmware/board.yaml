@@ -1,0 +1,36 @@
+name: M3Radio
+lsefreq: 0
+hsefreq: 26000000
+voltage: 3.3
+mcutype: STM32F405xx
+default: input, pushpull, starthigh, pullup, highspeed
+pins:
+    JTMS: pa13, af0, pulldown
+    JTCK: pa14, af0, pulldown
+    JTDI: pa15, af0, pullup
+    JTDO: pb3, af0
+    NJTRST: pb4, af0, pullup
+    CAN_RX: pb8, af9
+    CAN_TX: pb9, af9
+
+    GPS_PPS: pa5, af1
+    GPS_RX: pa0, af8
+    GPS_TX: pa1, af8
+    GPS_RESET_N: pa2, output, starthigh
+    ANT_FLAG_N: pc14
+    ANT_EN_N: pc15, output, starthigh
+
+    LED_RED: pa6, output, startlow
+    LED_GRN: pa4, output, startlow
+
+    RADIO_IRQ_N: pa11
+    RADIO_GPIO1: pa12
+    RADIO_CS: pb12, output, starthigh
+    RADIO_SCLK: pb13, af5
+    RADIO_SDO: pb14, af5
+    RADIO_SDI: pb15, af5
+    RADIO_SDN: pc6, output, starthigh
+    RADIO_GATE: pa8, output, startlow
+    
+    PLL_SCL: pb10, af4
+    PLL_SDA: pb11, af4
