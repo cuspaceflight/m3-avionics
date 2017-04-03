@@ -27,7 +27,7 @@ accel_cal_y:
   offset: -4
 
 accel_cal_z:
-  scale: 0.00405
-  offset: 22.86
+  scale: 0.00404944
+  offset: -23.4957
 
 radio_freq: 869600000

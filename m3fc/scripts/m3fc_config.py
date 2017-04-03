@@ -402,7 +402,7 @@ def main():
         print(cfg)
         return
 
-    unglob = glob.glob(args.serial_port)
+    unglob = glob.glob(args.port)
     if len(unglob) == 0:
         raise RuntimeError("No serial ports matching glob found")
     port = unglob[0]
