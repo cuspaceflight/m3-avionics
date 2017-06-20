@@ -5,7 +5,7 @@ LIBS:m3pwramp-cache
 LIBS:TOAD-cache
 LIBS:max-8q
 LIBS:m3radio-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
@@ -1072,7 +1072,6 @@ Text Label 2700 3250 0    60   ~ 0
 Radio_SDN
 Text Notes 12300 1550 0    59   ~ 0
 App note: see hardware integration \nmanual, figure 3.4.2.1 for \ncircuit diagram
-NoConn ~ 1600 3250
 $Comp
 L PWR #FLG039
 U 1 1 576DCF29
@@ -2039,7 +2038,7 @@ Text Label 11750 5500 2    60   ~ 0
 Radio_GATE
 Text Label 11750 5600 2    60   ~ 0
 Radio_nSEL
-Text Label 2800 2150 0    60   ~ 0
+Text Label 1350 3250 2    60   ~ 0
 Radio_nSEL
 $Comp
 L 3v3 #PWR054
@@ -2160,4 +2159,7 @@ Wire Wire Line
 Wire Wire Line
 	1500 3350 1600 3350
 NoConn ~ 2600 3950
+Wire Wire Line
+	1600 3250 1350 3250
+NoConn ~ 2800 2150
 $EndSCHEMATC
