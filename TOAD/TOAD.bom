@@ -1,0 +1,198 @@
+Bill Of Materials
+=================
+
+Source file: TOAD.xml
+Date: 2017-06-20T12:20:27.394158
+
+Parts Missing Footprints
+------------------------
+X11    RF Cover       
+X15    RF Cover       
+X2     USB Mini-B     
+X5     SMA Panel      
+X6     PWR Switch     
+X1     USB Cap        
+X4     SMA Panel      
+X7     Battery        
+X3     Case           
+
+Parts Missing Order Codes
+-------------------------
+P2     SWD_TC          agg:TC2030-NL
+X8     Mount           agg:M3_MOUNT
+X9     Mount           agg:M3_MOUNT
+X12    Mount           agg:M3_MOUNT
+X13    Mount           agg:M3_MOUNT
+C27    DC              agg:0402
+C24    DC              agg:0402
+C25    DC              agg:0402
+C56    DC              agg:0402
+C54    DC              agg:0402
+C55    DC              agg:0402
+
+Inconsistent Order Codes
+------------------------
+  RS
+  ~~
+    123-6106: 
+      X6     PWR Switch      None
+      X1     USB Cap         None
+  Farnell
+  ~~~~~~~
+    2496930: 
+      C15    4u7             agg:0603
+      C39    4u7             agg:0603-L
+      C45    4u7             agg:0603-L
+    1830748: 
+      J2     BATT            agg:S03B-PASK-2
+      J3     SWITCH          agg:S03B-PASK-2
+
+Vendor Specific BOMs
+--------------------
+  CPC
+  ~~~
+SG32733,1,1x X3 None
+
+
+  RS
+  ~~
+123-6106,2,,2x--USB Cap-PWR Switch--None--X6X1
+252-438,1,,1x--USB Mini-B--None--X2
+841-8759,1,,1x--USB--SIL-254P-05--J1
+
+
+  App Note
+  ~~~~~~~~
+http://www.silabs.com/Support%20Documents/TechnicalDocs/AN648.pdf,2,2x IC2 IC9 QFN-20-EP-SI
+
+
+  Hab Supplies
+  ~~~~~~~~~~~~
+HAB-SL1252R,1,1x P1 SMA-EDGE
+HAB-MAX-M8Q,1,1x IC3 MAX-M8Q
+
+
+  Farnell
+  ~~~~~~~
+9238689,5,5x 47K 0603-L
+2688498,2,2x 5.1pF 0402
+9238379,8,8x 120R 0603-L
+2497715,2,2x RF Frame BMI-S-201-F
+2497714,2,2x RF Cover None
+2133992,2,2x 1pF 0402
+9238603,4,4x 10K 0603-L
+2368169,10,10x ESD_DIODE 0402-L
+1417667,1,1x NC7SZ04 SOT-23-5
+2376932,1,1x ADP3335 MSOP-8
+2067775,1,1x ADP3335 MSOP-8
+1865556,6,6x 1u 0603-L
+2496792,2,2x 100pF 0402
+2496930,3,3x 4u7 0603 0603-L
+2434643,2,2x 33pF 0402
+2112849,2,2x 1uF 0603-L
+1748728,2,2x 20nH 0402
+2346896,2,2x 2.2uF 0603-L
+2502402,2,2x 110k 0603-L
+2401856,1,1x Battery None
+2406965,1,1x SN74LVC1G0832 SC-70-6
+2358234,1,1x MICROSD MICROSD_MOLEX_50339
+2496834,5,5x 100n 0603-L
+2470344,2,2x 24nH 0402
+2096227,2,2x SMA Panel None
+2064363,1,1x STM32F405RxTx LQFP-64
+1828860,2,2x 100nF 0402
+2290329,4,4x LED 0603-LED
+2290328,4,4x LED 0603-LED
+2496882,2,2x 1n 0603-L
+2309108,1,1x 1k 0603-L
+1830748,2,2x SWITCH BATT S03B-PASK-2
+1608592,2,2x SMA SMA-EDGE
+2332509,4,4x 4.7pF 0402
+2496825,2,2x 10n 0603-L
+2405785,1,1x 26M TCXO XTAL-25x20
+2462637,2,2x Si4463 QFN-20-EP-SI
+9402047,8,8x 100n 0402
+2524984,2,2x 3pF 0402
+2496800,2,2x 220pF 0402
+1762621,2,2x 15nH 0402
+2285871,2,2x 120nH 0402
+1797012,2,2x 2u2 0603-L
+2670808,1,1x 4k32 0603-L
+2672775,2,2x 3.9pF 0402
+1469746,1,1x 1M 0603-L
+2116067,4,4x 11nH 0402
+2672771,2,2x 2.7pF 0402
+1762616,2,2x 9.1nH 0402
+2480594,2,2x BGS12AL7 TSLP7-4
+2576286,1,1x BQ24232HA QFN-16-EP-TI
+
+
+  Mouser
+  ~~~~~~
+634-SL18860DC,1,1x IC13 DFN-10-SL18860DC
+777-CS2100CP-CZZ,1,1x IC11 MSOP-10
+
+
+Assembly BOM
+------------
+SG32733              1   Case            None            X3
+123-6106             2   USB Cap,PWR Switch None            X1 X6
+252-438              1   USB Mini-B      None            X2
+841-8759             1   USB             SIL-254P-05     J1
+http://www.silabs.com/Support%20Documents/TechnicalDocs/AN648.pdf 2   Si4463          QFN-20-EP-SI    IC2 IC9
+HAB-SL1252R          1   SMA             SMA-EDGE        P1
+HAB-MAX-M8Q          1   MAX-M8Q         MAX-M8Q         IC3
+9238689              5   47K             0603-L          R10 R3 R6 R7 R8
+2688498              2   5.1pF           0402            C22 C52
+9238379              8   120R            0603-L          R15 R16 R17 R18 R19 R20 R21 R22
+2497715              2   RF Frame        BMI-S-201-F     X10 X14
+2497714              2   RF Cover        None            X11 X15
+2133992              2   1pF             0402            C20 C51
+9238603              4   10K             0603-L          R1 R11 R12 R2
+2368169              10  ESD_DIODE       0402-L          D1 D15 D17 D18 D2 D3 D4 D5 D6 D7
+1417667              1   NC7SZ04         SOT-23-5        IC8
+2376932              1   ADP3335         MSOP-8          IC6
+2067775              1   ADP3335         MSOP-8          IC10
+1865556              6   1u              0603-L          C16 C26 C31 C42 C43 C47
+2496792              2   100pF           0402            C38 C6
+2496930              3   4u7             0603,0603-L     C15 C39 C45
+2434643              2   33pF            0402            C18 C49
+2112849              2   1uF             0603-L          C37 C5
+1748728              2   20nH            0402            L2 L9
+2346896              2   2.2uF           0603-L          C1 C33
+2502402              2   110k            0603-L          R4 R5
+2401856              1   Battery         None            X7
+2406965              1   SN74LVC1G0832   SC-70-6         IC4
+2358234              1   MICROSD         MICROSD_MOLEX_503398-1892 U1
+2496834              5   100n            0603-L          C21 C32 C36 C44 C58
+2470344              2   24nH            0402            L10 L3
+2096227              2   SMA Panel       None            X4 X5
+2064363              1   STM32F405RxTx   LQFP-64         IC1
+1828860              2   100nF           0402            C2 C34
+2290329              4   LED             0603-LED        D11 D13 D16 D9
+2290328              4   LED             0603-LED        D10 D12 D14 D8
+2496882              2   1n              0603-L          C40 C41
+2309108              1   1k              0603-L          R14
+1830748              2   SWITCH,BATT     S03B-PASK-2     J2 J3
+1608592              2   SMA             SMA-EDGE        P3 P4
+2332509              4   4.7pF           0402            C28 C30 C57 C59
+2496825              2   10n             0603-L          C29 C46
+2405785              1   26M TCXO        XTAL-25x20      Y1
+2462637              2   Si4463          QFN-20-EP-SI    IC2 IC9
+9402047              8   100n            0402            C12 C13 C14 C4 C60 C7 C8 C9
+2524984              2   3pF             0402            C17 C48
+2496800              2   220pF           0402            C3 C35
+1762621              2   15nH            0402            L11 L4
+2285871              2   120nH           0402            L1 L8
+1797012              2   2u2             0603-L          C10 C11
+2670808              1   4k32            0603-L          R9
+2672775              2   3.9pF           0402            C19 C50
+1469746              1   1M              0603-L          R13
+2116067              4   11nH            0402            L12 L13 L5 L6
+2672771              2   2.7pF           0402            C23 C53
+1762616              2   9.1nH           0402            L14 L7
+2480594              2   BGS12AL7        TSLP7-4         IC12 IC5
+2576286              1   BQ24232HA       QFN-16-EP-TI    IC7
+634-SL18860DC        1   SL18860DC       DFN-10-SL18860DC IC13
+777-CS2100CP-CZZ     1   CS2100-CP       MSOP-10         IC11
+
