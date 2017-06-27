@@ -1,4 +1,4 @@
-update=Tue 20 Jun 2017 16:53:26 BST
+update=Tue 27 Jun 2017 22:58:43 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -29,8 +29,6 @@ LibDir=../agg-kicad
 [eeschema/libraries]
 LibName1=TOAD-rescue
 LibName2=../agg-kicad/agg-kicad
-[general]
-version=1
 [schematic_editor]
 version=1
 PageLayoutDescrFile=
@@ -41,3 +39,5 @@ NetFmtName=
 SpiceAjustPassiveValues=0
 LabSize=60
 ERC_TestSimilarLabels=1
+[general]
+version=1
