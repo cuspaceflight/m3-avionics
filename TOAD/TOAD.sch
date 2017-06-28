@@ -2523,7 +2523,7 @@ CHG_EN
 Text Label 2950 6200 0    60   ~ 0
 V_BAT_MON
 Text Notes 9400 10600 0    60   ~ 0
-TODO:\n- Add debug points \n- Begin PCB layout of each section\n- Place holes and board edge\n- Complete PCB layout
+TODO:\n- Via Stitching\n- Test Points\n- Silkscreen & Logos\n- Gerbers\n- BOM\n- Boardholder STL
 NoConn ~ 2850 4000
 Text Label 2950 4100 0    60   ~ 0
 B_TEMP
