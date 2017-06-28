@@ -3043,8 +3043,8 @@ F 3 "" H 7350 7900 50  0001 C CNN
 	1    7350 7900
 	0    -1   -1   0   
 $EndComp
-Text Notes 14100 10750 0    60   ~ 0
-See /RangingSpecs.pdf for further notes
+Text Notes 13300 10750 0    60   ~ 0
+See ../documentation/RangingSpecs.pdf for further notes
 $Comp
 L C_Small C26
 U 1 1 58DF4354

@@ -1,4 +1,4 @@
-update=Wed 28 Jun 2017 20:25:49 BST
+update=Wed 28 Jun 2017 22:39:38 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -28,7 +28,7 @@ version=1
 LibDir=../agg-kicad
 [eeschema/libraries]
 LibName1=TOAD-rescue
-LibName2=../agg-kicad/agg-kicad
+LibName2=../../agg-kicad/agg-kicad
 [schematic_editor]
 version=1
 PageLayoutDescrFile=

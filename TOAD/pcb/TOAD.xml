@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>/home/matt/Documents/m3-avionics/TOAD/TOAD.sch</source>
-    <date>Tue 20 Jun 2017 12:20:27 BST</date>
+    <source>/home/matt/Documents/m3-avionics/TOAD/pcb/TOAD.sch</source>
+    <date>Wed 28 Jun 2017 22:36:28 BST</date>
     <tool>Eeschema no-vcs-found-feba091~58~ubuntu16.04.1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -2000,13 +2000,13 @@
   </libparts>
   <libraries>
     <library logical="TOAD-rescue">
-      <uri>/home/matt/Documents/m3-avionics/TOAD/TOAD-rescue.lib</uri>
+      <uri>/home/matt/Documents/m3-avionics/TOAD/pcb/TOAD-rescue.lib</uri>
     </library>
     <library logical="agg-kicad">
-      <uri>/home/matt/Documents/m3-avionics/TOAD/../agg-kicad/agg-kicad.lib</uri>
+      <uri>/home/matt/Documents/m3-avionics/TOAD/pcb/../../agg-kicad/agg-kicad.lib</uri>
     </library>
     <library logical="TOAD-cache">
-      <uri>/home/matt/Documents/m3-avionics/TOAD/TOAD-cache.lib</uri>
+      <uri>/home/matt/Documents/m3-avionics/TOAD/pcb/TOAD-cache.lib</uri>
     </library>
   </libraries>
   <nets>
