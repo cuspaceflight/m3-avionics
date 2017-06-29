@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: TOAD.xml
-Date: 2017-06-28T22:06:04.846336
+Date: 2017-06-29T15:10:40.859554
 
 Parts Missing Footprints
 ------------------------
@@ -29,6 +29,18 @@ C25    DC              agg:0402
 C56    DC              agg:0402
 C54    DC              agg:0402
 C55    DC              agg:0402
+TP3    TESTPAD         agg:TESTPAD
+TP2    TESTPAD         agg:TESTPAD
+TP1    TESTPAD         agg:TESTPAD
+TP7    TESTPAD         agg:TESTPAD
+TP8    TESTPAD         agg:TESTPAD
+TP4    TESTPAD         agg:TESTPAD
+TP5    TESTPAD         agg:TESTPAD
+TP6    TESTPAD         agg:TESTPAD
+TP9    TESTPAD         agg:TESTPAD
+TP10   TESTPAD         agg:TESTPAD
+TP11   TESTPAD         agg:TESTPAD
+TP12   TESTPAD         agg:TESTPAD
 
 Inconsistent Order Codes
 ------------------------
