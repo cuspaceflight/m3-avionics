@@ -1,0 +1,71 @@
+name: toad
+lsefreq: 0
+hsefreq: 26000000
+voltage: 3.3
+mcutype: STM32F405xx
+default: input, pushpull, starthigh, pullup, highspeed
+pins:
+    SWDIO:      pa13, af0
+    SWCLK:      pa14, pulldown, af0
+    
+    GPS_PPS:    pa0, input, pushpull
+    GPS_RST:    pb5, output, pushpull, starthigh, pullup
+    UART_TX:    pb6, af7
+    UART_RX:    pb7, af7
+    
+    I2C_SCL:    pb8, af4
+    I2C_SDA:    pb9, af4    
+    
+    SPI1_SCK:   pa5, af5
+    SPI1_MOSI:  pa7, af5
+    SPI1_MISO:  pa6, af5 
+    PR_GPIO:    pa1, input, pushpull
+    PR_nSS:     pa2, output, pushpull, starthigh, pullup
+    PR_nIRQ:    pb11, input, pushpull, pullup
+    PR_SW:      pc1, output, pushpull
+    PR_SDN:     pc13, output, pushpull
+    GATE:       pa4, output, pushpull, startlow, pulldown      
+    
+    SPI2_SCK:   pb10, af5
+    SPI2_MOSI:  pc3, af5
+    SPI2_MISO:  pc2, af5
+    SR_nSS:     pa3, output, pushpull, starthigh, pullup
+    SR_nIRQ:    pc15, input, pushpull, pullup
+    SR_SW:      pc0, output, pushpull
+    SR_SDN:     pc14, output, pushpull    
+    
+    GPS_GD:     pa8, output, pushpull, startlow
+    GPS_ERR:    pa9, output, pushpull, startlow
+    PR_GD:      pa10, output, pushpull, startlow
+    PR_ERR:     pa11, output, pushpull, startlow
+    SR_GD:      pa12, output, pushpull, startlow
+    SR_ERR:     pa15, output, pushpull, startlow
+    SYS_GD:     pc6, output, pushpull, startlow
+    SYS_ERR:    pc7, output, pushpull, startlow
+    
+    OTG_VBUS:   pb13, input, pulldown
+    OTG_DM:     pb14, af12
+    OTG_DP:     pb15, af12
+    
+    B_TEMP:     pb1, analog, floating
+    CHG_EN:     pb2, output, pushpull, startlow, pulldown
+    CHG_GOOD:   Pb3, input, pushpull
+    POWER_GOOD: pb4, input, pushpull
+    I_CHG_MON:  pc4, analog, floating
+    V_BAT_MON:  pc5, analog, floating
+    
+    SDIO_DO:    pc8, af12
+    SDIO_D1:    pc9, af12
+    SDIO_D2:    pc10, af12
+    SDIO_D3:    pc11, af12
+    SDIO_CK:    pc12, af12
+    SDIO_CMD:   pd2, af12
+    
+
+
+
+
+
+
+
+    
