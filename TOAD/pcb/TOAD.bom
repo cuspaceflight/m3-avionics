@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: TOAD.xml
-Date: 2017-06-29T15:10:40.859554
+Date: 2017-06-30T13:14:42.217190
 
 Parts Missing Footprints
 ------------------------
@@ -23,12 +23,6 @@ X8     Mount           agg:M3_MOUNT
 X9     Mount           agg:M3_MOUNT
 X12    Mount           agg:M3_MOUNT
 X13    Mount           agg:M3_MOUNT
-C27    DC              agg:0402
-C24    DC              agg:0402
-C25    DC              agg:0402
-C56    DC              agg:0402
-C54    DC              agg:0402
-C55    DC              agg:0402
 TP3    TESTPAD         agg:TESTPAD
 TP2    TESTPAD         agg:TESTPAD
 TP1    TESTPAD         agg:TESTPAD
