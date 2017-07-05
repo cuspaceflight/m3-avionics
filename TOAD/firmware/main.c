@@ -1,5 +1,8 @@
+
 #include "ch.h"
 #include "hal.h"
+
+#include "psu.h"
 
 int main(void) {
 
@@ -11,5 +14,6 @@ int main(void) {
     chSysInit();
     
     /* Do some stuff */
+    psu_init();
 
 }
