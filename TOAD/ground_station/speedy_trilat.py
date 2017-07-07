@@ -42,49 +42,20 @@ def speedy_trilat(p_i, r_i, n=3):
     a = a/N
     B = B/N
     c = c/N
-    print("a:")
-    print(a)
-    print("")
-    print("sizeof a=")
-    print(a.shape)
-    print("")
-    print("B:")
-    print(B)
-    print("")
-    print("c:")
-    print(c)
-    print("")
-    a = a[:,np.newaxis]      # Vector
+    
+    a_mat = a[:,np.newaxis]      # Single dimension matrix
     c_mat = c[:,np.newaxis]  # Single dimension matrix
-    print(c)
-    f = a + np.dot(B,c_mat) + 2*np.dot( np.dot( c_mat, np.transpose(c_mat) ) , c_mat )
-    print("sizeof c = ")
-    print(c.shape)
-    print("")
-
-    print("f:")
-    print(f)
-
-    print("")
+    
+    f = a_mat + np.dot(B,c_mat) + 2*np.dot( np.dot( c_mat, np.transpose(c_mat) ) , c_mat )
     H = ( np.dot(p_i, np.transpose(p_i)) + 2*N*np.dot(c_mat, np.transpose(c_mat)) ) * (-2/N)
     
     
-    print("H:")
-    print(H)
-    print("")
     
     fprime = f - f[n-1]
     fprime = np.delete(fprime, (n-1), axis=0)
     Hprime = H - H[n-1,:][np.newaxis,:]
     Hprime = np.delete(Hprime, (n-1), axis=0)
 
-
-    print("fprime:")
-    print(fprime)
-    print("")
-    print("Hprime")
-    print(Hprime)
-    print("")
 
 
     Q,U = np.linalg.qr(Hprime)
