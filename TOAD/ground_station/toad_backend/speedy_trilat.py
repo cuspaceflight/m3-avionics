@@ -3,12 +3,9 @@
 """
 Speedy trilateration algorithm.
 
-USAGE NOTES HERE.
+Derivation: Y. Zhou, "An Efficient Least-Squares Trilateration Algorithm for Mobile Robot Localization".
+Matlab implementations in TOAD documentation.
 """
-
-# Derivation: Y. Zhou, "An Efficient Least-Squares Trilateration Algorithm for Mobile Robot Localization".
-# Matlab implementations in TOAD documentation.
-
 import sys
 import math
 import numpy as np
@@ -26,13 +23,9 @@ def speedy_trilat(p_i, r_i):
 
     Raises:
         Asserts n (number of dimensions) is 2 or 3
+        ValueError if no real solution to quadratic equation in step 3 exists(circles/spheres do not intersect)
     """
-    print("p_i =")
-    print(p_i)
-    print("")
-    print("r_i =")
-    print(r_i)
-    
+        
     n = np.shape(p_i)[0]
     N = np.shape(p_i)[1]
     assert ( n==2 or n==3 ) , "Position vectors should have two or three dimensions"
@@ -53,7 +46,7 @@ def speedy_trilat(p_i, r_i):
     B = B/N
     c = c/N
 
-    a_mat = a[:,np.newaxis]      # Single dimension matrix
+    a_mat = a[:,np.newaxis]  # Single dimension matrix
     c_mat = c[:,np.newaxis]  # Single dimension matrix
 
     f = a_mat + np.dot(B,c_mat) + 2*np.dot( np.dot( c_mat, np.transpose(c_mat) ) , c_mat )
@@ -72,6 +65,8 @@ def speedy_trilat(p_i, r_i):
     qtq = np.sum(qtq)/N
 
     # Steps 3 to 5 - dependent on n
+    # Note about complex roots:
+    # Quadratic equation has no real roots if spheres/circles do not intersect
     v = np.dot( np.transpose(Q), fprime)
     q = np.zeros(shape=(n,2))
     if n==2:
@@ -80,9 +75,12 @@ def speedy_trilat(p_i, r_i):
         poly_v = v[0]/U[0,0]
         poly_u = U[0,1]/U[0,0]
 
-        
-        q[1,] = np.roots(np.array([poly_u*poly_u + 1, 2*poly_u*poly_v, poly_v*poly_v - qtq]))
+        roots = np.roots(np.array([poly_u*poly_u + 1, 2*poly_u*poly_v, poly_v*poly_v - qtq]))
+        if np.iscomplex(roots[0]):
+            raise ValueError("No real solution to quadratic equation for y coordinate")
 
+        q[1,] = roots
+        
         # Step 4:
         q[0,:] = -poly_v - poly_u * q[1,:]
     elif n == 3:
@@ -91,16 +89,20 @@ def speedy_trilat(p_i, r_i):
         poly_b = U[0,1]*U[1,2] / (U[0,0]*U[1,1]) - U[0,2]/U[0,0]
         poly_c = v[1]/U[1,1]
         poly_d = U[1,2]/U[1,1]
-        q[2,:] = np.roots(np.array([1 + poly_b**2 + poly_d**2,
+        roots = np.roots(np.array([1 + poly_b**2 + poly_d**2,
             2*(poly_a * poly_b + poly_c * poly_d),
             poly_a**2 + poly_c**2 - qtq]))
 
+        if np.iscomplex(roots[0]):
+            raise ValueError("No real solution to quadratic equation for z coordinate")
+
+        q[2,:] = roots
         # Step 4:
         q[0,:] = poly_a + poly_b * q[2,:]
         q[1,:] = -poly_c - poly_d * q[2,:]
 
     else:
-        raise ValueError("number of spatial dimensions in input matrices should be 2 or 3")
+        raise ValueError("Number of spatial dimensions in input matrices should be 2 or 3")
     
     # Step 5:
     p0 = q + c[:,np.newaxis]
@@ -119,6 +121,7 @@ def speedy_trilat(p_i, r_i):
 
     return pos
 
+# Call function for testing
 print(speedy_trilat(np.array([
     [10,0,10,0],
     [0,10,10,0],
