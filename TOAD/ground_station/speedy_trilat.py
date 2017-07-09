@@ -101,11 +101,26 @@ def speedy_trilat(p_i, r_i):
 
     else:
         raise ValueError("number of spatial dimensions in input matrices should be 2 or 3")
-    pos=q
+    
+    # Step 5:
+    p0 = q + c[:,np.newaxis]
+    
+    # Steps 6 to 7: Select p0
+
+    # Assume that correct solution has positive z component
+    # i.e. above ground if xyz axes oriented with plane of ground
+
+    if p0[2,0] > 0:
+        pos = p0[:,0]
+    elif p0[2,1] >= 0:
+        pos = p0[:,1]
+    else:
+        raise ValueError("Both position estimates on wrong side of plane (negative z component)")
+
     return pos
 
 print(speedy_trilat(np.array([
-    [7,3,3,4],
-    [4,4,4,4],
-    [1,1,1,1]]),
-    np.array([9,8,7,6])))
+    [10,0,10,0],
+    [0,10,10,0],
+    [0,0,0,0]]),
+    np.array([10.1,10.2,10.3,10.4])))
