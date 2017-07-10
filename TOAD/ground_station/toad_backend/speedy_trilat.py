@@ -6,8 +6,6 @@ Speedy trilateration algorithm.
 Derivation: Y. Zhou, "An Efficient Least-Squares Trilateration Algorithm for Mobile Robot Localization".
 Matlab implementations in TOAD documentation.
 """
-import sys
-import math
 import numpy as np
 
 def speedy_trilat(p_i, r_i, guess = False):
