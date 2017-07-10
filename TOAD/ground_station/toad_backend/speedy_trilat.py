@@ -10,20 +10,22 @@ import sys
 import math
 import numpy as np
 
-def speedy_trilat(p_i, r_i):
+def speedy_trilat(p_i, r_i, guess = False):
     """
     Returns position estimate from ground station locations and distances between them and tracked objects.
 
     Args:
         p_i: nxN numpy array containing position vectors of reference points
         r_i: N element row vector (numpy array) containing distances from each reference point
-
+        guess: boolean, set true to assume that z=0 if no intersection point can be found
+    
     Returns:
         Position of tracked object as an n element column vector (numpy array)
 
     Raises:
         Asserts n (number of dimensions) is 2 or 3
         ValueError if no real solution to quadratic equation in step 3 exists(circles/spheres do not intersect)
+            (and guess is set to false)
     """
         
     n = np.shape(p_i)[0]
@@ -77,9 +79,12 @@ def speedy_trilat(p_i, r_i):
 
         roots = np.roots(np.array([poly_u*poly_u + 1, 2*poly_u*poly_v, poly_v*poly_v - qtq]))
         if np.iscomplex(roots[0]):
-            raise ValueError("No real solution to quadratic equation for y coordinate")
-
-        q[1,] = roots
+            if guess:
+                q[1,] = np.zeros(2)
+            else:
+                raise ValueError("No real solution to quadratic equation for y coordinate")
+        else:
+            q[1,] = roots
         
         # Step 4:
         q[0,:] = -poly_v - poly_u * q[1,:]
@@ -94,9 +99,12 @@ def speedy_trilat(p_i, r_i):
             poly_a**2 + poly_c**2 - qtq]))
 
         if np.iscomplex(roots[0]):
-            raise ValueError("No real solution to quadratic equation for z coordinate")
-
-        q[2,:] = roots
+            if guess:
+                q[2,:] = np.zeros(2)
+            else:
+                raise ValueError("No real solution to quadratic equation for z coordinate")
+        else:
+            q[2,:] = roots
         # Step 4:
         q[0,:] = poly_a + poly_b * q[2,:]
         q[1,:] = -poly_c - poly_d * q[2,:]
@@ -123,7 +131,7 @@ def speedy_trilat(p_i, r_i):
 
 # Call function for testing
 print(speedy_trilat(np.array([
-    [10,0,10,0],
-    [0,10,10,0],
-    [0,0,0,0]]),
-    np.array([10.1,10.2,10.3,10.4])))
+    [10,0,10],
+    [0,10,10],
+    [0,0,0]]),
+    np.array([0.5, 0.5, 0.5])))
