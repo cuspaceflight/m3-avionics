@@ -1,4 +1,4 @@
-update=Fri 30 Jun 2017 15:12:21 BST
+update=Mon 10 Jul 2017 21:10:32 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -23,21 +23,22 @@ ModuleOutlineThickness=0.150000000000
 [cvpcb]
 version=1
 NetIExt=net
+[general]
+version=1
 [eeschema]
 version=1
 LibDir=../agg-kicad
 [eeschema/libraries]
 LibName1=TOAD-rescue
 LibName2=../../agg-kicad/agg-kicad
+LibName3=/home/matt/Documents/m3-avionics/agg-kicad/agg-kicad
 [schematic_editor]
 version=1
 PageLayoutDescrFile=
 PlotDirectoryName=
 SubpartIdSeparator=0
 SubpartFirstId=65
-NetFmtName=
+NetFmtName=Pcbnew
 SpiceAjustPassiveValues=0
 LabSize=60
 ERC_TestSimilarLabels=1
-[general]
-version=1
