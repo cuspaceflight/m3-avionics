@@ -10,4 +10,4 @@ def run():
     shared_mgr = multiprocessing.Manager()
     global_state = shared_mgr.dict(time=0.0,
         position=np.zeros((3,1)), velocity=np.zeros((3,1)), acceleration=np.zeros((3,1)),
-        angular_velocity=np.zeros((3,1)) )# add angular position as quaternion
+        angular_position=Quaternion(), angular_velocity=np.zeros((3,1)) )
