@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Speedy trilateration algorithm.
 
@@ -14,7 +16,7 @@ def speedy_trilat(p_i, r_i, guess = False):
         p_i: nxN numpy array containing position vectors of reference points
         r_i: N element row vector (numpy array) containing distances from each reference point
         guess: boolean, set true to assume that z=0 if no intersection point can be found
-
+    
     Returns:
         Position of tracked object as an n element column vector (numpy array)
 
@@ -23,7 +25,7 @@ def speedy_trilat(p_i, r_i, guess = False):
         ValueError if no real solution to quadratic equation in step 3 exists(circles/spheres do not intersect)
             (and guess is set to false)
     """
-
+        
     n = np.shape(p_i)[0]
     N = np.shape(p_i)[1]
     assert ( n==2 or n==3 ) , "Position vectors should have two or three dimensions"
@@ -81,7 +83,7 @@ def speedy_trilat(p_i, r_i, guess = False):
                 raise ValueError("No real solution to quadratic equation for y coordinate")
         else:
             q[1,] = roots
-
+        
         # Step 4:
         q[0,:] = -poly_v - poly_u * q[1,:]
     elif n == 3:
@@ -107,10 +109,10 @@ def speedy_trilat(p_i, r_i, guess = False):
 
     else:
         raise ValueError("Number of spatial dimensions in input matrices should be 2 or 3")
-
+    
     # Step 5:
     p0 = q + c[:,np.newaxis]
-
+    
     # Steps 6 to 7: Select p0
 
     # Assume that correct solution has positive z component
@@ -124,3 +126,10 @@ def speedy_trilat(p_i, r_i, guess = False):
         raise ValueError("Both position estimates on wrong side of plane (negative z component)")
 
     return pos
+
+# Call function for testing
+print(speedy_trilat(np.array([
+    [10,0,10],
+    [0,10,10],
+    [0,0,0]]),
+    np.array([0.5, 0.5, 0.5])))
