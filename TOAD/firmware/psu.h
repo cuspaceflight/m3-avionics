@@ -8,7 +8,4 @@
 /* PSU Init */
 void psu_init(void);
 
-/* PSU Measurement */
-void get_psu_measurements(void);
-
 #endif 
