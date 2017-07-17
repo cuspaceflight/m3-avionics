@@ -1,5 +1,6 @@
 """Trilateration maths functions.
 """
+import numpy as np
 
 def ecef_transform():
 

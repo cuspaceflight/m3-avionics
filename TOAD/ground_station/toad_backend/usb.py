@@ -11,11 +11,11 @@ import serial
 from multiprocessing import Pipe
 
 class Toad_Packet:
-"""Decoded data packet from TOAD network.
+    """Decoded data packet from TOAD network.
 
-Attributes:
+    Attributes:
 
-"""
+    """
     def __init__(self):
 
 
