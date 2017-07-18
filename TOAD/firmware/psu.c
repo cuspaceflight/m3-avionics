@@ -9,7 +9,6 @@ bool input_power = FALSE;
 bool battery_charging = FALSE;
 
 /* Prototypes */
-void get_psu_status(void);
 void get_psu_measurements(void);
 void enable_charging(void);
 
@@ -29,28 +28,20 @@ static const ADCConversionGroup adcgrpcfg = {
     .sqr1 = ADC_SQR1_NUM_CH(ADC_NUM_CHANNELS),
     .sqr2 = 0,
     .sqr3 = ADC_SQR3_SQ3_N(ADC_CHANNEL_IN15) |
-            ADC_SQR3_SQ2_N(ADC_CHANNEL_IN14)   | ADC_SQR3_SQ1_N(ADC_CHANNEL_IN9)
+            ADC_SQR3_SQ2_N(ADC_CHANNEL_IN14) | ADC_SQR3_SQ1_N(ADC_CHANNEL_IN9)
 };
 
 
 /* Get PSU Measurements */
 void get_psu_measurements(void) {
 
-     adcConvert(&ADCD1, &adcgrpcfg, measure, ADC_BUF_DEPTH);
-     chThdSleepMilliseconds(500);
+    /* Trigger ADC Conversion */
+    adcConvert(&ADCD1, &adcgrpcfg, measure, ADC_BUF_DEPTH);
+    chThdSleepMilliseconds(500);
 }
 
 
-/* Get PSU Status */
-void get_psu_status() {
-
-    /* Read In CHG_GOOD and P_GOOD */
-    battery_charging = !(palReadPad(GPIOB, GPIOB_CHG_GOOD));
-    input_power = !(palReadPad(GPIOB, GPIOB_POWER_GOOD));
-
-}
-
-/* Enable Charging */
+/* Enable Charging  -  Triggered by Interrupt */
 void enable_charging(void) {
     
     /* Cycle CHG_EN Pin */
@@ -74,7 +65,6 @@ static THD_FUNCTION(PSUThread, arg) {
     
     /* Monitor PSU */
     get_psu_measurements();
-    get_psu_status();
     
     /* TODO: Analyse Measurements */
     
