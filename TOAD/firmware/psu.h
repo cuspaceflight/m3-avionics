@@ -7,5 +7,6 @@
 
 /* PSU Init */
 void psu_init(void);
+void enable_charging(void);
 
 #endif 
