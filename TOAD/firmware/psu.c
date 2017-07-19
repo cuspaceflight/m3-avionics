@@ -5,12 +5,10 @@
 #include "psu.h"
 
 /* PSU Status */
-bool input_power = FALSE;
 bool battery_charging = FALSE;
 
 /* Prototypes */
 void get_psu_measurements(void);
-void enable_charging(void);
 
 /* ADC Samples */
 static adcsample_t measure[ADC_NUM_CHANNELS * ADC_BUF_DEPTH];
