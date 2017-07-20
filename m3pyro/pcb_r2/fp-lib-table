@@ -1,3 +1,4 @@
 (fp_lib_table
   (lib (name agg)(type KiCad)(uri "$(KIPRJMOD)/../../agg-kicad/agg.pretty")(options "")(descr ""))
+  (lib (name m3pyro)(type KiCad)(uri "$(KIPRJMOD)/m3pyro.pretty")(options "")(descr ""))
 )
