@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 9)
+    (drawings 7)
     (tracks 1331)
     (zones 0)
     (modules 65)
@@ -28,7 +28,7 @@
     (33 F.Adhes user)
     (34 B.Paste user)
     (35 F.Paste user)
-    (36 B.SilkS user hide)
+    (36 B.SilkS user)
     (37 F.SilkS user)
     (38 B.Mask user)
     (39 F.Mask user)
@@ -3165,7 +3165,7 @@
       (net 52 "Net-(C5-Pad2)"))
   )
 
-  (gr_text "M3Radio r1\n23 June 2016" (at 100.3 97.4) (layer B.SilkS)
+  (gr_text "M3Radio r2\n23 July 2017" (at 100.3 97.4) (layer B.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
   )
   (gr_circle (center 100 100) (end 119.75 100) (layer Edge.Cuts) (width 0.01))
@@ -3183,12 +3183,6 @@
   )
   (gr_text Radio (at 95.1 82.25) (layer F.SilkS) (tstamp 57335CE7)
     (effects (font (size 0.75 0.75) (thickness 0.1875)))
-  )
-  (gr_text Radio (at 94.25 87.45) (layer B.SilkS)
-    (effects (font (size 0.75 0.75) (thickness 0.1875)) (justify mirror))
-  )
-  (gr_text GPS (at 83.55 109.2) (layer B.SilkS)
-    (effects (font (size 0.75 0.75) (thickness 0.1875)) (justify mirror))
   )
 
   (segment (start 113.960001 86.925) (end 113.960001 86.625001) (width 0.2) (layer F.Cu) (net 1))
