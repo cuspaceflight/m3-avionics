@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:agg-kicad
 LIBS:usblc6-2
 LIBS:ADIS16405
 LIBS:sd_reader
@@ -276,7 +277,9 @@ F 0 "C12" H 6400 4870 50  0000 C CNN
 F 1 "100n" H 6400 4730 50  0000 C CNN
 F 2 "agg:0402" H 6350 4800 50  0001 C CNN
 F 3 "" H 6350 4800 50  0001 C CNN
-F 4 "2496771" H 6350 4800 60  0001 C CNN "Farnell"
+F 4 "Value" H 6350 4800 60  0001 C CNN "Digikey"
+F 5 "2496771" H 6350 4800 60  0001 C CNN "Farnell"
+F 6 "Value" H 6350 4800 60  0001 C CNN "Fieldname"
 	1    6350 4800
 	0    1    1    0   
 $EndComp
@@ -1080,7 +1083,9 @@ F 0 "C17" H 6050 5570 50  0000 C CNN
 F 1 "100n" H 6050 5430 50  0000 C CNN
 F 2 "agg:0603" H 6000 5500 50  0001 C CNN
 F 3 "" H 6000 5500 50  0001 C CNN
-F 4 "Value" H 6000 5500 60  0001 C CNN "Farnell"
+F 4 "Value" H 6000 5500 60  0001 C CNN "Digikey"
+F 5 "2496771" H 6000 5500 60  0001 C CNN "Farnell"
+F 6 "Value" H 6000 5500 60  0001 C CNN "Fieldname"
 	1    6000 5500
 	0    1    1    0   
 $EndComp
@@ -1817,6 +1822,4 @@ Wire Wire Line
 	2500 6750 2600 6750
 Wire Wire Line
 	2600 7250 2500 7250
-Text Notes 6150 5600 0    60   ~ 0
-NEEDS FARNELL NUMBER
 $EndSCHEMATC
