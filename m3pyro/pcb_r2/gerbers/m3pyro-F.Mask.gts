@@ -1,12 +1,12 @@
 G04 #@! TF.GenerationSoftware,KiCad,Pcbnew,no-vcs-found-d3b382c~59~ubuntu16.04.1*
-G04 #@! TF.CreationDate,2017-07-20T01:56:19+01:00*
+G04 #@! TF.CreationDate,2017-07-22T14:16:26+01:00*
 G04 #@! TF.ProjectId,m3pyro,6D337079726F2E6B696361645F706362,rev?*
 G04 #@! TF.SameCoordinates,Original
 G04 #@! TF.FileFunction,Soldermask,Top*
 G04 #@! TF.FilePolarity,Negative*
 %FSLAX46Y46*%
 G04 Gerber Fmt 4.6, Leading zero omitted, Abs format (unit mm)*
-G04 Created by KiCad (PCBNEW no-vcs-found-d3b382c~59~ubuntu16.04.1) date Thu Jul 20 01:56:19 2017*
+G04 Created by KiCad (PCBNEW no-vcs-found-d3b382c~59~ubuntu16.04.1) date Sat Jul 22 14:16:26 2017*
 %MOMM*%
 %LPD*%
 G01*
