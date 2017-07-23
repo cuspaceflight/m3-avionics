@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>/home/gregory/m3-avionics/m3imu/pcb/m3imu.sch</source>
-    <date>Sun 23 Jul 2017 20:01:53 BST</date>
+    <date>Sun 23 Jul 2017 20:15:58 BST</date>
     <tool>Eeschema no-vcs-found-cb2f3d6~59~ubuntu16.04.1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -66,9 +66,7 @@
       <value>100n</value>
       <footprint>agg:0402</footprint>
       <fields>
-        <field name="Digikey">Value</field>
         <field name="Farnell">2496771</field>
-        <field name="Fieldname">Value</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -362,11 +360,9 @@
     </comp>
     <comp ref="C17">
       <value>100n</value>
-      <footprint>agg:0603</footprint>
+      <footprint>agg:0402</footprint>
       <fields>
-        <field name="Digikey">Value</field>
         <field name="Farnell">2496771</field>
-        <field name="Fieldname">Value</field>
       </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>

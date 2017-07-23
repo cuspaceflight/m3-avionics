@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/gregory/m3-avionics/m3imu/pcb/m3imu.sch)
-    (date "Sun 23 Jul 2017 17:40:39 BST")
+    (date "Sun 23 Jul 2017 20:13:28 BST")
     (tool "Eeschema no-vcs-found-cb2f3d6~59~ubuntu16.04.1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -54,9 +54,7 @@
       (value 100n)
       (footprint agg:0402)
       (fields
-        (field (name Digikey) Value)
-        (field (name Farnell) 2496771)
-        (field (name Fieldname) Value))
+        (field (name Farnell) 2496771))
       (libsource (lib agg-kicad) (part C))
       (sheetpath (names /) (tstamps /))
       (tstamp 56C4DA72))
@@ -292,11 +290,9 @@
       (tstamp 580E65C4))
     (comp (ref C17)
       (value 100n)
-      (footprint agg:0603)
+      (footprint agg:0402)
       (fields
-        (field (name Digikey) Value)
-        (field (name Farnell) 2496771)
-        (field (name Fieldname) Value))
+        (field (name Farnell) 2496771))
       (libsource (lib agg-kicad) (part C))
       (sheetpath (names /) (tstamps /))
       (tstamp 580E8A5A))
