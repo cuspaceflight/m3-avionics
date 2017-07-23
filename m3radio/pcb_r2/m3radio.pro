@@ -1,4 +1,4 @@
-update=07/03/2017 21:22:54
+update=Sat 22 Jul 2017 22:44:24 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -27,10 +27,12 @@ NetIExt=net
 version=1
 [eeschema]
 version=1
-LibDir=../../agg-kicad;../../agg-kicad/lib/ic/microcontroller;../../agg-kicad
+LibDir=../../agg-kicad;../../agg-kicad/lib/ic/microcontroller
 [eeschema/libraries]
 LibName1=agg-kicad
 LibName2=TOAD
 LibName3=m3pwramp-cache
 LibName4=TOAD-cache
 LibName5=max-8q
+LibName6=m3radio-rescue
+LibName7=m3radio-cache
