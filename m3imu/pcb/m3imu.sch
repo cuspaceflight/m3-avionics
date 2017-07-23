@@ -4,7 +4,7 @@ LIBS:usblc6-2
 LIBS:ADIS16405
 LIBS:sd_reader
 LIBS:m3imu-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -669,8 +669,6 @@ Text Label 2600 4950 0    60   ~ 0
 MPU_IRQ
 Text Label 2600 5050 0    60   ~ 0
 ~MPU_SS
-Text Label 2600 5250 0    60   ~ 0
-MISO
 Text Label 1400 6350 2    60   ~ 0
 BARO_SCLK
 Text Label 1400 6550 2    60   ~ 0
@@ -724,19 +722,6 @@ F 3 "" H 6000 4750 50  0001 C CNN
 $EndComp
 NoConn ~ 8650 6000
 NoConn ~ 1500 6250
-$Comp
-L ADIS16405BMLZ U1
-U 1 1 56C6FF68
-P 5800 2050
-F 0 "U1" H 5800 1100 60  0000 C CNN
-F 1 "ADIS16405BMLZ" H 5800 3000 60  0000 C CNN
-F 2 "agg:ADIS16405BMLZ" H 5800 1950 60  0001 C CNN
-F 3 "" H 5150 2800 60  0000 C CNN
-F 4 "FTMH-112-03-L-DV" H 5800 2050 60  0001 C CNN "Digikey"
-F 5 "1849515" H 5800 2050 60  0001 C CNN "Farnell"
-	1    5800 2050
-	1    0    0    -1  
-$EndComp
 $Comp
 L 3v3 #PWR027
 U 1 1 56C71741
@@ -829,57 +814,11 @@ Text Label 10350 1300 2    60   ~ 0
 ~MPU_SS
 Text Label 10350 1400 2    60   ~ 0
 MISO
-Text Label 2600 5350 0    60   ~ 0
-MOSI
-NoConn ~ 5150 1400
-NoConn ~ 5150 1500
-NoConn ~ 5150 1600
-NoConn ~ 6450 1800
-$Comp
-L GND #PWR031
-U 1 1 56CB3E38
-P 6600 2350
-F 0 "#PWR031" H 6470 2390 50  0001 L CNN
-F 1 "GND" H 6600 2250 50  0000 C CNN
-F 2 "" H 6600 2350 60  0000 C CNN
-F 3 "" H 6600 2350 60  0000 C CNN
-	1    6600 2350
-	1    0    0    -1  
-$EndComp
-$Comp
-L 5v #PWR032
-U 1 1 56CB4283
-P 6700 2650
-F 0 "#PWR032" H 6700 2760 50  0001 L CNN
-F 1 "5v" H 6700 2740 50  0000 C CNN
-F 2 "" H 6700 2650 60  0000 C CNN
-F 3 "" H 6700 2650 60  0000 C CNN
-	1    6700 2650
-	1    0    0    -1  
-$EndComp
-Text Label 4500 1300 0    60   ~ 0
-ADIS_IRQ
-Text Label 4500 1800 0    60   ~ 0
-~ADIS_SS
-Text Label 4500 1900 0    60   ~ 0
-MOSI
-Text Label 4500 2000 0    60   ~ 0
-MISO
-Text Label 4500 2100 0    60   ~ 0
-SCLK
-Text Label 4500 2300 0    60   ~ 0
-~ADIS_RESET
 Text Label 2600 6150 0    60   ~ 0
 LED_RED
 Text Label 2600 6250 0    60   ~ 0
 LED_GRN
 NoConn ~ 2500 5550
-Text Label 2600 6050 0    60   ~ 0
-ADIS_IRQ
-Text Label 1400 6050 2    60   ~ 0
-~ADIS_SS
-Text Label 1400 6150 2    60   ~ 0
-~ADIS_RESET
 NoConn ~ 1500 5850
 $Comp
 L PWR #FLG033
@@ -995,8 +934,6 @@ Text Label 5750 3400 0    60   ~ 0
 USB_DETECT
 Text Label 1400 6750 2    60   ~ 0
 USB_DETECT
-Text Label 2600 5150 0    60   ~ 0
-SCLK
 NoConn ~ 2500 5750
 NoConn ~ 2500 5850
 NoConn ~ 2500 4850
@@ -1558,10 +1495,6 @@ Wire Wire Line
 Wire Wire Line
 	1400 6350 1500 6350
 Wire Wire Line
-	2500 5150 2600 5150
-Wire Wire Line
-	2600 5250 2500 5250
-Wire Wire Line
 	2150 950  2150 1000
 Wire Wire Line
 	2100 1000 2200 1000
@@ -1621,56 +1554,11 @@ Wire Wire Line
 Wire Wire Line
 	9700 1500 10350 1500
 Wire Wire Line
-	2600 5350 2500 5350
-Wire Wire Line
-	6450 1900 6600 1900
-Wire Wire Line
-	6600 1900 6600 2350
-Wire Wire Line
-	6600 2300 6450 2300
-Wire Wire Line
-	6450 2100 6600 2100
-Connection ~ 6600 2100
-Wire Wire Line
-	6450 2200 6600 2200
-Connection ~ 6600 2200
-Connection ~ 6600 2300
-Wire Wire Line
-	6450 2700 6700 2700
-Wire Wire Line
-	6700 2700 6700 2650
-Wire Wire Line
-	5150 1300 4500 1300
-Wire Wire Line
-	4500 1800 5150 1800
-Wire Wire Line
-	5150 1900 4500 1900
-Wire Wire Line
-	4500 2000 5150 2000
-Wire Wire Line
-	4500 2100 5150 2100
-Wire Wire Line
-	4500 2300 5150 2300
-Wire Wire Line
-	1400 6150 1500 6150
-Wire Wire Line
-	1400 6050 1500 6050
-Wire Wire Line
 	2600 4950 2500 4950
 Wire Wire Line
 	2600 5050 2500 5050
 Wire Wire Line
-	2600 6050 2500 6050
-Wire Wire Line
 	2600 6150 2500 6150
-Wire Wire Line
-	6450 2600 6500 2600
-Wire Wire Line
-	6500 2500 6500 2700
-Connection ~ 6500 2700
-Wire Wire Line
-	6500 2500 6450 2500
-Connection ~ 6500 2600
 Wire Wire Line
 	2100 1200 2200 1200
 Wire Wire Line
@@ -1822,4 +1710,19 @@ Wire Wire Line
 	2500 6750 2600 6750
 Wire Wire Line
 	2600 7250 2500 7250
+Wire Wire Line
+	2500 5150 2600 5150
+Text Label 2600 5150 0    60   ~ 0
+SCLK
+Wire Wire Line
+	2600 5350 2500 5350
+Wire Wire Line
+	2600 5250 2500 5250
+Text Label 2600 5250 0    60   ~ 0
+MISO
+Text Label 2600 5350 0    60   ~ 0
+MOSI
+NoConn ~ 1500 6050
+NoConn ~ 1500 6150
+NoConn ~ 2500 6050
 $EndSCHEMATC
