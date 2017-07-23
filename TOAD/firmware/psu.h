@@ -7,7 +7,7 @@
 
 /* PSU Init */
 void psu_init(void);
-void enable_charging(void);
-void set_charging_status(void);
+void enable_charging(EXTDriver *extp, expchannel_t channel);
+void set_charging_status(EXTDriver *extp, expchannel_t channel);
 
 #endif 

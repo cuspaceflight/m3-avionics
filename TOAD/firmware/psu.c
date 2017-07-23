@@ -40,21 +40,27 @@ void get_psu_measurements(void) {
 
 
 /* Set Charging Status - Triggered by Interrupt */
-void set_charging_status(void) {
+void set_charging_status(EXTDriver *extp, expchannel_t channel) {
 
-	if (CHG_GOOD == 0) {
+	(void)extp;
+	(void)channel;
+	
+	if (palReadPad(GPIOB, GPIOB_CHG_GOOD) == 0) {
 		battery_charging = TRUE;
 	}
 
-	else if (CHG_GOOD == 1) {
+	else if (palReadPad(GPIOB, GPIOB_CHG_GOOD) == 1) {
 		battery_charging = FALSE;
 	}
 }
 
 /* Enable Charging  -  Triggered by Interrupt */
-void enable_charging(void) {
+void enable_charging(EXTDriver *extp, expchannel_t channel) {
     
-    /* Cycle CHG_EN Pin */
+    (void)extp;
+	(void)channel;
+	
+	/* Cycle CHG_EN Pin */
     palSetPad(GPIOB, GPIOB_CHG_EN);
     chThdSleepMilliseconds(250);
     palClearPad(GPIOB, GPIOB_CHG_EN);
