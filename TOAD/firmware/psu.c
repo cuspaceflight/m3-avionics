@@ -39,6 +39,18 @@ void get_psu_measurements(void) {
 }
 
 
+/* Set Charging Status - Triggered by Interrupt */
+void set_charging_status(void) {
+
+	if (CHG_GOOD == 0) {
+		battery_charging = TRUE;
+	}
+
+	else if (CHG_GOOD == 1) {
+		battery_charging = FALSE;
+	}
+}
+
 /* Enable Charging  -  Triggered by Interrupt */
 void enable_charging(void) {
     

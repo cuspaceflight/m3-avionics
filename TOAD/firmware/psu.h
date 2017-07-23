@@ -8,5 +8,6 @@
 /* PSU Init */
 void psu_init(void);
 void enable_charging(void);
+void set_charging_status(void);
 
 #endif 
