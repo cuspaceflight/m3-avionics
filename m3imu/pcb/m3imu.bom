@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: m3imu.xml
-Date: 2016-06-26T16:08:50.236291
+Date: 2017-07-24T23:10:36.089059
 
 Parts Missing Footprints
 ------------------------
@@ -23,14 +23,26 @@ Inconsistent Order Codes
 
 Vendor Specific BOMs
 --------------------
-  Digikey
+  Farnell
   ~~~~~~~
-1,FTMH-112-03-L-DV,1x ADIS16405BMLZ ADIS16405BMLZ U1
-
-
-  DigiKey
-  ~~~~~~~
-1,1428-1019-1-ND,1x MPU-9250 QFN-24-MPU9250 IC4
+1414575,1,1x 10n 0402
+2496771,10,10x 100n 0402
+2064363,1,1x STM32F405RxTx LQFP-64
+2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
+2290363,1,1x GRN 0603-LED
+2072575,1,1x 120 0402
+1295310,1,1x USBLC6-2P6 SOT-666
+2496790,2,2x 10p 0402
+2506952,1,1x 26M XTAL-20x16
+1568023,1,1x MICROUSB MICROUSB_MOLEX_475
+2426952,1,1x 4µ7 0402
+2314404,1,1x RED 0603-LED
+2358234,1,1x MICROSD-RESCUE-main MICROSD
+9239111,3,3x 100 0402
+9238689,5,5x 47K 0603
+2362662,1,1x MS5611-01BA03 MS5611
+2496814,1,1x 1µ 0402
+2362088,2,2x 2µ2 0402
 
 
   Samtec
@@ -43,48 +55,32 @@ SFML-110-02-L-D-LC,2,2x J4 J2 SFML-110-02-L-D-LC
 883-7942,1,,1x--MPU-9250--QFN-24-MPU9250--IC4
 
 
-  Farnell
+  DigiKey
   ~~~~~~~
-9239111,3,3x 100 0402
-2496771,9,9x 100n 0402
-1849515,1,1x ADIS16405BMLZ ADIS16405BMLZ
-2290363,1,1x GRN 0603-LED
-2064363,1,1x STM32F405RxTx LQFP-64
-2362088,2,2x 2µ2 0402
-2362662,1,1x MS5611-01BA03 MS5611
-2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
-2426952,1,1x 4µ7 0402
-2506952,1,1x 26M XTAL-20x16
-1568023,1,1x MICROUSB MICROUSB_MOLEX_475
-2496814,1,1x 1µ 0402
-1414575,1,1x 10n 0402
-2072575,1,1x 120 0402
-2496790,2,2x 10p 0402
-1295310,1,1x USBLC6-2P6 SOT-666
-2314404,1,1x RED 0603-LED
+1,1428-1019-1-ND,1x MPU-9250 QFN-24-MPU9250 IC4
 
 
 Assembly BOM
 ------------
-FTMH-112-03-L-DV     1   ADIS16405BMLZ   ADIS16405BMLZ   U1
-1428-1019-1-ND       1   MPU-9250        QFN-24-MPU9250  IC4
-SFML-110-02-L-D-LC   2   WEST BOT,EAST BOT SFML-110-02-L-D-LC J2 J4
-883-7942             1   MPU-9250        QFN-24-MPU9250  IC4
-9239111              3   100             0402            R1 R2 R4
-2496771              9   100n            0402            C12 C13 C15 C16 C4 C5 C7 C8 C9
-1849515              1   ADIS16405BMLZ   ADIS16405BMLZ   U1
-2290363              1   GRN             0603-LED        D3
+1414575              1   10n             0402            C14
+2496771              10  100n            0402            C12 C13 C15 C16 C17 C4 C5 C7 C8 C9
 2064363              1   STM32F405RxTx   LQFP-64         IC1
-2362088              2   2µ2             0402            C10 C11
-2362662              1   MS5611-01BA03   MS5611          IC3
 2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC2
-2426952              1   4µ7             0402            C3
+2290363              1   GRN             0603-LED        D3
+2072575              1   120             0402            R5
+1295310              1   USBLC6-2P6      SOT-666         D2
+2496790              2   10p             0402            C1 C2
 2506952              1   26M             XTAL-20x16      Y1
 1568023              1   MICROUSB        MICROUSB_MOLEX_47589-0001 J1
-2496814              1   1µ              0402            C6
-1414575              1   10n             0402            C14
-2072575              1   120             0402            R5
-2496790              2   10p             0402            C1 C2
-1295310              1   USBLC6-2P6      SOT-666         D2
+2426952              1   4µ7             0402            C3
 2314404              1   RED             0603-LED        D1
+2358234              1   MICROSD-RESCUE-main MICROSD_MOLEX_503398-1892 U2
+9239111              3   100             0402            R1 R2 R4
+9238689              5   47K             0603            R3 R6 R7 R8 R9
+2362662              1   MS5611-01BA03   MS5611          IC3
+2496814              1   1µ              0402            C6
+2362088              2   2µ2             0402            C10 C11
+SFML-110-02-L-D-LC   2   EAST BOT,WEST BOT SFML-110-02-L-D-LC J2 J4
+883-7942             1   MPU-9250        QFN-24-MPU9250  IC4
+1428-1019-1-ND       1   MPU-9250        QFN-24-MPU9250  IC4
 

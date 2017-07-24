@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>/home/gregory/m3-avionics/m3imu/pcb/m3imu.sch</source>
-    <date>Sun 23 Jul 2017 20:15:58 BST</date>
-    <tool>Eeschema no-vcs-found-cb2f3d6~59~ubuntu16.04.1</tool>
+    <source>C:/Users/grego/Downloads/m3-avionics/m3imu/pcb/m3imu.sch</source>
+    <date>24/07/2017 23:07:54</date>
+    <tool>Eeschema 4.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>M3 IMU board schematic</title>
@@ -703,10 +703,10 @@
   </libparts>
   <libraries>
     <library logical="agg-kicad">
-      <uri>/home/gregory/m3-avionics/m3imu/pcb/../../agg-kicad/agg-kicad.lib</uri>
+      <uri>..\..\agg-kicad\agg-kicad.lib</uri>
     </library>
     <library logical="sd_reader">
-      <uri>/home/gregory/m3-avionics/m3imu/pcb/sd_reader.lib</uri>
+      <uri>sd_reader.lib</uri>
     </library>
   </libraries>
   <nets>
@@ -889,7 +889,6 @@
       <node ref="IC4" pin="11"/>
       <node ref="D2" pin="2"/>
       <node ref="C17" pin="2"/>
-      <node ref="U2" pin="9"/>
       <node ref="U2" pin="9"/>
       <node ref="U2" pin="11"/>
       <node ref="U2" pin="9"/>
