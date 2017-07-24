@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>/home/gregory/m3r/m3-avionics/m3radio/pcb_r2/m3radio.sch</source>
-    <date>Sun 23 Jul 2017 17:16:39 BST</date>
-    <tool>Eeschema no-vcs-found-f042fcd~59~ubuntu16.04.1</tool>
+    <source>C:/Users/grego/Downloads/m3-avionics/m3radio/pcb_r2/m3radio.sch</source>
+    <date>24/07/2017 22:54:22</date>
+    <tool>Eeschema 4.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>M3 Radio board schematic</title>
@@ -1099,13 +1099,13 @@
   </libparts>
   <libraries>
     <library logical="agg-kicad">
-      <uri>/home/gregory/m3r/m3-avionics/agg-kicad/agg-kicad.lib</uri>
-    </library>
-    <library logical="max-8q">
-      <uri>/home/gregory/m3r/m3-avionics/m3radio/pcb_r2/max-8q.lib</uri>
+      <uri>C:\Users\grego\Downloads\m3-avionics\agg-kicad\agg-kicad.lib</uri>
     </library>
     <library logical="m3radio-cache">
-      <uri>/home/gregory/m3r/m3-avionics/m3radio/pcb_r2/m3radio-cache.lib</uri>
+      <uri>m3radio-cache.lib</uri>
+    </library>
+    <library logical="max-8q">
+      <uri>max-8q.lib</uri>
     </library>
   </libraries>
   <nets>
