@@ -1,0 +1,20 @@
+G04 #@! TF.GenerationSoftware,KiCad,Pcbnew,no-vcs-found-d3b382c~59~ubuntu16.04.1*
+G04 #@! TF.CreationDate,2017-07-25T02:02:09+01:00*
+G04 #@! TF.ProjectId,m3radio,6D33726164696F2E6B696361645F7063,Rev 1*
+G04 #@! TF.SameCoordinates,Original
+G04 #@! TF.FileFunction,Profile,NP*
+%FSLAX46Y46*%
+G04 Gerber Fmt 4.6, Leading zero omitted, Abs format (unit mm)*
+G04 Created by KiCad (PCBNEW no-vcs-found-d3b382c~59~ubuntu16.04.1) date Tue Jul 25 02:02:09 2017*
+%MOMM*%
+%LPD*%
+G01*
+G04 APERTURE LIST*
+%ADD10C,0.010000*%
+G04 APERTURE END LIST*
+D10*
+X119750000Y-100000000D02*
+G75*
+G03X119750000Y-100000000I-19750000J0D01*
+G01*
+M02*

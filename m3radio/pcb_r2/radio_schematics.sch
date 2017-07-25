@@ -1,0 +1,526 @@
+EESchema Schematic File Version 2
+LIBS:agg-kicad
+LIBS:TOAD
+LIBS:m3pwramp-cache
+LIBS:TOAD-cache
+LIBS:max-8q
+LIBS:m3radio-rescue
+LIBS:m3radio-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 2
+Title "M3 Radio Transceiver Schematic"
+Date "8 feb 2016"
+Rev "Rev 1"
+Comp "Cambridge University Spaceflight"
+Comment1 "G Brooks"
+Comment2 "A Raghu"
+Comment3 "E R Eide"
+Comment4 "Drawn by:"
+$EndDescr
+Text Notes 2200 2050 0    59   ~ 0
+SI4460 (radio) 
+Text Notes 1870 710  0    118  ~ 0
+Radio
+$Comp
+L Si4460 IC201
+U 1 1 56B20B0C
+P 2550 2900
+F 0 "IC201" H 2250 3600 50  0000 L CNN
+F 1 "Si4461" H 2250 2200 50  0000 L CNN
+F 2 "agg:QFN-20-EP-SI" H 2250 2100 50  0001 L CNN
+F 3 "" H 2150 3500 50  0001 C CNN
+F 4 "2462636" H 2250 2000 50  0001 L CNN "Farnell"
+	1    2550 2900
+	1    0    0    -1  
+$EndComp
+Text HLabel 2050 3200 0    60   Input ~ 0
+Radio_SCLK
+Text HLabel 2050 3400 0    60   Input ~ 0
+Radio_SDI
+Text HLabel 2050 3300 0    60   Input ~ 0
+Radio_SDO
+Text HLabel 3050 3200 2    60   Input ~ 0
+Radio_nIRQ
+Text HLabel 2050 3500 0    60   Input ~ 0
+Radio_nSEL
+$Comp
+L GND #PWR059
+U 1 1 56B22850
+P 2050 2650
+F 0 "#PWR059" H 1920 2690 50  0001 L CNN
+F 1 "GND" H 2050 2550 50  0000 C CNN
+F 2 "" H 2050 2650 60  0000 C CNN
+F 3 "" H 2050 2650 60  0000 C CNN
+	1    2050 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L 3v3 #PWR060
+U 1 1 56B228AE
+P 950 2150
+F 0 "#PWR060" H 950 2260 50  0001 L CNN
+F 1 "3v3" H 950 2240 50  0000 C CNN
+F 2 "" H 950 2150 60  0000 C CNN
+F 3 "" H 950 2150 60  0000 C CNN
+	1    950  2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C6
+U 1 1 56B2293A
+P 1900 2350
+F 0 "C6" H 1950 2420 50  0000 C CNN
+F 1 "1u" H 1950 2280 50  0000 C CNN
+F 2 "agg:0402" H 1900 2350 50  0001 C CNN
+F 3 "" H 1900 2350 50  0001 C CNN
+F 4 "2496814" H 1900 2350 60  0001 C CNN "Farnell"
+	1    1900 2350
+	0    1    1    0   
+$EndComp
+$Comp
+L C C202
+U 1 1 56B2297D
+P 1700 2350
+F 0 "C202" H 1750 2420 50  0000 C CNN
+F 1 "100n" H 1750 2280 50  0000 C CNN
+F 2 "agg:0402" H 1700 2350 50  0001 C CNN
+F 3 "" H 1700 2350 50  0001 C CNN
+F 4 "2496771" H 1700 2350 60  0001 C CNN "Farnell"
+	1    1700 2350
+	0    1    1    0   
+$EndComp
+$Comp
+L C C201
+U 1 1 56B229B8
+P 1450 2350
+F 0 "C201" H 1500 2420 50  0000 C CNN
+F 1 "100p" H 1500 2280 50  0000 C CNN
+F 2 "agg:0402" H 1450 2350 50  0001 C CNN
+F 3 "" H 1450 2350 50  0001 C CNN
+F 4 "2496792" H 1450 2350 60  0001 C CNN "Farnell"
+	1    1450 2350
+	0    1    1    0   
+$EndComp
+Text Label 3050 2500 0    60   ~ 0
+TX_pin
+Text Label 3050 2400 0    60   ~ 0
+RXn
+Text Label 3050 2300 0    60   ~ 0
+RXp
+Text Label 5900 4550 2    60   ~ 0
+RXp
+Text Label 5900 4150 2    60   ~ 0
+RXn
+Text Label 5900 3750 2    60   ~ 0
+TX_pin
+$Comp
+L L L201
+U 1 1 56B2381E
+P 6250 3500
+F 0 "L201" H 6300 3550 50  0000 C CNN
+F 1 "120nH" H 6300 3450 50  0000 C CNN
+F 2 "agg:0603-L" H 6250 3500 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/1327494.pdf" H 6250 3500 50  0001 C CNN
+F 4 "1865812" H 6250 3500 60  0001 C CNN "Farnell"
+	1    6250 3500
+	0    1    1    0   
+$EndComp
+$Comp
+L C C204
+U 1 1 56B23AF0
+P 6500 3750
+F 0 "C204" H 6550 3820 50  0000 C CNN
+F 1 "22p" H 6500 3650 50  0000 C CNN
+F 2 "agg:0402" H 6500 3750 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/1928846.pdf" H 6500 3750 50  0001 C CNN
+F 4 "1885344" H 6500 3750 60  0001 C CNN "Farnell"
+	1    6500 3750
+	1    0    0    -1  
+$EndComp
+$Comp
+L L L204
+U 1 1 56B23B31
+P 6700 3750
+F 0 "L204" H 6750 3800 50  0000 C CNN
+F 1 "8.2nH" H 6750 3650 50  0000 C CNN
+F 2 "agg:0603-L" H 6700 3750 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/2091766.pdf" H 6700 3750 50  0001 C CNN
+F 4 "6581778" H 6700 3750 60  0001 C CNN "Farnell"
+	1    6700 3750
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C205
+U 1 1 56B23C5B
+P 6550 4150
+F 0 "C205" H 6600 4220 50  0000 C CNN
+F 1 "1p" H 6600 4080 50  0000 C CNN
+F 2 "agg:0402" H 6550 4150 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/2050006.pdf" H 6550 4150 50  0001 C CNN
+F 4 "2133992" H 6550 4150 60  0001 C CNN "Farnell"
+	1    6550 4150
+	1    0    0    -1  
+$EndComp
+$Comp
+L L L202
+U 1 1 56B23D7C
+P 6250 4300
+F 0 "L202" H 6300 4350 50  0000 C CNN
+F 1 "20nH" H 6300 4250 50  0000 C CNN
+F 2 "agg:0402" H 6250 4300 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/426761.pdf" H 6250 4300 50  0001 C CNN
+F 4 "1748728" H 6250 4300 60  0001 C CNN "Farnell"
+	1    6250 4300
+	0    1    1    0   
+$EndComp
+$Comp
+L L L203
+U 1 1 56B23E07
+P 6500 4550
+F 0 "L203" H 6550 4600 50  0000 C CNN
+F 1 "24nH" H 6550 4500 50  0000 C CNN
+F 2 "agg:0402" H 6500 4550 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/1888750.pdf" H 6500 4550 50  0001 C CNN
+F 4 "2470344" H 6500 4550 60  0001 C CNN "Farnell"
+	1    6500 4550
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C203
+U 1 1 56B23FB7
+P 6250 4650
+F 0 "C203" H 6300 4720 50  0000 C CNN
+F 1 "3p" H 6300 4580 50  0000 C CNN
+F 2 "agg:0402" H 6250 4650 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/2291921.pdf" H 6250 4650 50  0001 C CNN
+F 4 "2524984" H 6250 4650 60  0001 C CNN "Farnell"
+	1    6250 4650
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR061
+U 1 1 56B2404E
+P 6250 4850
+F 0 "#PWR061" H 6120 4890 50  0001 L CNN
+F 1 "GND" H 6250 4750 50  0000 C CNN
+F 2 "" H 6250 4850 60  0000 C CNN
+F 3 "" H 6250 4850 60  0000 C CNN
+	1    6250 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C206
+U 1 1 56B241BD
+P 7200 3950
+F 0 "C206" H 7250 4020 50  0000 C CNN
+F 1 "5.6p" H 7250 3880 50  0000 C CNN
+F 2 "agg:0402" H 7200 3950 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/1825495.pdf" H 7200 3950 50  0001 C CNN
+F 4 "2310316" H 7200 3950 60  0001 C CNN "Farnell"
+	1    7200 3950
+	0    1    1    0   
+$EndComp
+$Comp
+L L L205
+U 1 1 56B24388
+P 7400 3750
+F 0 "L205" H 7450 3800 50  0000 C CNN
+F 1 "6.8nH" H 7450 3700 50  0000 C CNN
+F 2 "agg:0402" H 7400 3750 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/1924569.pdf." H 7400 3750 50  0001 C CNN
+F 4 "1762612" H 7400 3750 60  0001 C CNN "Farnell"
+	1    7400 3750
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR062
+U 1 1 56B24884
+P 7450 4200
+F 0 "#PWR062" H 7320 4240 50  0001 L CNN
+F 1 "GND" H 7450 4100 50  0000 C CNN
+F 2 "" H 7450 4200 60  0000 C CNN
+F 3 "" H 7450 4200 60  0000 C CNN
+	1    7450 4200
+	1    0    0    -1  
+$EndComp
+NoConn ~ 2950 2800
+NoConn ~ 2950 3000
+NoConn ~ 2950 3100
+NoConn ~ 2950 2600
+$Comp
+L COAX P201
+U 1 1 56B306EE
+P 8500 3750
+F 0 "P201" H 8500 3850 50  0000 C CNN
+F 1 "COAX" H 8500 3600 50  0000 C CNN
+F 2 "M3radio:U.FL-R-SMT-1" H 8500 3540 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/1947917.pdf" H 8600 3650 50  0001 C CNN
+F 4 "3908021" H 8500 3470 50  0001 C CNN "Farnell"
+	1    8500 3750
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR063
+U 1 1 56B30843
+P 8350 4050
+F 0 "#PWR063" H 8220 4090 50  0001 L CNN
+F 1 "GND" H 8350 3950 50  0000 C CNN
+F 2 "" H 8350 4050 60  0000 C CNN
+F 3 "" H 8350 4050 60  0000 C CNN
+	1    8350 4050
+	1    0    0    -1  
+$EndComp
+NoConn ~ 2150 2800
+$Comp
+L 3v3 #PWR064
+U 1 1 576AEE23
+P 6250 3100
+F 0 "#PWR064" H 6250 3210 50  0001 L CNN
+F 1 "3v3" H 6250 3190 50  0000 C CNN
+F 2 "" H 6250 3100 60  0000 C CNN
+F 3 "" H 6250 3100 60  0000 C CNN
+	1    6250 3100
+	1    0    0    -1  
+$EndComp
+Text Notes 4550 6300 0    118  ~ 0
+Application note:\nConfigured for 868MHz\n\nSee AN627 p14 Table 9. for component values\np16 (figure 4.) for schematic\n\nhttps://www.silabs.com/Support%20Documents/TechnicalDocs/AN627.pdf
+$Comp
+L ESD_DIODE D2
+U 1 1 576B5135
+P 8200 3900
+F 0 "D2" H 8150 4000 50  0000 L CNN
+F 1 "ESD_DIODE" H 8150 3800 50  0001 L CNN
+F 2 "agg:0402" H 8150 3700 50  0001 L CNN
+F 3 "" H 8100 3900 50  0001 C CNN
+F 4 "2368169" H 8150 3600 50  0001 L CNN "Farnell"
+	1    8200 3900
+	0    1    1    0   
+$EndComp
+Text HLabel 3050 2900 2    60   Input ~ 0
+Radio_GPIO1
+Text HLabel 2050 3100 0    60   Input ~ 0
+Radio_SDN
+Text HLabel 1100 2900 0    60   Input ~ 0
+Radio_XIN
+$Comp
+L R R4
+U 1 1 597395AC
+P 1150 2900
+F 0 "R4" H 1200 3078 50  0000 C CNN
+F 1 "10k" H 1200 2987 50  0000 C CNN
+F 2 "agg:0402" H 1150 2900 50  0001 C CNN
+F 3 "" H 1150 2900 50  0001 C CNN
+F 4 "2379805" H 1150 2900 60  0001 C CNN "Farnell"
+	1    1150 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R5
+U 1 1 597397D6
+P 1300 2950
+F 0 "R5" V 1304 2991 50  0000 L CNN
+F 1 "10k" V 1395 2991 50  0000 L CNN
+F 2 "agg:0402" H 1300 2950 50  0001 C CNN
+F 3 "" H 1300 2950 50  0001 C CNN
+F 4 "2379805" H 1300 2950 60  0001 C CNN "Farnell"
+	1    1300 2950
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR065
+U 1 1 59739869
+P 1300 3100
+F 0 "#PWR065" H 1170 3140 50  0001 L CNN
+F 1 "GND" H 1300 3000 50  0000 C CNN
+F 2 "" H 1300 3100 60  0001 C CNN
+F 3 "" H 1300 3100 60  0001 C CNN
+	1    1300 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1300 3050 1300 3100
+Connection ~ 1300 2900
+Wire Wire Line
+	1150 2900 1100 2900
+Wire Wire Line
+	1300 2950 1300 2900
+Wire Wire Line
+	2150 3100 2050 3100
+Wire Wire Line
+	2950 2900 3050 2900
+Wire Wire Line
+	1250 2900 2150 2900
+Connection ~ 8200 3750
+Wire Wire Line
+	8200 3800 8200 3750
+Connection ~ 8350 4000
+Wire Wire Line
+	8350 4000 8200 4000
+Wire Wire Line
+	8350 3850 8350 4050
+Wire Wire Line
+	8400 3850 8350 3850
+Wire Notes Line
+	7050 3550 7050 4400
+Wire Notes Line
+	7850 3550 7850 4400
+Wire Wire Line
+	6250 3100 6250 3500
+Wire Wire Line
+	7500 3750 8400 3750
+Wire Wire Line
+	6800 3750 7400 3750
+Connection ~ 6900 3750
+Wire Wire Line
+	6250 4750 6250 4850
+Wire Wire Line
+	6900 4550 6600 4550
+Connection ~ 6250 4550
+Wire Wire Line
+	6250 4400 6250 4650
+Wire Wire Line
+	5900 4550 6500 4550
+Connection ~ 6250 4150
+Wire Wire Line
+	6250 4150 6250 4300
+Connection ~ 6900 4150
+Wire Wire Line
+	6650 4150 6900 4150
+Wire Wire Line
+	5900 4150 6550 4150
+Wire Wire Line
+	6900 3750 6900 4550
+Wire Wire Line
+	6600 3750 6700 3750
+Connection ~ 6250 3750
+Wire Wire Line
+	6250 3600 6250 3750
+Wire Wire Line
+	5900 3750 6500 3750
+Wire Notes Line
+	4400 2850 11150 2850
+Wire Notes Line
+	4400 2450 4400 2750
+Wire Notes Line
+	4400 500  4400 7700
+Wire Wire Line
+	2950 2500 3050 2500
+Wire Wire Line
+	2950 2400 3050 2400
+Wire Wire Line
+	2950 2300 3050 2300
+Connection ~ 1450 2300
+Connection ~ 1700 2500
+Wire Wire Line
+	1450 2450 1450 2500
+Connection ~ 1900 2500
+Wire Wire Line
+	1700 2450 1700 2500
+Connection ~ 2050 2500
+Wire Wire Line
+	1900 2450 1900 2500
+Connection ~ 1700 2300
+Wire Wire Line
+	1700 2300 1700 2350
+Connection ~ 1900 2300
+Wire Wire Line
+	1900 2300 1900 2350
+Wire Wire Line
+	2150 2400 2050 2400
+Connection ~ 2050 2300
+Wire Wire Line
+	2050 2400 2050 2300
+Connection ~ 2050 2600
+Wire Wire Line
+	950  2500 2150 2500
+Wire Wire Line
+	2050 2500 2050 2650
+Wire Wire Line
+	2150 2600 2050 2600
+Wire Wire Line
+	950  2300 2150 2300
+Wire Wire Line
+	2950 3200 3050 3200
+Wire Wire Line
+	2150 3500 2050 3500
+Wire Wire Line
+	2150 3400 2050 3400
+Wire Wire Line
+	2150 3300 2050 3300
+Wire Wire Line
+	2150 3200 2050 3200
+Wire Notes Line
+	4330 4340 510  4340
+$Comp
+L C C13
+U 1 1 5973AA20
+P 1200 2350
+F 0 "C13" H 1250 2420 50  0000 C CNN
+F 1 "2.2u" H 1250 2280 50  0000 C CNN
+F 2 "agg:0402" H 1200 2350 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/2047915.pdf" H 1200 2350 50  0001 C CNN
+F 4 "2456102" H 1200 2350 60  0001 C CNN "Farnell"
+	1    1200 2350
+	0    1    1    0   
+$EndComp
+$Comp
+L C C12
+U 1 1 5973AA62
+P 950 2350
+F 0 "C12" H 1000 2420 50  0000 C CNN
+F 1 "220p" H 1000 2280 50  0000 C CNN
+F 2 "agg:0402" H 950 2350 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/1958513.pdf" H 950 2350 50  0001 C CNN
+F 4 "2496800" H 950 2350 60  0001 C CNN "Farnell"
+	1    950  2350
+	0    1    1    0   
+$EndComp
+Connection ~ 1450 2500
+Wire Wire Line
+	950  2500 950  2450
+Wire Wire Line
+	950  2150 950  2350
+Wire Wire Line
+	1200 2350 1200 2300
+Connection ~ 1200 2300
+Wire Wire Line
+	1200 2450 1200 2500
+Connection ~ 1200 2500
+Wire Wire Line
+	1450 2350 1450 2300
+Connection ~ 950  2300
+Wire Notes Line
+	7850 4400 7050 4400
+Wire Notes Line
+	7850 3550 7050 3550
+Wire Wire Line
+	7200 3950 7200 3750
+Connection ~ 7200 3750
+Wire Wire Line
+	7700 3950 7700 3750
+Connection ~ 7700 3750
+Wire Wire Line
+	7200 4050 7200 4150
+Wire Wire Line
+	7200 4150 7700 4150
+Wire Wire Line
+	7700 4150 7700 4050
+Wire Wire Line
+	7450 4200 7450 4150
+Connection ~ 7450 4150
+$Comp
+L C C207
+U 1 1 56B24202
+P 7700 3950
+F 0 "C207" H 7750 4020 50  0000 C CNN
+F 1 "5.6p" H 7750 3880 50  0000 C CNN
+F 2 "agg:0402" H 7700 3950 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/1825495.pdf" H 7700 3950 50  0001 C CNN
+F 4 "2310316" H 7700 3950 60  0001 C CNN "Farnell"
+	1    7700 3950
+	0    1    1    0   
+$EndComp
+$EndSCHEMATC

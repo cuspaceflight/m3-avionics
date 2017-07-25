@@ -1,0 +1,385 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text Notes 3800 3520 0    118  ~ 0
+RF amplifier and antenna
+Text Notes 4350 3800 0    59   ~ 0
+M2PA - radio amplifier\n
+$Comp
+L COAX P?
+U 1 1 56C61609
+P 4150 4700
+F 0 "P?" H 4150 4800 50  0000 C CNN
+F 1 "COAX" H 4150 4550 50  0000 C CNN
+F 2 "agg-unchecked:SMA-142-0701-801" H 4150 4490 50  0001 C CNN
+F 3 "" H 4250 4600 50  0001 C CNN
+F 4 "1608592" H 4150 4420 50  0001 C CNN "Farnell"
+	1    4150 4700
+	-1   0    0    1   
+$EndComp
+Text Notes 3850 5350 0    60   ~ 0
+Note that there is a critical spacing 
+$Comp
+L GND #PWR?
+U 1 1 56C61611
+P 4250 4450
+F 0 "#PWR?" H 4120 4490 50  0001 L CNN
+F 1 "GND" H 4250 4350 50  0000 C CNN
+F 2 "" H 4250 4450 60  0000 C CNN
+F 3 "" H 4250 4450 60  0000 C CNN
+	1    4250 4450
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4250 4600 4250 4450
+$Comp
+L C C?
+U 1 1 56C61618
+P 4500 4700
+F 0 "C?" H 4550 4770 50  0000 C CNN
+F 1 "10pF" H 4550 4630 50  0000 C CNN
+F 2 "" H 4500 4700 50  0001 C CNN
+F 3 "" H 4500 4700 50  0001 C CNN
+	1    4500 4700
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56C6161F
+P 4750 4800
+F 0 "C?" H 4800 4870 50  0000 C CNN
+F 1 "8pF" H 4800 4730 50  0000 C CNN
+F 2 "" H 4750 4800 50  0001 C CNN
+F 3 "" H 4750 4800 50  0001 C CNN
+	1    4750 4800
+	0    1    1    0   
+$EndComp
+$Comp
+L R lamda?
+U 1 1 56C61626
+P 4900 4700
+F 0 "lamda?" H 4950 4750 50  0000 C CNN
+F 1 "R" H 4950 4650 50  0000 C CNN
+F 2 "" H 4900 4700 50  0001 C CNN
+F 3 "" H 4900 4700 50  0001 C CNN
+	1    4900 4700
+	1    0    0    -1  
+$EndComp
+Text Notes 5100 4500 0    60   ~ 0
+ADL5324
+Wire Notes Line
+	5000 4300 5000 4600
+Wire Notes Line
+	5000 4600 5600 4600
+Wire Notes Line
+	5600 4600 5600 4300
+Wire Notes Line
+	5600 4300 5000 4300
+Wire Wire Line
+	4600 4700 4900 4700
+Wire Wire Line
+	4750 4700 4750 4800
+Connection ~ 4750 4700
+Wire Wire Line
+	4750 4900 4750 5000
+$Comp
+L GND #PWR?
+U 1 1 56C61636
+P 4750 5000
+F 0 "#PWR?" H 4620 5040 50  0001 L CNN
+F 1 "GND" H 4750 4900 50  0000 C CNN
+F 2 "" H 4750 5000 60  0000 C CNN
+F 3 "" H 4750 5000 60  0000 C CNN
+	1    4750 5000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5000 4700 5150 4700
+Wire Wire Line
+	5050 4700 5050 4600
+Wire Wire Line
+	5150 4700 5150 4600
+Connection ~ 5050 4700
+Wire Wire Line
+	5250 4600 5250 4700
+Wire Wire Line
+	5250 4700 5350 4700
+Wire Wire Line
+	5300 4700 5300 4600
+Wire Wire Line
+	5300 4600 5350 4600
+Connection ~ 5300 4700
+Wire Wire Line
+	5350 4700 5350 4800
+$Comp
+L GND #PWR?
+U 1 1 56C61646
+P 5350 4750
+F 0 "#PWR?" H 5220 4790 50  0001 L CNN
+F 1 "GND" H 5350 4650 50  0000 C CNN
+F 2 "" H 5350 4750 60  0000 C CNN
+F 3 "" H 5350 4750 60  0000 C CNN
+	1    5350 4750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5550 4600 5550 4700
+Wire Wire Line
+	5550 4700 5900 4700
+Wire Wire Line
+	5600 4600 5600 4700
+Connection ~ 5600 4700
+Wire Wire Line
+	5800 4550 5800 4700
+Connection ~ 5800 4700
+$Comp
+L R lamda?
+U 1 1 56C61652
+P 5900 4700
+F 0 "lamda?" H 5950 4750 50  0000 C CNN
+F 1 "R" H 5950 4650 50  0000 C CNN
+F 2 "" H 5900 4700 50  0001 C CNN
+F 3 "" H 5900 4700 50  0001 C CNN
+	1    5900 4700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6000 4700 6250 4700
+Wire Wire Line
+	6150 4700 6150 4850
+$Comp
+L C C?
+U 1 1 56C6165B
+P 6150 4850
+F 0 "C?" H 6200 4920 50  0000 C CNN
+F 1 "3.6pF" H 6200 4780 50  0000 C CNN
+F 2 "" H 6150 4850 50  0001 C CNN
+F 3 "" H 6150 4850 50  0001 C CNN
+	1    6150 4850
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 56C61662
+P 6450 4700
+F 0 "C?" H 6500 4770 50  0000 C CNN
+F 1 "20pF" H 6500 4630 50  0000 C CNN
+F 2 "" H 6450 4700 50  0001 C CNN
+F 3 "" H 6450 4700 50  0001 C CNN
+	1    6450 4700
+	1    0    0    -1  
+$EndComp
+$Comp
+L COAX P?
+U 1 1 56C6166A
+P 6800 4700
+F 0 "P?" H 6800 4800 50  0000 C CNN
+F 1 "COAX" H 6800 4550 50  0000 C CNN
+F 2 "agg-unchecked:SMA-142-0701-801" H 6800 4490 50  0001 C CNN
+F 3 "" H 6900 4600 50  0001 C CNN
+F 4 "1608592" H 6800 4420 50  0001 C CNN "Farnell"
+	1    6800 4700
+	1    0    0    -1  
+$EndComp
+$Comp
+L L L?
+U 1 1 56C61671
+P 5800 4450
+F 0 "L?" H 5850 4500 50  0000 C CNN
+F 1 "18nH" H 5850 4400 50  0000 C CNN
+F 2 "" H 5800 4450 50  0001 C CNN
+F 3 "" H 5800 4450 50  0001 C CNN
+	1    5800 4450
+	0    1    1    0   
+$EndComp
+Connection ~ 6150 4700
+Wire Wire Line
+	6350 4700 6450 4700
+Wire Wire Line
+	6550 4700 6700 4700
+Wire Wire Line
+	6650 4800 6650 4900
+Wire Wire Line
+	6650 4800 6700 4800
+Wire Wire Line
+	6150 4950 6150 5050
+$Comp
+L GND #PWR?
+U 1 1 56C6167E
+P 6150 5050
+F 0 "#PWR?" H 6020 5090 50  0001 L CNN
+F 1 "GND" H 6150 4950 50  0000 C CNN
+F 2 "" H 6150 5050 60  0000 C CNN
+F 3 "" H 6150 5050 60  0000 C CNN
+	1    6150 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56C61684
+P 6650 4900
+F 0 "#PWR?" H 6520 4940 50  0001 L CNN
+F 1 "GND" H 6650 4800 50  0000 C CNN
+F 2 "" H 6650 4900 60  0000 C CNN
+F 3 "" H 6650 4900 60  0000 C CNN
+	1    6650 4900
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56C6168A
+P 6050 4300
+F 0 "#PWR?" H 5920 4340 50  0001 L CNN
+F 1 "GND" H 6050 4200 50  0000 C CNN
+F 2 "" H 6050 4300 60  0000 C CNN
+F 3 "" H 6050 4300 60  0000 C CNN
+	1    6050 4300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56C61690
+P 6050 4100
+F 0 "#PWR?" H 5920 4140 50  0001 L CNN
+F 1 "GND" H 6050 4000 50  0000 C CNN
+F 2 "" H 6050 4100 60  0000 C CNN
+F 3 "" H 6050 4100 60  0000 C CNN
+	1    6050 4100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 56C61696
+P 6050 3900
+F 0 "#PWR?" H 5920 3940 50  0001 L CNN
+F 1 "GND" H 6050 3800 50  0000 C CNN
+F 2 "" H 6050 3900 60  0000 C CNN
+F 3 "" H 6050 3900 60  0000 C CNN
+	1    6050 3900
+	0    -1   -1   0   
+$EndComp
+Connection ~ 5800 4300
+$Comp
+L C C?
+U 1 1 56C6169D
+P 5900 4300
+F 0 "C?" H 5950 4370 50  0000 C CNN
+F 1 "100pF" H 5950 4230 50  0000 C CNN
+F 2 "" H 5900 4300 50  0001 C CNN
+F 3 "" H 5900 4300 50  0001 C CNN
+	1    5900 4300
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56C616A4
+P 5900 4100
+F 0 "C?" H 5950 4170 50  0000 C CNN
+F 1 "10nF" H 5950 4030 50  0000 C CNN
+F 2 "" H 5900 4100 50  0001 C CNN
+F 3 "" H 5900 4100 50  0001 C CNN
+	1    5900 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 56C616AB
+P 5900 3900
+F 0 "C?" H 5950 3970 50  0000 C CNN
+F 1 "10uF" H 5950 3830 50  0000 C CNN
+F 2 "" H 5900 3900 50  0001 C CNN
+F 3 "" H 5900 3900 50  0001 C CNN
+	1    5900 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5800 4100 5900 4100
+Connection ~ 5800 4100
+Wire Wire Line
+	5800 3900 5900 3900
+Connection ~ 5800 3900
+Wire Wire Line
+	5800 3750 5800 4450
+Wire Wire Line
+	5800 4300 5900 4300
+Wire Wire Line
+	6000 4300 6050 4300
+$Comp
+L 5v #PWR?
+U 1 1 56C616B9
+P 5800 3750
+F 0 "#PWR?" H 5800 3860 50  0001 L CNN
+F 1 "5v" H 5800 3840 50  0000 C CNN
+F 2 "" H 5800 3750 60  0000 C CNN
+F 3 "" H 5800 3750 60  0000 C CNN
+	1    5800 3750
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 56C616BF
+P 4300 4700
+F 0 "R?" H 4350 4750 50  0000 C CNN
+F 1 "2R" H 4350 4650 50  0000 C CNN
+F 2 "" H 4300 4700 50  0001 C CNN
+F 3 "" H 4300 4700 50  0001 C CNN
+	1    4300 4700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4250 4700 4300 4700
+Wire Wire Line
+	4400 4700 4500 4700
+$Comp
+L L 2.4nH?
+U 1 1 56C616C8
+P 6250 4700
+F 0 "2.4nH?" H 6300 4750 50  0000 C CNN
+F 1 "L" H 6300 4650 50  0000 C CNN
+F 2 "" H 6250 4700 50  0001 C CNN
+F 3 "" H 6250 4700 50  0001 C CNN
+	1    6250 4700
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
