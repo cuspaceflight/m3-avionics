@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: DCDC-5V.xml
-Date: 2017-07-26T00:05:07.325189
+Date: 2017-07-26T00:49:06.180123
 
 Parts Missing Footprints
 ------------------------
@@ -46,6 +46,7 @@ TP1    TESTPAD         agg:TESTPAD
 TP2    TESTPAD         agg:TESTPAD
 TP3    TESTPAD         agg:TESTPAD
 TP4    TESTPAD         agg:TESTPAD
+C13    22u             agg:0805
 
 Inconsistent Order Codes
 ------------------------
