@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: TOAD.xml
-Date: 2017-06-30T15:11:16.436411
+Date: 2017-07-25T20:50:16.386832
 
 Parts Missing Footprints
 ------------------------
@@ -38,11 +38,6 @@ TP12   TESTPAD         agg:TESTPAD
 
 Inconsistent Order Codes
 ------------------------
-  RS
-  ~~
-    123-6106: 
-      X6     PWR Switch      None
-      X1     USB Cap         None
   Farnell
   ~~~~~~~
     2496930: 
@@ -62,14 +57,15 @@ SG32733,1,1x X3 None
 
   RS
   ~~
-123-6106,2,,2x--USB Cap-PWR Switch--None--X6X1
+252-163,1,,1x--USB Cap--None--X1
+123-6106,1,,1x--PWR Switch--None--X6
 252-438,1,,1x--USB Mini-B--None--X2
 841-8759,1,,1x--USB--SIL-254P-05--J1
 
 
   App Note
   ~~~~~~~~
-http://www.silabs.com/Support%20Documents/TechnicalDocs/AN648.pdf,2,2x IC2 IC9 QFN-20-EP-SI
+http://www.silabs.com/Support%20Documents/TechnicalDocs/AN648.pdf,2,2x IC9 IC2 QFN-20-EP-SI
 
 
   Hab Supplies
@@ -143,7 +139,8 @@ HAB-MAX-M8Q,1,1x IC3 MAX-M8Q
 Assembly BOM
 ------------
 SG32733              1   Case            None            X3
-123-6106             2   USB Cap,PWR Switch None            X1 X6
+252-163              1   USB Cap         None            X1
+123-6106             1   PWR Switch      None            X6
 252-438              1   USB Mini-B      None            X2
 841-8759             1   USB             SIL-254P-05     J1
 http://www.silabs.com/Support%20Documents/TechnicalDocs/AN648.pdf 2   Si4463          QFN-20-EP-SI    IC2 IC9
