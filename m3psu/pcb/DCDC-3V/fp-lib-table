@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name m3psu)(type KiCad)(uri ${KIPRJMOD}/../m3psu.pretty)(options "")(descr ""))
+  (lib (name agg)(type KiCad)(uri "$(KIPRJMOD)/../../../agg-kicad/agg.pretty")(options "")(descr ""))
+)

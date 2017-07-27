@@ -1,0 +1,106 @@
+Bill Of Materials
+=================
+
+Source file: DCDC-5V.xml
+Date: 2017-07-26T00:49:06.180123
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+C4     100n            agg:0402
+R5     10k             agg:0402
+R3     10k             agg:0402
+R6     10k             agg:0402
+R4     10k             agg:0402
+R8     10k             agg:0402
+R2     10k             agg:0402
+R7     10k             agg:0402
+C2     10n             agg:0402
+C3     100n            agg:0402
+C1     100n            agg:0402
+R13    33k             agg:0402
+R17    10m             agg:0603
+R14    33k             agg:0402
+R18    10m             agg:0603
+R15    33k             agg:0402
+R19    10m             agg:0603
+R16    33k             agg:0402
+R20    10m             agg:0603
+Q5     PFET_GDS        agg:SON2x2
+Q6     PFET_GDS        agg:SON2x2
+Q7     PFET_GDS        agg:SON2x2
+Q8     PFET_GDS        agg:SON2x2
+C7     3n3             agg:0402
+C6     100n            agg:0402
+C5     10u             agg:0805
+C8     22u             agg:0805
+R1     5k49            agg:0402
+R21    1M              agg:0402
+R22    1M              agg:0402
+R23    1M              agg:0402
+R24    1M              agg:0402
+TP1    TESTPAD         agg:TESTPAD
+TP2    TESTPAD         agg:TESTPAD
+TP3    TESTPAD         agg:TESTPAD
+TP4    TESTPAD         agg:TESTPAD
+C13    22u             agg:0805
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    SFML-110-02-L-D-LC: 
+      J2     WEST BOT        agg:SFML-110-02-L-D-LC
+      J5     EAST BOT        agg:SFML-110-02-L-D-LC
+    TFML-110-02-L-D: 
+      J1     WEST TOP        agg:TFML-110-02-L-D
+      J4     EAST TOP        agg:TFML-110-02-L-D
+
+Vendor Specific BOMs
+--------------------
+  Samtec
+  ~~~~~~
+SFML-110-02-L-D-LC,2,2x J2 J5 SFML-110-02-L-D-LC
+TFML-110-02-L-D,2,2x J1 J4 TFML-110-02-L-D
+SFML-105-02-L-D-LC,1,1x J6 SFML-105-02-L-D-LC
+TFML-105-02-L-D,1,1x J3 TFML-105-02-L-D
+
+
+  Fit
+  ~~~
+NOFIT,4,4x R9 R10 R11 R12 0402
+
+
+  Farnell
+  ~~~~~~~
+2455373,1,1x 3u3 VLS201610HBX-1
+2289216,1,1x 2u2 XFL4020
+2364070,4,4x NFET_GDS PowerPAK-SC-75-6L-
+2492469,1,1x TPS62133 QFN-16-EP-TI
+1758918,1,1x 3n3 0402
+2382918,1,1x TPS62152 QFN-16-EP-TI
+1907510,2,2x 22u 0805
+2496771,1,1x 100n 0402
+2461150,1,1x LTC2975 QFN-64-EP-LTC-UP
+
+
+Assembly BOM
+------------
+SFML-110-02-L-D-LC   2   WEST BOT,EAST BOT SFML-110-02-L-D-LC J2 J5
+TFML-110-02-L-D      2   EAST TOP,WEST TOP TFML-110-02-L-D J1 J4
+SFML-105-02-L-D-LC   1   NORTH BOT       SFML-105-02-L-D-LC J6
+TFML-105-02-L-D      1   NORTH TOP       TFML-105-02-L-D J3
+NOFIT                4   33k             0402            R10 R11 R12 R9
+2455373              1   3u3             VLS201610HBX-1  L2
+2289216              1   2u2             XFL4020         L1
+2364070              4   NFET_GDS        PowerPAK-SC-75-6L-Single Q1 Q2 Q3 Q4
+2492469              1   TPS62133        QFN-16-EP-TI    IC2
+1758918              1   3n3             0402            C11
+2382918              1   TPS62152        QFN-16-EP-TI    IC3
+1907510              2   22u             0805            C12 C9
+2496771              1   100n            0402            C10
+2461150              1   LTC2975         QFN-64-EP-LTC-UP IC1
+

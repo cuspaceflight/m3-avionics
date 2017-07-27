@@ -1,0 +1,110 @@
+Bill Of Materials
+=================
+
+Source file: DCDC-3V.xml
+Date: 2017-07-26T01:04:01.813350
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+J3     NORTH TOP       agg:TFML-105-02-L-D
+J6     NORTH BOT       agg:SFML-105-02-L-D-LC
+C4     100n            agg:0402
+R5     10k             agg:0402
+R3     10k             agg:0402
+R6     10k             agg:0402
+R4     10k             agg:0402
+R8     10k             agg:0402
+R2     10k             agg:0402
+R7     10k             agg:0402
+C2     10n             agg:0402
+C3     100n            agg:0402
+C1     100n            agg:0402
+R13    33k             agg:0402
+R17    10m             agg:0603
+R14    33k             agg:0402
+R18    10m             agg:0603
+R15    33k             agg:0402
+R19    10m             agg:0603
+R16    33k             agg:0402
+R20    10m             agg:0603
+C7     3n3             agg:0402
+C6     100n            agg:0402
+C5     10u             agg:0805
+C8     22u             agg:0805
+R1     5k49            agg:0402
+R30    33k             agg:0402
+R31    10m             agg:0603
+R33    33k             agg:0402
+R34    10m             agg:0603
+C12    100n            agg:0402
+R24    10k             agg:0402
+R22    10k             agg:0402
+R25    10k             agg:0402
+R23    10k             agg:0402
+R28    10k             agg:0402
+R21    10k             agg:0402
+R27    10k             agg:0402
+C10    10n             agg:0402
+C11    100n            agg:0402
+C9     100n            agg:0402
+R26    5k49            agg:0402
+R35    1M              agg:0402
+R36    1M              agg:0402
+R37    1M              agg:0402
+R38    1M              agg:0402
+R39    1M              agg:0402
+R40    1M              agg:0402
+TP1    TESTPAD         agg:TESTPAD
+TP2    TESTPAD         agg:TESTPAD
+TP3    TESTPAD         agg:TESTPAD
+TP4    TESTPAD         agg:TESTPAD
+C13    22u             agg:0805
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    SFML-110-02-L-D-LC: 
+      J2     WEST BOT        agg:SFML-110-02-L-D-LC
+      J5     EAST BOT        agg:SFML-110-02-L-D-LC
+    TFML-110-02-L-D: 
+      J1     WEST TOP        agg:TFML-110-02-L-D
+      J4     EAST TOP        agg:TFML-110-02-L-D
+
+Vendor Specific BOMs
+--------------------
+  Samtec
+  ~~~~~~
+SFML-110-02-L-D-LC,2,2x J2 J5 SFML-110-02-L-D-LC
+TFML-110-02-L-D,2,2x J1 J4 TFML-110-02-L-D
+
+
+  Fit
+  ~~~
+NOFIT,6,6x R9 R10 R11 R12 R29 R32 0402
+
+
+  Farnell
+  ~~~~~~~
+2492468,1,1x TPS62132 QFN-16-EP-TI
+2501102,6,6x PFET_GDS SON2x2
+2289216,1,1x 2u2 XFL4020
+2461150,2,2x LTC2975 QFN-64-EP-LTC-UP
+2364070,6,6x NFET_GDS PowerPAK-SC-75-6L-
+
+
+Assembly BOM
+------------
+SFML-110-02-L-D-LC   2   WEST BOT,EAST BOT SFML-110-02-L-D-LC J2 J5
+TFML-110-02-L-D      2   EAST TOP,WEST TOP TFML-110-02-L-D J1 J4
+NOFIT                6   33k             0402            R10 R11 R12 R29 R32 R9
+2492468              1   TPS62132        QFN-16-EP-TI    IC2
+2501102              6   PFET_GDS        SON2x2          Q10 Q12 Q5 Q6 Q7 Q8
+2289216              1   2u2             XFL4020         L1
+2461150              2   LTC2975         QFN-64-EP-LTC-UP IC1 IC3
+2364070              6   NFET_GDS        PowerPAK-SC-75-6L-Single Q1 Q11 Q2 Q3 Q4 Q9
+
