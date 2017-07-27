@@ -243,13 +243,13 @@ Text Label 2950 1550 0    60   ~ 0
 CHARGE
 Text Label 2950 1450 0    60   ~ 0
 PWR
-Text Label 2950 1350 0    60   ~ 0
+Text Label 2950 2650 0    60   ~ 0
 PYRO4
-Text Label 2950 1250 0    60   ~ 0
+Text Label 2950 2550 0    60   ~ 0
 PYRO3
-Text Label 2950 1150 0    60   ~ 0
+Text Label 2950 2450 0    60   ~ 0
 PYRO2
-Text Label 2950 1050 0    60   ~ 0
+Text Label 2950 2350 0    60   ~ 0
 PYRO1
 $Comp
 L CONN_02x10 J4
@@ -331,13 +331,13 @@ Text Label 2950 2850 0    60   ~ 0
 CHARGE
 Text Label 2950 2750 0    60   ~ 0
 PWR
-Text Label 2950 2650 0    60   ~ 0
+Text Label 2950 1350 0    60   ~ 0
 PYRO8
-Text Label 2950 2550 0    60   ~ 0
+Text Label 2950 1250 0    60   ~ 0
 PYRO7
-Text Label 2950 2450 0    60   ~ 0
+Text Label 2950 1150 0    60   ~ 0
 PYRO6
-Text Label 2950 2350 0    60   ~ 0
+Text Label 2950 1050 0    60   ~ 0
 PYRO5
 Text Notes 550  3250 0    60   ~ 0
 Interconnects
@@ -788,13 +788,13 @@ Wire Wire Line
 Wire Wire Line
 	2950 1450 2850 1450
 Wire Wire Line
-	2850 1350 2950 1350
+	2850 2650 2950 2650
 Wire Wire Line
-	2850 1250 2950 1250
+	2850 2550 2950 2550
 Wire Wire Line
-	2950 1150 2850 1150
+	2950 2450 2850 2450
 Wire Wire Line
-	2850 1050 2950 1050
+	2850 2350 2950 2350
 Wire Wire Line
 	2950 950  2850 950 
 Wire Wire Line
@@ -836,13 +836,13 @@ Wire Wire Line
 Wire Wire Line
 	2950 2750 2850 2750
 Wire Wire Line
-	2850 2650 2950 2650
+	2850 1350 2950 1350
 Wire Wire Line
-	2850 2550 2950 2550
+	2850 1250 2950 1250
 Wire Wire Line
-	2950 2450 2850 2450
+	2950 1150 2850 1150
 Wire Wire Line
-	2850 2350 2950 2350
+	2850 1050 2950 1050
 Wire Wire Line
 	2950 2250 2850 2250
 Wire Wire Line
@@ -1790,7 +1790,7 @@ Wire Wire Line
 Connection ~ 8500 1500
 Connection ~ 8250 1300
 Text Label 8150 1300 2    50   ~ 0
-CH1
+CH5
 Wire Wire Line
 	8500 1000 8500 950 
 Wire Wire Line
@@ -1826,7 +1826,7 @@ Wire Wire Line
 Wire Wire Line
 	9000 1400 9150 1400
 Text Label 9150 1400 0    60   ~ 0
-PYRO1
+PYRO5
 Wire Wire Line
 	8500 950  8800 950 
 Wire Wire Line
@@ -1835,7 +1835,7 @@ Connection ~ 9100 1400
 Wire Notes Line
 	7850 550  7850 5350
 Text Notes 7900 1700 0    60   ~ 0
-Channel 1
+Channel 5
 Wire Notes Line
 	7850 550  11150 550 
 $Comp
@@ -1897,7 +1897,7 @@ Wire Wire Line
 Connection ~ 10150 1500
 Connection ~ 9900 1300
 Text Label 9800 1300 2    50   ~ 0
-CH2
+CH6
 Wire Wire Line
 	10150 1000 10150 950 
 Wire Wire Line
@@ -1933,7 +1933,7 @@ Wire Wire Line
 Wire Wire Line
 	10650 1400 10800 1400
 Text Label 10800 1400 0    60   ~ 0
-PYRO2
+PYRO6
 Wire Wire Line
 	10150 950  10450 950 
 Wire Wire Line
@@ -1944,7 +1944,7 @@ Wire Notes Line
 Wire Notes Line
 	9500 550  9500 5350
 Text Notes 9550 1700 0    60   ~ 0
-Channel 2
+Channel 6
 $Comp
 L Si5515CDC Q1
 U 2 1 5967F3CD
@@ -2004,7 +2004,7 @@ Wire Wire Line
 Connection ~ 8500 2700
 Connection ~ 8250 2500
 Text Label 8150 2500 2    50   ~ 0
-CH3
+CH7
 Wire Wire Line
 	8500 2200 8500 2150
 Wire Wire Line
@@ -2040,14 +2040,14 @@ Wire Wire Line
 Wire Wire Line
 	9000 2600 9150 2600
 Text Label 9150 2600 0    60   ~ 0
-PYRO3
+PYRO7
 Wire Wire Line
 	8500 2150 8800 2150
 Wire Wire Line
 	9000 2450 9000 2600
 Connection ~ 9100 2600
 Text Notes 7900 2900 0    60   ~ 0
-Channel 3
+Channel 7
 Wire Notes Line
 	7850 1750 11150 1750
 $Comp
@@ -2109,7 +2109,7 @@ Wire Wire Line
 Connection ~ 10150 2700
 Connection ~ 9900 2500
 Text Label 9800 2500 2    50   ~ 0
-CH4
+CH8
 Wire Wire Line
 	10150 2200 10150 2150
 Wire Wire Line
@@ -2145,14 +2145,14 @@ Wire Wire Line
 Wire Wire Line
 	10650 2600 10800 2600
 Text Label 10800 2600 0    60   ~ 0
-PYRO4
+PYRO8
 Wire Wire Line
 	10150 2150 10450 2150
 Wire Wire Line
 	10650 2450 10650 2600
 Connection ~ 10750 2600
 Text Notes 9550 2900 0    60   ~ 0
-Channel 4
+Channel 8
 $Comp
 L Si5515CDC Q7
 U 2 1 596805B7
@@ -2212,7 +2212,7 @@ Wire Wire Line
 Connection ~ 8500 3900
 Connection ~ 8250 3700
 Text Label 8150 3700 2    50   ~ 0
-CH5
+CH1
 Wire Wire Line
 	8500 3400 8500 3350
 Wire Wire Line
@@ -2248,14 +2248,14 @@ Wire Wire Line
 Wire Wire Line
 	9000 3800 9150 3800
 Text Label 9150 3800 0    60   ~ 0
-PYRO5
+PYRO1
 Wire Wire Line
 	8500 3350 8800 3350
 Wire Wire Line
 	9000 3650 9000 3800
 Connection ~ 9100 3800
 Text Notes 7900 4100 0    60   ~ 0
-Channel 5
+Channel 1
 Wire Notes Line
 	7850 2950 11150 2950
 $Comp
@@ -2317,7 +2317,7 @@ Wire Wire Line
 Connection ~ 10150 3900
 Connection ~ 9900 3700
 Text Label 9800 3700 2    50   ~ 0
-CH6
+CH2
 Wire Wire Line
 	10150 3400 10150 3350
 Wire Wire Line
@@ -2353,14 +2353,14 @@ Wire Wire Line
 Wire Wire Line
 	10650 3800 10800 3800
 Text Label 10800 3800 0    60   ~ 0
-PYRO6
+PYRO2
 Wire Wire Line
 	10150 3350 10450 3350
 Wire Wire Line
 	10650 3650 10650 3800
 Connection ~ 10750 3800
 Text Notes 9550 4100 0    60   ~ 0
-Channel 6
+Channel 2
 $Comp
 L Si5515CDC Q5
 U 2 1 59680630
@@ -2420,7 +2420,7 @@ Wire Wire Line
 Connection ~ 8500 5100
 Connection ~ 8250 4900
 Text Label 8150 4900 2    50   ~ 0
-CH7
+CH3
 Wire Wire Line
 	8500 4600 8500 4550
 Wire Wire Line
@@ -2456,14 +2456,14 @@ Wire Wire Line
 Wire Wire Line
 	9000 5000 9150 5000
 Text Label 9150 5000 0    60   ~ 0
-PYRO7
+PYRO3
 Wire Wire Line
 	8500 4550 8800 4550
 Wire Wire Line
 	9000 4850 9000 5000
 Connection ~ 9100 5000
 Text Notes 7900 5300 0    60   ~ 0
-Channel 7
+Channel 3
 Wire Notes Line
 	7850 4150 11150 4150
 $Comp
@@ -2525,7 +2525,7 @@ Wire Wire Line
 Connection ~ 10150 5100
 Connection ~ 9900 4900
 Text Label 9800 4900 2    50   ~ 0
-CH8
+CH4
 Wire Wire Line
 	10150 4600 10150 4550
 Wire Wire Line
@@ -2561,14 +2561,14 @@ Wire Wire Line
 Wire Wire Line
 	10650 5000 10800 5000
 Text Label 10800 5000 0    60   ~ 0
-PYRO8
+PYRO4
 Wire Wire Line
 	10150 4550 10450 4550
 Wire Wire Line
 	10650 4850 10650 5000
 Connection ~ 10750 5000
 Text Notes 9550 5300 0    60   ~ 0
-Channel 8
+Channel 4
 Wire Notes Line
 	11150 5350 7850 5350
 Wire Notes Line
@@ -2592,21 +2592,21 @@ Wire Notes Line
 Text Notes 6200 1700 0    60   ~ 0
 Voltage Monitoring
 Text Label 2600 4950 0    50   ~ 0
-CH1
-Text Label 2600 5950 0    50   ~ 0
-CH2
-Text Label 2600 6150 0    50   ~ 0
-CH3
-Text Label 2600 5850 0    50   ~ 0
-CH4
-Text Label 2600 4850 0    50   ~ 0
 CH5
-Text Label 2600 5150 0    50   ~ 0
+Text Label 2600 5950 0    50   ~ 0
 CH6
-Text Label 2600 6050 0    50   ~ 0
+Text Label 2600 6150 0    50   ~ 0
 CH7
-Text Label 2600 5750 0    50   ~ 0
+Text Label 2600 5850 0    50   ~ 0
 CH8
+Text Label 2600 4850 0    50   ~ 0
+CH1
+Text Label 2600 5150 0    50   ~ 0
+CH2
+Text Label 2600 6050 0    50   ~ 0
+CH3
+Text Label 2600 5750 0    50   ~ 0
+CH4
 Wire Notes Line
 	7800 1800 7800 5350
 Wire Notes Line
