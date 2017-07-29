@@ -11,7 +11,7 @@ encoding utf-8
 Sheet 1 1
 Title "M3 IMU board schematic"
 Date "2017-07-28"
-Rev "3.0"
+Rev "3.1"
 Comp "Cambridge University Spaceflight"
 Comment1 "Drawn by: Gregory Brooks"
 Comment2 ""
@@ -906,17 +906,6 @@ Text Label 7050 3550 0    60   ~ 0
 OTG_FS_DM
 Text Label 7050 3750 0    60   ~ 0
 OTG_FS_DP
-$Comp
-L PART X2
-U 1 1 56F1DE12
-P 2950 3650
-F 0 "X2" H 3000 3750 50  0000 L CNN
-F 1 "PART" H 3000 3650 50  0000 L CNN
-F 2 "agg:M3_MOUNT" H 2950 3650 50  0001 C CNN
-F 3 "" H 2950 3650 50  0001 C CNN
-	1    2950 3650
-	1    0    0    -1  
-$EndComp
 Text Label 5750 3400 0    60   ~ 0
 USB_DETECT
 Text Label 1400 6750 2    60   ~ 0

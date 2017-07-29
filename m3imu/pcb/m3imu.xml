@@ -2,13 +2,13 @@
 <export version="D">
   <design>
     <source>C:/Users/grego/Downloads/m3-avionics/m3imu/pcb/m3imu.sch</source>
-    <date>29/07/2017 02:12:29</date>
+    <date>29/07/2017 15:51:55</date>
     <tool>Eeschema 4.0.6</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>M3 IMU board schematic</title>
         <company>Cambridge University Spaceflight</company>
-        <rev>3.0</rev>
+        <rev>3.1</rev>
         <date>2017-07-28</date>
         <source>m3imu.sch</source>
         <comment number="1" value="Drawn by: Gregory Brooks"/>
@@ -308,13 +308,6 @@
       <libsource lib="agg-kicad" part="MICROUSB"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56F154B7</tstamp>
-    </comp>
-    <comp ref="X2">
-      <value>PART</value>
-      <footprint>agg:M3_MOUNT</footprint>
-      <libsource lib="agg-kicad" part="PART"/>
-      <sheetpath names="/" tstamps="/"/>
-      <tstamp>56F1DE12</tstamp>
     </comp>
     <comp ref="D2">
       <value>USBLC6-2P6</value>
