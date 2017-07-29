@@ -1,4 +1,4 @@
-update=23/03/2016 17:30:06
+update=Mon 24 Oct 2016 20:05:23 BST
 version=1
 last_client=kicad
 [pcbnew]
@@ -32,3 +32,4 @@ LibDir=
 LibName1=../../agg-kicad/agg-kicad
 LibName2=usblc6-2
 LibName3=ADIS16405
+LibName4=sd_reader
