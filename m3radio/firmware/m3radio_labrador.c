@@ -16,6 +16,8 @@ static uint8_t labrador_wa[LDPC_SIZE(FAST, TXCODE, MP, RXCODE)];
 
 static thread_t* m3radio_labrador_thdp = NULL;
 
+static uint8_t testing_txbuf[128] = {0};
+
 /* Board configuration.
  * This tells the Si446x driver what our hardware looks like.
  */
@@ -74,7 +76,9 @@ THD_WORKING_AREA(m3radio_labrador_thd_wa, 1024);
 THD_FUNCTION(m3radio_labrador_thd, arg) {
     (void)arg;
 
+#if 0
     uint8_t* rxbuf;
+#endif
 
     m3status_set_init(M3RADIO_COMPONENT_LABRADOR);
 
@@ -101,6 +105,18 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
 
     /* Loop sending/receiving messages */
     while (true) {
+
+        /* XXX Just spam sending messages for testing purposes. */
+        labrador_err result = labrador_tx(testing_txbuf);
+        if(result != LABRADOR_OK) {
+            m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
+                               M3RADIO_ERROR_LABRADOR_TX);
+        } else {
+            m3status_set_ok(M3RADIO_COMPONENT_LABRADOR);
+        }
+        continue;
+
+#if 0
         /* If there's a packet ready to send,
          * send it and then signal that we've done so.
          */
@@ -144,6 +160,7 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
             m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
                                M3RADIO_ERROR_LABRADOR_RX);
         }
+#endif
     }
 }
 
