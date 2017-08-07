@@ -54,7 +54,8 @@ void set_charging_status(EXTDriver *extp, expchannel_t channel) {
 	}
 }
 
-/* Enable Charging  -  Triggered by Interrupt */
+
+/* Enable Charging - Triggered by Interrupt */
 void enable_charging(EXTDriver *extp, expchannel_t channel) {
     
     (void)extp;

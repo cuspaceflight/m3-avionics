@@ -1,10 +1,9 @@
 #ifndef TIMER
 #define TIMER
 
-#define TIMER_FREQ  xxx
+#define TIMER_FREQ  84000000
 
-/* Timer Init */
-static void timer_init(void);
-
+/* GPT2 Init */
+void gpt2_init(void);
 
 #endif

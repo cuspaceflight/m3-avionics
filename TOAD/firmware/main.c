@@ -3,6 +3,7 @@
 #include "hal.h"
 
 #include "psu.h"
+#include "timer.h"
 
 /* Interrupt Configuration */
 static const EXTConfig extcfg = {
@@ -43,10 +44,11 @@ int main(void) {
     halInit();
     chSysInit();
     
+    /* Setup HSE */
+    
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
     
-    /* Do some stuff */
+    /* PSU Init */
     psu_init();
-
 }

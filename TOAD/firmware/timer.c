@@ -3,14 +3,14 @@
 
 #include "timer.h"
 
+/* Prototypes */
+static void measurements_gpt2_cb(GPTDriver* gptd);
 
-static void timer_init(void) {
 
-    /* Configure GPT2 to precisely time the GPS PPS and the mains     
-    * zero-crossing events. It runs at full speed 100MHz.     
-    * We interrupt on both CC1 (mains zc) and CC2 (PPS).     
-    */    
-    
+/* Configure GPT2 */
+void gpt2_init(void) {
+
+    /* Setup GPT2 driver */ 
     static const GPTConfig gpt2_cfg = {        
     .frequency = TIMER_FREQ,        
     .callback = measurements_gpt2_cb,        
@@ -24,8 +24,16 @@ static void timer_init(void) {
     TIM2->CCMR1 = STM32_TIM_CCMR1_CC1S(1) | STM32_TIM_CCMR1_CC2S(1);    
     /* Enable CC1 and CC2, non-inverted rising-edge. */    
     TIM2->CCER = STM32_TIM_CCER_CC1E | STM32_TIM_CCER_CC2E;    
-    /* Have to set this here rather than in gpt2_cfg as gptStart clears it.. */    
+    /* Interrupt on both CC1 (PPS) and CC2 (Radio) */    
     TIM2->DIER = STM32_TIM_DIER_CC1IE | STM32_TIM_DIER_CC2IE;    
     gptStartContinuous(&GPTD2, 0xFFFFFFFF);
+    
+}
+
+
+/* Handle TIM2 input capture events */ 
+static void measurements_gpt2_cb(GPTDriver* gptd) {    
+
+    (void)gptd;
     
 }
