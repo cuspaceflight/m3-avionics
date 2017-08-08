@@ -1,5 +1,6 @@
 EESchema Schematic File Version 2
 LIBS:agg-kicad
+LIBS:m3top-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
@@ -802,6 +803,7 @@ F 0 "R1" H 2750 2750 50  0000 C CNN
 F 1 "120" H 2750 2650 50  0000 C CNN
 F 2 "agg:0603" H 2700 2700 50  0001 C CNN
 F 3 "" H 2700 2700 50  0001 C CNN
+F 4 "9238379" H 2700 2700 60  0001 C CNN "Farnell"
 	1    2700 2700
 	1    0    0    -1  
 $EndComp

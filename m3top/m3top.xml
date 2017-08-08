@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/adam/Projects/m3-avionics/m3top/m3top.sch</source>
+    <date>Tue 08 Aug 2017 16:56:53 BST</date>
+    <tool>Eeschema no-vcs-found-e79f978~58~ubuntu14.04.1</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>M3Top</title>
+        <company>CU Spaceflight</company>
+        <rev>1</rev>
+        <date>2017-07-28</date>
+        <source>m3top.sch</source>
+        <comment number="1" value="Drawn By: Adam Greig"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="J4">
+      <value>EAST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <fields>
+        <field name="Samtec">SFML-110-02-L-D-LC</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56B188E5</tstamp>
+    </comp>
+    <comp ref="J2">
+      <value>WEST BOT</value>
+      <footprint>agg:SFML-110-02-L-D-LC</footprint>
+      <fields>
+        <field name="Samtec">SFML-110-02-L-D-LC</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_02x10"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56B2D314</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>PYRO5</value>
+      <footprint>agg:B02B-PASK</footprint>
+      <fields>
+        <field name="Farnell">1830734</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A86A5</tstamp>
+    </comp>
+    <comp ref="J3">
+      <value>PYRO6</value>
+      <footprint>agg:B02B-PASK</footprint>
+      <fields>
+        <field name="Farnell">1830734</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A88E5</tstamp>
+    </comp>
+    <comp ref="J5">
+      <value>PYRO7</value>
+      <footprint>agg:B02B-PASK</footprint>
+      <fields>
+        <field name="Farnell">1830734</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A8941</tstamp>
+    </comp>
+    <comp ref="J6">
+      <value>PYRO8</value>
+      <footprint>agg:B02B-PASK</footprint>
+      <fields>
+        <field name="Farnell">1830734</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A89C7</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A8A7C</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A8BE0</tstamp>
+    </comp>
+    <comp ref="D3">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A8C06</tstamp>
+    </comp>
+    <comp ref="D4">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A8C2E</tstamp>
+    </comp>
+    <comp ref="J7">
+      <value>5v_CAM</value>
+      <footprint>agg:B02B-PASK</footprint>
+      <fields>
+        <field name="Farnell">1830734</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A9209</tstamp>
+    </comp>
+    <comp ref="D5">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A921A</tstamp>
+    </comp>
+    <comp ref="J8">
+      <value>ARM</value>
+      <footprint>agg:B02B-PASK</footprint>
+      <fields>
+        <field name="Farnell">1830734</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A98CC</tstamp>
+    </comp>
+    <comp ref="D6">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A98DD</tstamp>
+    </comp>
+    <comp ref="D7">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597A9CEB</tstamp>
+    </comp>
+    <comp ref="J9">
+      <value>PWR</value>
+      <footprint>agg:B02B-PASK</footprint>
+      <fields>
+        <field name="Farnell">1830734</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597AA022</tstamp>
+    </comp>
+    <comp ref="D8">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597AA033</tstamp>
+    </comp>
+    <comp ref="J10">
+      <value>CHARGE</value>
+      <footprint>agg:B02B-PASK</footprint>
+      <fields>
+        <field name="Farnell">1830734</field>
+      </fields>
+      <libsource lib="agg-kicad" part="CONN_01x02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597AA2F6</tstamp>
+    </comp>
+    <comp ref="D9">
+      <value>ESD_DIODE</value>
+      <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <libsource lib="agg-kicad" part="ESD_DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597AA307</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>120</value>
+      <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">9238379</field>
+      </fields>
+      <libsource lib="agg-kicad" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>597AA960</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="agg-kicad" part="CONN_01x02">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_01x02</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="CONN_02x10">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">CONN_02x10</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+        <pin num="7" name="7" type="passive"/>
+        <pin num="8" name="8" type="passive"/>
+        <pin num="9" name="9" type="passive"/>
+        <pin num="10" name="10" type="passive"/>
+        <pin num="11" name="11" type="passive"/>
+        <pin num="12" name="12" type="passive"/>
+        <pin num="13" name="13" type="passive"/>
+        <pin num="14" name="14" type="passive"/>
+        <pin num="15" name="15" type="passive"/>
+        <pin num="16" name="16" type="passive"/>
+        <pin num="17" name="17" type="passive"/>
+        <pin num="18" name="18" type="passive"/>
+        <pin num="19" name="19" type="passive"/>
+        <pin num="20" name="20" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="ESD_DIODE">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">ESD_DIODE</field>
+        <field name="Footprint">agg:0402</field>
+        <field name="Farnell">2368169</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="agg-kicad" part="R">
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="agg-kicad">
+      <uri>/home/adam/Projects/m3-avionics/agg-kicad/agg-kicad.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="/PYRO6">
+      <node ref="J3" pin="1"/>
+      <node ref="D2" pin="1"/>
+      <node ref="J4" pin="10"/>
+    </net>
+    <net code="2" name="GND">
+      <node ref="D8" pin="2"/>
+      <node ref="J10" pin="2"/>
+      <node ref="J3" pin="2"/>
+      <node ref="D9" pin="2"/>
+      <node ref="J9" pin="2"/>
+      <node ref="D7" pin="2"/>
+      <node ref="J2" pin="1"/>
+      <node ref="J1" pin="2"/>
+      <node ref="J2" pin="19"/>
+      <node ref="J2" pin="20"/>
+      <node ref="J4" pin="19"/>
+      <node ref="J2" pin="2"/>
+      <node ref="J4" pin="20"/>
+      <node ref="J4" pin="2"/>
+      <node ref="J4" pin="1"/>
+      <node ref="D4" pin="2"/>
+      <node ref="D6" pin="2"/>
+      <node ref="D3" pin="2"/>
+      <node ref="D2" pin="2"/>
+      <node ref="D1" pin="2"/>
+      <node ref="J5" pin="2"/>
+      <node ref="J6" pin="2"/>
+      <node ref="D5" pin="2"/>
+      <node ref="J7" pin="2"/>
+    </net>
+    <net code="3" name="/PYRO8">
+      <node ref="D4" pin="1"/>
+      <node ref="J6" pin="1"/>
+      <node ref="J4" pin="14"/>
+    </net>
+    <net code="4" name="/PYRO7">
+      <node ref="J5" pin="1"/>
+      <node ref="D3" pin="1"/>
+      <node ref="J4" pin="12"/>
+    </net>
+    <net code="5" name="/PYRO5">
+      <node ref="J4" pin="8"/>
+      <node ref="D1" pin="1"/>
+      <node ref="J1" pin="1"/>
+    </net>
+    <net code="6" name="/5v_CAM">
+      <node ref="J7" pin="1"/>
+      <node ref="J4" pin="15"/>
+      <node ref="D5" pin="1"/>
+    </net>
+    <net code="7" name="/PYRO_SI">
+      <node ref="D6" pin="1"/>
+      <node ref="J4" pin="6"/>
+      <node ref="J4" pin="5"/>
+      <node ref="J8" pin="2"/>
+    </net>
+    <net code="8" name="/CAN-">
+      <node ref="R1" pin="1"/>
+      <node ref="J2" pin="16"/>
+    </net>
+    <net code="9" name="/JTDI">
+      <node ref="J2" pin="10"/>
+      <node ref="J2" pin="8"/>
+    </net>
+    <net code="10" name="/CAN+">
+      <node ref="J2" pin="18"/>
+      <node ref="R1" pin="2"/>
+    </net>
+    <net code="11" name="/CHARGE">
+      <node ref="J4" pin="17"/>
+      <node ref="D9" pin="1"/>
+      <node ref="J4" pin="18"/>
+      <node ref="J10" pin="1"/>
+    </net>
+    <net code="12" name="/RSVD1">
+      <node ref="J2" pin="12"/>
+    </net>
+    <net code="13" name="/RSVD2">
+      <node ref="J2" pin="17"/>
+    </net>
+    <net code="14" name="/3v3_AUX2">
+      <node ref="J2" pin="15"/>
+    </net>
+    <net code="15" name="/3v3_AUX1">
+      <node ref="J2" pin="13"/>
+    </net>
+    <net code="16" name="/PYRO_SO">
+      <node ref="D7" pin="1"/>
+      <node ref="J8" pin="1"/>
+      <node ref="J4" pin="4"/>
+      <node ref="J4" pin="3"/>
+    </net>
+    <net code="17" name="/PWR">
+      <node ref="D8" pin="1"/>
+      <node ref="J4" pin="16"/>
+      <node ref="J9" pin="1"/>
+    </net>
+    <net code="18" name="/5v_AUX1">
+      <node ref="J4" pin="11"/>
+    </net>
+    <net code="19" name="/5v_IMU">
+      <node ref="J4" pin="9"/>
+    </net>
+    <net code="20" name="/5v_RADIO">
+      <node ref="J4" pin="7"/>
+    </net>
+    <net code="21" name="/5v_AUX2">
+      <node ref="J4" pin="13"/>
+    </net>
+    <net code="22" name="/5v_CAN">
+      <node ref="J2" pin="14"/>
+    </net>
+    <net code="23" name="/3v3_DL">
+      <node ref="J2" pin="11"/>
+    </net>
+    <net code="24" name="/3v3_PYRO">
+      <node ref="J2" pin="9"/>
+    </net>
+    <net code="25" name="/3v3_FC">
+      <node ref="J2" pin="7"/>
+    </net>
+    <net code="26" name="/3v3_RADIO">
+      <node ref="J2" pin="5"/>
+    </net>
+    <net code="27" name="/3v3_IMU">
+      <node ref="J2" pin="3"/>
+    </net>
+    <net code="28" name="/JTCK">
+      <node ref="J2" pin="6"/>
+    </net>
+    <net code="29" name="/JTMS">
+      <node ref="J2" pin="4"/>
+    </net>
+  </nets>
+</export>

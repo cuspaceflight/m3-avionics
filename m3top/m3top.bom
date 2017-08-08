@@ -1,0 +1,54 @@
+Bill Of Materials
+=================
+
+Source file: m3top.xml
+Date: 2017-08-08T16:56:53.339599
+
+Parts Missing Footprints
+------------------------
+
+
+Parts Missing Order Codes
+-------------------------
+
+
+Inconsistent Order Codes
+------------------------
+  Farnell
+  ~~~~~~~
+    1830734: 
+      J1     PYRO5           agg:B02B-PASK
+      J3     PYRO6           agg:B02B-PASK
+      J5     PYRO7           agg:B02B-PASK
+      J6     PYRO8           agg:B02B-PASK
+      J7     5v_CAM          agg:B02B-PASK
+      J8     ARM             agg:B02B-PASK
+      J9     PWR             agg:B02B-PASK
+      J10    CHARGE          agg:B02B-PASK
+  Samtec
+  ~~~~~~
+    SFML-110-02-L-D-LC: 
+      J4     EAST BOT        agg:SFML-110-02-L-D-LC
+      J2     WEST BOT        agg:SFML-110-02-L-D-LC
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+2368169,9,9x ESD_DIODE 0402
+1830734,8,8x PYRO8 ARM PYRO7 CHARGE PWR 
+9238379,1,1x 120 0603
+
+
+  Samtec
+  ~~~~~~
+SFML-110-02-L-D-LC,2,2x J4 J2 SFML-110-02-L-D-LC
+
+
+Assembly BOM
+------------
+2368169              9   ESD_DIODE       0402            D1 D2 D3 D4 D5 D6 D7 D8 D9
+1830734              8   PYRO8,ARM,PYRO7,CHARGE,PWR,PYRO5,PYRO6,5v_CAM B02B-PASK       J1 J10 J3 J5 J6 J7 J8 J9
+9238379              1   120             0603            R1
+SFML-110-02-L-D-LC   2   EAST BOT,WEST BOT SFML-110-02-L-D-LC J2 J4
+
