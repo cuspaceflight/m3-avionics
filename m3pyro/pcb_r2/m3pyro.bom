@@ -1,0 +1,86 @@
+Bill Of Materials
+=================
+
+Source file: m3pyro.xml
+Date: 2017-08-08T17:15:16.875222
+
+Parts Missing Footprints
+------------------------
+X1     BACKUP 22µ     
+
+Parts Missing Order Codes
+-------------------------
+
+
+Inconsistent Order Codes
+------------------------
+  Samtec
+  ~~~~~~
+    SFML-110-02-L-D-LC: 
+      J4     EAST BOT        agg:SFML-110-02-L-D-LC
+      J2     WEST BOT        agg:SFML-110-02-L-D-LC
+    TFML-110-02-L-D: 
+      J3     EAST TOP        agg:TFML-110-02-L-D
+      J1     WEST TOP        agg:TFML-110-02-L-D
+
+Vendor Specific BOMs
+--------------------
+  Farnell
+  ~~~~~~~
+2289216,2,2x 2µ2 XFL4020
+9239111,4,4x 100 0402
+2335804,1,1x YLW 0603-LED
+2335332,8,8x Si5515CDC ChipFET-1206-8
+2379805,18,18x 10k 0402
+2361246,1,1x TPS62130 QFN-16-EP-TI
+2506952,1,1x 26M XTAL-20x16
+2448755,1,1x MCP2562 DFN-8-EP-MICROCHIP
+2064363,1,1x STM32F405RxTx LQFP-64
+2496814,1,1x 1µ 0402
+2211164,2,2x 10µ 0603
+2361248,1,1x TPS62150 QFN-16-EP-TI
+2314404,1,1x RED 0603-LED
+2447170,4,4x 3k3 0402
+2362088,2,2x 2µ2 0402
+8737843,2,2x PMEG2005AEA SOD-323
+2290363,1,1x GRN 0603-LED
+2496771,8,8x 100n 0402
+2346921,1,1x BACKUP 22µ None
+2494232,1,1x 22µ 0603
+2426952,1,1x 4µ7 0402
+2496790,2,2x 10p 0402
+
+
+  Samtec
+  ~~~~~~
+SFML-110-02-L-D-LC,2,2x J4 J2 SFML-110-02-L-D-LC
+TFML-110-02-L-D,2,2x J3 J1 TFML-110-02-L-D
+
+
+Assembly BOM
+------------
+2289216              2   2µ2             XFL4020         L1 L2
+9239111              4   100             0402            R2 R3 R4 R5
+2335804              1   YLW             0603-LED        D2
+2335332              8   Si5515CDC       ChipFET-1206-8  Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8
+2379805              18  10k             0402            R11 R12 R13 R14 R15 R16 R17 R18 R21 R22 R23 R24 R25 R26 R27 R28 R7 R9
+2361246              1   TPS62130        QFN-16-EP-TI    IC2
+2506952              1   26M             XTAL-20x16      Y1
+2448755              1   MCP2562         DFN-8-EP-MICROCHIP IC3
+2064363              1   STM32F405RxTx   LQFP-64         IC1
+2496814              1   1µ              0402            C5
+2211164              2   10µ             0603            C12 C17
+2361248              1   TPS62150        QFN-16-EP-TI    IC4
+2314404              1   RED             0603-LED        D1
+2447170              4   3k3             0402            R10 R19 R20 R8
+2362088              2   2µ2             0402            C10 C11
+8737843              2   PMEG2005AEA     SOD-323         D4 D5
+2290363              1   GRN             0603-LED        D3
+2496771              8   100n            0402            C13 C14 C15 C3 C4 C7 C8 C9
+2346921              1   BACKUP 22µ      None            X1
+2494232              1   22µ             0603            C16
+2426952              1   4µ7             0402            C2
+2496790              2   10p             0402            C1 C6
+SFML-110-02-L-D-LC   2   EAST BOT,WEST BOT SFML-110-02-L-D-LC J2 J4
+TFML-110-02-L-D      2   WEST TOP,EAST TOP TFML-110-02-L-D J1 J3
+
