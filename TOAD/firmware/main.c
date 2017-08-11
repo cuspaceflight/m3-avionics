@@ -3,7 +3,7 @@
 #include "hal.h"
 
 #include "psu.h"
-#include "timer.h"
+
 
 /* Interrupt Configuration */
 static const EXTConfig extcfg = {
@@ -11,8 +11,8 @@ static const EXTConfig extcfg = {
     {EXT_CH_MODE_DISABLED, NULL}, /* Px0 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px1 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px2 */
-    {EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOB, set_charging_status}, /* PB3 */
-    {EXT_CH_MODE_FALLING_EDGE | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOB, enable_charging}, /* PB4 */
+    {EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOB, set_charging_status}, /* PB3 - CHG_GOOD */
+    {EXT_CH_MODE_FALLING_EDGE | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOB, enable_charging}, /* PB4 - P_GOOD */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px5 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px6 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px7 */
@@ -44,11 +44,18 @@ int main(void) {
     halInit();
     chSysInit();
     
-    /* Setup HSE */
+    /* TODO Setup HSE */
     
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
     
     /* PSU Init */
     psu_init();
+    
+    /* Main Loop */
+    while (true) {
+    
+        /* Do nothing */
+        chThdSleepMilliseconds(1000);
+    }
 }

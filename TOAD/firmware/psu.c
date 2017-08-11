@@ -21,8 +21,8 @@ static const ADCConversionGroup adcgrpcfg = {
     .error_cb = NULL,
     .cr1 = 0,
     .cr2 = ADC_CR2_SWSTART,
-    .smpr1 = ADC_SMPR1_SMP_AN14(ADC_SAMPLE_3) | ADC_SMPR1_SMP_AN15(ADC_SAMPLE_3),
-    .smpr2 = ADC_SMPR2_SMP_AN9(ADC_SAMPLE_3),
+    .smpr1 = ADC_SMPR1_SMP_AN14(ADC_SAMPLE_480) | ADC_SMPR1_SMP_AN15(ADC_SAMPLE_480),
+    .smpr2 = ADC_SMPR2_SMP_AN9(ADC_SAMPLE_480),
     .sqr1 = ADC_SQR1_NUM_CH(ADC_NUM_CHANNELS),
     .sqr2 = 0,
     .sqr3 = ADC_SQR3_SQ3_N(ADC_CHANNEL_IN15) |
@@ -39,7 +39,7 @@ void get_psu_measurements(void) {
 }
 
 
-/* Set Charging Status - Triggered by Interrupt */
+/* Set Charging Status - Triggered by Interrupt on CHG_GOOD */
 void set_charging_status(EXTDriver *extp, expchannel_t channel) {
 
 	(void)extp;
@@ -55,7 +55,7 @@ void set_charging_status(EXTDriver *extp, expchannel_t channel) {
 }
 
 
-/* Enable Charging - Triggered by Interrupt */
+/* Enable Charging - Triggered by Interrupt on P_GOOD */
 void enable_charging(EXTDriver *extp, expchannel_t channel) {
     
     (void)extp;
@@ -63,13 +63,12 @@ void enable_charging(EXTDriver *extp, expchannel_t channel) {
 	
 	/* Cycle CHG_EN Pin */
     palSetPad(GPIOB, GPIOB_CHG_EN);
-    chThdSleepMilliseconds(250);
     palClearPad(GPIOB, GPIOB_CHG_EN);
 }
 
 
 /* PSU Monitor Thread */
-static THD_WORKING_AREA(waPSUThread, 128);
+static THD_WORKING_AREA(waPSUThread, 256);
 static THD_FUNCTION(PSUThread, arg) {
 
   (void)arg;
@@ -85,7 +84,17 @@ static THD_FUNCTION(PSUThread, arg) {
     
     /* TODO: Analyse Measurements */
     
-    chThdSleepMilliseconds(5000);
+    palToggleLine(LINE_SR_ERR);
+    palToggleLine(LINE_PR_ERR);
+    palToggleLine(LINE_SYS_ERR);
+    palToggleLine(LINE_GPS_ERR);
+    
+    palToggleLine(LINE_SR_GD);
+    palToggleLine(LINE_PR_GD);
+    palToggleLine(LINE_SYS_GD);
+    palToggleLine(LINE_GPS_GD);
+    
+    //chThdSleepMilliseconds(5000);
   }
 }
 
