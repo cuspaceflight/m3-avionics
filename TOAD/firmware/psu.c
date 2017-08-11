@@ -82,8 +82,18 @@ static THD_FUNCTION(PSUThread, arg) {
     /* Monitor PSU */
     get_psu_measurements();
     
-    /* TODO: Analyse Measurements */
+    /* TODO: Analyse Measurements 
+     * N.B. The thermistor is only
+     * sourced when the battery is
+     * charging. If charging stops 
+     * due to an over-temp the 
+     * CHG_GOOD pin remains low to
+     * indicate charging is still 
+     * taking place.
+     */
     
+    
+    /* DEBUG - Toggle LEDs */
     palToggleLine(LINE_SR_ERR);
     palToggleLine(LINE_PR_ERR);
     palToggleLine(LINE_SYS_ERR);
@@ -93,8 +103,6 @@ static THD_FUNCTION(PSUThread, arg) {
     palToggleLine(LINE_PR_GD);
     palToggleLine(LINE_SYS_GD);
     palToggleLine(LINE_GPS_GD);
-    
-    //chThdSleepMilliseconds(5000);
   }
 }
 
