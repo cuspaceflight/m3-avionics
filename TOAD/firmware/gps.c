@@ -4,16 +4,24 @@
  *CUSF 2017
  */
 
+#include <string.h>
 #include "gps.h"
 #include "ubx.h"
 
-SerialDriver* gps_seriald;
+static SerialDriver* gps_seriald;
+static bool gps_configured = false;
 
 static uint16_t gps_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n);
 static void gps_checksum(uint8_t *buf);
 static bool gps_transmit(uint8_t *buf);
 static void ublox_state_machine(uint8_t b);
-static bool gps_configure(void);
+
+/* UBX Decoding State Machine States */
+typedef enum {
+    STATE_IDLE = 0, STATE_SYNC1, STATE_SYNC2,
+    STATE_CLASS, STATE_ID, STATE_L1, STATE_L2,
+    STATE_PAYLOAD, STATE_CK_A, NUM_STATES
+} ubx_state;
 
 static SerialConfig serial_cfg = {
     .speed = 9600,
@@ -88,8 +96,8 @@ uint8_t rxbuf[255] = {0};
 uint8_t rxbufidx = 0;
 static void ublox_state_machine(uint8_t b)
 {
-    NEEDS EDITING TO WORK WITH THIS PROJECT
-    E.G. PUT DATA INTO A MAILBOX
+    /*NEEDS EDITING TO WORK WITH THIS PROJECT
+    E.G. PUT DATA INTO A MAILBOX*/
 
     rxbuf[rxbufidx++] = b;
     static ubx_state state = STATE_IDLE;
@@ -136,8 +144,8 @@ static void ublox_state_machine(uint8_t b)
         case STATE_L1:
             length |= (uint16_t)b << 8;
             if(length >= 128) {
-                m3status_set_error(M3RADIO_COMPONENT_UBLOX,
-                                   M3RADIO_ERROR_UBLOX_DECODE);
+                //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                //                   M3RADIO_ERROR_UBLOX_DECODE);
                 state = STATE_IDLE;
             }
             length_remaining = length;
@@ -163,8 +171,8 @@ static void ublox_state_machine(uint8_t b)
             ck = gps_fletcher_8(ck, (uint8_t*)&length, 2);
             ck = gps_fletcher_8(ck, payload, length);
             if(ck_a != (ck&0xFF) || ck_b != (ck>>8)) {
-                m3status_set_error(M3RADIO_COMPONENT_UBLOX,
-                                   M3RADIO_ERROR_UBLOX_CHECKSUM);
+                //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                //                   M3RADIO_ERROR_UBLOX_CHECKSUM);
                 break;
             }
 
@@ -172,14 +180,14 @@ static void ublox_state_machine(uint8_t b)
                 case UBX_ACK:
                     if(id == 0x00) {
                         /* NAK */
-                        m3status_set_error(M3RADIO_COMPONENT_UBLOX,
-                                           M3RADIO_ERROR_UBLOX_NAK);
+                        //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                        //                   M3RADIO_ERROR_UBLOX_NAK);
                     } else if(id == 0x01) {
                         /* ACK */
                         /* No need to do anything */
                     } else {
-                        m3status_set_error(M3RADIO_COMPONENT_UBLOX,
-                                           M3RADIO_ERROR_UBLOX_DECODE);
+                        //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                        //                   M3RADIO_ERROR_UBLOX_DECODE);
                     }
                     break;
                 case UBX_NAV:
@@ -188,12 +196,12 @@ static void ublox_state_machine(uint8_t b)
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt, payload, length);
 
-                        ublox_can_send_pvt(&pvt);
+                        //ublox_can_send_pvt(&pvt);
 
-                        m3status_set_ok(M3RADIO_COMPONENT_UBLOX);
+                        //m3status_set_ok(M3RADIO_COMPONENT_UBLOX);
                     } else {
-                        m3status_set_error(M3RADIO_COMPONENT_UBLOX,
-                                           M3RADIO_ERROR_UBLOX_DECODE);
+                        //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                        //                   M3RADIO_ERROR_UBLOX_DECODE);
                     }
                     break;
                 case UBX_CFG:
@@ -201,12 +209,12 @@ static void ublox_state_machine(uint8_t b)
                         /* NAV5 */
                         memcpy(cfg_nav5.payload, payload, length);
                         if(cfg_nav5.dyn_model != 8) {
-                            m3status_set_error(M3RADIO_COMPONENT_UBLOX,
-                                               M3RADIO_ERROR_UBLOX_FLIGHT_MODE);
+                            //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                            //                   M3RADIO_ERROR_UBLOX_FLIGHT_MODE);
                         }
                     } else {
-                        m3status_set_error(M3RADIO_COMPONENT_UBLOX,
-                                           M3RADIO_ERROR_UBLOX_DECODE);
+                        //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+                        //                   M3RADIO_ERROR_UBLOX_DECODE);
                     }
                     break;
                 default:
@@ -216,273 +224,263 @@ static void ublox_state_machine(uint8_t b)
 
         default:
             state = STATE_IDLE;
-            m3status_set_error(M3RADIO_COMPONENT_UBLOX,
-                               M3RADIO_ERROR_UBLOX_DECODE);
+            //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
+            //                   M3RADIO_ERROR_UBLOX_DECODE);
             break;
 
     }
 }
 
 
-static bool gps_configure(void)
-{
-    ubx_cfg_prt_t prt;
-    ubx_cfg_nav5_t nav5;
-    ubx_cfg_msg_t msg;
-    // ubx_cfg_msg_t msg2;
-    ubx_cfg_rate_t rate;
-    ubx_cfg_sbas_t sbas;
-    ubx_cfg_gnss_t gnss;
-    ubx_cfg_tp5_t tp5_1;
-    ubx_cfg_tp5_t tp5_2a;
-    ubx_cfg_tp5_t tp5_2b;
+void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
+                bool rising_edge){
+	gps_seriald = seriald;  // Set global serial driver
+
+	/* We'll reset the uBlox so it's in a known state */
+    palClearLine(LINE_GPS_RST);
+    chThdSleepMilliseconds(100);
+    palSetLine(LINE_GPS_RST);
+    chThdSleepMilliseconds(500);
+
+    sdStart(gps_seriald, &serial_cfg);
+
+	do {
+        gps_configured = true;
+
+        ubx_cfg_prt_t prt;
+        ubx_cfg_nav5_t nav5;
+        ubx_cfg_msg_t msg;
+        ubx_cfg_msg_t msg2;
+        ubx_cfg_rate_t rate;
+        ubx_cfg_sbas_t sbas;
+        ubx_cfg_gnss_t gnss;
+        ubx_cfg_tp5_t tp5_1;
+        ubx_cfg_tp5_t tp5_2;
+
+        /* Disable NMEA on UART */
+        prt.sync1 = UBX_SYNC1;
+        prt.sync2 = UBX_SYNC2;
+        prt.class = UBX_CFG;
+        prt.id = UBX_CFG_PRT;
+        prt.length = sizeof(prt.payload);
+        /* Program UART1 */
+        prt.port_id = 1;
+        /* Don't use TXReady GPIO */
+        prt.tx_ready = 0;
+        /* 8 bits, no polarity, 1 stop bit */
+        prt.mode = (1<<4) | (3<<6) | (4<<9);
+        /* 9600 baud */
+        prt.baud_rate = 9600;
+        /* only receive UBX protocol */
+        prt.in_proto_mask = (1<<0);
+        /* only send UBX protocol */
+        prt.out_proto_mask = (1<<0);
+        /* no weird timeout */
+        prt.flags = 0;
+        /* must be 0 */
+        prt.reserved5 = 0;
+        gps_configured &= gps_transmit((uint8_t*)&prt);
+        if(!gps_configured) break;
 
 
-    bool success = true;
+        /* Set to Stationary mode */
+        nav5.sync1 = UBX_SYNC1;
+        nav5.sync2 = UBX_SYNC2;
+        nav5.class = UBX_CFG;
+        nav5.id = UBX_CFG_NAV5;
+        nav5.length = sizeof(nav5.payload);
 
-    /* Disable NMEA on UART */
-    prt.sync1 = UBX_SYNC1;
-    prt.sync2 = UBX_SYNC2;
-    prt.class = UBX_CFG;
-    prt.id = UBX_CFG_PRT;
-    prt.length = sizeof(prt.payload);
-    /* Program UART1 */
-    prt.port_id = 1;
-    /* Don't use TXReady GPIO */
-    prt.tx_ready = 0;
-    /* 8 bits, no polarity, 1 stop bit */
-    prt.mode = (1<<4) | (3<<6) | (4<<9);
-    /* 9600 baud */
-    prt.baud_rate = 9600;
-    /* only receive UBX protocol */
-    prt.in_proto_mask = (1<<0);
-    /* only send UBX protocol */
-    prt.out_proto_mask = (1<<0);
-    /* no weird timeout */
-    prt.flags = 0;
-    /* must be 0 */
-    prt.reserved5 = 0;
-    success &= gps_transmit((uint8_t*)&prt);
-    if(!success) return false;
+        nav5.mask = 1 | (1<<10);
+        nav5.dyn_model = 2;
+        nav5.utc_standard = 3;  // USNO
+
+        gps_configured &= gps_transmit((uint8_t*)&nav5);
+        if(!gps_configured) break;
 
 
-    /* Set to Stationary mode */
-    nav5.sync1 = UBX_SYNC1;
-    nav5.sync2 = UBX_SYNC2;
-    nav5.class = UBX_CFG;
-    nav5.id = UBX_CFG_NAV5;
-    nav5.length = sizeof(nav5.payload);
+        /* Enable NAV PVT messages */
+        if(nav_pvt){
+            msg.sync1 = UBX_SYNC1;
+            msg.sync2 = UBX_SYNC2;
+            msg.class = UBX_CFG;
+            msg.id = UBX_CFG_MSG;
+            msg.length = sizeof(msg.payload);
 
-    nav5.mask = 1 | (1<<10);
-    nav5.dyn_model = 2;
-    nav5.utc_standard = 3;  // USNO
-
-    success &= gps_transmit((uint8_t*)&nav5);
-    if(!success) return false;
-
-
-    /* Enable NAV PVT messages */
-    msg.sync1 = UBX_SYNC1;
-    msg.sync2 = UBX_SYNC2;
-    msg.class = UBX_CFG;
-    msg.id = UBX_CFG_MSG;
-    msg.length = sizeof(msg.payload);
-
-    msg.msg_class = UBX_NAV;
-    msg.msg_id    = UBX_NAV_PVT;
-    msg.rate      = 1;
-    success &= gps_transmit((uint8_t*)&msg);
-    if(!success) return FALSE;
+            msg.msg_class = UBX_NAV;
+            msg.msg_id    = UBX_NAV_PVT;
+            msg.rate      = 1;
+            gps_configured &= gps_transmit((uint8_t*)&msg);
+            if(!gps_configured) break;
+        }
 
 
-    /* Enable NAV POSECEF messages */
-    /*
-    msg2.sync1 = UBX_SYNC1;
-    msg2.sync2 = UBX_SYNC2;
-    msg2.class = UBX_CFG;
-    msg2.id = UBX_CFG_MSG;
-    msg2.length = sizeof(msg2.payload);
 
-    msg2.msg_class = UBX_NAV;
-    msg2.msg_id    = UBX_NAV_POSECEF;
-    msg2.rate      = 1;
-    success &= gps_transmit((uint8_t*)&msg2);
-    if(!success) return FALSE;
-    */
+        /* Enable NAV POSECEF messages */
+        if (nav_posecef){
+            msg2.sync1 = UBX_SYNC1;
+            msg2.sync2 = UBX_SYNC2;
+            msg2.class = UBX_CFG;
+            msg2.id = UBX_CFG_MSG;
+            msg2.length = sizeof(msg2.payload);
 
+            msg2.msg_class = UBX_NAV;
+            msg2.msg_id    = UBX_NAV_POSECEF;
+            msg2.rate      = 1;
+            gps_configured &= gps_transmit((uint8_t*)&msg2);
+            if(!gps_configured) break;
+        }
 
-    /* Set solution rate to 1Hz */
-    rate.sync1 = UBX_SYNC1;
-    rate.sync2 = UBX_SYNC2;
-    rate.class = UBX_CFG;
-    rate.id = UBX_CFG_RATE;
-    rate.length = sizeof(rate.payload);
+        /* Set solution rate to 1Hz */
+        rate.sync1 = UBX_SYNC1;
+        rate.sync2 = UBX_SYNC2;
+        rate.class = UBX_CFG;
+        rate.id = UBX_CFG_RATE;
+        rate.length = sizeof(rate.payload);
 
-    rate.meas_rate = 1000;
-    rate.nav_rate = 1;
-    rate.time_ref = 0;  // UTC
-    success &= gps_transmit((uint8_t*)&rate);
-    if(!success) return FALSE;
-
-
-    /* Disable sbas */
-    sbas.sync1 = UBX_SYNC1;
-    sbas.sync2 = UBX_SYNC2;
-    sbas.class = UBX_CFG;
-    sbas.id = UBX_CFG_SBAS;
-    sbas.length = sizeof(sbas.payload);
-
-    sbas.mode = 0;
-    success &= gps_transmit((uint8_t*)&sbas);
-    if(!success) return FALSE;
+        rate.meas_rate = 1000;
+        rate.nav_rate = 1;
+        rate.time_ref = 0;  // UTC
+        gps_configured &= gps_transmit((uint8_t*)&rate);
+        if(!gps_configured) break;
 
 
-    /* Disable non GPS systems */
-    gnss.sync1 = UBX_SYNC1;
-    gnss.sync2 = UBX_SYNC2;
-    gnss.class = UBX_CFG;
-    gnss.id = UBX_CFG_GNSS;
-    gnss.length = sizeof(gnss.payload)
+        /* Disable sbas */
+        sbas.sync1 = UBX_SYNC1;
+        sbas.sync2 = UBX_SYNC2;
+        sbas.class = UBX_CFG;
+        sbas.id = UBX_CFG_SBAS;
+        sbas.length = sizeof(sbas.payload);
 
-    gnss.msg_ver = 0;
-    gnss.num_trk_ch_hw = 32;
-    gnss.num_trk_ch_use = 32;
-    gnss.num_config_blocks = 5;
-
-    /* Enable GPS, use all channels */
-    gnss.gps_gnss_id = 0;
-    gnss.gps_res_trk_ch = 32;
-    gnss.gps_max_trk_ch = 32;
-    gnss.gps_flags = 1;
-
-    /* Leave all other GNSS systems disabled */
-    gnss.sbas_gnss_id = 1;
-    gnss.beidou_gnss_id = 3;
-    gnss.qzss_gnss_id = 5;
-    gnss.glonass_gnss_id = 6;
-    success &= gps_transmit((uint8_t*)&gnss);
-    if(!success) return FALSE;
+        sbas.mode = 0;
+        gps_configured &= gps_transmit((uint8_t*)&sbas);
+        if(!gps_configured) break;
 
 
-    /* Set up 4MHz timepulse on TIMEPULSE pin*/
-    tp5_1.sync1 = UBX_SYNC1;
-    tp5_1.sync2 = UBX_SYNC2;
-    tp5_1.class = UBX_CFG;
-    tp5_1.id = UBX_CFG_TP5;
-    tp5_1.length = sizeof(tp5_1.payload);
+        /* Disable non GPS systems */
+        gnss.sync1 = UBX_SYNC1;
+        gnss.sync2 = UBX_SYNC2;
+        gnss.class = UBX_CFG;
+        gnss.id = UBX_CFG_GNSS;
+        gnss.length = sizeof(gnss.payload);
 
-    tp5_1.tp_idx =           0;  // TIMEPULSE
-    tp5_1.version =          0;
-    tp5_1.ant_cable_delay =  15; // Needs experimental adjustment!
-    tp5_1.freq_period =      4000000;  // 4MHz
-    tp5_1.pulse_len_ratio =  0xffffffff >> 1; // (2^32/2)/2^32 = 50% duty cycle
-    tp5_1.freq_period_lock = 4000000;
-    tp5_1.pulse_len_ratio_lock = 0xffffffff >> 1;
-    tp5_1.user_config_delay = 0;
-    tp5_1.flags = (
-        UBX_CFG_TP5_FLAGS_ACTIVE                    |
-        UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ            |
-        UBX_CFG_TP5_FLAGS_IS_FREQ                   |
-        UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
-        UBX_CFG_TP5_FLAGS_POLARITY                  |
-        UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
-    success &= gps_transmit((uint8_t*)&tp5_1);
-    if(!success) return FALSE;
+        gnss.msg_ver = 0;
+        gnss.num_trk_ch_hw = 32;
+        gnss.num_trk_ch_use = 32;
+        gnss.num_config_blocks = 5;
 
+        /* Enable GPS, use all channels */
+        gnss.gps_gnss_id = 0;
+        gnss.gps_res_trk_ch = 32;
+        gnss.gps_max_trk_ch = 32;
+        gnss.gps_flags = 1;
 
-    /* Set up 1Hz pulse, rising edge at top of second */
-    tp5_2a.sync1 = UBX_SYNC1;
-    tp5_2a.sync2 = UBX_SYNC2;
-    tp5_2a.class = UBX_CFG;
-    tp5_2a.id = UBX_CFG_TP5;
-    tp5_2a.length = sizeof(tp5_2a.payload);
-
-    tp5_2a.tp_idx               = 1;  // Safeboot pin
-    tp5_2a.version              = 0;
-    tp5_2a.ant_cable_delay      = 15;  // Needs experimental adjustment!
-    tp5_2a.freq_period          = 0;  // Only when gps lock valid
-    tp5_2a.pulse_len_ratio      = 10000;  // us
-    tp5_2a.freq_period_lock     = 1;
-    tp5_2a.pulse_len_ratio_lock = 10000;
-    tp5_2a.flags = (
-        UBX_CFG_TP5_FLAGS_ACTIVE                    |
-        UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ            |
-        UBX_CFG_TP5_FLAGS_LOCKED_OTHER_SET          |
-        UBX_CFG_TP5_FLAGS_IS_FREQ                   |
-        UBX_CFG_TP5_FLAGS_IS_LENGTH                 |
-        UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
-        UBX_CFG_TP5_FLAGS_POLARITY                  |
-        UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
-    success &= gps_transmit((uint8_t*)&tp5_2a);
-    if(!success) return FALSE;
+        /* Leave all other GNSS systems disabled */
+        gnss.sbas_gnss_id = 1;
+        gnss.beidou_gnss_id = 3;
+        gnss.qzss_gnss_id = 5;
+        gnss.glonass_gnss_id = 6;
+        gps_configured &= gps_transmit((uint8_t*)&gnss);
+        if(!gps_configured) break;
 
 
-    /* Set up 1Hz pulse, falling edge at top of second */
-    /*tp5_2b.sync1 = UBX_SYNC1;
-    tp5_2b.sync2 = UBX_SYNC2;
-    tp5_2b.class = UBX_CFG;
-    tp5_2b.id = UBX_CFG_TP5;
-    tp5_2b.length = sizeof(tp5_2b.payload);
+        /* Set up 4MHz timepulse on TIMEPULSE pin*/
+        tp5_1.sync1 = UBX_SYNC1;
+        tp5_1.sync2 = UBX_SYNC2;
+        tp5_1.class = UBX_CFG;
+        tp5_1.id = UBX_CFG_TP5;
+        tp5_1.length = sizeof(tp5_1.payload);
 
-    tp5_2b.tp_idx               = 1;  // Safeboot pin
-    tp5_2b.version              = 0;
-    tp5_2b.ant_cable_delay      = 15;  // Needs experimental adjustment!
-    tp5_2b.freq_period          = 0;  // Only when gps lock valid
-    tp5_2b.pulse_len_ratio      = 10000;  // us
-    tp5_2b.freq_period_lock     = 1;
-    tp5_2b.pulse_len_ratio_lock = 10000;
-    tp5_2b.flags = (
-        UBX_CFG_TP5_FLAGS_ACTIVE                    |
-        UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ            |
-        UBX_CFG_TP5_FLAGS_LOCKED_OTHER_SET          |
-        UBX_CFG_TP5_FLAGS_IS_FREQ                   |
-        UBX_CFG_TP5_FLAGS_IS_LENGTH                 |
-        UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
-        UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
-    success &= gps_transmit((uint8_t*)&tp5_2b);
-    if(!success) return FALSE;
-    */
-    // Still todo:
+        tp5_1.tp_idx =           0;  // TIMEPULSE
+        tp5_1.version =          0;
+        tp5_1.ant_cable_delay =  15; // Needs experimental adjustment!
+        tp5_1.freq_period =      4000000;  // 4MHz
+        tp5_1.pulse_len_ratio =  0xffffffff >> 1; // (2^32/2)/2^32 = 50% duty cycle
+        tp5_1.freq_period_lock = 4000000;
+        tp5_1.pulse_len_ratio_lock = 0xffffffff >> 1;
+        tp5_1.user_config_delay = 0;
+        tp5_1.flags = (
+            UBX_CFG_TP5_FLAGS_ACTIVE                    |
+            UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ            |
+            UBX_CFG_TP5_FLAGS_IS_FREQ                   |
+            UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
+            UBX_CFG_TP5_FLAGS_POLARITY                  |
+            UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
+        gps_configured &= gps_transmit((uint8_t*)&tp5_1);
+        if(!gps_configured) break;
 
-    //
-    //
-    // tim-tp? Might not be useful
-    //
 
-    // Wait for ack with gps transmit - add ublox_expect?
+        /* Set up 1Hz pulse */
+        tp5_2.sync1 = UBX_SYNC1;
+        tp5_2.sync2 = UBX_SYNC2;
+        tp5_2.class = UBX_CFG;
+        tp5_2.id = UBX_CFG_TP5;
+        tp5_2.length = sizeof(tp5_2.payload);
 
-    /* Less important:
-     * - Name all the constants
-     * - Arguments as options e.g. which nav messages to enable, rising or falling edge on top of second
-     */
+        tp5_2.tp_idx               = 1;  // Safeboot pin
+        tp5_2.version              = 0;
+        tp5_2.ant_cable_delay      = 15;  // Needs experimental adjustment!
+        tp5_2.freq_period          = 0;  // Only when gps lock valid
+        tp5_2.pulse_len_ratio      = 10000;  // us
+        tp5_2.freq_period_lock     = 1;
+        tp5_2.pulse_len_ratio_lock = 10000;
+        if(rising_edge){
+            // Rising edge on top of second
+            tp5_2.flags = (
+                UBX_CFG_TP5_FLAGS_ACTIVE                    |
+                UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ            |
+                UBX_CFG_TP5_FLAGS_LOCKED_OTHER_SET          |
+                UBX_CFG_TP5_FLAGS_IS_FREQ                   |
+                UBX_CFG_TP5_FLAGS_IS_LENGTH                 |
+                UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
+                UBX_CFG_TP5_FLAGS_POLARITY                  |
+                UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
+        }
+        else{
+            // Falling edge on top of second
+            tp5_2.flags = (
+                UBX_CFG_TP5_FLAGS_ACTIVE                    |
+                UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ            |
+                UBX_CFG_TP5_FLAGS_LOCKED_OTHER_SET          |
+                UBX_CFG_TP5_FLAGS_IS_FREQ                   |
+                UBX_CFG_TP5_FLAGS_IS_LENGTH                 |
+                UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
+                UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
+        }
 
-    return success;
+        gps_configured &= gps_transmit((uint8_t*)&tp5_2);
+        if(!gps_configured) break;
+
+        // Still todo:
+
+        //
+        //
+        // tim-tp? Might not be useful
+        //
+
+        // Wait for ack with gps transmit - add ublox_expect?
+
+        /* Less important:
+         * - Name all the constants
+         *
+         */
+         if(!gps_configured) chThdSleepMilliseconds(1000);
+	} while(!gps_configured);
+    return;
 }
 
 
 static THD_WORKING_AREA(gps_thd_wa, 512);
 static THD_FUNCTION(gps_thd, arg) {
     (void)arg;
-    /* We'll reset the uBlox so it's in a known state */
-    palClearLine(GPS_RST);
-    chThdSleepMilliseconds(100);
-    palSetLine(GPS_RST);
-    chThdSleepMilliseconds(500);
-
-    sdStart(gps_seriald, &serial_cfg);
-
-    while(!gps_configure()) {
-        chThdSleepMilliseconds(1000);
-    }
 
     while(true) {
         ublox_state_machine(sdGet(gps_seriald));
     }
+
 }
 
 
-void gps_init(SerialDriver* seriald){
-    gps_seriald = seriald;
+void gps_thd_init(void){
     chThdCreateStatic(gps_thd_wa, sizeof(gps_thd_wa), NORMALPRIO,
     gps_thd, NULL);
 }

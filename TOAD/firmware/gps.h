@@ -4,12 +4,12 @@
 #include "ch.h"
 #include "hal.h"
 
-/*typedef struct __attribute__((packed)){
+typedef struct __attribute__((packed)){
     uint32_t i_tow;
     int32_t ecef_x, ecef_y, ecef_z;
     uint32_t p_acc;
 } ublox_ecef_t;
-*/
+
 
 typedef struct __attribute__((packed)) {
     uint32_t i_tow;
@@ -36,8 +36,8 @@ typedef struct __attribute__((packed)) {
     uint32_t reserved4;
 } ublox_pvt_t;
 
-void gps_init(SerialDriver* seriald);
-ublox_pvt_t gps_get_pvt(void);
-ublox_ecef_t gps_get_ecef(void);
+void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
+                bool rising_edge);
+void gps_thd_init(void);
 
 #endif /*__GPS_H__*/
