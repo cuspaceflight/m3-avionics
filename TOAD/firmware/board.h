@@ -444,7 +444,7 @@
                                         PIN_OTYPE_PUSHPULL(GPIOB_UART_TX) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_UART_RX) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_I2C_SCL) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_I2C_SDA) | \
+                                        PIN_OTYPE_OPENDRAIN(GPIOB_I2C_SDA) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_SPI2_SCK) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PR_NIRQ) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN12) | \

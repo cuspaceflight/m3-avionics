@@ -94,7 +94,10 @@ static bool cs2100_read(uint8_t reg_addr, uint8_t* data)
 
 static bool cs2100_write(uint8_t reg_addr, uint8_t data)
 {
-    const uint8_t buf[2] = {reg_addr, data};
+    static uint8_t buf[2] __attribute__((section("DATA_RAM")));
+    buf[0] = reg_addr; 
+    buf[1] = data;
+    
     msg_t result = i2cMasterTransmitTimeout(
         cs2100_i2cd, CS2100_ADDR, buf, 2, NULL, 0, MS2ST(20));
 
