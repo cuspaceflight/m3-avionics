@@ -46,10 +46,10 @@ int main(void) {
     chSysInit();
     
     /* Configure CS2100 to Produce HSE */
-    cs2100_configure(&I2CD1);
+    //cs2100_configure(&I2CD1);
 
     /* Swap PLLSRC to HSE */
-    cs2100_set_pll();
+    //cs2100_set_pll();
     
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
