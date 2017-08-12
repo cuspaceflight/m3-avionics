@@ -46,7 +46,7 @@ int main(void) {
     halInit();
     chSysInit();
     
-    /* Configure GPS to Produce 4MHz Signal */
+    /* Configure GPS to Produce 1MHz Signal */
     gps_init(&SD1, true, true, true);
     
     /* Configure CS2100 to Produce HSE */

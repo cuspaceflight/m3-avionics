@@ -393,9 +393,9 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         tp5_1.tp_idx =           0;  // TIMEPULSE
         tp5_1.version =          0;
         tp5_1.ant_cable_delay =  15; // Needs experimental adjustment!
-        tp5_1.freq_period =      4000000;  // 4MHz
+        tp5_1.freq_period =      1000000;  // 4MHz
         tp5_1.pulse_len_ratio =  0xffffffff >> 1; // (2^32/2)/2^32 = 50% duty cycle
-        tp5_1.freq_period_lock = 4000000;
+        tp5_1.freq_period_lock = 1000000;
         tp5_1.pulse_len_ratio_lock = 0xffffffff >> 1;
         tp5_1.user_config_delay = 0;
         tp5_1.flags = (

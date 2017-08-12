@@ -54,7 +54,7 @@
 
 static I2CDriver* cs2100_i2cd;
 static void cs2100_error(const char* err);
-static bool cs2100_read(uint8_t reg_addr, uint8_t* data);
+static uint8_t cs2100_read(uint8_t reg_addr);
 static bool cs2100_write(uint8_t reg_addr, uint8_t data);
 
 
@@ -71,23 +71,27 @@ static void cs2100_error(const char* err)
 }
 
 
-static bool cs2100_read(uint8_t reg_addr, uint8_t* data)
+static uint8_t cs2100_read(uint8_t reg_addr)
 {
+    static uint8_t res __attribute__((section("DATA_RAM")));
+    static uint8_t read_reg_addr __attribute__((section("DATA_RAM")));
+    
+    read_reg_addr = reg_addr;
     msg_t result = i2cMasterTransmitTimeout(
-        cs2100_i2cd, CS2100_ADDR, &reg_addr, 1, data, 1, MS2ST(20));
+        cs2100_i2cd, CS2100_ADDR, &read_reg_addr, 1, &res, 1, MS2ST(20));
 
    if(result == MSG_OK) {
-        return true;
+        return res;
     } else if(result == MSG_RESET) {
         i2cflags_t i2c_errs = i2cGetErrors(cs2100_i2cd);
         (void)i2c_errs;
         cs2100_error("I2C write error");
-        return false;
+        return 0;
     } else if(result == MSG_TIMEOUT) {
         cs2100_error("I2C write timeout");
-        return false;
+        return 0;
     } else {
-        return false;
+        return 0;
     }
 }
 
@@ -170,8 +174,8 @@ void cs2100_configure(I2CDriver* i2cd)
     /* Wait for PLL to lock. */
     bool unlocked;
     do {
-        uint8_t ctrl;
-        cs2100_read(CS2100_DEVICE_CTRL, &ctrl);
+        static uint8_t ctrl __attribute__((section("DATA_RAM")));
+        ctrl = cs2100_read(CS2100_DEVICE_CTRL);
         unlocked = ctrl & CS2100_DEVICE_CTRL_UNLOCK;
         chThdSleepMilliseconds(10);
     } while(unlocked);
