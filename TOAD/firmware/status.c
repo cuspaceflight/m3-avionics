@@ -124,6 +124,7 @@ static THD_WORKING_AREA(waStatusThread, 128);
 static THD_FUNCTION(StatusThread, arg) {
 
     (void)arg;
+    chRegSetThreadName("STATUS");
 
     /* Main Loop */
     while(true) {

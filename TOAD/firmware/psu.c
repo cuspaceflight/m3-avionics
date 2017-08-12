@@ -6,7 +6,13 @@
 #include "status.h"
 
 /* PSU Status */
-bool battery_charging = FALSE;
+static bool battery_charging = FALSE;
+static uint16_t battery_charge_current;
+static uint16_t battery_voltage;
+static uint8_t battery_charge_temp;
+static uint16_t charge_current_voltage;
+static uint16_t charge_temp_voltage;
+
 
 /* Prototypes */
 void get_psu_measurements(void);
@@ -72,27 +78,50 @@ void enable_charging(EXTDriver *extp, expchannel_t channel) {
 static THD_WORKING_AREA(waPSUThread, 256);
 static THD_FUNCTION(PSUThread, arg) {
 
-  (void)arg;
-  chRegSetThreadName("PSU");
-  
-  /* Start ADC */
-  adcStart(&ADCD1, NULL);
-  
-  while (true) {
-    
-    /* Monitor PSU */
-    get_psu_measurements();
-    
-    /* TODO: Analyse Measurements 
-     * N.B. The thermistor is only
-     * sourced when the battery is
-     * charging. If charging stops 
-     * due to an over-temp the 
-     * CHG_GOOD pin remains low to
-     * indicate charging is still 
-     * taking place.
-     */    
-  }
+    (void)arg;
+    chRegSetThreadName("PSU");
+
+    /* Start ADC */
+    adcStart(&ADCD1, NULL);
+
+    while (true) {
+
+        /* Monitor PSU */
+        get_psu_measurements();
+
+        /* TODO: Analyse Measurements 
+        * N.B. The thermistor is only
+        * sourced when the battery is
+        * charging. If charging stops 
+        * due to an over-temp the 
+        * CHG_GOOD pin remains low to
+        * indicate charging is still 
+        * taking place.
+        */
+
+        /* Compute Charging Data */
+        if (battery_charging == TRUE) { 
+            
+            /* Charge Temp in Degrees Celsius */
+            charge_temp_voltage = ((measure[0] / 4096) * 3300);
+            battery_charge_temp = (((charge_temp_voltage - 300) / (1200 - 300)) * 50);
+            
+            /* Charge Current in mAh */
+            charge_current_voltage = ((measure[1] / 4096) * 3300);
+            battery_charge_current = ((charge_current_voltage / 4320) * 400);
+
+        } else {
+
+            battery_charge_temp = 0;
+            battery_charge_current = 0;
+        }
+
+        /* Compute Battery Voltage in mV */
+        battery_voltage = ((measure[2] / 4096) * 6600);
+        
+        /* Sleep */
+        chThdSleepMilliseconds(1000);
+    }
 }
 
 
@@ -102,6 +131,3 @@ void psu_init(void) {
     /* Create Thread */
     chThdCreateStatic(waPSUThread, sizeof(waPSUThread), NORMALPRIO, PSUThread, NULL);
 }
-
-    
-    
