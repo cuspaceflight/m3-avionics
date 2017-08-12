@@ -5,6 +5,7 @@
 #include "cs2100.h"
 #include "gps.h"
 #include "psu.h"
+#include "status.h"
 
 
 /* Interrupt Configuration */
@@ -57,6 +58,9 @@ int main(void) {
     
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
+    
+    /* Status Init */
+    status_init();
     
     /* PSU Init */
     psu_init();

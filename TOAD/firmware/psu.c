@@ -3,6 +3,7 @@
 #include "hal.h"
 
 #include "psu.h"
+#include "status.h"
 
 /* PSU Status */
 bool battery_charging = FALSE;
@@ -92,17 +93,8 @@ static THD_FUNCTION(PSUThread, arg) {
      * taking place.
      */
     
+    set_status(COMPONENT_SYS, STATUS_GOOD);
     
-    /* DEBUG - Toggle LEDs */
-    palToggleLine(LINE_SR_ERR);
-    palToggleLine(LINE_PR_ERR);
-    palToggleLine(LINE_SYS_ERR);
-    palToggleLine(LINE_GPS_ERR);
-    
-    palToggleLine(LINE_SR_GD);
-    palToggleLine(LINE_PR_GD);
-    palToggleLine(LINE_SYS_GD);
-    palToggleLine(LINE_GPS_GD);
   }
 }
 
