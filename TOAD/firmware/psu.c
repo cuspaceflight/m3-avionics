@@ -91,10 +91,7 @@ static THD_FUNCTION(PSUThread, arg) {
      * CHG_GOOD pin remains low to
      * indicate charging is still 
      * taking place.
-     */
-    
-    set_status(COMPONENT_SYS, STATUS_GOOD);
-    
+     */    
   }
 }
 

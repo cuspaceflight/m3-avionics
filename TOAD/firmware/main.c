@@ -65,6 +65,9 @@ int main(void) {
     /* PSU Init */
     psu_init();
     
+    /* Update System Status */
+    set_status(COMPONENT_SYS, STATUS_GOOD);
+    
     /* Main Loop */
     while (true) {
     

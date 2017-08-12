@@ -11,6 +11,7 @@
 #define STATUS_ACTIVITY 3 
    
 
+/* Prototypes */
 void status_init(void);
 void set_status(uint8_t component, uint8_t status);
 
