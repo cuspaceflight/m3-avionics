@@ -103,12 +103,12 @@ static THD_FUNCTION(PSUThread, arg) {
         if (battery_charging == TRUE) { 
             
             /* Charge Temp in Degrees Celsius */
-            charge_temp_voltage = ((measure[0] / 4096) * 3300);
-            battery_charge_temp = (((charge_temp_voltage - 300) / (1200 - 300)) * 50);
+            charge_temp_voltage = ((measure[0] * 3300) / 4096);
+            battery_charge_temp = (((charge_temp_voltage - 300) * 50) / (1200 - 300));
             
             /* Charge Current in mAh */
-            charge_current_voltage = ((measure[1] / 4096) * 3300);
-            battery_charge_current = ((charge_current_voltage / 4320) * 400);
+            charge_current_voltage = ((measure[1] * 3300) / 4096);
+            battery_charge_current = ((charge_current_voltage * 400) / 4320);
 
         } else {
 
@@ -117,7 +117,7 @@ static THD_FUNCTION(PSUThread, arg) {
         }
 
         /* Compute Battery Voltage in mV */
-        battery_voltage = ((measure[2] / 4096) * 6600);
+        battery_voltage = ((measure[2] * 6600) / 4096);
         
         /* Sleep */
         chThdSleepMilliseconds(1000);
