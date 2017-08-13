@@ -13,7 +13,10 @@
 typedef struct {
   I2CDriver *i2c;
   i2caddr_t address;
-  float voltage;
+  float voltage1;
+  float voltage2;
+  float voltage3;
+  float voltage4;
   char name1[12];
   char name2[12];
   char name3[12];
@@ -22,18 +25,9 @@ typedef struct {
 
 typedef struct {
   LTC2975Config config;
-  float vout_1;
-  float iout_1;
-  float pout_1;
-  float vout_2;
-  float iout_2;
-  float pout_2;
-  float vout_3;
-  float iout_3;
-  float pout_3;
-  float vout_4;
-  float iout_4;
-  float pout_4;
+  float vout[4];
+  float iout[4];
+  float pout[4];
   systime_t poll_time;
 } LTC2975;
 
@@ -48,7 +42,7 @@ typedef struct {
   bool off:1;
   bool vout_ov:1;
   bool iout_oc:1;
-  bool vout_uv:1;
+  bool vin_uv:1;
   bool temperature:1;
   bool cml:1;
   bool other:1;
@@ -83,10 +77,11 @@ typedef struct {
   bool other_communication_fault:1;
 } ltc2975_fault_status;
 
-uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address, float voltage,
-                      const char *name1, float sense1_mohms, const char *name2, 
-                      float sense2_mohms, const char *name3, float sense3_mohms,
-                      const char *name4, float sense4_mohms);
+uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
+                     float voltage1, const char *name1, float sense1_mohms,
+                     float voltage2, const char *name2, float sense2_mohms,
+                     float voltage3, const char *name3, float sense3_mohms,
+                     float voltage4, const char *name4, float sense4_mohms);
 bool ltc2975_is_alerting(LTC2975 *ltc);
 uint8_t ltc2975_clear_faults(LTC2975 *ltc);
 ltc2975_fault_status ltc2975_get_fault_status(LTC2975 *ltc, uint8_t page);
