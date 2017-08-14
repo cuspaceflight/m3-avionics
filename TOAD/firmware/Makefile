@@ -236,6 +236,16 @@ debug: build/$(PROJECT).elf
 		              -ex 'monitor swdp_scan' \
 					  -ex 'attach 1' \
 					  -ex "file build/$(PROJECT).elf"
+					  
+power:
+	arm-none-eabi-gdb --batch \
+	                  -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'monitor tpwr enable'
+
+unpower:
+	arm-none-eabi-gdb --batch \
+		              -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'monitor tpwr disable'					  
 
 #
 # End BlackMagic flashing
