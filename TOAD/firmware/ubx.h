@@ -41,6 +41,21 @@
 #define NMEA_VTG 0x05
 
 
+
+// U-Blox results for state machine output
+enum ublox_result {
+    UBLOX_WAIT,
+    UBLOX_RXLEN_TOO_LONG,
+    UBLOX_BAD_CHECKSUM,
+    UBLOX_ACK, UBLOX_NAK,
+    UBLOX_NAV_PVT, UBLOX_NAV_TIMELS,
+    UBLOX_TIM_TP,
+    UBLOX_CFG_NAV5,
+    UBLOX_UNHANDLED,
+    UBLOX_ERROR
+};
+
+
 /* UBX-CFG-PRT
  * Change port settings including protocols.
  */

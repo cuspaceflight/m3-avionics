@@ -7,6 +7,7 @@
 #include <string.h>
 #include "gps.h"
 #include "ubx.h"
+#include "status.h"
 
 static SerialDriver* gps_seriald;
 static bool gps_configured = false;
@@ -14,7 +15,9 @@ static bool gps_configured = false;
 static uint16_t gps_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n);
 static void gps_checksum(uint8_t *buf);
 static bool gps_transmit(uint8_t *buf);
-static void ublox_state_machine(uint8_t b);
+static bool gps_expect(enum ublox_result expected);
+static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected);
+static enum ublox_result ublox_state_machine(uint8_t b);
 
 /* UBX Decoding State Machine States */
 typedef enum {
@@ -87,6 +90,33 @@ static bool gps_transmit(uint8_t *buf)
     return nwritten == n;
 }
 
+static bool gps_expect(enum ublox_result expected)
+{
+    enum ublox_result r;
+    do {
+        r = ublox_state_machine(sdGet(gps_seriald));
+    } while(r == UBLOX_WAIT);
+
+    if(r != expected) {
+        set_status(COMPONENT_GPS,STATUS_ERROR);
+        return false;
+    }
+
+    return true;
+}
+
+
+static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected)
+{
+    if(!gps_transmit(buf)) {
+        return false;
+    }
+
+    if(!gps_expect(expected)) {
+        return false;
+    }
+    return true;
+}
 
 /* Run new byte b through the UBX decoding state machine. Note that this
  * function preserves static state and processes new messages as appropriate
@@ -94,11 +124,11 @@ static bool gps_transmit(uint8_t *buf)
  */
 uint8_t rxbuf[255] = {0};
 uint8_t rxbufidx = 0;
-static void ublox_state_machine(uint8_t b)
+static enum ublox_result ublox_state_machine(uint8_t b)
 {
     /*NEEDS EDITING TO WORK WITH THIS PROJECT
     E.G. PUT DATA INTO A MAILBOX*/
-
+    set_status(COMPONENT_GPS,STATUS_ACTIVITY);
     rxbuf[rxbufidx++] = b;
     static ubx_state state = STATE_IDLE;
 
@@ -146,7 +176,10 @@ static void ublox_state_machine(uint8_t b)
             if(length >= 128) {
                 //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                 //                   M3RADIO_ERROR_UBLOX_DECODE);
+                set_status(COMPONENT_GPS,STATUS_ERROR);
                 state = STATE_IDLE;
+                rxbufidx = 0;
+                return UBLOX_RXLEN_TOO_LONG;
             }
             length_remaining = length;
             state = STATE_PAYLOAD;
@@ -173,7 +206,10 @@ static void ublox_state_machine(uint8_t b)
             if(ck_a != (ck&0xFF) || ck_b != (ck>>8)) {
                 //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                 //                   M3RADIO_ERROR_UBLOX_CHECKSUM);
-                break;
+                set_status(COMPONENT_GPS,STATUS_ERROR);
+                state=STATE_IDLE;
+                rxbufidx = 0;
+                return UBLOX_BAD_CHECKSUM;
             }
 
             switch(class) {
@@ -182,12 +218,17 @@ static void ublox_state_machine(uint8_t b)
                         /* NAK */
                         //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                         //                   M3RADIO_ERROR_UBLOX_NAK);
+                        set_status(COMPONENT_GPS,STATUS_ERROR);
+                        return UBLOX_NAK;
                     } else if(id == 0x01) {
                         /* ACK */
                         /* No need to do anything */
+                        return UBLOX_ACK;
                     } else {
                         //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                         //                   M3RADIO_ERROR_UBLOX_DECODE);
+                        set_status(COMPONENT_GPS,STATUS_ERROR);
+                        return UBLOX_UNHANDLED;
                     }
                     break;
                 case UBX_NAV:
@@ -199,26 +240,34 @@ static void ublox_state_machine(uint8_t b)
                         //ublox_can_send_pvt(&pvt);
 
                         //m3status_set_ok(M3RADIO_COMPONENT_UBLOX);
+                        set_status(COMPONENT_GPS,STATUS_GOOD);
+                        return UBLOX_NAV_PVT;
                     } else {
                         //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                         //                   M3RADIO_ERROR_UBLOX_DECODE);
+                        set_status(COMPONENT_GPS,STATUS_ERROR);
+                        return UBLOX_UNHANDLED;
                     }
                     break;
                 case UBX_CFG:
                     if(id == UBX_CFG_NAV5) {
                         /* NAV5 */
                         memcpy(cfg_nav5.payload, payload, length);
-                        if(cfg_nav5.dyn_model != 8) {
+                        if(cfg_nav5.dyn_model != 2) {
                             //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                             //                   M3RADIO_ERROR_UBLOX_FLIGHT_MODE);
+                            set_status(COMPONENT_GPS,STATUS_ERROR);
                         }
+                        return UBLOX_CFG_NAV5;
                     } else {
                         //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
                         //                   M3RADIO_ERROR_UBLOX_DECODE);
+                        set_status(COMPONENT_GPS,STATUS_ERROR);
+                        return UBLOX_UNHANDLED;
                     }
                     break;
                 default:
-                    break;
+                    return UBLOX_UNHANDLED;
             }
             break;
 
@@ -226,14 +275,17 @@ static void ublox_state_machine(uint8_t b)
             state = STATE_IDLE;
             //m3status_set_error(M3RADIO_COMPONENT_UBLOX,
             //                   M3RADIO_ERROR_UBLOX_DECODE);
-            break;
-
+            set_status(COMPONENT_GPS,STATUS_ERROR);
+            rxbufidx = 0;
+            return UBLOX_ERROR;
     }
+    return UBLOX_WAIT;
 }
 
 
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
                 bool rising_edge){
+    set_status(COMPONENT_GPS,STATUS_ACTIVITY);
 	gps_seriald = seriald;  // Set global serial driver
 
 	/* We'll reset the uBlox so it's in a known state */
@@ -294,7 +346,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         nav5.dyn_model = 2;
         nav5.utc_standard = 3;  // USNO
 
-        gps_configured &= gps_transmit((uint8_t*)&nav5);
+        gps_configured &= gps_tx_expect((uint8_t*)&nav5,UBLOX_ACK);
         if(!gps_configured) break;
 
 
@@ -309,7 +361,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
             msg.msg_class = UBX_NAV;
             msg.msg_id    = UBX_NAV_PVT;
             msg.rate      = 1;
-            gps_configured &= gps_transmit((uint8_t*)&msg);
+            gps_configured &= gps_tx_expect((uint8_t*)&msg,UBLOX_ACK);
             if(!gps_configured) break;
         }
 
@@ -326,7 +378,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
             msg2.msg_class = UBX_NAV;
             msg2.msg_id    = UBX_NAV_POSECEF;
             msg2.rate      = 1;
-            gps_configured &= gps_transmit((uint8_t*)&msg2);
+            gps_configured &= gps_tx_expect((uint8_t*)&msg2,UBLOX_ACK);
             if(!gps_configured) break;
         }
 
@@ -340,7 +392,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         rate.meas_rate = 1000;
         rate.nav_rate = 1;
         rate.time_ref = 0;  // UTC
-        gps_configured &= gps_transmit((uint8_t*)&rate);
+        gps_configured &= gps_tx_expect((uint8_t*)&rate,UBLOX_ACK);
         if(!gps_configured) break;
 
 
@@ -352,7 +404,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         sbas.length = sizeof(sbas.payload);
 
         sbas.mode = 0;
-        gps_configured &= gps_transmit((uint8_t*)&sbas);
+        gps_configured &= gps_tx_expect((uint8_t*)&sbas,UBLOX_ACK);
         if(!gps_configured) break;
 
 
@@ -379,7 +431,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         gnss.beidou_gnss_id = 3;
         gnss.qzss_gnss_id = 5;
         gnss.glonass_gnss_id = 6;
-        gps_configured &= gps_transmit((uint8_t*)&gnss);
+        gps_configured &= gps_tx_expect((uint8_t*)&gnss,UBLOX_ACK);
         if(!gps_configured) break;
 
 
@@ -405,7 +457,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
             UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
             UBX_CFG_TP5_FLAGS_POLARITY                  |
             UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
-        gps_configured &= gps_transmit((uint8_t*)&tp5_1);
+        gps_configured &= gps_tx_expect((uint8_t*)&tp5_1,UBLOX_ACK);
         if(!gps_configured) break;
 
 
@@ -447,24 +499,15 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
                 UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
         }
 
-        gps_configured &= gps_transmit((uint8_t*)&tp5_2);
+        gps_configured &= gps_tx_expect((uint8_t*)&tp5_2,UBLOX_ACK);
         if(!gps_configured) break;
 
-        // Still todo:
-
-        //
-        //
-        // tim-tp? Might not be useful
-        //
-
-        // Wait for ack with gps transmit - add ublox_expect?
-
-        /* Less important:
-         * - Name all the constants
-         *
-         */
-         if(!gps_configured) chThdSleepMilliseconds(1000);
+         if(!gps_configured){
+             set_status(COMPONENT_GPS,STATUS_ERROR);
+             chThdSleepMilliseconds(1000);
+         }
 	} while(!gps_configured);
+    set_status(COMPONENT_GPS,STATUS_GOOD);
     return;
 }
 
@@ -474,7 +517,9 @@ static THD_FUNCTION(gps_thd, arg) {
     (void)arg;
 
     while(true) {
-        ublox_state_machine(sdGet(gps_seriald));
+        if(gps_configured){
+            ublox_state_machine(sdGet(gps_seriald));
+        }
     }
 
 }
