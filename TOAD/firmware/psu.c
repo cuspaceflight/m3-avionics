@@ -75,7 +75,7 @@ void enable_charging(EXTDriver *extp, expchannel_t channel) {
 
 
 /* PSU Monitor Thread */
-static THD_WORKING_AREA(waPSUThread, 256);
+static THD_WORKING_AREA(waPSUThread, 128);
 static THD_FUNCTION(PSUThread, arg) {
 
     (void)arg;
