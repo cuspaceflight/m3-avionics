@@ -1,9 +1,3 @@
-
-/*
- * TOAD GPS driver
- * CUSF 2017
- */
-
 #include <string.h>
 #include "gps.h"
 #include "ubx.h"
@@ -15,9 +9,9 @@ static bool gps_configured = false;
 static uint16_t gps_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n);
 static void gps_checksum(uint8_t *buf);
 static bool gps_transmit(uint8_t *buf);
-static bool gps_expect(enum ublox_result expected);
-static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected);
 static enum ublox_result ublox_state_machine(uint8_t b);
+// static bool gps_expect(enum ublox_result expected);
+// static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected);
 
 /* UBX Decoding State Machine States */
 typedef enum {
@@ -90,6 +84,7 @@ static bool gps_transmit(uint8_t *buf)
     return nwritten == n;
 }
 
+/* TODO Fix this function
 static bool gps_expect(enum ublox_result expected)
 {
     enum ublox_result r;
@@ -103,9 +98,9 @@ static bool gps_expect(enum ublox_result expected)
     }
 
     return true;
-}
+} */
 
-
+/* TODO Fix this function
 static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected)
 {
     if(!gps_transmit(buf)) {
@@ -116,7 +111,7 @@ static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected)
         return false;
     }
     return true;
-}
+} */
 
 /* Run new byte b through the UBX decoding state machine. Note that this
  * function preserves static state and processes new messages as appropriate
@@ -231,7 +226,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
 
                         /* TODO Handle Data  */
 
-                        //m3status_set_ok(M3RADIO_COMPONENT_UBLOX);
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_PVT;
                     } else {
@@ -334,7 +328,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         nav5.dyn_model = 2;
         nav5.utc_standard = 3;  // USNO
 
-        gps_configured &= gps_tx_expect((uint8_t*)&nav5,UBLOX_ACK);
+        gps_configured &= gps_transmit((uint8_t*)&nav5);
         if(!gps_configured) break;
 
 
@@ -349,7 +343,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
             msg.msg_class = UBX_NAV;
             msg.msg_id    = UBX_NAV_PVT;
             msg.rate      = 1;
-            gps_configured &= gps_tx_expect((uint8_t*)&msg,UBLOX_ACK);
+            gps_configured &= gps_transmit((uint8_t*)&msg);
             if(!gps_configured) break;
         }
         
@@ -365,7 +359,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
             msg2.msg_class = UBX_NAV;
             msg2.msg_id    = UBX_NAV_POSECEF;
             msg2.rate      = 1;
-            gps_configured &= gps_tx_expect((uint8_t*)&msg2,UBLOX_ACK);
+            gps_configured &= gps_transmit((uint8_t*)&msg2);
             if(!gps_configured) break;
         }
         
@@ -380,7 +374,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         rate.meas_rate = 1000;
         rate.nav_rate = 1;
         rate.time_ref = 0;  // UTC
-        gps_configured &= gps_tx_expect((uint8_t*)&rate,UBLOX_ACK);
+        gps_configured &= gps_transmit((uint8_t*)&rate);
         if(!gps_configured) break;
 
 
@@ -392,7 +386,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         sbas.length = sizeof(sbas.payload);
 
         sbas.mode = 0;
-        gps_configured &= gps_tx_expect((uint8_t*)&sbas,UBLOX_ACK);
+        gps_configured &= gps_transmit((uint8_t*)&sbas);
         if(!gps_configured) break;
 
 
@@ -421,7 +415,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         gnss.beidou_gnss_id = 3;
         gnss.qzss_gnss_id = 5;
         gnss.glonass_gnss_id = 6;
-        gps_configured &= gps_tx_expect((uint8_t*)&gnss,UBLOX_ACK);
+        gps_configured &= gps_transmit((uint8_t*)&gnss);
         if(!gps_configured) break;
 
 
@@ -447,7 +441,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
             UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
             UBX_CFG_TP5_FLAGS_POLARITY                  |
             UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
-        gps_configured &= gps_tx_expect((uint8_t*)&tp5_1,UBLOX_ACK);
+        gps_configured &= gps_transmit((uint8_t*)&tp5_1);
         if(!gps_configured) break;
 
 
@@ -491,10 +485,12 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
                 UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
         }
 
-        gps_configured &= gps_tx_expect((uint8_t*)&tp5_2,UBLOX_ACK);
+        gps_configured &= gps_transmit((uint8_t*)&tp5_2);
         if(!gps_configured) break;
 
 	} while(!gps_configured);
+
+    set_status(COMPONENT_GPS, STATUS_GOOD);
 
     return;
 }
