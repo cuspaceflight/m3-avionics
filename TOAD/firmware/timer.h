@@ -1,7 +1,5 @@
-#ifndef TIMER
-#define TIMER
-
-#define TIMER_FREQ  84000000
+#ifndef TIMER_H
+#define TIMER_H
 
 /* GPT2 Init */
 void gpt2_init(void);

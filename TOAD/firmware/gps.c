@@ -224,7 +224,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt, payload, length);
 
-                        /* TODO Handle Data  */
+                        /* TODO Put PVT in Mailbox */
 
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_PVT;

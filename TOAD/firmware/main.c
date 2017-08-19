@@ -5,6 +5,7 @@
 #include "cs2100.h"
 #include "gps.h"
 #include "psu.h"
+#include "timer.h"
 #include "status.h"
 
 
@@ -64,6 +65,9 @@ int main(void) {
     
     /* PSU Init */
     psu_init();
+    
+    /* Start Timer */
+    gpt2_init();
     
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);
