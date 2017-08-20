@@ -4,6 +4,13 @@
  *CUSF 2017
  */
 
+
+/* TODO:
+ * - state machine needs to put packets into mailbox
+ * - Add state machine case for each packet to be received
+
+*/
+
 #include <string.h>
 #include "gps.h"
 #include "ubx.h"
@@ -519,6 +526,11 @@ static THD_FUNCTION(gps_thd, arg) {
     while(true) {
         if(gps_configured){
             ublox_state_machine(sdGet(gps_seriald));
+        }
+        else{
+            // Thread started before gps set up!
+            set_status(COMPONENT_GPS,STATUS_ERROR);
+            break;
         }
     }
 
