@@ -302,7 +302,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
 
 	/* Reset uBlox */
     palClearLine(LINE_GPS_RST);
-    chThdSleepMilliseconds(100);
+    chThdSleepMilliseconds(300);
     palSetLine(LINE_GPS_RST);
 
     sdStart(gps_seriald, &serial_cfg);
