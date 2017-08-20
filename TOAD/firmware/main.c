@@ -49,7 +49,7 @@ int main(void) {
     chSysInit();
     
     /* Configure GPS to Produce 1MHz Signal */
-    gps_init(&SD1, true, false, true);
+    gps_init(&SD1, true, true, true);
     
     /* Configure CS2100 to Produce HSE */
     cs2100_configure(&I2CD1);
