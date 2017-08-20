@@ -42,7 +42,7 @@
 
 
 
-// U-Blox results for state machine output
+/* U-Blox results for state machine output */
 enum ublox_result {
     UBLOX_WAIT,
     UBLOX_RXLEN_TOO_LONG,
@@ -136,6 +136,7 @@ typedef struct __attribute__((packed)) {
     uint8_t ck_a, ck_b;
 } ubx_cfg_sbas_t;
 
+
 /* UBX-CFG-NAV5
  * Set navigation fix settings.
  */
@@ -191,7 +192,8 @@ typedef struct __attribute__((packed)) {
     };
     uint8_t ck_a, ck_b;
 } ubx_cfg_tp5_t;
-// Flags for cfg-tp5
+
+/* Flags for cfg-tp5 */
 #define UBX_CFG_TP5_FLAGS_ACTIVE                (1<<0)
 #define UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ        (1<<1)
 #define UBX_CFG_TP5_FLAGS_LOCKED_OTHER_SET      (1<<2)

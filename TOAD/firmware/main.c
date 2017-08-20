@@ -49,7 +49,7 @@ int main(void) {
     chSysInit();
     
     /* Configure GPS to Produce 1MHz Signal */
-    gps_init(&SD1, true, true, true);
+    gps_init(&SD1, true, false, true);
     
     /* Configure CS2100 to Produce HSE */
     cs2100_configure(&I2CD1);
@@ -68,6 +68,9 @@ int main(void) {
     
     /* Start Timer */
     gpt2_init();
+    
+    /* Start GPS State Machine */
+    gps_thd_init();
     
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);

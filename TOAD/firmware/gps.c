@@ -3,15 +3,28 @@
 #include "ubx.h"
 #include "status.h"
 
+/* Serial Setup */
 static SerialDriver* gps_seriald;
+static SerialConfig serial_cfg = {
+    .speed = 9600,
+    .cr1 = 0,
+    .cr2 = 0,
+    .cr3 = 0,
+};
+
+
+/* Config Flag */
 static bool gps_configured = false;
 
+
+/* Function Prototypes */
 static uint16_t gps_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n);
 static void gps_checksum(uint8_t *buf);
 static bool gps_transmit(uint8_t *buf);
 static enum ublox_result ublox_state_machine(uint8_t b);
 // static bool gps_expect(enum ublox_result expected);
 // static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected);
+
 
 /* UBX Decoding State Machine States */
 typedef enum {
@@ -20,12 +33,6 @@ typedef enum {
     STATE_PAYLOAD, STATE_CK_A, NUM_STATES
 } ubx_state;
 
-static SerialConfig serial_cfg = {
-    .speed = 9600,
-    .cr1 = 0,
-    .cr2 = 0,
-    .cr3 = 0,
-};
 
 /* Run the Fletcher-8 checksum, initialised to chk, over n bytes of buf */
 static uint16_t gps_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n)
@@ -41,6 +48,7 @@ static uint16_t gps_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n)
 
     return (ck_b<<8) | (ck_a);
 }
+
 
 /* Computes the Fletcher-8 checksum over buf, using its length fields
  * to determine how much to read, returning the new checksum.
@@ -62,6 +70,7 @@ static void gps_checksum(uint8_t *buf)
     buf[plen+6] = ck;
     buf[plen+7] = ck >> 8;
 }
+
 
 /* Transmit a UBX message over the Serial.
  * Message length is determined from the UBX length field.
@@ -100,6 +109,7 @@ static bool gps_expect(enum ublox_result expected)
     return true;
 } */
 
+
 /* TODO Fix this function
 static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected)
 {
@@ -113,6 +123,7 @@ static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected)
     return true;
 } */
 
+
 /* Run new byte b through the UBX decoding state machine. Note that this
  * function preserves static state and processes new messages as appropriate
  * once received.
@@ -121,9 +132,6 @@ uint8_t rxbuf[255] = {0};
 uint8_t rxbufidx = 0;
 static enum ublox_result ublox_state_machine(uint8_t b)
 {
-    /* NEEDS EDITING TO WORK WITH THIS PROJECT
-    E.G. PUT DATA INTO A MAILBOX */
-    set_status(COMPONENT_GPS,STATUS_ACTIVITY);
     rxbuf[rxbufidx++] = b;
     static ubx_state state = STATE_IDLE;
 
@@ -203,24 +211,29 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                 return UBLOX_BAD_CHECKSUM;
             }
 
+            /* Handle Payload */
             switch(class) {
+                
+                /* Acknowledge */
                 case UBX_ACK:
                     if(id == 0x00) {
                         /* NAK */
                         set_status(COMPONENT_GPS,STATUS_ERROR);
                         return UBLOX_NAK;
                     } else if(id == 0x01) {
-                        /* ACK */
-                        /* No need to do anything */
+                        /* ACK - Do Nothing */
                         return UBLOX_ACK;
                     } else {
                         set_status(COMPONENT_GPS,STATUS_ERROR);
                         return UBLOX_UNHANDLED;
                     }
                     break;
+                 
+                /* Nav Payload */  
                 case UBX_NAV:
                     if(id == UBX_NAV_PVT) {
-                        /* PVT */
+                        
+                        /* Extract Nav Payload */
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt, payload, length);
 
@@ -233,19 +246,24 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         return UBLOX_UNHANDLED;
                     }
                     break;
+                
+                /* Config Payload */
                 case UBX_CFG:
                     if(id == UBX_CFG_NAV5) {
+                        
                         /* NAV5 */
                         memcpy(cfg_nav5.payload, payload, length);
-                        if(cfg_nav5.dyn_model != 2) {
+                        if(cfg_nav5.dyn_model != 2) {                        
                             set_status(COMPONENT_GPS,STATUS_ERROR);
                         }
                         return UBLOX_CFG_NAV5;
-                    } else {
+                    } else {                        
                         set_status(COMPONENT_GPS,STATUS_ERROR);
                         return UBLOX_UNHANDLED;
                     }
                     break;
+                
+                /* Unhandled */
                 default:
                     return UBLOX_UNHANDLED;
             }
@@ -262,13 +280,14 @@ static enum ublox_result ublox_state_machine(uint8_t b)
 }
 
 
+/* Configure uBlox GPS */
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
                 bool rising_edge){
     
 	/* Set global serial driver */
 	gps_seriald = seriald;  
 
-	/* We'll reset the uBlox so it's in a known state */
+	/* Reset uBlox */
     palClearLine(LINE_GPS_RST);
     chThdSleepMilliseconds(100);
     palSetLine(LINE_GPS_RST);
@@ -445,7 +464,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
         if(!gps_configured) break;
 
 
-        /* Set up 1Hz pulse */
+        /* Set up 1Hz pulse on SAFEBOOT pin */
         tp5_2.sync1 = UBX_SYNC1;
         tp5_2.sync2 = UBX_SYNC2;
         tp5_2.class = UBX_CFG;
@@ -496,6 +515,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
 }
 
 
+/* Thread to Run State Machine */
 static THD_WORKING_AREA(gps_thd_wa, 512);
 static THD_FUNCTION(gps_thd, arg) {
     (void)arg;
@@ -508,7 +528,11 @@ static THD_FUNCTION(gps_thd, arg) {
 }
 
 
+/* Init GPS Thread */
 void gps_thd_init(void){
     chThdCreateStatic(gps_thd_wa, sizeof(gps_thd_wa), NORMALPRIO,
     gps_thd, NULL);
 }
+
+
+

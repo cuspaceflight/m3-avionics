@@ -16,6 +16,8 @@ void measurements_handle_pps(void) {
 
     /* PPS Timestamp */
     time_capture_pps_timestamp = TIM2->CCR1;
+    
+    /* TODO - Trigger Backhaul delay */
 }
 
 
