@@ -75,7 +75,7 @@ void enable_charging(EXTDriver *extp, expchannel_t channel) {
 
 
 /* PSU Monitor Thread */
-static THD_WORKING_AREA(waPSUThread, 256);
+static THD_WORKING_AREA(waPSUThread, 128);
 static THD_FUNCTION(PSUThread, arg) {
 
     (void)arg;
@@ -89,7 +89,7 @@ static THD_FUNCTION(PSUThread, arg) {
         /* Monitor PSU */
         get_psu_measurements();
 
-        /* TODO: Analyse Measurements 
+        /* Analyse Measurements 
         * N.B. The thermistor is only
         * sourced when the battery is
         * charging. If charging stops 
@@ -118,6 +118,8 @@ static THD_FUNCTION(PSUThread, arg) {
 
         /* Compute Battery Voltage in mV */
         battery_voltage = ((measure[2] * 6600) / 4096);
+        
+        /* TODO - Log PSU status */
         
         /* Sleep */
         chThdSleepMilliseconds(1000);

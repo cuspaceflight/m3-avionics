@@ -8,7 +8,7 @@ pins:
     SWDIO:      pa13, af0
     SWCLK:      pa14, pulldown, af0
     
-    GPS_PPS:    pa0, input, pushpull
+    GPS_PPS:    pa0, af1
     GPS_RST:    pb5, output, pushpull, starthigh, pullup
     UART_TX:    pb6, af7
     UART_RX:    pb7, af7
@@ -19,7 +19,7 @@ pins:
     SPI1_SCK:   pa5, af5
     SPI1_MOSI:  pa7, af5
     SPI1_MISO:  pa6, af5 
-    PR_GPIO:    pa1, input, pushpull
+    PR_GPIO:    pa1, af1
     PR_nSS:     pa2, output, pushpull, starthigh, pullup
     PR_nIRQ:    pb11, input, pushpull, pullup
     PR_SW:      pc1, output, pushpull

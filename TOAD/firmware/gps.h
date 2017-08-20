@@ -4,6 +4,8 @@
 #include "ch.h"
 #include "hal.h"
 
+
+/* NAV-ECEF Payload Data */
 typedef struct __attribute__((packed)){
     uint32_t i_tow;
     int32_t ecef_x, ecef_y, ecef_z;
@@ -11,6 +13,7 @@ typedef struct __attribute__((packed)){
 } ublox_ecef_t;
 
 
+/* NAV-PVT Payload Data */
 typedef struct __attribute__((packed)) {
     uint32_t i_tow;
     uint16_t year;
@@ -36,8 +39,12 @@ typedef struct __attribute__((packed)) {
     uint32_t reserved4;
 } ublox_pvt_t;
 
+
+/* Configure uBlox GPS */
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
                 bool rising_edge);
+
+/* Init GPS Thread */
 void gps_thd_init(void);
 
 #endif /*__GPS_H__*/
