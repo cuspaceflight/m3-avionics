@@ -54,14 +54,12 @@ void update_state_LEDs(void) {
         case (STATUS_GOOD):
     
             palSetPad(GPIOC, GPIOC_SYS_GD);
-            palClearPad(GPIOC, GPIOC_SYS_ERR);
             
             break;
             
         case (STATUS_ERROR):
             
             palSetPad(GPIOC, GPIOC_SYS_ERR);
-            palClearPad(GPIOC, GPIOC_SYS_GD);
             
             break;   
         
@@ -79,15 +77,13 @@ void update_state_LEDs(void) {
         case (STATUS_GOOD):
     
             palSetPad(GPIOA, GPIOA_GPS_GD);
-            palClearPad(GPIOA, GPIOA_GPS_ERR);
-            
+                        
             break;
         
         case (STATUS_ERROR):
             
             palSetPad(GPIOA, GPIOA_GPS_ERR);
-            palClearPad(GPIOA, GPIOA_GPS_GD);
-            
+                        
             break;
             
         case (STATUS_ACTIVITY):
@@ -104,15 +100,13 @@ void update_state_LEDs(void) {
         case (STATUS_GOOD):
     
             palSetPad(GPIOA, GPIOA_PR_GD);
-            palClearPad(GPIOA, GPIOA_PR_ERR);
             
             break;
         
         case (STATUS_ERROR):
             
             palSetPad(GPIOA, GPIOA_PR_ERR);
-            palClearPad(GPIOA, GPIOA_PR_GD);
-            
+                        
             break;
             
         case (STATUS_ACTIVITY):
@@ -129,15 +123,13 @@ void update_state_LEDs(void) {
         case (STATUS_GOOD):
     
             palSetPad(GPIOA, GPIOA_SR_GD);
-            palClearPad(GPIOA, GPIOA_SR_ERR);
-            
+                        
             break;
         
         case (STATUS_ERROR):
             
             palSetPad(GPIOA, GPIOA_SR_ERR);
-            palClearPad(GPIOA, GPIOA_SR_GD);
-            
+                       
             break;
             
         case (STATUS_ACTIVITY):
