@@ -43,6 +43,9 @@ void set_status(uint8_t component, uint8_t status) {
             break;
         
     }
+    
+    /* Update Status LEDs */
+    update_state_LEDs();
 }
 
 
@@ -54,20 +57,21 @@ void update_state_LEDs(void) {
         case (STATUS_GOOD):
     
             palSetPad(GPIOC, GPIOC_SYS_GD);
+            palClearPad(GPIOC, GPIOC_SYS_ERR);
             
             break;
             
         case (STATUS_ERROR):
             
             palSetPad(GPIOC, GPIOC_SYS_ERR);
+            palClearPad(GPIOC, GPIOC_SYS_GD);
             
             break;   
         
         case (STATUS_ACTIVITY):
         
             palClearPad(GPIOC, GPIOC_SYS_GD);
-            set_status(COMPONENT_SYS, STATUS_GOOD);
-            
+                        
             break;
                      
     }
@@ -77,19 +81,20 @@ void update_state_LEDs(void) {
         case (STATUS_GOOD):
     
             palSetPad(GPIOA, GPIOA_GPS_GD);
+            palClearPad(GPIOA, GPIOA_GPS_ERR);
                         
             break;
         
         case (STATUS_ERROR):
-            
+        
             palSetPad(GPIOA, GPIOA_GPS_ERR);
+            palClearPad(GPIOA, GPIOA_GPS_GD);
                         
             break;
             
         case (STATUS_ACTIVITY):
         
             palClearPad(GPIOA, GPIOA_GPS_GD);
-            set_status(COMPONENT_GPS, STATUS_GOOD);
             
             break;
                           
@@ -100,19 +105,20 @@ void update_state_LEDs(void) {
         case (STATUS_GOOD):
     
             palSetPad(GPIOA, GPIOA_PR_GD);
+            palClearPad(GPIOA, GPIOA_PR_ERR);
             
             break;
         
         case (STATUS_ERROR):
             
             palSetPad(GPIOA, GPIOA_PR_ERR);
+            palClearPad(GPIOA, GPIOA_PR_GD);
                         
             break;
             
         case (STATUS_ACTIVITY):
         
             palClearPad(GPIOA, GPIOA_PR_GD);
-            set_status(COMPONENT_PR, STATUS_GOOD);
             
             break;
                       
@@ -123,45 +129,22 @@ void update_state_LEDs(void) {
         case (STATUS_GOOD):
     
             palSetPad(GPIOA, GPIOA_SR_GD);
+            palClearPad(GPIOA, GPIOA_SR_ERR);
                         
             break;
         
         case (STATUS_ERROR):
             
             palSetPad(GPIOA, GPIOA_SR_ERR);
+            palClearPad(GPIOA, GPIOA_SR_GD);
                        
             break;
             
         case (STATUS_ACTIVITY):
         
             palClearPad(GPIOA, GPIOA_SR_GD);
-            set_status(COMPONENT_SR, STATUS_GOOD);
             
             break;
                           
     }
-}
-
-
-/* Status Monitor Thread */
-static THD_WORKING_AREA(waStatusThread, 128);
-static THD_FUNCTION(StatusThread, arg) {
-
-    (void)arg;
-    chRegSetThreadName("STATUS");
-
-    /* Main Loop */
-    while(true) {
-
-        update_state_LEDs();
-        chThdSleepMilliseconds(200);
-    }
-}
-
-
-/* Create Status Monitor Thread */
-void status_init(void) {
-
-    chThdCreateStatic(waStatusThread, sizeof(waStatusThread), NORMALPRIO, StatusThread, NULL);
-
 }
