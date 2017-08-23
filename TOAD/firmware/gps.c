@@ -345,6 +345,11 @@ static bool gps_configure(){
     gps_configured &= gps_transmit((uint8_t*)&prt);
     if(!gps_configured) return false;
 
+    /* Wait for it to stop barfing NMEA */
+    chThdSleepMilliseconds(300);
+
+    /* Clear the read buffer */
+    while(sdGetTimeout(ublox_seriald, TIME_IMMEDIATE) != Q_TIMEOUT);
 
     /* Set to Stationary mode */
     nav5.sync1 = UBX_SYNC1;
