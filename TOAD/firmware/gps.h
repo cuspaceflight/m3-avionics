@@ -39,6 +39,13 @@ typedef struct __attribute__((packed)) {
     uint32_t reserved4;
 } ublox_pvt_t;
 
+/* NAV-POSECEF Payload Data */
+typedef struct __attribute__((packed)) {
+    uint32_t i_tow;
+    int32_t ecef_x, ecef_y, ecef_z;
+    uint32_t p_acc;
+} ublox_posecef_t;
+
 
 /* Configure uBlox GPS */
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,

@@ -24,6 +24,8 @@
 #define NMEA_CLASS 0xF0
 
 /* Selection of UBX IDs */
+#define UBX_ACK_ACK     0x01
+#define UBX_ACK_NAK     0x00
 #define UBX_CFG_PRT     0x00
 #define UBX_CFG_MSG     0x01
 #define UBX_CFG_RATE    0x08
@@ -48,7 +50,7 @@ enum ublox_result {
     UBLOX_RXLEN_TOO_LONG,
     UBLOX_BAD_CHECKSUM,
     UBLOX_ACK, UBLOX_NAK,
-    UBLOX_NAV_PVT, UBLOX_NAV_TIMELS,
+    UBLOX_NAV_PVT, UBLOX_NAV_POSECEF, UBLOX_NAV_TIMELS,
     UBLOX_TIM_TP,
     UBLOX_CFG_NAV5,
     UBLOX_UNHANDLED,
