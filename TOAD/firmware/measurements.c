@@ -3,6 +3,7 @@
 
 #include "timer.h"
 #include "measurements.h"
+#include "status.h"
 
 /* Timestamps */
 static uint32_t time_capture_pps_timestamp;
@@ -17,7 +18,11 @@ void measurements_handle_pps(void) {
     /* PPS Timestamp */
     time_capture_pps_timestamp = TIM2->CCR1;
     
+    /* Debug */
+    set_status(COMPONENT_PR, STATUS_GOOD);
+    
     /* TODO - Trigger Backhaul delay */
+    
 }
 
 

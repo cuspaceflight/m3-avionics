@@ -1,20 +1,14 @@
-
-/*
- *TOAD GPS driver
- *CUSF 2017
- */
-
-
-/* TODO:
- * - state machine needs to put packets into mailbox
- * - Add state machine case for each packet to be received
-
-*/
-
 #include <string.h>
 #include "gps.h"
 #include "ubx.h"
 #include "status.h"
+
+#define PVT_LOG_SIZE    2
+
+/* Mailbox Setup */
+static mailbox_t log_pvt_mailbox;
+static msg_t pvt_mailbox_buffer[PVT_LOG_SIZE];
+
 
 /* Serial Setup */
 static SerialDriver* gps_seriald;
@@ -254,7 +248,11 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt, payload, length);
 
-                        /* TODO Put PVT in Mailbox */
+                        /* Put PVT pointer in Mailbox */
+                        //chMBPost(&log_pvt_mailbox, (msg_t)&pvt, TIME_IMMEDIATE);
+
+                        /* Debug */
+                        set_status(COMPONENT_SR, STATUS_GOOD);
 
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_PVT;
@@ -377,7 +375,6 @@ static bool gps_configure(){
         gps_configured &= gps_transmit((uint8_t*)&msg);
         if(!gps_configured) return false;
     }
-
 
     /* Enable NAV POSECEF messages */
     if (nav_posecef){
@@ -551,15 +548,16 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
 /* Thread to Run State Machine */
 static THD_WORKING_AREA(gps_thd_wa, 512);
 static THD_FUNCTION(gps_thd, arg) {
+
     (void)arg;
+    chRegSetThreadName("GPS");
 
     while(true) {
         if(gps_configured) {
             ublox_state_machine(sdGet(gps_seriald));
         }
         else{
-            // Thread started before gps set up!
-            set_status(COMPONENT_GPS,STATUS_ERROR);
+            set_status(COMPONENT_GPS, STATUS_ERROR);
             break;
         }
     }
@@ -568,6 +566,10 @@ static THD_FUNCTION(gps_thd, arg) {
 
 /* Init GPS Thread */
 void gps_thd_init(void){
-    chThdCreateStatic(gps_thd_wa, sizeof(gps_thd_wa), NORMALPRIO,
-    gps_thd, NULL);
+
+    /* Init Mailbox */
+    chMBObjectInit(&log_pvt_mailbox, (msg_t*)pvt_mailbox_buffer, PVT_LOG_SIZE);
+
+    /* Init Thread */
+    chThdCreateStatic(gps_thd_wa, sizeof(gps_thd_wa), NORMALPRIO, gps_thd, NULL);
 }
