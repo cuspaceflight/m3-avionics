@@ -490,30 +490,6 @@ uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
   }
   ltc2975_wait_for_not_busy(ltc);
 
-  // Mask UT_FAULT alert
-  data[0] = LTC2975_CMD_STATUS_TEMPERATURE;
-  data[1] = (1 << LTC2975_FAULT_EXT_UT_BIT);
-  if (ltc2975_global_write(ltc, LTC2975_CMD_SMBALERT_MASK, data, 2) != ERR_OK) {
-    return ERR_COMMS;
-  }
-  ltc2975_wait_for_not_busy(ltc);
-
-  // Disable Share Clock Control
-  // XXX Also disable GPIO Alerts
-  data[0] = 0x1D & ~(1 << LTC2975_SHARE_CLK_CONTROL);
-  data[0] &= ~(1 << LTC2975_NO_GPIO_ALERT);
-  if (ltc2975_global_write(ltc, LTC2975_CMD_MFR_CONFIG_LTC2975, data, 1) != ERR_OK) {
-    return ERR_COMMS;
-  }
-  ltc2975_wait_for_not_busy(ltc);
-
-  // Ignore GPIO (since nothing can pull it down externally anyway)
-  data[0] = 0x00;
-  if (ltc2975_global_write(ltc, LTC2975_CMD_MFR_GPIO_RESPONSE, data, 1) != ERR_OK) {
-    return ERR_COMMS;
-  }
-  ltc2975_wait_for_not_busy(ltc);
-
   // Clear Faults
   ltc2975_clear_faults(ltc);
 
