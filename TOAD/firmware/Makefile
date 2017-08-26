@@ -99,6 +99,17 @@ include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # Other files (optional).
 include $(CHIBIOS)/test/rt/test.mk
 
+# Pull in Labrador stuff
+LABRADOR_DIR = labrador
+LABRADOR_SRC = $(LABRADOR_DIR)/labrador/src/labrador.c \
+               $(LABRADOR_DIR)/radios/src/si446x.c \
+               $(LABRADOR_DIR)/ldpc/src/ldpc_codes.c \
+               $(LABRADOR_DIR)/ldpc/src/ldpc_encoder.c \
+               $(LABRADOR_DIR)/ldpc/src/ldpc_decoder.c
+LABRADOR_INC = $(LABRADOR_DIR)/labrador/include \
+               $(LABRADOR_DIR)/radios/include \
+               $(LABRADOR_DIR)/ldpc/include
+               
 BOARDSRC=board.c
 BOARDINC=.
 
@@ -115,7 +126,9 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
-       main.c psu.c cs2100.c gps.c status.c timer.c measurements.c
+       $(LABRADOR_SRC) \
+       main.c psu.c cs2100.c gps.c status.c timer.c \
+       measurements.c s_radio.c
        
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -146,7 +159,7 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(CHIBIOS)/os/various
+         $(LABRADOR_INC) $(CHIBIOS)/os/various
 
 #
 # Project, sources and paths
@@ -209,7 +222,7 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ULIBS =
+ULIBS = -lm
 
 #
 # End of user defines
