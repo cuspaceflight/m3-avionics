@@ -29,7 +29,7 @@ static uint16_t gps_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n);
 static void gps_checksum(uint8_t *buf);
 static bool gps_transmit(uint8_t *buf);
 static enum ublox_result ublox_state_machine(uint8_t b);
-static bool gps_configure();
+static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge);
 
 // static bool gps_expect(enum ublox_result expected);
 // static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected);
@@ -258,6 +258,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         return UBLOX_NAV_PVT;
 
                     } else if(id == UBX_NAV_POSECEF){
+                        
                         /* Extract Nav Payload */
                         memcpy(nav_posecef.payload, payload, length);
                         memcpy(&posecef, payload, length);
@@ -306,8 +307,9 @@ static enum ublox_result ublox_state_machine(uint8_t b)
 }
 
 
-/* Configure uBlox GPS - private function */
-static bool gps_configure(){
+/* Configure uBlox GPS */
+static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
+
     gps_configured = true;
 
     ubx_cfg_prt_t prt;
@@ -349,7 +351,7 @@ static bool gps_configure(){
     chThdSleepMilliseconds(300);
 
     /* Clear the read buffer */
-    while(sdGetTimeout(ublox_seriald, TIME_IMMEDIATE) != Q_TIMEOUT);
+    while(sdGetTimeout(gps_seriald, TIME_IMMEDIATE) != Q_TIMEOUT);
 
     /* Set to Stationary mode */
     nav5.sync1 = UBX_SYNC1;
@@ -541,7 +543,7 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
 
     sdStart(gps_seriald, &serial_cfg);
 
-	while(!gps_configure()){
+	while(!gps_configure(nav_pvt, nav_posecef, rising_edge)) {
         set_status(COMPONENT_GPS, STATUS_ERROR);
         chThdSleepMilliseconds(1000);
 	}
