@@ -127,58 +127,77 @@
 
 static int8_t l16_exp;
 
-uint8_t ltc2975_paged_write(LTC2975 *ltc, uint8_t command_code, uint8_t page, uint8_t *data, uint8_t datalen) {
-  if(smbus_write_block(ltc->config.i2c, ltc->config.address, LTC2975_CMD_PAGE, &page, 1) != ERR_OK){
-      return ERR_COMMS;
-  }
-
-  return smbus_write_block(ltc->config.i2c, ltc->config.address, command_code, data, datalen);
+uint8_t ltc2975_set_page(LTC2975 *ltc, uint8_t page){
+  return smbus_write_byte(ltc->config.i2c, ltc->config.address, LTC2975_CMD_PAGE, page);
 }
 
-uint8_t ltc2975_paged_read(LTC2975 *ltc, uint8_t command_code, uint8_t page,
+uint8_t ltc2975_command(LTC2975 *ltc, uint8_t command_code, uint8_t page){
+  if(ltc2975_set_page(ltc, page) != ERR_OK){
+      return ERR_COMMS;
+  }
+  return smbus_send_byte(ltc->config.i2c, ltc->config.address, command_code);
+}
+
+uint8_t ltc2975_write_byte(LTC2975 *ltc, uint8_t command_code, uint8_t page, uint8_t value){
+  if(ltc2975_set_page(ltc, page) != ERR_OK){
+      return ERR_COMMS;
+  }
+  return smbus_write_byte(ltc->config.i2c, ltc->config.address, command_code, value);
+}
+
+
+uint8_t ltc2975_write_word(LTC2975 *ltc, uint8_t command_code, uint8_t page, uint16_t value){
+  if(ltc2975_set_page(ltc, page) != ERR_OK){
+      return ERR_COMMS;
+  }
+  return smbus_write_word(ltc->config.i2c, ltc->config.address, command_code, value);
+}
+
+uint8_t ltc2975_read_byte(LTC2975 *ltc, uint8_t command_code, uint8_t page, uint8_t *value){
+  if(ltc2975_set_page(ltc, page) != ERR_OK){
+      return ERR_COMMS;
+  }
+  return smbus_read_byte(ltc->config.i2c, ltc->config.address, command_code, value);
+}
+
+uint8_t ltc2975_read_word(LTC2975 *ltc, uint8_t command_code, uint8_t page, uint16_t *value){
+  if(ltc2975_set_page(ltc, page) != ERR_OK){
+      return ERR_COMMS;
+  }
+  return smbus_read_word(ltc->config.i2c, ltc->config.address, command_code, value);
+}
+
+uint8_t ltc2975_read_block(LTC2975 *ltc, uint8_t command_code, uint8_t page,
                            uint8_t *data, uint8_t datalen) {
-  if(smbus_write_block(ltc->config.i2c, ltc->config.address, LTC2975_CMD_PAGE, &page, 1) != ERR_OK){
+  if(ltc2975_set_page(ltc, page) != ERR_OK){
       return ERR_COMMS;
   }
-
   return smbus_read_block(ltc->config.i2c, ltc->config.address, command_code, NULL, 0, data, datalen);
-}
-
-uint8_t ltc2975_global_write(LTC2975 *ltc, uint8_t command_code, uint8_t *data, uint8_t datalen) {
-  chDbgAssert(command_code == LTC2975_CMD_CLEAR_FAULTS ||
-              command_code == LTC2975_CMD_OPERATION ||
-              command_code == LTC2975_CMD_ON_OFF_CONFIG, "Command not supported to PAGE_ALL");
-  return ltc2975_paged_write(ltc, command_code, PAGE_ALL, data, datalen);
-}
-
-uint8_t ltc2975_global_read(LTC2975 *ltc, uint8_t command_code, uint8_t *data, uint8_t datalen) {
-  // TODO: check if reads are *ever* allowed with PAGE_ALL. Datasheet is unclear
-  return ltc2975_paged_read(ltc, command_code, PAGE_ALL, data, datalen);
 }
 
 uint8_t ltc2975_read_l16_exp(LTC2975 *ltc) {
   // Read the VOUT_MODE register to get L16 exponent to use
-  uint8_t rxdat[1];
-  uint8_t status = ltc2975_global_read(ltc, LTC2975_CMD_VOUT_MODE, rxdat, sizeof(rxdat));
+  uint8_t val;
+  uint8_t status = ltc2975_read_byte(ltc, LTC2975_CMD_VOUT_MODE, PAGE_0, &val);
 
   // sign-extend 5 bits
-  if (rxdat[0] > 0x0F)
-    rxdat[0] |= 0xE0;
-  l16_exp = rxdat[0];
+  if (val > 0x0F)
+    val |= 0xE0;
+  l16_exp = val;
 
   return status;
 }
 
 bool ltc2975_is_alerting(LTC2975 *ltc) {
-  uint8_t mfr_common[1];
-  ltc2975_global_read(ltc, LTC2975_CMD_MFR_COMMON, mfr_common, sizeof(mfr_common));
+  uint8_t mfr_common;
+  ltc2975_read_byte(ltc, LTC2975_CMD_MFR_COMMON, PAGE_ALL, &mfr_common);
 
-  return ((mfr_common[0] & LTC2975_MFRC_NOT_ALERTING) != 0);
+  return ((mfr_common & LTC2975_MFRC_NOT_ALERTING) != 0);
 }
 
 uint8_t ltc2975_clear_faults(LTC2975 *ltc) {
   // Send a CLEAR_FAULTS command and wait for it to complete
-  if (ltc2975_global_write(ltc, LTC2975_CMD_CLEAR_FAULTS, NULL, 0) != ERR_OK) {
+  if (ltc2975_command(ltc, LTC2975_CMD_CLEAR_FAULTS, PAGE_ALL) != ERR_OK) {
     return ERR_COMMS;
   }
   // It can take up to 10us to complete (no way of checking?)
@@ -188,17 +207,17 @@ uint8_t ltc2975_clear_faults(LTC2975 *ltc) {
 
 ltc2975_fault_status ltc2975_get_fault_status(LTC2975 *ltc, uint8_t page) {
   uint8_t rxdat[2];
+  uint16_t status_word;
 
   // Read STATUS_WORD to get overview of where faults are
-  ltc2975_paged_read(ltc, LTC2975_CMD_STATUS_WORD, page, rxdat, 2);
-  uint16_t status_word = (rxdat[1] << 8) | rxdat[0];
+  ltc2975_read_word(ltc, LTC2975_CMD_STATUS_WORD, page, &status_word);
 
   ltc2975_fault_status fault_status;
 
   if ((status_word & LTC2975_STATUS_VOUT) != 0) {
     fault_status.vout = 1;
     // read STATUS_VOUT
-    ltc2975_paged_read(ltc, LTC2975_CMD_STATUS_VOUT, page, rxdat, 1);
+    ltc2975_read_byte(ltc, LTC2975_CMD_STATUS_VOUT, page, rxdat);
     fault_status.vout_ov_fault = ((rxdat[0] & LTC2975_STATUS_VOUT_VOUT_OV_FAULT) != 0);
     fault_status.vout_ov_warning = ((rxdat[0] & LTC2975_STATUS_VOUT_VOUT_OV_WARNING) != 0);
     fault_status.vout_uv_warning = ((rxdat[0] & LTC2975_STATUS_VOUT_VOUT_UV_WARNING) != 0);
@@ -219,7 +238,7 @@ ltc2975_fault_status ltc2975_get_fault_status(LTC2975 *ltc, uint8_t page) {
   if ((status_word & LTC2975_STATUS_IOUT) != 0) {
     fault_status.iout = 1;
     // read STATUS_IOUT
-    ltc2975_paged_read(ltc, LTC2975_CMD_STATUS_IOUT, page, rxdat, 1);
+    ltc2975_read_byte(ltc, LTC2975_CMD_STATUS_IOUT, page, rxdat);
     fault_status.iout_oc_fault = ((rxdat[0] & LTC2975_STATUS_IOUT_IOUT_OC_FAULT) != 0);
     fault_status.iout_oc_warning = ((rxdat[0]
         & LTC2975_STATUS_IOUT_IOUT_OC_WARNING) != 0);
@@ -235,7 +254,7 @@ ltc2975_fault_status ltc2975_get_fault_status(LTC2975 *ltc, uint8_t page) {
   if ((status_word & LTC2975_STATUS_INPUT) != 0) {
     fault_status.input = 1;
     // read STATUS_INPUT
-    ltc2975_paged_read(ltc, LTC2975_CMD_STATUS_INPUT, page, rxdat, 1);
+    ltc2975_read_byte(ltc, LTC2975_CMD_STATUS_INPUT, page, rxdat);
     fault_status.vin_ov_fault = ((rxdat[0] & LTC2975_STATUS_INPUT_VIN_OV_FAULT) != 0);
     fault_status.vin_ov_warning = ((rxdat[0] & LTC2975_STATUS_INPUT_VIN_OV_WARNING) != 0);
     fault_status.vin_uv_warning = ((rxdat[0] & LTC2975_STATUS_INPUT_VIN_UV_WARNING) != 0);
@@ -254,7 +273,7 @@ ltc2975_fault_status ltc2975_get_fault_status(LTC2975 *ltc, uint8_t page) {
   if ((status_word & LTC2975_STATUS_MFR_SPECIFIC) != 0) {
     fault_status.mfr_specific = 1;
     // read STATUS_MFR_SPECIFIC
-    ltc2975_paged_read(ltc, LTC2975_CMD_STATUS_MFR_SPECIFIC, page, rxdat, 1);
+    ltc2975_read_byte(ltc, LTC2975_CMD_STATUS_MFR_SPECIFIC, page, rxdat);
     fault_status.vout_discharge_fault = ((rxdat[0] & LTC2975_STATUS_MFRS_VOUT_DISCHARGE_FAULT) != 0);
     fault_status.fault1_in = ((rxdat[0] & LTC2975_STATUS_MFRS_FAULT1_IN) != 0);
     fault_status.fault0_in = ((rxdat[0] & LTC2975_STATUS_MFRS_FAULT0_IN) != 0);
@@ -278,7 +297,7 @@ ltc2975_fault_status ltc2975_get_fault_status(LTC2975 *ltc, uint8_t page) {
   if ((status_word & LTC2975_STATUS_TEMPERATURE) != 0) {
     fault_status.temperature = 1;
     // read STATUS_TEMPERATURE
-    ltc2975_paged_read(ltc, LTC2975_CMD_STATUS_TEMPERATURE, page, rxdat, 1);
+    ltc2975_read_byte(ltc, LTC2975_CMD_STATUS_TEMPERATURE, page, rxdat);
     fault_status.temp_ot_fault = ((rxdat[0] & LTC2975_STATUS_TEMP_OT_FAULT) != 0);
     fault_status.temp_ot_warning = ((rxdat[0] & LTC2975_STATUS_TEMP_OT_WARNING) != 0);
     fault_status.temp_ut_warning = ((rxdat[0] & LTC2975_STATUS_TEMP_UT_WARNING) != 0);
@@ -295,7 +314,7 @@ ltc2975_fault_status ltc2975_get_fault_status(LTC2975 *ltc, uint8_t page) {
   if ((status_word & LTC2975_STATUS_CML) != 0) {
     fault_status.cml = 1;
     // read STATUS_CML
-    ltc2975_paged_read(ltc, LTC2975_CMD_STATUS_CML, page, rxdat, 1);
+    ltc2975_read_byte(ltc, LTC2975_CMD_STATUS_CML, page, rxdat);
     fault_status.invalid_command = ((rxdat[0] & LTC2975_STATUS_CML_INVALID_COMMAND) != 0);
     fault_status.invalid_data = ((rxdat[0] & LTC2975_STATUS_CML_INVALID_DATA) != 0);
     fault_status.pec_failed = ((rxdat[0] & LTC2975_STATUS_CML_PEC_FAILED) != 0);
@@ -329,10 +348,10 @@ bool ltc2975_is_faulting(ltc2975_fault_status *fault_status) {
 //TODO deal with i2c errors - just assume chip is rebooting?
 bool ltc2975_chip_busy(LTC2975 *ltc) {
   // The MFR_COMMON command has status bit 6 for the busy state
-  uint8_t mfr_common[1];
-  ltc2975_global_read(ltc, LTC2975_CMD_MFR_COMMON, mfr_common, 1);
+  uint8_t mfr_common;
+  ltc2975_read_byte(ltc, LTC2975_CMD_MFR_COMMON, PAGE_ALL, &mfr_common);
 
-  bool chip_not_busy = ((mfr_common[0] & LTC2975_MFRC_NOT_BUSY) != 0);
+  bool chip_not_busy = ((mfr_common & LTC2975_MFRC_NOT_BUSY) != 0);
 
   return !chip_not_busy;
 }
@@ -345,12 +364,12 @@ void ltc2975_wait_for_not_busy(LTC2975 *ltc) {
 
 uint8_t ltc2975_check_comms(LTC2975 *ltc) {
   // Read MFR_SPECIAL_ID to check communication / ID part
-  uint8_t rxdat[2];
-  if (ltc2975_global_read(ltc, LTC2975_CMD_MFR_SPECIAL_ID, rxdat, 2) != ERR_OK) {
+  uint16_t special_id;
+  if (ltc2975_read_word(ltc, LTC2975_CMD_MFR_SPECIAL_ID, PAGE_ALL, &special_id) != ERR_OK) {
     return ERR_COMMS;
   }
   // We expect 0x0223
-  if ((rxdat[0] == 0x02) && (rxdat[1] == 0x23)) {
+  if (special_id == 0x0223) {
     return ERR_OK;
   }
   return ERR_COMMS;
@@ -371,39 +390,26 @@ static uint8_t ltc2975_program_voltage(LTC2975 *ltc, uint8_t channel, float volt
   ltc2975_wait_for_not_busy(ltc);
   */
 
-  uint8_t data[2];
   uint16_t voltage_l16 = float_to_L16(l16_exp, voltage * (1 + fault_margin));
-  data[0] = (voltage_l16 & 0xff);
-  data[1] = (voltage_l16 >> 8) & 0xff;
-  if (ltc2975_paged_write(ltc, LTC2975_CMD_VOUT_OV_FAULT_LIMIT, channel, data,
-                          2) != ERR_OK) {
+  if (ltc2975_write_word(ltc, LTC2975_CMD_VOUT_OV_FAULT_LIMIT, channel, voltage_l16) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc2975_wait_for_not_busy(ltc);
 
   voltage_l16 = float_to_L16(l16_exp, voltage * (1 + warn_margin));
-  data[0] = (voltage_l16 & 0xff);
-  data[1] = (voltage_l16 >> 8) & 0xff;
-  if (ltc2975_paged_write(ltc, LTC2975_CMD_VOUT_OV_WARN_LIMIT, channel, data,
-                          2) != ERR_OK) {
+  if (ltc2975_write_word(ltc, LTC2975_CMD_VOUT_OV_WARN_LIMIT, channel, voltage_l16) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc2975_wait_for_not_busy(ltc);
 
   voltage_l16 = float_to_L16(l16_exp, voltage * (1 - fault_margin));
-  data[0] = (voltage_l16 & 0xff);
-  data[1] = (voltage_l16 >> 8) & 0xff;
-  if (ltc2975_paged_write(ltc, LTC2975_CMD_VOUT_UV_FAULT_LIMIT, channel, data,
-                          2) != ERR_OK) {
+  if (ltc2975_write_word(ltc, LTC2975_CMD_VOUT_UV_FAULT_LIMIT, channel, voltage_l16) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc2975_wait_for_not_busy(ltc);
 
   voltage_l16 = float_to_L16(l16_exp, voltage * (1 - warn_margin));
-  data[0] = (voltage_l16 & 0xff);
-  data[1] = (voltage_l16 >> 8) & 0xff;
-  if (ltc2975_paged_write(ltc, LTC2975_CMD_VOUT_UV_WARN_LIMIT, channel, data,
-                          2) != ERR_OK) {
+  if (ltc2975_write_word(ltc, LTC2975_CMD_VOUT_UV_WARN_LIMIT, channel, voltage_l16) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc2975_wait_for_not_busy(ltc);
@@ -437,16 +443,14 @@ uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
 
   ltc->poll_time = 0;
 
-  uint8_t data[4];
-
   // read exponent to use for l16-float conversions
   if (ltc2975_read_l16_exp(ltc) != ERR_OK) {
     return ERR_COMMS;
   }
 
   // set on_off_config to respond to PMbus OPERATION command
-  data[0] = 0x1E | (1 << LTC2975_ONOFF_USE_PMBUS); // default value is 0x1E
-  if (ltc2975_global_write(ltc, LTC2975_CMD_ON_OFF_CONFIG, data, 1) != ERR_OK) {
+  uint8_t on_off_config = 0x1E | (1 << LTC2975_ONOFF_USE_PMBUS); // default value is 0x1E
+  if (ltc2975_write_byte(ltc, LTC2975_CMD_ON_OFF_CONFIG, PAGE_ALL, on_off_config) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc2975_wait_for_not_busy(ltc);
@@ -463,9 +467,7 @@ uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
   float sense_resistors[] = {sense1_mohms, sense2_mohms, sense3_mohms, sense4_mohms};
   for(int i=0; i<4; i++){
     uint16_t iout_cal_gain = float_to_L11(sense_resistors[i]);
-    data[0] = iout_cal_gain & 0xff;
-    data[1] = (iout_cal_gain >> 8) & 0xff;
-    if (ltc2975_paged_write(ltc, LTC2975_CMD_IOUT_CAL_GAIN, i, data, 2) != ERR_OK) {
+    if (ltc2975_write_word(ltc, LTC2975_CMD_IOUT_CAL_GAIN, i, iout_cal_gain) != ERR_OK) {
       return ERR_COMMS;
     }
     ltc2975_wait_for_not_busy(ltc);
@@ -473,10 +475,9 @@ uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
 
   // set DAC mode to not-connected and enable VEN weak pull-up
   // set voltage resoltuion to low (0-6v range)
-  data[0] = (0b01 << LTC2975_DAC_MODE) | (1 << LTC2975_WPU_ENABLE);
-  data[1] = (1 << (LTC2975_V_RESOLUTION-8));
+  uint16_t config_ltc2975 = (1 << LTC2975_V_RESOLUTION) | (0b01 << LTC2975_DAC_MODE) | (1 << LTC2975_WPU_ENABLE);
   for(int i=0; i<4; i++){
-    if(ltc2975_paged_write(ltc, LTC2975_CMD_MFR_CONFIG_LTC2975, i, data, 2) != ERR_OK) {
+    if(ltc2975_write_word(ltc, LTC2975_CMD_MFR_CONFIG_LTC2975, i, config_ltc2975) != ERR_OK) {
       return ERR_COMMS;
     }
     ltc2975_wait_for_not_busy(ltc);
@@ -484,19 +485,19 @@ uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
 
   // disable temperature sensing and alert
   // See UT_FAULT_LIMIT, UT_FAULT_RESPONSE commands
-  data[0] = (LTC2975_UT_LIMIT_MIN & 0xff);
-  data[1] = (LTC2975_UT_LIMIT_MIN >> 8) & 0xff;
-  if (ltc2975_global_write(ltc, LTC2975_CMD_UT_FAULT_LIMIT, data, 2) != ERR_OK) {
-    return ERR_COMMS;
+  for(int i=0; i<4; i++){
+    if (ltc2975_write_word(ltc, LTC2975_CMD_UT_FAULT_LIMIT, i, LTC2975_UT_LIMIT_MIN) != ERR_OK) {
+      return ERR_COMMS;
+    }
+    ltc2975_wait_for_not_busy(ltc);
   }
-  ltc2975_wait_for_not_busy(ltc);
 
-  data[0] = LTC2975_UT_FAULT_IGNORE;
-  if (ltc2975_global_write(ltc, LTC2975_CMD_UT_FAULT_RESPONSE, data,
-                           1) != ERR_OK) {
-    return ERR_COMMS;
+  for(int i=0; i<4; i++){
+    if (ltc2975_write_byte(ltc, LTC2975_CMD_UT_FAULT_RESPONSE, i, LTC2975_UT_FAULT_IGNORE) != ERR_OK) {
+      return ERR_COMMS;
+    }
+    ltc2975_wait_for_not_busy(ltc);
   }
-  ltc2975_wait_for_not_busy(ltc);
 
   // Clear Faults
   ltc2975_clear_faults(ltc);
@@ -505,23 +506,23 @@ uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
 }
 
 uint8_t ltc2975_poll(LTC2975 *ltc) {
-  uint8_t rxdat[2];
+  uint16_t value;
 
   for(int i=0; i<4; i++){
-    if (ltc2975_paged_read(ltc, LTC2975_CMD_READ_VOUT, i, rxdat, sizeof(rxdat)) != ERR_OK) {
+    if (ltc2975_read_word(ltc, LTC2975_CMD_READ_VOUT, i, &value) != ERR_OK) {
       return ERR_COMMS;
     }
-    ltc->vout[i] = L16_to_float(l16_exp, ((rxdat[1] << 8) | rxdat[0]));
+    ltc->vout[i] = L16_to_float(l16_exp, value);
 
-    if (ltc2975_paged_read(ltc, LTC2975_CMD_READ_IOUT, i, rxdat, sizeof(rxdat)) != ERR_OK) {
+    if (ltc2975_read_word(ltc, LTC2975_CMD_READ_IOUT, i, &value) != ERR_OK) {
       return ERR_COMMS;
     }
-    ltc->iout[i] = L11_to_float((rxdat[1] << 8) | rxdat[0]);
+    ltc->iout[i] = L11_to_float(value);
 
-    if (ltc2975_paged_read(ltc, LTC2975_CMD_READ_POUT, i, rxdat, sizeof(rxdat)) != ERR_OK) {
+    if (ltc2975_read_word(ltc, LTC2975_CMD_READ_POUT, i, &value) != ERR_OK) {
       return ERR_COMMS;
     }
-    ltc->pout[i] = L11_to_float((rxdat[1] << 8) | rxdat[0]);
+    ltc->pout[i] = L11_to_float(value);
   }
 
   // Track the last polled time to notice stale data
@@ -531,9 +532,7 @@ uint8_t ltc2975_poll(LTC2975 *ltc) {
 }
 
 uint8_t ltc2975_turn_on(LTC2975 *ltc, uint8_t channel) {
-  uint8_t data[1];
-  data[0] = LTC2975_OPER_ON;
-  if (ltc2975_paged_write(ltc, LTC2975_CMD_OPERATION, channel, data, 1) != ERR_OK) {
+  if (ltc2975_write_byte(ltc, LTC2975_CMD_OPERATION, channel, LTC2975_OPER_ON) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc2975_wait_for_not_busy(ltc);
@@ -542,9 +541,7 @@ uint8_t ltc2975_turn_on(LTC2975 *ltc, uint8_t channel) {
 }
 
 uint8_t ltc2975_turn_off(LTC2975 *ltc, uint8_t channel) {
-  uint8_t data[1];
-  data[0] = LTC2975_OPER_OFF;
-  if (ltc2975_paged_write(ltc, LTC2975_CMD_OPERATION, channel, data, 1) != ERR_OK) {
+  if (ltc2975_write_byte(ltc, LTC2975_CMD_OPERATION, channel, LTC2975_OPER_OFF) != ERR_OK) {
     return ERR_COMMS;
   }
   ltc2975_wait_for_not_busy(ltc);

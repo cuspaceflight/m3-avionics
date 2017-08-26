@@ -30,8 +30,23 @@ msg_t i2c_transmit_retry_n(I2CDriver *i2c, uint8_t deviceaddress, uint8_t *txdat
   return MSG_TIMEOUT;
 }
 
+uint8_t smbus_send_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t command){
+  static uint8_t txdat[1] __attribute__((section("DATA_RAM"))); // Can't DMA from Core-Coupled Memory (where the stack resides)
+
+  txdat[0] = command;
+
+  i2cAcquireBus(i2c);
+  msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, txdat, 1, NULL, 0, MS2ST(20), 1);
+  i2cReleaseBus(i2c);
+
+  if(status == MSG_OK){
+    return ERR_OK;
+  }
+  return ERR_COMMS;
+}
+
 uint8_t smbus_write_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint8_t value){
-  static uint8_t txdat[2] __attribute__((section("DATA_RAM"))); // Can't DMA from Core-Coupled Memory (where the stack resides)
+  static uint8_t txdat[2] __attribute__((section("DATA_RAM")));
 
   txdat[0] = byteaddress;
   txdat[1] = value;
