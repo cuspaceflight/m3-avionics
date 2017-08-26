@@ -6,6 +6,7 @@
 #include "si446x.h"
 #include "s_radio.h"
 #include "status.h"
+#include "measurements.h"
 
 
 #define TXCODE LDPC_CODE_N512_K256
@@ -74,8 +75,6 @@ static THD_FUNCTION(sr_thd, arg) {
     (void)arg;
     chRegSetThreadName("SR");
 
-    uint8_t* rxbuf;
-
     /* Initialise Labrador systems */
     while(labrador_init(&labcfg, &labradcfg, &labstats, &labrador_radio_si446x)
           != LABRADOR_OK)
@@ -91,7 +90,7 @@ static THD_FUNCTION(sr_thd, arg) {
         chThdSleepMilliseconds(1000);
     }
 
-    /* Loop sending/receiving messages */
+    /* Loop sending messages */
     while (true) {
         
         /* If there's a packet ready to send,
@@ -110,20 +109,6 @@ static THD_FUNCTION(sr_thd, arg) {
                 set_status(COMPONENT_SR, STATUS_GOOD);
             }
             chMsgRelease(tp, (msg_t)result);
-        }
-
-        /* Try and receive a message, on success, send it over CAN. */
-        labrador_err result = labrador_rx(&rxbuf);
-        if(result == LABRADOR_OK) {
-     
-            /* DEBUG */
-            set_status(COMPONENT_SR, STATUS_GOOD);
-            chThdSleepMilliseconds(100);
-        
-        } else if(result != LABRADOR_NO_DATA) {
-            set_status(COMPONENT_SR, STATUS_ERROR);
-        } else {
-            set_status(COMPONENT_SR, STATUS_ACTIVITY);
         }
     }  
 }

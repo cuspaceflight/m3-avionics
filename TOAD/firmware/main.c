@@ -72,6 +72,9 @@ int main(void) {
     /* Start Secondary Radio */
     sr_labrador_init();
     
+    /* Start Measurement Handler */
+    //measurement_init();
+    
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);
 
@@ -80,9 +83,5 @@ int main(void) {
 
         /* Do nothing */
         chThdSleepMilliseconds(1000);
-        
-        /* DEBUG */
-        //uint8_t test_msg[32] = "hello toad";
-        //sr_labrador_tx(test_msg);
     }
 }
