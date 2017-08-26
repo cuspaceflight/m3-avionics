@@ -111,13 +111,12 @@
 #define LTC2975_OPER_OFF            0x40 /* Turn off channel */
 
 #define LTC2975_UT_LIMIT_MIN        0xFDDA /* 0xFDDA = -275C (disable UT warning) */
-#define LTC2975_UT_FAULT_IGNORE     0x00 /* Ignore under-temperature faults */ //TODO?
-
-/* Fault bits */
-#define LTC2975_FAULT_EXT_UT_BIT    4 //TODO?
+#define LTC2975_UT_FAULT_IGNORE     0x00 /* Ignore under-temperature faults */
 
 /* MFR_CONFIG_LTC2975 bits */
-#define LTC2975_WPU_ENABLE  3 //TODO
+#define LTC2975_V_RESOLUTION    10
+#define LTC2975_DAC_MODE        4
+#define LTC2975_WPU_ENABLE      3
 
 /* PAGE constants */
 #define PAGE_0      0x00
@@ -472,7 +471,16 @@ uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
     ltc2975_wait_for_not_busy(ltc);
   }
 
-  //TODO check here onwards
+  // set DAC mode to not-connected and enable VEN weak pull-up
+  // set voltage resoltuion to low (0-6v range)
+  data[0] = (0b01 << LTC2975_DAC_MODE) | (1 << LTC2975_WPU_ENABLE);
+  data[1] = (1 << (LTC2975_V_RESOLUTION-8));
+  for(int i=0; i<4; i++){
+    if(ltc2975_paged_write(ltc, LTC2975_CMD_MFR_CONFIG_LTC2975, i, data, 2) != ERR_OK) {
+      return ERR_COMMS;
+    }
+    ltc2975_wait_for_not_busy(ltc);
+  }
 
   // disable temperature sensing and alert
   // See UT_FAULT_LIMIT, UT_FAULT_RESPONSE commands
