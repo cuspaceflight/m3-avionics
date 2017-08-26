@@ -24,8 +24,9 @@ static bool gps_transmit(uint8_t *buf);
 static enum ublox_result ublox_state_machine(uint8_t b);
 static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge);
 
-// static bool gps_expect(enum ublox_result expected);
-// static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected);
+//static bool gps_expect(enum ublox_result expected);
+//static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected);
+static bool gps_tx_ack(uint8_t *buf);
 
 
 /* UBX Decoding State Machine States */
@@ -95,8 +96,8 @@ static bool gps_transmit(uint8_t *buf)
     return nwritten == n;
 }
 
-/* TODO Fix this function
-static bool gps_expect(enum ublox_result expected)
+
+/*static bool gps_expect(enum ublox_result expected)
 {
     enum ublox_result r;
     do {
@@ -109,11 +110,10 @@ static bool gps_expect(enum ublox_result expected)
     }
 
     return true;
-} */
+}*/
 
 
-/* TODO Fix this function
-static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected)
+/*static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected)
 {
     if(!gps_transmit(buf)) {
         return false;
@@ -123,7 +123,26 @@ static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected)
         return false;
     }
     return true;
-} */
+}*/
+
+static bool gps_tx_ack(uint8_t *buf)
+{
+    if(!gps_transmit(buf)) {
+        return false;
+    }
+
+    enum ublox_result r;
+    do {
+        // TODO: Needs a timeout!
+        r = ublox_state_machine(sdGet(gps_seriald));
+    } while( (r != UBLOX_ACK) && (r != UBLOX_NAK) );
+
+    if(r == UBLOX_NAK){
+        set_status(COMPONENT_GPS,STATUS_ERROR);
+        return false;
+    }
+    return true;
+}
 
 
 /* Run new byte b through the UBX decoding state machine. Note that this
@@ -248,7 +267,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         return UBLOX_NAV_PVT;
 
                     } else if(id == UBX_NAV_POSECEF){
-                        
+
                         /* Extract Nav Payload */
                         memcpy(nav_posecef.payload, payload, length);
                         memcpy(&posecef, payload, length);
@@ -353,7 +372,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     nav5.dyn_model = 2;
     nav5.utc_standard = 3;  // USNO
 
-    gps_configured &= gps_transmit((uint8_t*)&nav5);
+    gps_configured &= gps_tx_ack((uint8_t*)&nav5);
     if(!gps_configured) return false;
 
 
@@ -368,7 +387,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
         msg.msg_class = UBX_NAV;
         msg.msg_id    = UBX_NAV_PVT;
         msg.rate      = 1;
-        gps_configured &= gps_transmit((uint8_t*)&msg);
+        gps_configured &= gps_tx_ack((uint8_t*)&msg);
         if(!gps_configured) return false;
     }
 
@@ -383,7 +402,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
         msg2.msg_class = UBX_NAV;
         msg2.msg_id    = UBX_NAV_POSECEF;
         msg2.rate      = 1;
-        gps_configured &= gps_transmit((uint8_t*)&msg2);
+        gps_configured &= gps_tx_ack((uint8_t*)&msg2);
         if(!gps_configured) return false;
     }
 
@@ -398,7 +417,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     rate.meas_rate = 1000;
     rate.nav_rate = 1;
     rate.time_ref = 0;  // UTC
-    gps_configured &= gps_transmit((uint8_t*)&rate);
+    gps_configured &= gps_tx_ack((uint8_t*)&rate);
     if(!gps_configured) return false;
 
 
@@ -410,7 +429,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     sbas.length = sizeof(sbas.payload);
 
     sbas.mode = 0;
-    gps_configured &= gps_transmit((uint8_t*)&sbas);
+    gps_configured &= gps_tx_ack((uint8_t*)&sbas);
     if(!gps_configured) return false;
 
 
@@ -439,7 +458,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     gnss.beidou_gnss_id = 3;
     gnss.qzss_gnss_id = 5;
     gnss.glonass_gnss_id = 6;
-    gps_configured &= gps_transmit((uint8_t*)&gnss);
+    gps_configured &= gps_tx_ack((uint8_t*)&gnss);
     if(!gps_configured) return false;
 
 
@@ -465,7 +484,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
         UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
         UBX_CFG_TP5_FLAGS_POLARITY                  |
         UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
-    gps_configured &= gps_transmit((uint8_t*)&tp5_1);
+    gps_configured &= gps_tx_ack((uint8_t*)&tp5_1);
     if(!gps_configured) return false;
 
 
@@ -479,7 +498,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     tp5_2.tp_idx               = 1;     // Safeboot pin
     tp5_2.version              = 0;
     tp5_2.ant_cable_delay      = 0;
-    tp5_2.freq_period          = 1;     // Only when gps lock valid
+    tp5_2.freq_period          = 1;
     tp5_2.pulse_len_ratio      = 10000; // us
     tp5_2.freq_period_lock     = 1;
     tp5_2.pulse_len_ratio_lock = 10000;
@@ -509,7 +528,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
             UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
     }
 
-    gps_configured &= gps_transmit((uint8_t*)&tp5_2);
+    gps_configured &= gps_tx_ack((uint8_t*)&tp5_2);
     if(!gps_configured) return false;
 
     return gps_configured;
@@ -519,7 +538,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
                 bool rising_edge){
 
-    /* Set global serial driver */ 
+    /* Set global serial driver */
     gps_seriald = seriald;
 
     /* Reset uBlox */
