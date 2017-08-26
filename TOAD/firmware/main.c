@@ -1,10 +1,10 @@
-
 #include "ch.h"
 #include "hal.h"
 
 #include "cs2100.h"
 #include "gps.h"
 #include "psu.h"
+#include "s_radio.h"
 #include "timer.h"
 #include "status.h"
 
@@ -68,7 +68,10 @@ int main(void) {
 
     /* Start GPS State Machine */
     gps_thd_init();
-
+    
+    /* Start Secondary Radio */
+    sr_labrador_init();
+    
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);
 
@@ -77,5 +80,9 @@ int main(void) {
 
         /* Do nothing */
         chThdSleepMilliseconds(1000);
+        
+        /* DEBUG */
+        //uint8_t test_msg[32] = "hello toad";
+        //sr_labrador_tx(test_msg);
     }
 }

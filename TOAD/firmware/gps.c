@@ -260,9 +260,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt, payload, length);
 
-                        /* Debug */
-                        set_status(COMPONENT_SR, STATUS_GOOD);
-
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_PVT;
 
@@ -271,7 +268,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         /* Extract Nav Payload */
                         memcpy(nav_posecef.payload, payload, length);
                         memcpy(&posecef, payload, length);
-
 
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_POSECEF;
