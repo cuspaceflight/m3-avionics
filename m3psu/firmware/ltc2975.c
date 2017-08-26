@@ -499,6 +499,19 @@ uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
     ltc2975_wait_for_not_busy(ltc);
   }
 
+  // Allow power to come on at 6v minimum, and turn off if it falls below 5v
+  uint16_t vin_on = float_to_L11(6.0f);
+  uint16_t vin_off = float_to_L11(5.0f);
+  for(int i=0; i<4; i++){
+    if (ltc2975_write_word(ltc, LTC2975_CMD_VIN_ON, i, vin_on) != ERR_OK) {
+      return ERR_COMMS;
+    }
+    if (ltc2975_write_word(ltc, LTC2975_CMD_VIN_OFF, i, vin_off) != ERR_OK) {
+      return ERR_COMMS;
+    }
+    ltc2975_wait_for_not_busy(ltc);
+  }
+
   // Clear Faults
   ltc2975_clear_faults(ltc);
 
