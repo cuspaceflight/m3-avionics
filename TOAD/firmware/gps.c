@@ -3,13 +3,6 @@
 #include "ubx.h"
 #include "status.h"
 
-#define PVT_LOG_SIZE    2
-
-/* Mailbox Setup */
-static mailbox_t log_pvt_mailbox;
-static msg_t pvt_mailbox_buffer[PVT_LOG_SIZE];
-
-
 /* Serial Setup */
 static SerialDriver* gps_seriald;
 static SerialConfig serial_cfg = {
@@ -248,9 +241,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt, payload, length);
 
-                        /* Put PVT pointer in Mailbox */
-                        //chMBPost(&log_pvt_mailbox, (msg_t)&pvt, TIME_IMMEDIATE);
-
                         /* Debug */
                         set_status(COMPONENT_SR, STATUS_GOOD);
 
@@ -263,7 +253,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         memcpy(nav_posecef.payload, payload, length);
                         memcpy(&posecef, payload, length);
 
-                        /* TODO Put in Mailbox */
 
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_POSECEF;
@@ -463,7 +452,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
 
     tp5_1.tp_idx =           0;                 // TIMEPULSE
     tp5_1.version =          0;
-    tp5_1.ant_cable_delay =  15;                // Needs experimental adjustment!
+    tp5_1.ant_cable_delay =  0;
     tp5_1.freq_period =      1000000;           // 1MHz
     tp5_1.pulse_len_ratio =  0xffffffff >> 1;   // (2^32/2)/2^32 = 50% duty cycle
     tp5_1.freq_period_lock = 1000000;
@@ -489,8 +478,8 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
 
     tp5_2.tp_idx               = 1;     // Safeboot pin
     tp5_2.version              = 0;
-    tp5_2.ant_cable_delay      = 15;    // Needs experimental adjustment!
-    tp5_2.freq_period          = 0;     // Only when gps lock valid
+    tp5_2.ant_cable_delay      = 0;
+    tp5_2.freq_period          = 1;     // Only when gps lock valid
     tp5_2.pulse_len_ratio      = 10000; // us
     tp5_2.freq_period_lock     = 1;
     tp5_2.pulse_len_ratio_lock = 10000;
@@ -530,10 +519,10 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
                 bool rising_edge){
 
-	/* Set global serial driver */
-	gps_seriald = seriald;
+    /* Set global serial driver */ 
+    gps_seriald = seriald;
 
-	/* Reset uBlox */
+    /* Reset uBlox */
     palClearLine(LINE_GPS_RST);
     chThdSleepMilliseconds(300);
     palSetLine(LINE_GPS_RST);
@@ -543,10 +532,10 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
 
     sdStart(gps_seriald, &serial_cfg);
 
-	while(!gps_configure(nav_pvt, nav_posecef, rising_edge)) {
+    while(!gps_configure(nav_pvt, nav_posecef, rising_edge)) {
         set_status(COMPONENT_GPS, STATUS_ERROR);
         chThdSleepMilliseconds(1000);
-	}
+    }
     set_status(COMPONENT_GPS, STATUS_GOOD);
     return;
 }
@@ -573,10 +562,5 @@ static THD_FUNCTION(gps_thd, arg) {
 
 /* Init GPS Thread */
 void gps_thd_init(void){
-
-    /* Init Mailbox */
-    chMBObjectInit(&log_pvt_mailbox, (msg_t*)pvt_mailbox_buffer, PVT_LOG_SIZE);
-
-    /* Init Thread */
     chThdCreateStatic(gps_thd_wa, sizeof(gps_thd_wa), NORMALPRIO, gps_thd, NULL);
 }
