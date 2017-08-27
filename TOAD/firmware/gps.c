@@ -360,6 +360,49 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     /* Clear the read buffer */
     while(sdGetTimeout(gps_seriald, TIME_IMMEDIATE) != Q_TIMEOUT);
 
+    /* Disable non GPS systems */
+    gnss.sync1 = UBX_SYNC1;
+    gnss.sync2 = UBX_SYNC2;
+    gnss.class = UBX_CFG;
+    gnss.id = UBX_CFG_GNSS;
+    gnss.length = sizeof(gnss.payload);
+
+    gnss.msg_ver = 0;
+    gnss.num_trk_ch_hw = 32;
+    gnss.num_trk_ch_use = 32;
+    gnss.num_config_blocks = 5;
+
+
+    /* Enable GPS, use all-1 channels */
+    gnss.gps_gnss_id = 0;
+    gnss.gps_res_trk_ch = 31;
+    gnss.gps_max_trk_ch = 31;
+    gnss.gps_flags = 1+(1<<16);
+
+    /* Enable QZSS as per protocol spec*/
+    gnss.qzss_gnss_id = 5;
+    gnss.qzss_res_trk_ch = 1;  // Might need checking?
+    gnss.qzss_max_trk_ch = 1;
+    gnss.qzss_flags = 1+(1<<16);
+
+    /* Leave all other GNSS systems disabled */
+    gnss.sbas_gnss_id = 1;
+    gnss.beidou_gnss_id = 3;
+    gnss.glonass_gnss_id = 6;
+    gps_configured &= gps_tx_ack((uint8_t*)&gnss);
+    if(!gps_configured) return false;
+
+    /*Wait for reset*/
+    chThdSleepMilliseconds(500);
+
+    /* Might need redoing after gnss reset?*/
+    gps_configured &= gps_transmit((uint8_t*)&prt);
+    if(!gps_configured) return false;
+    /* Wait for it to stop barfing NMEA */
+    chThdSleepMilliseconds(300);
+    /* Clear the read buffer */
+    while(sdGetTimeout(gps_seriald, TIME_IMMEDIATE) != Q_TIMEOUT);
+
     /* Set to Stationary mode */
     nav5.sync1 = UBX_SYNC1;
     nav5.sync2 = UBX_SYNC2;
@@ -373,38 +416,6 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
 
     gps_configured &= gps_tx_ack((uint8_t*)&nav5);
     if(!gps_configured) return false;
-
-
-    /* Enable NAV PVT messages */
-    if(nav_pvt){
-        msg.sync1 = UBX_SYNC1;
-        msg.sync2 = UBX_SYNC2;
-        msg.class = UBX_CFG;
-        msg.id = UBX_CFG_MSG;
-        msg.length = sizeof(msg.payload);
-
-        msg.msg_class = UBX_NAV;
-        msg.msg_id    = UBX_NAV_PVT;
-        msg.rate      = 1;
-        gps_configured &= gps_tx_ack((uint8_t*)&msg);
-        if(!gps_configured) return false;
-    }
-
-    /* Enable NAV POSECEF messages */
-    if (nav_posecef){
-        msg2.sync1 = UBX_SYNC1;
-        msg2.sync2 = UBX_SYNC2;
-        msg2.class = UBX_CFG;
-        msg2.id = UBX_CFG_MSG;
-        msg2.length = sizeof(msg2.payload);
-
-        msg2.msg_class = UBX_NAV;
-        msg2.msg_id    = UBX_NAV_POSECEF;
-        msg2.rate      = 1;
-        gps_configured &= gps_tx_ack((uint8_t*)&msg2);
-        if(!gps_configured) return false;
-    }
-
 
     /* Set solution rate to 1Hz */
     rate.sync1 = UBX_SYNC1;
@@ -429,35 +440,6 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
 
     sbas.mode = 0;
     gps_configured &= gps_tx_ack((uint8_t*)&sbas);
-    if(!gps_configured) return false;
-
-
-    /* Disable non GPS systems */
-    gnss.sync1 = UBX_SYNC1;
-    gnss.sync2 = UBX_SYNC2;
-    gnss.class = UBX_CFG;
-    gnss.id = UBX_CFG_GNSS;
-    gnss.length = sizeof(gnss.payload);
-
-    gnss.msg_ver = 0;
-    gnss.num_trk_ch_hw = 32;
-    gnss.num_trk_ch_use = 32;
-    gnss.num_config_blocks = 5;
-
-
-    /* Enable GPS, use all channels */
-    gnss.gps_gnss_id = 0;
-    gnss.gps_res_trk_ch = 32;
-    gnss.gps_max_trk_ch = 32;
-    gnss.gps_flags = 1;
-
-
-    /* Leave all other GNSS systems disabled */
-    gnss.sbas_gnss_id = 1;
-    gnss.beidou_gnss_id = 3;
-    gnss.qzss_gnss_id = 5;
-    gnss.glonass_gnss_id = 6;
-    gps_configured &= gps_tx_ack((uint8_t*)&gnss);
     if(!gps_configured) return false;
 
 
@@ -529,6 +511,36 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
 
     gps_configured &= gps_tx_ack((uint8_t*)&tp5_2);
     if(!gps_configured) return false;
+
+    /* Enable NAV PVT messages */
+    if(nav_pvt){
+        msg.sync1 = UBX_SYNC1;
+        msg.sync2 = UBX_SYNC2;
+        msg.class = UBX_CFG;
+        msg.id = UBX_CFG_MSG;
+        msg.length = sizeof(msg.payload);
+
+        msg.msg_class = UBX_NAV;
+        msg.msg_id    = UBX_NAV_PVT;
+        msg.rate      = 1;
+        gps_configured &= gps_tx_ack((uint8_t*)&msg);
+        if(!gps_configured) return false;
+    }
+
+    /* Enable NAV POSECEF messages */
+    if (nav_posecef){
+        msg2.sync1 = UBX_SYNC1;
+        msg2.sync2 = UBX_SYNC2;
+        msg2.class = UBX_CFG;
+        msg2.id = UBX_CFG_MSG;
+        msg2.length = sizeof(msg2.payload);
+
+        msg2.msg_class = UBX_NAV;
+        msg2.msg_id    = UBX_NAV_POSECEF;
+        msg2.rate      = 1;
+        gps_configured &= gps_tx_ack((uint8_t*)&msg2);
+        if(!gps_configured) return false;
+    }
 
     return gps_configured;
 }
