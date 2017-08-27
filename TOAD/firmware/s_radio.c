@@ -110,11 +110,14 @@ static THD_FUNCTION(sr_thd, arg) {
             }
             chMsgRelease(tp, (msg_t)result);
         }
+        
+        /* Sleep */
+        chThdSleepMilliseconds(1000);
     }  
 }
 
 
-/* Transmit Data */
+/* Transmit a 32 Byte Data Buffer */
 void sr_labrador_tx(uint8_t* buf)
 {
     if(sr_labrador_thdp != NULL) {

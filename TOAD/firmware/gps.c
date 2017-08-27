@@ -121,11 +121,8 @@ static bool gps_tx_ack(uint8_t *buf)
  * function preserves static state and processes new messages as appropriate
  * once received.
  */
-uint8_t rxbuf[255] = {0};
-uint8_t rxbufidx = 0;
 static enum ublox_result ublox_state_machine(uint8_t b)
 {
-    rxbuf[rxbufidx++] = b;
     static ubx_state state = STATE_IDLE;
 
     static uint8_t class, id;
@@ -174,7 +171,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
             if(length >= 128) {
                 set_status(COMPONENT_GPS,STATUS_ERROR);
                 state = STATE_IDLE;
-                rxbufidx = 0;
                 return UBLOX_RXLEN_TOO_LONG;
             }
             length_remaining = length;
@@ -202,7 +198,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
             if(ck_a != (ck&0xFF) || ck_b != (ck>>8)) {
                 set_status(COMPONENT_GPS,STATUS_ERROR);
                 state=STATE_IDLE;
-                rxbufidx = 0;
                 return UBLOX_BAD_CHECKSUM;
             }
 
@@ -231,9 +226,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         /* Extract NAV_PVT Payload */
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt, payload, length);
-
-                        /* Debug */
-                        set_status(COMPONENT_SR, STATUS_GOOD);
 
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_PVT;
@@ -279,7 +271,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
             state = STATE_IDLE;
 
             set_status(COMPONENT_GPS,STATUS_ERROR);
-            rxbufidx = 0;
             return UBLOX_ERROR;
     }
     return UBLOX_WAIT;
@@ -301,7 +292,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     ubx_cfg_tp5_t tp5_1;
     ubx_cfg_tp5_t tp5_2;
 
-        /* Disable NMEA on UART */
+    /* Disable NMEA on UART */
     prt.sync1 = UBX_SYNC1;
     prt.sync2 = UBX_SYNC2;
     prt.class = UBX_CFG;
