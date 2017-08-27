@@ -1,0 +1,33 @@
+#ifndef PACKETS_H
+#define PACKETS_H
+
+/* BOARD ID */
+#define TOAD_ID             0x01
+
+/* Packet Type */
+#define PACKET_POSITION     0x80
+#define PACKET_RANGE        0x40
+
+/* Ranging Packet */
+typedef struct __attribute__((packed)) {
+
+    uint8_t type;
+    uint32_t tof;
+    uint32_t time_of_week;
+    uint16_t bat_volt; 
+    
+} ranging_packet;
+
+
+/* Position Packet */
+typedef struct __attribute__((packed)) {
+
+    uint8_t type;
+    int32_t lon, lat;
+    int32_t height;
+    uint8_t num_sat;
+    uint16_t bat_volt; 
+    
+} position_packet;
+
+#endif

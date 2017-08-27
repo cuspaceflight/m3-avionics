@@ -5,6 +5,7 @@
 #include "measurements.h"
 #include "status.h"
 #include "gps.h"
+#include "packets.h"
 
 /* Timestamps */
 static uint32_t time_capture_pps_timestamp;
@@ -53,37 +54,39 @@ static THD_FUNCTION(MEASUREThread, arg) {
     
     while(TRUE) {
     
+        range_pkt.type = (PACKET_RANGE | TOAD_ID);
+    
         /* Wait for PPS Event */
-        if (chBSemWaitTimeout(&pps_event_sem, MS2ST(1500)) == RDY_TIMEOUT) {
+        if (chBSemWaitTimeout(&pps_event_sem, MS2ST(1500)) == MSG_TIMEOUT) {
         
             continue;    
         }        
         
         /* Debug */
-        set_status(COMPONENT_PR, STATUS_GOOD);
-        
+        set_status(COMPONENT_PR, STATUS_GOOD);        
         
         /* Wait for NAV-PVT Message */
-        if (chBSemWaitTimeout(&pvt_ready_sem, MS2ST(1500)) == RDY_TIMEOUT) {
+        if (chBSemWaitTimeout(&pvt_ready_sem, MS2ST(1500)) == MSG_TIMEOUT) {
         
             continue;
         }
         
-        //range_pkt.position = pvt_latest;
+        /* Timestamp Packet */
+        range_pkt.time_of_week = pvt_latest.i_tow;
             
         /* Debug */
         set_status(COMPONENT_PR, STATUS_GOOD);
         
         
         /* Wait for Radio Sync Event */
-        if (chBSemWaitTimeout(&radio_sync_event_sem, MS2ST(1500)) == RDY_TIMEOUT) {
+        if (chBSemWaitTimeout(&radio_sync_event_sem, MS2ST(1500)) == MSG_TIMEOUT) {
         
             continue;
         }
         
         /* Compute Time of Flight */
         time_of_flight = (time_capture_pps_timestamp - time_capture_radio_timestamp);        
-        range_pkt.TOF = time_of_flight;
+        range_pkt.tof = time_of_flight;
     
         /* TODO - Log data somewhere */
         (void)range_pkt;
