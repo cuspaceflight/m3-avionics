@@ -1,0 +1,41 @@
+name: M3Pyro
+lsefreq: 0
+hsefreq: 26000000
+voltage: 3.3
+mcutype: STM32F405xx
+default: input, pushpull, starthigh, pullup, highspeed
+pins:
+    JTMS: pa13, af0, pulldown
+    JTCK: pa14, af0, pulldown
+    JTDI: pa15, af0, pullup
+    JTDO: pb3, af0
+    NJTRST: pb4, af0, pullup
+
+    CAN_RX: pb8, af9
+    CAN_TX: pb9, af9
+
+    LED_RED: pa0, output, startlow, floating
+    LED_YLW: pa1, output, startlow, floating
+    LED_GRN: pa2, output, startlow, floating
+
+    SI_DIV: pa4, analog, floating
+    BUS_DIV: pa5, analog, floating
+    CONT: pa6, analog, floating
+    CONT_EN: pa7, output, startlow, floating
+    1A_EN: pa10, output, startlow, floating
+    3A_EN: pa12, output, startlow, floating
+
+    CH1: pb12, output, startlow, floating
+    CH2: pb15, output, startlow, floating
+    CH3: pc7, output, startlow, floating
+    CH4: pc4, output, startlow, floating
+    CH5: pb13, output, startlow, floating
+    CH6: pc6, output, startlow, floating
+    CH7: pc8, output, startlow, floating
+    CH8: pc5, output, startlow, floating
+
+    CONT_PASSTHROUGH: pa8, input, floating
+    BUS_DIV_PASSTHROUGH: pa9, input, floating
+    SI_DIV_PASSTHROUGH: pa11, input, floating
+    3V3_PASSTHROUGH: pb7, input, floating
+    CONT_EN_PASSTHROUGH: pc9, input, floating
