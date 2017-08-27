@@ -1,7 +1,8 @@
 #ifndef MEASURE_H
 #define MEASURE_H
 
-#include "gps.h"
+#include "ch.h"
+
 
 /* Measurement Functions */
 void measurements_handle_pps(void);
@@ -15,8 +16,12 @@ typedef struct __attribute__((packed)) {
 
     uint8_t ID;
     uint32_t TOF;
-    ublox_pvt_t position;
+    uint32_t i_tow;
+    int32_t lon, lat;
+    int32_t height,
     
 } ranging_packet;
+
+extern ranging_packet range_pkt;
 
 #endif

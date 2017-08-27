@@ -46,6 +46,9 @@ typedef struct __attribute__((packed)) {
     uint32_t p_acc;
 } ublox_posecef_t;
 
+/* Global NAV-PVT Data */
+extern ublox_pvt_t pvt_latest;
+extern binary_semaphore_t pvt_ready_sem;
 
 /* Configure uBlox GPS */
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,

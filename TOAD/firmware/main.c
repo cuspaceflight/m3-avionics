@@ -6,6 +6,7 @@
 #include "psu.h"
 #include "s_radio.h"
 #include "timer.h"
+#include "measurements.h"
 #include "status.h"
 
 
@@ -63,6 +64,9 @@ int main(void) {
     /* PSU Init */
     psu_init();
 
+    /* Start Measurement Handler */
+    measurement_init();
+    
     /* Start Timer */
     gpt2_init();
 
@@ -71,9 +75,6 @@ int main(void) {
     
     /* Start Secondary Radio */
     sr_labrador_init();
-    
-    /* Start Measurement Handler */
-    //measurement_init();
     
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);

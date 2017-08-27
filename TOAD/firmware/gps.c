@@ -2,6 +2,7 @@
 #include "gps.h"
 #include "ubx.h"
 #include "status.h"
+#include "measurements.h"
 
 
 /* Serial Setup */
@@ -25,6 +26,9 @@ static bool gps_transmit(uint8_t *buf);
 static enum ublox_result ublox_state_machine(uint8_t b);
 static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge);
 static bool gps_tx_ack(uint8_t *buf);
+
+binary_semaphore_t pvt_ready_sem;
+ublox_pvt_t pvt_latest;
 
 
 /* UBX Decoding State Machine States */
@@ -134,9 +138,9 @@ static enum ublox_result ublox_state_machine(uint8_t b)
 
     ubx_cfg_nav5_t cfg_nav5;
     ubx_nav_pvt_t nav_pvt;
-    ublox_pvt_t pvt;
     ubx_nav_posecef_t nav_posecef;
     ublox_posecef_t posecef;
+    
 
     switch(state) {
         case STATE_IDLE:
@@ -223,16 +227,19 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                 case UBX_NAV:
                     if(id == UBX_NAV_PVT) {
 
-                        /* Extract NAV_PVT Payload */
+                        /* Extract NAV-PVT Payload */
                         memcpy(nav_pvt.payload, payload, length);
-                        memcpy(&pvt, payload, length);
+                        memcpy(&pvt_latest, payload, length);
+                        
+                        /* Signal NAV-PVT Ready Semaphore */
+	                    chBSemSignal(&pvt_ready_sem);
 
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_PVT;
 
                     } else if(id == UBX_NAV_POSECEF){
 
-                        /* Extract NAV_POSECEF Payload */
+                        /* Extract NAV-POSECEF Payload */
                         memcpy(nav_posecef.payload, payload, length);
                         memcpy(&posecef, payload, length);
 
