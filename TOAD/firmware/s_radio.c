@@ -9,8 +9,8 @@
 #include "measurements.h"
 
 
-#define TXCODE LDPC_CODE_N512_K256
-#define RXCODE LDPC_CODE_N512_K256
+#define TXCODE LDPC_CODE_N256_K128
+#define RXCODE LDPC_CODE_N256_K128
 
 static uint8_t labrador_wa[LDPC_SIZE(FAST, TXCODE, MP, RXCODE)];
 
@@ -113,11 +113,13 @@ static THD_FUNCTION(sr_thd, arg) {
         
         /* Sleep */
         chThdSleepMilliseconds(1000);
+        
+        set_status(COMPONENT_SR, STATUS_GOOD);
     }  
 }
 
 
-/* Transmit a 32 Byte Data Buffer */
+/* Transmit a 16 Byte Data Buffer */
 void sr_labrador_tx(uint8_t* buf)
 {
     if(sr_labrador_thdp != NULL) {

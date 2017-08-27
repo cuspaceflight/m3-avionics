@@ -103,6 +103,7 @@ include $(CHIBIOS)/test/rt/test.mk
 LABRADOR_DIR = labrador
 LABRADOR_SRC = $(LABRADOR_DIR)/labrador/src/labrador.c \
                $(LABRADOR_DIR)/radios/src/si446x.c \
+               $(LABRADOR_DIR)/radios/src/p_radio.c \
                $(LABRADOR_DIR)/ldpc/src/ldpc_codes.c \
                $(LABRADOR_DIR)/ldpc/src/ldpc_encoder.c \
                $(LABRADOR_DIR)/ldpc/src/ldpc_decoder.c
