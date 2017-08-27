@@ -8,6 +8,7 @@
 #include "timer.h"
 #include "measurements.h"
 #include "status.h"
+#include "downlink.h"
 
 
 /* Interrupt Configuration */
@@ -76,11 +77,19 @@ int main(void) {
     /* Start Secondary Radio */
     sr_labrador_init();
     
+    /* Start Primary Radio */
+    downlink_init();
+    
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);
 
     /* Main Loop */
     while (true) {
+
+        /*** RADIO DEBUG ***/
+        uint8_t data[16] = "hello toad";
+        sr_labrador_tx(data);
+    
 
         /* Do nothing */
         chThdSleepMilliseconds(1000);

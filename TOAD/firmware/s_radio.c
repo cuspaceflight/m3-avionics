@@ -106,13 +106,13 @@ static THD_FUNCTION(sr_thd, arg) {
             if(result != LABRADOR_OK) {
                 set_status(COMPONENT_SR, STATUS_ERROR);
             } else {
-                set_status(COMPONENT_SR, STATUS_GOOD);
+                set_status(COMPONENT_SR, STATUS_ACTIVITY);
             }
             chMsgRelease(tp, (msg_t)result);
         }
         
         /* Sleep */
-        chThdSleepMilliseconds(1000);
+        chThdSleepMilliseconds(100);
         
         set_status(COMPONENT_SR, STATUS_GOOD);
     }  

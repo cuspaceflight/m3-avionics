@@ -129,7 +129,7 @@ CSRC = $(STARTUPSRC) \
        $(TESTSRC) \
        $(LABRADOR_SRC) \
        main.c psu.c cs2100.c gps.c status.c timer.c \
-       measurements.c s_radio.c
+       measurements.c s_radio.c downlink.c
        
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
