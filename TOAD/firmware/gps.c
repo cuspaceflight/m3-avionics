@@ -3,6 +3,7 @@
 #include "ubx.h"
 #include "status.h"
 
+
 /* Serial Setup */
 static SerialDriver* gps_seriald;
 static SerialConfig serial_cfg = {
@@ -23,9 +24,6 @@ static void gps_checksum(uint8_t *buf);
 static bool gps_transmit(uint8_t *buf);
 static enum ublox_result ublox_state_machine(uint8_t b);
 static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge);
-
-//static bool gps_expect(enum ublox_result expected);
-//static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected);
 static bool gps_tx_ack(uint8_t *buf);
 
 
@@ -97,34 +95,9 @@ static bool gps_transmit(uint8_t *buf)
 }
 
 
-/*static bool gps_expect(enum ublox_result expected)
-{
-    enum ublox_result r;
-    do {
-        r = ublox_state_machine(sdGet(gps_seriald));
-    } while(r == UBLOX_WAIT);
-
-    if(r != expected) {
-        set_status(COMPONENT_GPS,STATUS_ERROR);
-        return false;
-    }
-
-    return true;
-}*/
-
-
-/*static bool gps_tx_expect(uint8_t *buf, enum ublox_result expected)
-{
-    if(!gps_transmit(buf)) {
-        return false;
-    }
-
-    if(!gps_expect(expected)) {
-        return false;
-    }
-    return true;
-}*/
-
+/* Transmits a UBX message and blocks 
+ * until a ACK/NAK is recieved in response
+ */
 static bool gps_tx_ack(uint8_t *buf)
 {
     if(!gps_transmit(buf)) {
@@ -133,7 +106,6 @@ static bool gps_tx_ack(uint8_t *buf)
 
     enum ublox_result r;
     do {
-        // TODO: Needs a timeout!
         r = ublox_state_machine(sdGet(gps_seriald));
     } while( (r != UBLOX_ACK) && (r != UBLOX_NAK) );
 
@@ -149,11 +121,11 @@ static bool gps_tx_ack(uint8_t *buf)
  * function preserves static state and processes new messages as appropriate
  * once received.
  */
-//uint8_t rxbuf[255] = {0};
-//uint8_t rxbufidx = 0;
+uint8_t rxbuf[255] = {0};
+uint8_t rxbufidx = 0;
 static enum ublox_result ublox_state_machine(uint8_t b)
 {
-    //rxbuf[rxbufidx++] = b;
+    rxbuf[rxbufidx++] = b;
     static ubx_state state = STATE_IDLE;
 
     static uint8_t class, id;
@@ -202,7 +174,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
             if(length >= 128) {
                 set_status(COMPONENT_GPS,STATUS_ERROR);
                 state = STATE_IDLE;
-                //rxbufidx = 0;
+                rxbufidx = 0;
                 return UBLOX_RXLEN_TOO_LONG;
             }
             length_remaining = length;
@@ -230,7 +202,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
             if(ck_a != (ck&0xFF) || ck_b != (ck>>8)) {
                 set_status(COMPONENT_GPS,STATUS_ERROR);
                 state=STATE_IDLE;
-                //rxbufidx = 0;
+                rxbufidx = 0;
                 return UBLOX_BAD_CHECKSUM;
             }
 
@@ -256,7 +228,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                 case UBX_NAV:
                     if(id == UBX_NAV_PVT) {
 
-                        /* Extract Nav Payload */
+                        /* Extract NAV_PVT Payload */
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt, payload, length);
 
@@ -268,7 +240,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
 
                     } else if(id == UBX_NAV_POSECEF){
 
-                        /* Extract Nav Payload */
+                        /* Extract NAV_POSECEF Payload */
                         memcpy(nav_posecef.payload, payload, length);
                         memcpy(&posecef, payload, length);
 
@@ -307,7 +279,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
             state = STATE_IDLE;
 
             set_status(COMPONENT_GPS,STATUS_ERROR);
-            //rxbufidx = 0;
+            rxbufidx = 0;
             return UBLOX_ERROR;
     }
     return UBLOX_WAIT;
@@ -329,7 +301,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     ubx_cfg_tp5_t tp5_1;
     ubx_cfg_tp5_t tp5_2;
 
-    /* Disable NMEA on UART */
+        /* Disable NMEA on UART */
     prt.sync1 = UBX_SYNC1;
     prt.sync2 = UBX_SYNC2;
     prt.class = UBX_CFG;
@@ -359,7 +331,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
 
     /* Clear the read buffer */
     while(sdGetTimeout(gps_seriald, TIME_IMMEDIATE) != Q_TIMEOUT);
-
+    
     /* Disable non GPS systems */
     gnss.sync1 = UBX_SYNC1;
     gnss.sync2 = UBX_SYNC2;
@@ -372,16 +344,15 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     gnss.num_trk_ch_use = 32;
     gnss.num_config_blocks = 5;
 
-
     /* Enable GPS, use all-1 channels */
     gnss.gps_gnss_id = 0;
     gnss.gps_res_trk_ch = 31;
     gnss.gps_max_trk_ch = 31;
     gnss.gps_flags = 1+(1<<16);
 
-    /* Enable QZSS as per protocol spec*/
+    /* Enable QZSS as per protocol spec */
     gnss.qzss_gnss_id = 5;
-    gnss.qzss_res_trk_ch = 1;  // Might need checking?
+    gnss.qzss_res_trk_ch = 1;
     gnss.qzss_max_trk_ch = 1;
     gnss.qzss_flags = 1+(1<<16);
 
@@ -392,17 +363,21 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     gps_configured &= gps_tx_ack((uint8_t*)&gnss);
     if(!gps_configured) return false;
 
-    /*Wait for reset*/
-    chThdSleepMilliseconds(500);
-
-    /* Might need redoing after gnss reset?*/
+    /* Wait for reset */
+    chThdSleepMilliseconds(500);    
+    
+    
+    /* Re-disable NMEA Output */
     gps_configured &= gps_transmit((uint8_t*)&prt);
     if(!gps_configured) return false;
+    
     /* Wait for it to stop barfing NMEA */
     chThdSleepMilliseconds(300);
+    
     /* Clear the read buffer */
     while(sdGetTimeout(gps_seriald, TIME_IMMEDIATE) != Q_TIMEOUT);
 
+    
     /* Set to Stationary mode */
     nav5.sync1 = UBX_SYNC1;
     nav5.sync2 = UBX_SYNC2;
@@ -427,6 +402,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     rate.meas_rate = 1000;
     rate.nav_rate = 1;
     rate.time_ref = 0;  // UTC
+    
     gps_configured &= gps_tx_ack((uint8_t*)&rate);
     if(!gps_configured) return false;
 
@@ -437,8 +413,8 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     sbas.class = UBX_CFG;
     sbas.id = UBX_CFG_SBAS;
     sbas.length = sizeof(sbas.payload);
-
     sbas.mode = 0;
+    
     gps_configured &= gps_tx_ack((uint8_t*)&sbas);
     if(!gps_configured) return false;
 
@@ -465,6 +441,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
         UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
         UBX_CFG_TP5_FLAGS_POLARITY                  |
         UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
+    
     gps_configured &= gps_tx_ack((uint8_t*)&tp5_1);
     if(!gps_configured) return false;
 
@@ -512,6 +489,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     gps_configured &= gps_tx_ack((uint8_t*)&tp5_2);
     if(!gps_configured) return false;
 
+    
     /* Enable NAV PVT messages */
     if(nav_pvt){
         msg.sync1 = UBX_SYNC1;
@@ -523,10 +501,12 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
         msg.msg_class = UBX_NAV;
         msg.msg_id    = UBX_NAV_PVT;
         msg.rate      = 1;
+        
         gps_configured &= gps_tx_ack((uint8_t*)&msg);
         if(!gps_configured) return false;
     }
 
+    
     /* Enable NAV POSECEF messages */
     if (nav_posecef){
         msg2.sync1 = UBX_SYNC1;
@@ -538,6 +518,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
         msg2.msg_class = UBX_NAV;
         msg2.msg_id    = UBX_NAV_POSECEF;
         msg2.rate      = 1;
+        
         gps_configured &= gps_tx_ack((uint8_t*)&msg2);
         if(!gps_configured) return false;
     }
@@ -545,7 +526,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge) {
     return gps_configured;
 }
 
-/* Configure uBlox GPS - public function*/
+/* Configure uBlox GPS - public function */
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
                 bool rising_edge){
 
@@ -558,15 +539,18 @@ void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
     palSetLine(LINE_GPS_RST);
 
     /* Wait for GPS to restart */
-    chThdSleepMilliseconds(1000);
+    chThdSleepMilliseconds(500);
 
     sdStart(gps_seriald, &serial_cfg);
 
     while(!gps_configure(nav_pvt, nav_posecef, rising_edge)) {
+        
         set_status(COMPONENT_GPS, STATUS_ERROR);
         chThdSleepMilliseconds(1000);
     }
+    
     set_status(COMPONENT_GPS, STATUS_GOOD);
+    
     return;
 }
 
@@ -579,11 +563,15 @@ static THD_FUNCTION(gps_thd, arg) {
     chRegSetThreadName("GPS");
 
     while(true) {
+    
         if(gps_configured) {
+            
             ublox_state_machine(sdGet(gps_seriald));
         }
-        else{
+        else {
+        
             set_status(COMPONENT_GPS, STATUS_ERROR);
+            
             break;
         }
     }
@@ -591,6 +579,7 @@ static THD_FUNCTION(gps_thd, arg) {
 
 
 /* Init GPS Thread */
-void gps_thd_init(void){
+void gps_thd_init(void) {
+
     chThdCreateStatic(gps_thd_wa, sizeof(gps_thd_wa), NORMALPRIO, gps_thd, NULL);
 }

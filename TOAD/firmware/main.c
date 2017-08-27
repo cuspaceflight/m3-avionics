@@ -70,7 +70,7 @@ int main(void) {
     gps_thd_init();
     
     /* Start Secondary Radio */
-    sr_labrador_init();
+    //sr_labrador_init();
     
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);
