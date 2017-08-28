@@ -36,7 +36,8 @@ int main(void) {
     m3radio_status_init();
 
     m3radio_gps_ant_init();
-    ublox_init(&SD4);
+    ublox_init(&SD4, true, false, true);
+    ublox_thd_init();
     m3radio_router_init();
     m3radio_labrador_init();
 
