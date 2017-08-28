@@ -153,13 +153,13 @@ THD_FUNCTION(powermanager_thread, arg){
         // Voltage as multiple of 0.03V
         // Current as multiple of 0.003A
         // Power as multiple of 0.02W
-        can_data[0] = (uint8_t) ((LTC2975s[idx].vout[(idx%4)+0] * 100.0f) / 3.0f);
-        can_data[1] = (uint8_t) ((LTC2975s[idx].iout[(idx%4)+0] * 1000.0f) / 3.0f);
-        can_data[2] = (uint8_t) ((LTC2975s[idx].pout[(idx%4)+0] * 100.0f) / 2.0f);
+        can_data[0] = (uint8_t) ((LTC2975s[idx/2].vout[(idx%2)*2+0] * 100.0f) / 3.0f);
+        can_data[1] = (uint8_t) ((LTC2975s[idx/2].iout[(idx%2)*2+0] * 1000.0f) / 3.0f);
+        can_data[2] = (uint8_t) ((LTC2975s[idx/2].pout[(idx%2)*2+0] * 100.0f) / 2.0f);
         can_data[3] = 0;
-        can_data[4] = (uint8_t) ((LTC2975s[idx].vout[(idx%4)+1] * 100.0f) / 3.0f);
-        can_data[5] = (uint8_t) ((LTC2975s[idx].iout[(idx%4)+1] * 1000.0f) / 3.0f);
-        can_data[6] = (uint8_t) ((LTC2975s[idx].pout[(idx%4)+1] * 100.0f) / 2.0f);
+        can_data[4] = (uint8_t) ((LTC2975s[idx/2].vout[(idx%2)*2+1] * 100.0f) / 3.0f);
+        can_data[5] = (uint8_t) ((LTC2975s[idx/2].iout[(idx%2)*2+1] * 1000.0f) / 3.0f);
+        can_data[6] = (uint8_t) ((LTC2975s[idx/2].pout[(idx%2)*2+1] * 100.0f) / 2.0f);
         can_data[7] = 0;
 
         uint8_t base_id = CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12 >> 5;
