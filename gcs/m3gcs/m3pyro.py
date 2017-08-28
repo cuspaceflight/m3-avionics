@@ -80,7 +80,22 @@ def arm_status(data):
 def continuity(data):
     resistances = ["{:.1f}Ω".format(float(d)*2) if d != 255 else "HI"
                    for d in data[:8]]
-    return "Ch1: {}, Ch2: {}, Ch3: {}, Ch4: {}, Ch5: {}, Ch6: {}, Ch7: {}, Ch8: {}".format(*resistances)
+    #return "Ch1: {}, Ch2: {}, Ch3: {}, Ch4: {}<br>Ch5: {}, Ch6: {}, Ch7: {}, Ch8: {}".format(*resistances)
+    return """
+    <table>
+        <tr>
+            <td style="padding: 3px"><strong>Ch1:</strong> {}</td>
+            <td style="padding: 3px"><strong>Ch2:</strong> {}</td>
+            <td style="padding: 3px"><strong>Ch3:</strong> {}</td>
+            <td style="padding: 3px"><strong>Ch4:</strong> {}</td>
+        </tr>
+        <tr>
+            <td style="padding: 3px"><strong>Ch5:</strong> {}</td>
+            <td style="padding: 3px"><strong>Ch6:</strong> {}</td>
+            <td style="padding: 3px"><strong>Ch7:</strong> {}</td>
+            <td style="padding: 3px"><strong>Ch8:</strong> {}</td>
+        </tr>
+    </table>""".format(*resistances).replace("\n","")
 
 
 @register_packet("m3pyro", CAN_MSG_ID_M3PYRO_SUPPLY_STATUS, "Supply Status")
@@ -115,8 +130,20 @@ def fire(data):
 @register_command("m3pyro", "Fire Ch4",
                   ("4 Off", "4 EMatch 1A", "4 Talon 1A", "4 Metron 1A",
                             "4 EMatch 3A", "4 Talon 3A", "4 Metron 3A"))
+@register_command("m3pyro", "Fire Ch5",
+                  ("5 Off", "5 EMatch 1A", "5 Talon 1A", "5 Metron 1A",
+                            "5 EMatch 3A", "5 Talon 3A", "5 Metron 3A"))
+@register_command("m3pyro", "Fire Ch6",
+                  ("6 Off", "6 EMatch 1A", "6 Talon 1A", "6 Metron 1A",
+                            "6 EMatch 3A", "6 Talon 3A", "6 Metron 3A"))
+@register_command("m3pyro", "Fire Ch7",
+                  ("7 Off", "7 EMatch 1A", "7 Talon 1A", "7 Metron 1A",
+                            "7 EMatch 3A", "7 Talon 3A", "7 Metron 3A"))
+@register_command("m3pyro", "Fire Ch8",
+                  ("8 Off", "8 EMatch 1A", "8 Talon 1A", "8 Metron 1A",
+                            "8 EMatch 3A", "8 Talon 3A", "8 Metron 3A"))
 def fire_ch_cmd(data):
-    [channel, operation] = data.split(" ")
+    [channel, operation] = data.split(" ", 1)
     command_map = {"Off": 0,
                    "EMatch 1A": 0x01, "Talon 1A": 0x02, "Metron 1A": 0x03,
                    "EMatch 3A": 0x11, "Talon 3A": 0x12, "Metron 3A": 0x13}

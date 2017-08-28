@@ -47,12 +47,23 @@ static const ADCConversionGroup adc_grp_bus = {
 
 /* Convert the 12bit ADC reading into a resistance 2R/LSB. */
 static uint8_t adc_to_resistance(adcsample_t reading) {
+    if(reading < 900) {
+        return 0;
+    } else {
+        return 255;
+    }
+/* Continuity resistance measurements to be investigated,
+ * readings 0.54V for a 0R load which means we can't even
+ * resolved 100R vs 0R.
+ */
+#if 0
     float r = 0.5 * (3300.0f * (float)reading) / (4096.0f - (float)reading);
     if(r >= 255.0f) {
         return 255;
     } else {
         return (uint8_t)r;
     }
+#endif
 }
 
 /* Convert the 12bit ADC reading into a 100mV/LSB voltage. */
@@ -83,7 +94,7 @@ void m3pyro_hal_init(void) {
 
 /* Read bus voltage. Returns in units of 0.1V, e.g. 33 for 3.3V. */
 uint8_t m3pyro_read_bus(void) {
-    adcsample_t samp;
+    static adcsample_t samp;
 
     adcAcquireBus(&ADCD2);
     msg_t result = adcConvert(&ADCD2, &adc_grp_bus, &samp, 1);
@@ -100,7 +111,7 @@ uint8_t m3pyro_read_bus(void) {
 
 /* Read supply voltage. Returns in units of 0.1V, e.g. 74 for 7.4V. */
 uint8_t m3pyro_read_supply(void) {
-    adcsample_t samp;
+    static adcsample_t samp;
 
     adcAcquireBus(&ADCD2);
     msg_t result = adcConvert(&ADCD2, &adc_grp_supply, &samp, 1);
@@ -117,7 +128,7 @@ uint8_t m3pyro_read_supply(void) {
 
 /* Read continuity. Returns a calculated resistance in ohms, or 255 for hi. */
 uint8_t m3pyro_read_cont(void) {
-    adcsample_t samp;
+    static adcsample_t samp;
 
     adcAcquireBus(&ADCD1);
     msg_t result = adcConvert(&ADCD1, &adc_grp_cont, &samp, 1);
