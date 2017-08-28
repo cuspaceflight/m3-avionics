@@ -92,7 +92,7 @@ uint8_t PowerManager_switch_on(uint8_t channel){
 }
 
 uint8_t PowerManager_switch_off(uint8_t channel){
-  if(channel > 2*NUM_LTC2975s) return ERR_INVAL;
+  if(channel > 4*NUM_LTC2975s) return ERR_INVAL;
   return ltc2975_turn_off(&LTC2975s[channel / 4], channel % 4);
 }
 

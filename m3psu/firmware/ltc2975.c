@@ -23,8 +23,8 @@
 #define LTC2975_CMD_VOUT_COMMAND        0x21
 #define LTC2975_CMD_VOUT_MARGIN_HIGH    0x25
 #define LTC2975_CMD_VOUT_MARGIN_LOW     0x26
-#define LTC2975_CMD_VIN_ON              0x35 //TODO
-#define LTC2975_CMD_VIN_OFF             0x36 //TODO
+#define LTC2975_CMD_VIN_ON              0x35
+#define LTC2975_CMD_VIN_OFF             0x36
 #define LTC2975_CMD_IOUT_CAL_GAIN       0x38
 #define LTC2975_CMD_VOUT_OV_FAULT_LIMIT 0x40
 #define LTC2975_CMD_VOUT_OV_WARN_LIMIT  0x42
@@ -145,7 +145,6 @@ uint8_t ltc2975_write_byte(LTC2975 *ltc, uint8_t command_code, uint8_t page, uin
   return smbus_write_byte(ltc->config.i2c, ltc->config.address, command_code, value);
 }
 
-
 uint8_t ltc2975_write_word(LTC2975 *ltc, uint8_t command_code, uint8_t page, uint16_t value){
   if(ltc2975_set_page(ltc, page) != ERR_OK){
       return ERR_COMMS;
@@ -180,10 +179,12 @@ uint8_t ltc2975_read_l16_exp(LTC2975 *ltc) {
   uint8_t val;
   uint8_t status = ltc2975_read_byte(ltc, LTC2975_CMD_VOUT_MODE, PAGE_0, &val);
 
-  // sign-extend 5 bits
-  if (val > 0x0F)
-    val |= 0xE0;
-  l16_exp = val;
+  if (status == ERR_OK){
+    // sign-extend 5 bits
+    if (val > 0x0F)
+      val |= 0xE0;
+    l16_exp = val;
+  }
 
   return status;
 }
@@ -499,9 +500,9 @@ uint8_t ltc2975_init(LTC2975 *ltc, I2CDriver *i2c, i2caddr_t address,
     ltc2975_wait_for_not_busy(ltc);
   }
 
-  // Allow power to come on at 6v minimum, and turn off if it falls below 5v
-  uint16_t vin_on = float_to_L11(6.0f);
-  uint16_t vin_off = float_to_L11(5.0f);
+  // Allow power to come on at 3v minimum, and turn off if it falls below 2v
+  uint16_t vin_on = float_to_L11(3.0f);
+  uint16_t vin_off = float_to_L11(2.0f);
   for(int i=0; i<4; i++){
     if (ltc2975_write_word(ltc, LTC2975_CMD_VIN_ON, i, vin_on) != ERR_OK) {
       return ERR_COMMS;

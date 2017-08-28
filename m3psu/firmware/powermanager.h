@@ -13,7 +13,7 @@
 
 #define POWER_CHANNEL_5V_CAN        0
 #define POWER_CHANNEL_5V_CAMERAS    1
-#define POWER_CHANNEL_5V_IMG        2
+#define POWER_CHANNEL_5V_IMU        2
 #define POWER_CHANNEL_5V_RADIO      3
 #define POWER_CHANNEL_3V3_IMU       4
 #define POWER_CHANNEL_3V3_RADIO     5
