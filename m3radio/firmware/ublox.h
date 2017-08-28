@@ -34,7 +34,27 @@ typedef struct __attribute__((packed)) {
     uint32_t reserved4;
 } ublox_pvt_t;
 
-/* Call to start ublox processing thread on specified Serial port */
-void ublox_init(SerialDriver* seriald);
+
+/* NAV-POSECEF Payload Data */
+typedef struct __attribute__((packed)) {
+    uint32_t i_tow;
+    int32_t ecef_x, ecef_y, ecef_z;
+    uint32_t p_acc;
+} ublox_posecef_t;
+
+
+/* Global NAV-PVT Data */
+extern ublox_pvt_t pvt_latest;
+extern binary_semaphore_t pvt_ready_sem;
+
+
+/* Configure uBlox GPS */
+void ublox_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
+                bool rising_edge);
+
+
+/* Init GPS Thread */
+void ublox_thd_init(void);
+
 
 #endif /* UBLOX_H */

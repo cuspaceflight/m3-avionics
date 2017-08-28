@@ -10,7 +10,7 @@ endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT = 
+  USE_COPT =
 endif
 
 # C++ specific options here (added to USE_OPT).
@@ -25,7 +25,7 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT = 
+  USE_LDOPT =
 endif
 
 # Enable this if you want link time optimizations (LTO)
@@ -101,14 +101,14 @@ include $(CHIBIOS)/test/rt/test.mk
 
 # Pull in Labrador stuff
 LABRADOR_DIR = ../labrador
-LABRADOR_SRC = $(LABRADOR_DIR)/labrador/src/labrador.c \
-               $(LABRADOR_DIR)/radios/src/si446x.c \
-               $(LABRADOR_DIR)/ldpc/src/ldpc_codes.c \
-               $(LABRADOR_DIR)/ldpc/src/ldpc_encoder.c \
-               $(LABRADOR_DIR)/ldpc/src/ldpc_decoder.c
-LABRADOR_INC = $(LABRADOR_DIR)/labrador/include \
-               $(LABRADOR_DIR)/radios/include \
-               $(LABRADOR_DIR)/ldpc/include
+LABRADOR_SRC = $(LABRADOR_DIR)/labradorlabrador/src/labrador.c \
+               $(LABRADOR_DIR)/labradorradios/src/si446x.c \
+               $(LABRADOR_DIR)/labradorldpc/src/ldpc_codes.c \
+               $(LABRADOR_DIR)/labradorldpc/src/ldpc_encoder.c \
+               $(LABRADOR_DIR)/labradorldpc/src/ldpc_decoder.c
+LABRADOR_INC = $(LABRADOR_DIR)/labradorlabrador/include \
+               $(LABRADOR_DIR)/labradorradios/include \
+               $(LABRADOR_DIR)/labradorldpc/include
 
 BOARDSRC=board.c
 BOARDINC=.
