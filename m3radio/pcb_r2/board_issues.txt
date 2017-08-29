@@ -1,0 +1,5 @@
+Non critical issues:
+- Si4463 GPIO not connected to a timer input (needed for return trip measurements)
+
+Notes:
+- Polarity of ant_en reversed
