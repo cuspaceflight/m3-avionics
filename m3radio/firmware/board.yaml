@@ -16,21 +16,21 @@ pins:
     GPS_PPS: pa5, af1
     GPS_RX: pa0, af8
     GPS_TX: pa1, af8
-    GPS_RESET_N: pa2, output, starthigh
+    GPS_RESET_N: pa2, output, pushpull, starthigh, pullup
     ANT_FLAG_N: pc14
-    ANT_EN_N: pc15, output, starthigh
+    ANT_EN: pc15, output, pushpull, startlow
 
     LED_RED: pa6, output, startlow
     LED_GRN: pa4, output, startlow
 
-    RADIO_IRQ_N: pa11
-    RADIO_GPIO1: pa12
-    RADIO_CS: pb12, output, starthigh
+    RADIO_IRQ_N: pa11, input, pushpull, pullup
+    RADIO_GPIO1: pa12, input
+    RADIO_CS: pa3, output, pushpull, starthigh, pullup
     RADIO_SCLK: pb13, af5
     RADIO_SDO: pb14, af5
     RADIO_SDI: pb15, af5
-    RADIO_SDN: pc6, output, starthigh
-    RADIO_GATE: pa8, output, startlow
-    
+    RADIO_SDN: pc6, output, starthigh, pushpull
+    RADIO_GATE: pa8, output, pushpull, startlow, pulldown
+
     PLL_SCL: pb10, af4
     PLL_SDA: pb11, af4
