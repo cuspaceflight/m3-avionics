@@ -4,6 +4,7 @@
 
 #include "psu.h"
 #include "status.h"
+#include "logging.h"
 
 
 /* Prototypes */
@@ -121,10 +122,11 @@ static THD_FUNCTION(PSUThread, arg) {
         /* Compute Battery Voltage in mV */
         battery.voltage = ((measure[2] * 6600) / 4096);
         
-        /* TODO - Log PSU status */
+        /* Log PSU status */
+        log_psu_status(&battery);
         
         /* Sleep */
-        chThdSleepMilliseconds(1000);
+        chThdSleepMilliseconds(5000);
     }
 }
 

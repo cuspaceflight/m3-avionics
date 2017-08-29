@@ -47,10 +47,10 @@ with open(sys.argv[1], 'rb') as log:
             print("fix_type = ", pvt[11])
             print("flags = ", pvt[12])
             print("num_sv = ", pvt[14])
-            print("lon = ", (pvt[15]/10000000))
-            print("lat = ", (pvt[16]/10000000))
-            print("height = ", pvt[17])
-            print("h_msl = ", pvt[18])
+            print("lon = ", (pvt[15]/10000000), "degrees")
+            print("lat = ", (pvt[16]/10000000), "degrees")
+            print("height = ", (pvt[17]/1000), "m")
+            print("h_msl = ", (pvt[18]/1000), "m")
             print("h_acc = ", pvt[19])
             print("v_acc = ", pvt[20])
             print("velN = ", pvt[21])
@@ -70,10 +70,10 @@ with open(sys.argv[1], 'rb') as log:
             psu = struct.unpack('<BHHBB', data)
             print(psu, '\n')
             print("TOAD ID = ", psu[0])
-            print("battery voltage = ", psu[2])
+            print("battery voltage = ", (psu[2]/1000), "V")
             print("charging = ", psu[4])
-            print("charge current = ", psu[1])
-            print("charge temperature = ", psu[3])
+            print("charge current = ", psu[1], "mA")
+            print("charge temperature = ", psu[3], "degrees C")
             print('\n\n')
             
         # Handle Ranging Packet
@@ -84,7 +84,7 @@ with open(sys.argv[1], 'rb') as log:
             print("TOAD ID = ", ranging[0])
             print("time of flight = ", ranging[2])
             print("i_tow = ", ranging[3])
-            print ("battery voltage = ", ranging[4])
+            print ("battery voltage = ", (ranging[4]/1000), "V")
             print('\n\n')
             
         # Handle Position Packet
@@ -93,11 +93,11 @@ with open(sys.argv[1], 'rb') as log:
             pos = struct.unpack('<BBiiiBH', data)
             print(pos, '\n')
             print("TOAD ID = ", pos[0])
-            print("lon = ", (pos[2]/10000000))
-            print("lat = ", (pos[3]/10000000))
-            print("height = ", pos[4])  
+            print("lon = ", (pos[2]/10000000), "degrees")
+            print("lat = ", (pos[3]/10000000), "degrees")
+            print("height = ", (pos[4]/1000), "m")  
             print("num sat = ", pos[5])
-            print("battery voltage = ", pos[6])
+            print("battery voltage = ", (pos[6]/1000), "V")
             print('\n\n')
                               
         # Increment file pointer
