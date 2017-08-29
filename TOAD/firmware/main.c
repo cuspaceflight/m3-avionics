@@ -9,6 +9,7 @@
 #include "measurements.h"
 #include "status.h"
 #include "downlink.h"
+#include "logging.h"
 
 
 /* Interrupt Configuration */
@@ -62,7 +63,10 @@ int main(void) {
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
 
-    /* PSU Init */
+    /* Start Logging Thread */
+    logging_init();
+    
+    /* Start PSU */
     psu_init();
 
     /* Start Measurement Handler */

@@ -12,4 +12,14 @@ void psu_init(void);
 void enable_charging(EXTDriver *extp, expchannel_t channel);
 void set_charging_status(EXTDriver *extp, expchannel_t channel);
 
+/* PSU Status Struct */
+typedef struct __attribute__((packed)) {
+
+    uint16_t charge_current;
+    uint16_t voltage;
+    uint8_t charge_temp;
+    bool charging;
+    
+} psu_status;
+
 #endif 

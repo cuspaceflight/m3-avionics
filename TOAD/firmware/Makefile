@@ -98,6 +98,7 @@ include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # Other files (optional).
 include $(CHIBIOS)/test/rt/test.mk
+include ../../shared/fatfs/fatfs.mk
 
 # Pull in Labrador stuff
 LABRADOR_DIR = labrador
@@ -128,8 +129,12 @@ CSRC = $(STARTUPSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
        $(LABRADOR_SRC) \
+       $(FATFSSRC) \
+       $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+       $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        main.c psu.c cs2100.c gps.c status.c timer.c \
-       measurements.c s_radio.c downlink.c
+       measurements.c s_radio.c downlink.c logging.c \
+       microsd.c
        
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -160,7 +165,10 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(LABRADOR_INC) $(CHIBIOS)/os/various
+         $(LABRADOR_INC) $(CHIBIOS)/os/various \
+         $(CHIBIOS)/os/various/fatfs_bindings \
+         $(CHIBIOS)/os/hal/lib/streams \
+         $(FATFSINC)
 
 #
 # Project, sources and paths

@@ -5,17 +5,12 @@
 #include "psu.h"
 #include "status.h"
 
-/* PSU Status */
-static bool battery_charging = FALSE;
-static uint16_t battery_charge_current;
-static uint16_t battery_voltage;
-static uint8_t battery_charge_temp;
-static uint16_t charge_current_voltage;
-static uint16_t charge_temp_voltage;
-
 
 /* Prototypes */
 void get_psu_measurements(void);
+
+/* PSU Status */
+psu_status battery;
 
 /* ADC Samples */
 static adcsample_t measure[ADC_NUM_CHANNELS * ADC_BUF_DEPTH];
@@ -36,6 +31,10 @@ static const ADCConversionGroup adcgrpcfg = {
             ADC_SQR3_SQ2_N(ADC_CHANNEL_IN14) | ADC_SQR3_SQ1_N(ADC_CHANNEL_IN9)
 };
 
+/* ADC Readings */
+static uint16_t charge_current_voltage;
+static uint16_t charge_temp_voltage;
+
 
 /* Get PSU Measurements */
 void get_psu_measurements(void) {
@@ -53,11 +52,11 @@ void set_charging_status(EXTDriver *extp, expchannel_t channel) {
 	(void)channel;
 	
 	if (palReadPad(GPIOB, GPIOB_CHG_GOOD) == 0) {
-		battery_charging = TRUE;
+		battery.charging = TRUE;
 	}
 
 	else if (palReadPad(GPIOB, GPIOB_CHG_GOOD) == 1) {
-		battery_charging = FALSE;
+		battery.charging = FALSE;
 	}
 }
 
@@ -83,6 +82,9 @@ static THD_FUNCTION(PSUThread, arg) {
 
     /* Start ADC */
     adcStart(&ADCD1, NULL);
+    
+    /* Init Battery Status */
+    battery.charging = FALSE;
 
     while (true) {
 
@@ -100,24 +102,24 @@ static THD_FUNCTION(PSUThread, arg) {
         */
 
         /* Compute Charging Data */
-        if (battery_charging == TRUE) { 
+        if (battery.charging == TRUE) { 
             
             /* Charge Temp in Degrees Celsius */
             charge_temp_voltage = ((measure[0] * 3300) / 4096);
-            battery_charge_temp = (((charge_temp_voltage - 300) * 50) / (1200 - 300));
+            battery.charge_temp = (((charge_temp_voltage - 300) * 50) / (1200 - 300));
             
             /* Charge Current in mAh */
             charge_current_voltage = ((measure[1] * 3300) / 4096);
-            battery_charge_current = ((charge_current_voltage * 400) / 4320);
+            battery.charge_current = ((charge_current_voltage * 400) / 4320);
 
         } else {
 
-            battery_charge_temp = 0;
-            battery_charge_current = 0;
+            battery.charge_temp = 0;
+            battery.charge_current = 0;
         }
 
         /* Compute Battery Voltage in mV */
-        battery_voltage = ((measure[2] * 6600) / 4096);
+        battery.voltage = ((measure[2] * 6600) / 4096);
         
         /* TODO - Log PSU status */
         

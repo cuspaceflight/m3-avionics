@@ -4,6 +4,7 @@
 #include "status.h"
 #include "measurements.h"
 #include "packets.h"
+#include "logging.h"
 
 
 /* Serial Setup */
@@ -28,6 +29,7 @@ static enum ublox_result ublox_state_machine(uint8_t b);
 static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge);
 static bool gps_tx_ack(uint8_t *buf);
 
+/* Position Signalling */
 binary_semaphore_t pvt_ready_sem;
 ublox_pvt_t pvt_latest;
 
@@ -231,10 +233,11 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         /* Extract NAV-PVT Payload */
                         memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt_latest, payload, length);
-                        
+                        log_pvt(&pvt_latest);
+                                                
                         /* Signal NAV-PVT Ready Semaphore */
 	                    chBSemSignal(&pvt_ready_sem);
-
+	                    
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_PVT;
 
