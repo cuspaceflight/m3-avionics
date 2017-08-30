@@ -14,7 +14,8 @@ typedef struct __attribute__((packed)) {
     uint8_t type;
     uint32_t tof;
     uint32_t time_of_week;
-    uint16_t bat_volt; 
+    uint8_t bat_volt;
+    uint8_t temp;
     
 } ranging_packet;
 
@@ -26,7 +27,8 @@ typedef struct __attribute__((packed)) {
     int32_t lon, lat;
     int32_t height;
     uint8_t num_sat;
-    uint16_t bat_volt; 
+    uint8_t bat_volt;
+    uint8_t temp; 
     
 } position_packet;
 
