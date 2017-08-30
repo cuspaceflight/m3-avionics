@@ -6,6 +6,7 @@
 #include "m3radio_labrador.h"
 #include "m3radio_router.h"
 #include "ublox.h"
+#include "c2100.h"
 
 #include <string.h>
 
@@ -55,6 +56,22 @@ int main(void) {
     halInit();
     chSysInit();
 
+    m3radio_status_init();
+
+    m3radio_gps_ant_init();
+
+    /* Initialise GPS to produce 1MHz pulse */
+    ublox_init(&SD4, true, false, true);
+
+    /* Configure CS2100 to Produce HSE */
+    cs2100_configure(&I2CD2);
+
+    /* Swap PLLSRC to HSE */
+    cs2100_set_pll();
+
+    /* Interrupt Init */
+    extStart(&EXTD1, &extcfg);
+
     /* Turn on the CAN system and send a packet with our firmware version.
      * We listen to all subsystems so don't set any filters.
      */
@@ -64,10 +81,6 @@ int main(void) {
      * the radio */
     m3can_set_loopback(true);
 
-    m3radio_status_init();
-
-    m3radio_gps_ant_init();
-    ublox_init(&SD4, true, false, true);
     ublox_thd_init();
     m3radio_router_init();
     m3radio_labrador_init();

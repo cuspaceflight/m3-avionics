@@ -131,6 +131,7 @@ CSRC = $(STARTUPSRC) \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
        ublox.c \
+	   cs2100.c \
        m3radio_status.c m3radio_can.c m3radio_gps_ant.c \
        m3radio_router.c m3radio_router_slots.c \
        m3radio_labrador.c $(LABRADOR_SRC) \
