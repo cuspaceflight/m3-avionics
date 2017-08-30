@@ -24,17 +24,19 @@ static const ADCConversionGroup adcgrpcfg = {
     .error_cb = NULL,
     .cr1 = 0,
     .cr2 = ADC_CR2_SWSTART,
-    .smpr1 = ADC_SMPR1_SMP_AN14(ADC_SAMPLE_480) | ADC_SMPR1_SMP_AN15(ADC_SAMPLE_480),
+    .smpr1 = ADC_SMPR1_SMP_AN14(ADC_SAMPLE_480) | ADC_SMPR1_SMP_AN15(ADC_SAMPLE_480) |
+             ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_480),
     .smpr2 = ADC_SMPR2_SMP_AN9(ADC_SAMPLE_480),
     .sqr1 = ADC_SQR1_NUM_CH(ADC_NUM_CHANNELS),
     .sqr2 = 0,
-    .sqr3 = ADC_SQR3_SQ3_N(ADC_CHANNEL_IN15) |
+    .sqr3 = ADC_SQR3_SQ4_N(ADC_CHANNEL_SENSOR) | ADC_SQR3_SQ3_N(ADC_CHANNEL_IN15) |
             ADC_SQR3_SQ2_N(ADC_CHANNEL_IN14) | ADC_SQR3_SQ1_N(ADC_CHANNEL_IN9)
 };
 
 /* ADC Readings */
 static uint16_t charge_current_voltage;
 static uint16_t charge_temp_voltage;
+static uint16_t temp_sense_voltage;
 
 
 /* Get PSU Measurements */
@@ -84,6 +86,9 @@ static THD_FUNCTION(PSUThread, arg) {
     /* Start ADC */
     adcStart(&ADCD1, NULL);
     
+    /* Enable Internal VREF/TS */
+    ADC->CCR |= ADC_CCR_TSVREFE;
+    
     /* Init Battery Status */
     battery.charging = FALSE;
 
@@ -121,6 +126,10 @@ static THD_FUNCTION(PSUThread, arg) {
 
         /* Compute Battery Voltage in mV */
         battery.voltage = ((measure[2] * 6600) / 4096);
+        
+        /* Compute Ambient Temperature */
+        temp_sense_voltage = ((measure[3] * 3300) / 4096);
+        battery.stm_temp = (((temp_sense_voltage + 62.5) - 760) / 2.5);
         
         /* Log PSU status */
         log_psu_status(&battery);

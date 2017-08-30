@@ -2,7 +2,7 @@
 #define PSU
 
 /* PSU Measurements */
-#define ADC_NUM_CHANNELS   3
+#define ADC_NUM_CHANNELS   4
 #define ADC_BUF_DEPTH      1
 
 /* PSU Init */
@@ -19,6 +19,7 @@ typedef struct __attribute__((packed)) {
     uint16_t voltage;
     uint8_t charge_temp;
     bool charging;
+    uint8_t stm_temp;
     
 } psu_status;
 
