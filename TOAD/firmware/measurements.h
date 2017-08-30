@@ -10,7 +10,13 @@ void measurements_handle_radio(void);
 /* Measurements Init */
 void measurement_init(void);
 
-/* Ranging Packet */
+/* Global Ranging Packet */
 extern ranging_packet range_pkt;
+
+/* Ranging Packet Mutex */
+extern mutex_t range_pkt_mutex;
+
+/* PPS Timestamp */
+extern uint32_t time_capture_pps_timestamp;
 
 #endif

@@ -13,6 +13,7 @@
 #include "packets.h"
 #include "gps.h"
 #include "psu.h"
+#include "config.h"
 
 #define LOG_MEMPOOL_ITEMS 64
 #define LOG_CACHE_SIZE    512
@@ -190,7 +191,7 @@ void log_position_packet(position_packet *position_data) {
     _log(&pkt);
 }
 
-/* Log a Dart Telemetry */
+/* Log Dart Telemetry */
 void log_telem_packet(uint8_t* buff) {
 
     toad_log pkt1;
@@ -205,6 +206,17 @@ void log_telem_packet(uint8_t* buff) {
     memcpy(pkt2.payload, (buff + 80), 80);
     _log(&pkt1);
     _log(&pkt2);
+}
+
+/* Log a PVT Capture */
+void log_pvt_capture(pvt_capture *pvt_cap_data) {
+
+    toad_log pkt;
+    pkt.type = MESSAGE_PVT_CAPTURE;
+    pkt.id = TOAD_ID;
+    memset(pkt.payload, 0, 126);
+    memcpy(pkt.payload, pvt_cap_data, sizeof(pvt_capture));
+    _log(&pkt);
 }
 
 /* Pass a formatted packet to the logging thread */

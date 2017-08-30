@@ -39,6 +39,12 @@ typedef struct __attribute__((packed)) {
     uint32_t reserved4;
 } ublox_pvt_t;
 
+/* Timestamped NAV-PVT Data */
+typedef struct __attribute__((packed)) {
+    uint32_t pps_timestamp;
+    uint32_t time_of_week;
+} pvt_capture;
+
 /* NAV-POSECEF Payload Data */
 typedef struct __attribute__((packed)) {
     uint32_t i_tow;
@@ -46,9 +52,11 @@ typedef struct __attribute__((packed)) {
     uint32_t p_acc;
 } ublox_posecef_t;
 
-/* Global NAV-PVT Data */
-extern ublox_pvt_t pvt_latest;
-extern binary_semaphore_t pvt_ready_sem;
+/* Global Timestamped iTOW */
+extern pvt_capture stamped_pvt;
+
+/* PVT Stamp Mutex */
+extern mutex_t pvt_stamp_mutex;
 
 /* Configure uBlox GPS */
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,

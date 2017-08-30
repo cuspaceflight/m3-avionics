@@ -16,10 +16,8 @@ static SerialConfig serial_cfg = {
     .cr3 = 0,
 };
 
-
 /* Config Flag */
 static bool gps_configured = false;
-
 
 /* Function Prototypes */
 static uint16_t gps_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n);
@@ -31,8 +29,12 @@ static bool gps_tx_ack(uint8_t *buf);
 
 /* Position Signalling */
 binary_semaphore_t pvt_ready_sem;
-ublox_pvt_t pvt_latest;
 
+/* Global Timestamped iTOW */
+pvt_capture stamped_pvt;
+
+/* PVT Stamp Mutex */
+mutex_t pvt_stamp_mutex;
 
 /* UBX Decoding State Machine States */
 typedef enum {
@@ -140,9 +142,8 @@ static enum ublox_result ublox_state_machine(uint8_t b)
     static uint16_t ck;
 
     ubx_cfg_nav5_t cfg_nav5;
-    ubx_nav_pvt_t nav_pvt;
-    ubx_nav_posecef_t nav_posecef;
     ublox_posecef_t posecef;
+    ublox_pvt_t pvt_latest;
     
 
     switch(state) {
@@ -231,12 +232,15 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                     if(id == UBX_NAV_PVT) {
 
                         /* Extract NAV-PVT Payload */
-                        memcpy(nav_pvt.payload, payload, length);
                         memcpy(&pvt_latest, payload, length);
                         log_pvt(&pvt_latest);
-                                                
-                        /* Signal NAV-PVT Ready Semaphore */
-	                    chBSemSignal(&pvt_ready_sem);
+                        
+                        /* Update Timestamped PVT */
+                        chMtxLock(&pvt_stamp_mutex);
+                        stamped_pvt.time_of_week = pvt_latest.i_tow;
+                        stamped_pvt.pps_timestamp = time_capture_pps_timestamp;
+                        log_pvt_capture(&stamped_pvt);
+                        chMtxUnlock(&pvt_stamp_mutex);
 	                    
                         set_status(COMPONENT_GPS,STATUS_GOOD);
                         return UBLOX_NAV_PVT;
@@ -244,7 +248,6 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                     } else if(id == UBX_NAV_POSECEF){
 
                         /* Extract NAV-POSECEF Payload */
-                        memcpy(nav_posecef.payload, payload, length);
                         memcpy(&posecef, payload, length);
 
                         set_status(COMPONENT_GPS,STATUS_GOOD);

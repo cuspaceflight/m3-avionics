@@ -13,6 +13,9 @@ void get_psu_measurements(void);
 /* PSU Status */
 psu_status battery;
 
+/* PSU Status Mutex */
+mutex_t psu_status_mutex;
+
 /* ADC Samples */
 static adcsample_t measure[ADC_NUM_CHANNELS * ADC_BUF_DEPTH];
 
@@ -107,6 +110,9 @@ static THD_FUNCTION(PSUThread, arg) {
         * taking place.
         */
 
+        /* Lock Mutex */
+        chMtxLock(&psu_status_mutex);
+
         /* Compute Charging Data */
         if (battery.charging == TRUE) { 
             
@@ -117,7 +123,16 @@ static THD_FUNCTION(PSUThread, arg) {
             /* Charge Current in mAh */
             charge_current_voltage = ((measure[1] * 3300) / 4096);
             battery.charge_current = ((charge_current_voltage * 400) / 4320);
-
+            
+            /* Handle Charger Timeout */
+            if (battery.charge_current < 10) {
+            
+                /* Toggle CE */
+                palSetPad(GPIOB, GPIOB_CHG_EN);
+                chThdSleepMilliseconds(10);
+                palClearPad(GPIOB, GPIOB_CHG_EN);
+            }
+            
         } else {
 
             battery.charge_temp = 0;
@@ -131,6 +146,9 @@ static THD_FUNCTION(PSUThread, arg) {
         temp_sense_voltage = ((measure[3] * 3300) / 4096);
         battery.stm_temp = (((temp_sense_voltage + 62.5) - 760) / 2.5);
         
+        /* Unlock Mutex */
+        chMtxUnlock(&psu_status_mutex);
+        
         /* Log PSU status */
         log_psu_status(&battery);
         
@@ -142,6 +160,9 @@ static THD_FUNCTION(PSUThread, arg) {
 
 /* Init PSU */
 void psu_init(void) {
+    
+    /* Init Mutex */
+    chMtxObjectInit(&psu_status_mutex);
     
     /* Create Thread */
     chThdCreateStatic(waPSUThread, sizeof(waPSUThread), NORMALPRIO, PSUThread, NULL);

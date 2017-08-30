@@ -12,6 +12,9 @@ void psu_init(void);
 void enable_charging(EXTDriver *extp, expchannel_t channel);
 void set_charging_status(EXTDriver *extp, expchannel_t channel);
 
+/* PSU Status Mutex */
+extern mutex_t psu_status_mutex;
+
 /* PSU Status Struct */
 typedef struct __attribute__((packed)) {
 
@@ -22,5 +25,8 @@ typedef struct __attribute__((packed)) {
     uint8_t stm_temp;
     
 } psu_status;
+
+/* PSU Status */
+extern psu_status battery;
 
 #endif 

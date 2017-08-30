@@ -1,9 +1,6 @@
 #ifndef PACKETS_H
 #define PACKETS_H
 
-/* BOARD ID */
-#define TOAD_ID             0x01
-
 /* Packet Type */
 #define PACKET_POSITION     0x80
 #define PACKET_RANGE        0x40

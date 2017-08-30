@@ -6,14 +6,20 @@
 #include "status.h"
 #include "gps.h"
 #include "packets.h"
+#include "config.h"
+#include "psu.h"
+#include "logging.h"
 
 /* Timestamps */
-static uint32_t time_capture_pps_timestamp;
-static uint32_t time_capture_radio_timestamp;
+uint32_t time_capture_pps_timestamp;
+uint32_t time_capture_radio_timestamp;
 
 /* Semaphores */
 binary_semaphore_t pps_event_sem;
 binary_semaphore_t radio_sync_event_sem;
+
+/* Mutexs */
+mutex_t range_pkt_mutex;
 
 /* Ranging Packet */
 ranging_packet range_pkt;
@@ -49,44 +55,37 @@ static THD_FUNCTION(MEASUREThread, arg) {
 
     (void)arg;
     chRegSetThreadName("Measurements");
-    
-    uint32_t time_of_flight = 0;
-    
-    while(TRUE) {
-    
         
-    
-        /* Wait for PPS Event */
-        if (chBSemWaitTimeout(&pps_event_sem, MS2ST(1500)) == MSG_TIMEOUT) {
-        
+    while(TRUE) {   
+
+        /* Loop until PPS Event */
+        if (chBSemWaitTimeout(&pps_event_sem, MS2ST(1000)) == MSG_TIMEOUT) {
             continue;    
         }        
-        
-        
-        /* Wait for NAV-PVT Message */
-        if (chBSemWaitTimeout(&pvt_ready_sem, MS2ST(1500)) == MSG_TIMEOUT) {
-        
-            continue;
-        }
-        
-        /* Timestamp Packet */
-        range_pkt.time_of_week = pvt_latest.i_tow;
-               
-        
+                  
         /* Wait for Radio Sync Event */
-        if (chBSemWaitTimeout(&radio_sync_event_sem, MS2ST(1500)) == MSG_TIMEOUT) {
-        
+        if (chBSemWaitTimeout(&radio_sync_event_sem, MS2ST(1000)) == MSG_TIMEOUT) {
             continue;
         }
+
+        /* Lock Mutexs */
+        chMtxLock(&range_pkt_mutex);
+        chMtxLock(&pvt_stamp_mutex);
+        chMtxLock(&psu_status_mutex);
         
-        
-        /* Compute Time of Flight */
-        time_of_flight = (time_capture_pps_timestamp - time_capture_radio_timestamp);        
+        /* Populate Ranging Packet */
         range_pkt.type = (PACKET_RANGE | TOAD_ID);
-        range_pkt.tof = time_of_flight;
-    
-        /* TODO - Log data somewhere */
-        (void)range_pkt;
+        range_pkt.time_of_week = stamped_pvt.time_of_week;
+        range_pkt.tof = (stamped_pvt.pps_timestamp - time_capture_radio_timestamp);
+        range_pkt.bat_volt = (uint8_t)(battery.voltage / 100);
+        range_pkt.temp = battery.stm_temp;
+        
+        log_ranging_packet(&range_pkt);
+        
+        /* Unlock Mutexs */
+        chMtxUnlock(&psu_status_mutex);
+        chMtxUnlock(&pvt_stamp_mutex);
+        chMtxUnlock(&range_pkt_mutex);
     }
 }
 
@@ -94,9 +93,12 @@ static THD_FUNCTION(MEASUREThread, arg) {
 /* Init Measurements */
 void measurement_init(void) {
     
+    /* Init Mutexs */
+    chMtxObjectInit(&pvt_stamp_mutex);
+    chMtxObjectInit(&range_pkt_mutex);
+    
     /* Create Semaphores */
     chBSemObjectInit(&pps_event_sem, TRUE);
-    chBSemObjectInit(&pvt_ready_sem, TRUE);
     chBSemObjectInit(&radio_sync_event_sem, TRUE);
     
     /* Create Thread */
