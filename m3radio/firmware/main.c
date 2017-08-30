@@ -6,7 +6,7 @@
 #include "m3radio_labrador.h"
 #include "m3radio_router.h"
 #include "ublox.h"
-#include "c2100.h"
+#include "cs2100.h"
 
 #include <string.h>
 

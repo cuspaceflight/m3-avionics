@@ -5,6 +5,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "cs2100.h"
+#include "m3radio_status.h"
 
 /* CS2100 I²C address */
 #define CS2100_ADDR (0x4E)
