@@ -190,6 +190,23 @@ void log_position_packet(position_packet *position_data) {
     _log(&pkt);
 }
 
+/* Log a Dart Telemetry */
+void log_telem_packet(uint8_t* buff) {
+
+    toad_log pkt1;
+    toad_log pkt2;
+    pkt1.type = MESSAGE_TELEM_1;
+    pkt2.type = MESSAGE_TELEM_2;
+    pkt1.id = TOAD_ID;
+    pkt2.id = TOAD_ID;
+    memset(pkt1.payload, 0, 126);
+    memset(pkt2.payload, 0, 126);
+    memcpy(pkt1.payload, buff, 80);
+    memcpy(pkt2.payload, (buff + 80), 80);
+    _log(&pkt1);
+    _log(&pkt2);
+}
+
 /* Pass a formatted packet to the logging thread */
 static void _log(toad_log *packet) {
 

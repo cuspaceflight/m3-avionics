@@ -54,7 +54,7 @@ static THD_FUNCTION(MEASUREThread, arg) {
     
     while(TRUE) {
     
-        range_pkt.type = (PACKET_RANGE | TOAD_ID);
+        
     
         /* Wait for PPS Event */
         if (chBSemWaitTimeout(&pps_event_sem, MS2ST(1500)) == MSG_TIMEOUT) {
@@ -82,6 +82,7 @@ static THD_FUNCTION(MEASUREThread, arg) {
         
         /* Compute Time of Flight */
         time_of_flight = (time_capture_pps_timestamp - time_capture_radio_timestamp);        
+        range_pkt.type = (PACKET_RANGE | TOAD_ID);
         range_pkt.tof = time_of_flight;
     
         /* TODO - Log data somewhere */

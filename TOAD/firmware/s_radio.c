@@ -93,6 +93,18 @@ static THD_FUNCTION(sr_thd, arg) {
     /* Loop sending messages */
     while (true) {
         
+        
+        /* TODO:
+            - Wait for the PPS event and sleep for
+              the required time
+            - Wake up and pull together a packet
+            - If packets have been recieved from the
+              rocket within the last 2 secs then send a ranging packet (flag set by downlink)
+            - Otherwise send a position packet     
+         */
+        
+        
+        
         /* If there's a packet ready to send,
          * send it and then signal that we've done so.
          */
