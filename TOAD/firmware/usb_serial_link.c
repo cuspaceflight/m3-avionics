@@ -17,10 +17,10 @@ static THD_FUNCTION(USBThread, arg) {
     usbDisconnectBus(serusbcfg.usbp);
     chThdSleepMilliseconds(1500);
     usbStart(serusbcfg.usbp, &usbcfg);
-    usbConnectBus(serusbcfg.usbp);
+    //usbConnectBus(serusbcfg.usbp);
     
     while(true) {
-    chThdSleepMilliseconds(1500);
+        chThdSleepMilliseconds(1500);
     }
     
 }
