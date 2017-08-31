@@ -4,6 +4,5 @@
 #define SR_LABRADOR_TXBUFSIZE (16)
 
 void sr_labrador_init(void);
-void sr_labrador_tx(uint8_t* buf);
 
 #endif

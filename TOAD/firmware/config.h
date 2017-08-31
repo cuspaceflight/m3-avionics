@@ -5,6 +5,6 @@
 #define TOAD_ID         0x01
 
 /* Backhaul Delay */
-#define BACKHAUL_DELAY  100
+#define BACKHAUL_DELAY  300
 
 #endif 

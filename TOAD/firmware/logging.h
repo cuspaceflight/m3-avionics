@@ -15,13 +15,16 @@
 #define MESSAGE_TELEM_2     0x20
 #define MESSAGE_PVT_CAPTURE 0x40
 #define MESSAGE_LAB_STATS   0x80
+#define MESSAGE_BH_RANGE    0x11
+#define MESSAGE_BH_POS      0x22
 
 /* TOAD Log Message */
 typedef struct __attribute__((packed)) {
 
     uint8_t type;
     uint8_t id;
-    uint8_t payload[126]; 
+    systime_t timestamp;
+    uint8_t payload[122]; 
     
 } toad_log;
 
@@ -34,6 +37,8 @@ void log_position_packet(position_packet *position_data);
 void log_pvt_capture(pvt_capture *pvt_cap_data);
 void log_telem_packet(uint8_t* buff); 
 void log_labrador_stats(struct labrador_stats *lab_stats);
+void log_backhaul_ranging_message(ranging_packet *range_data);
+void log_backhaul_position_message(position_packet *position_data);
 
 /* Start Logging Thread */
 void logging_init(void);

@@ -6,6 +6,9 @@
 #include "si446x.h"
 #include "s_radio.h"
 #include "status.h"
+#include "config.h"
+#include "gps.h"
+#include "logging.h"
 #include "measurements.h"
 
 
@@ -13,9 +16,6 @@
 #define RXCODE LDPC_CODE_N256_K128
 
 static uint8_t labrador_wa[LDPC_SIZE(FAST, TXCODE, MP, RXCODE)];
-
-/* PPS Event Semaphore */
-binary_semaphore_t pps_event_sem;
 
 /* Board configuration.
  * This tells the Si446x driver what our hardware looks like.
@@ -91,59 +91,75 @@ static THD_FUNCTION(sr_thd, arg) {
         chThdSleepMilliseconds(1000);
     }
 
-    /* Loop sending messages */
+    /* Backhaul Ranging/Position Data */
     while (true) {
         
+        /* Wait for PPS Event */
+        if (chBSemWaitTimeout(&pps_event_sem, MS2ST(1000)) == MSG_TIMEOUT) {
+            continue;
+        }
         
-        /* TODO:
-            - Wait for the PPS event and sleep for
-              the required time
-            - Wake up and pull together a packet
-            - If packets have been recieved from the
-              rocket within the last 2 secs then send a ranging packet (flag set by downlink)
-            - Otherwise send a position packet     
-         */
+        set_status(COMPONENT_SR, STATUS_GOOD);    
+    
+        /* Sleep until our TX slot */
+        chThdSleepMilliseconds(BACKHAUL_DELAY);       
         
+        uint8_t txbuf[16] = {0};
         
+        /* Test for Active Telemetry */
+        if(telem_activity) {
         
-        /* If there's a packet ready to send,
-         * send it and then signal that we've done so.
-         */
-        chSysLock();
-        bool msg_pending = chMsgIsPendingI(sr_labrador_thdp);
-        chSysUnlock();
-        if(msg_pending) {
-            thread_t *tp = chMsgWait();
-            uint8_t* txbuf = (uint8_t*)chMsgGet(tp);
+            /* Lock range_pkt */
+            chMtxLock(&range_pkt_mutex);
+            
+            /* Load TX Buffer */
+            memcpy(txbuf, &range_pkt, sizeof(ranging_packet));
+                           
+            /* Send a Ranging Packet */
             labrador_err result = labrador_tx(txbuf);
+            
             if(result != LABRADOR_OK) {
                 set_status(COMPONENT_SR, STATUS_ERROR);
             } else {
                 set_status(COMPONENT_SR, STATUS_ACTIVITY);
             }
-            chMsgRelease(tp, (msg_t)result);
+        
+            /* Log TX */
+            log_backhaul_ranging_message(&range_pkt);
+            
+            /* Relase Mutex */
+            chMtxUnlock(&range_pkt_mutex);
+        
+        } else {
+        
+            /* Lock pos_pkt */
+            chMtxLock(&pos_pkt_mutex);
+            
+            /* Load TX Buffer */
+            memcpy(txbuf, &pos_pkt, sizeof(position_packet));
+                           
+            /* Send a Position Packet */
+            labrador_err result = labrador_tx(txbuf);
+                        
+            if(result != LABRADOR_OK) {
+                set_status(COMPONENT_SR, STATUS_ERROR);
+            } else {
+                set_status(COMPONENT_SR, STATUS_ACTIVITY);
+            }
+        
+            /* Log TX */
+            log_backhaul_position_message(&pos_pkt);
+            
+            /* Relase Mutex */
+            chMtxUnlock(&pos_pkt_mutex);
         }
-        
-        /* Sleep */
-        chThdSleepMilliseconds(100);
-        
-        set_status(COMPONENT_SR, STATUS_GOOD);
     }  
-}
-
-
-/* Transmit a 16 Byte Data Buffer */
-void sr_labrador_tx(uint8_t* buf)
-{
-    if(sr_labrador_thdp != NULL) {
-        chMsgSend(sr_labrador_thdp, (msg_t)buf);
-    }
 }
 
 
 /* Start Secondary Radio Thread */
 void sr_labrador_init(void) {
 
-    sr_labrador_thdp = chThdCreateStatic(sr_thd_wa, sizeof(sr_thd_wa), NORMALPRIO, sr_thd, NULL);
+    chThdCreateStatic(sr_thd_wa, sizeof(sr_thd_wa), NORMALPRIO, sr_thd, NULL);
 }
 
