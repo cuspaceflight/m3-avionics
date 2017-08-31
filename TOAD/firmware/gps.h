@@ -6,12 +6,12 @@
 #include "packets.h"
 
 
-/* NAV-ECEF Payload Data */
-typedef struct __attribute__((packed)){
+/* NAV-POSECEF Payload Data */
+typedef struct __attribute__((packed)) {
     uint32_t i_tow;
     int32_t ecef_x, ecef_y, ecef_z;
     uint32_t p_acc;
-} ublox_ecef_t;
+} ublox_posecef_t;
 
 
 /* NAV-PVT Payload Data */
@@ -40,18 +40,13 @@ typedef struct __attribute__((packed)) {
     uint32_t reserved4;
 } ublox_pvt_t;
 
+
 /* Timestamped NAV-PVT Data */
 typedef struct __attribute__((packed)) {
     uint32_t pps_timestamp;
     uint32_t time_of_week;
 } pvt_capture;
 
-/* NAV-POSECEF Payload Data */
-typedef struct __attribute__((packed)) {
-    uint32_t i_tow;
-    int32_t ecef_x, ecef_y, ecef_z;
-    uint32_t p_acc;
-} ublox_posecef_t;
 
 /* Global Timestamped iTOW */
 extern pvt_capture stamped_pvt;

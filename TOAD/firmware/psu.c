@@ -111,6 +111,9 @@ static THD_FUNCTION(PSUThread, arg) {
         * taking place.
         */
 
+        /* Lock Mutex */
+        chMtxLock(&psu_status_mutex);
+
         /* Compute Charging Data */
         if (battery.charging == TRUE) { 
             
@@ -136,9 +139,6 @@ static THD_FUNCTION(PSUThread, arg) {
             battery.charge_temp = 0;
             battery.charge_current = 0;
         }
-
-        /* Lock Mutex */
-        chMtxLock(&psu_status_mutex);
 
         /* Compute Battery Voltage in mV */
         battery.voltage = ((measure[2] * 6600) / 4096);

@@ -87,7 +87,7 @@ int main(void) {
     downlink_init();
     
     /* Start USB System */
-    //usb_serial_init();
+    usb_serial_init();
     
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);

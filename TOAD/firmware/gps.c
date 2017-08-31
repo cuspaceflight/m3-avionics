@@ -241,7 +241,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         memcpy(&pvt_latest, payload, length);
                         log_pvt(&pvt_latest);
                         
-                        /* Timestamp PVT iTOW */
+                        /* Timestamp PVT with TIM2->CCR */
                         chMtxLock(&pvt_stamp_mutex);
                         
                         stamped_pvt.time_of_week = pvt_latest.i_tow;
