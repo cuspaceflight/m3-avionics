@@ -6,10 +6,12 @@
 #include "psu.h"
 #include "s_radio.h"
 #include "timer.h"
-#include "measurements.h"
 #include "status.h"
 #include "downlink.h"
 #include "logging.h"
+#include "measurements.h"
+#include "usb_serial_link.h"
+
 
 
 /* Interrupt Configuration */
@@ -83,6 +85,9 @@ int main(void) {
     
     /* Start Primary Radio */
     downlink_init();
+    
+    /* Start USB System */
+    //usb_serial_init();
     
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);
