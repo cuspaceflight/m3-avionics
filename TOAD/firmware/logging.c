@@ -11,6 +11,7 @@
 #include "logging.h"
 #include "status.h"
 #include "packets.h"
+#include "labrador.h"
 #include "gps.h"
 #include "psu.h"
 #include "config.h"
@@ -191,6 +192,19 @@ void log_position_packet(position_packet *position_data) {
     _log(&pkt);
 }
 
+
+/* Log a PVT Capture */
+void log_pvt_capture(pvt_capture *pvt_cap_data) {
+
+    toad_log pkt;
+    pkt.type = MESSAGE_PVT_CAPTURE;
+    pkt.id = TOAD_ID;
+    memset(pkt.payload, 0, 126);
+    memcpy(pkt.payload, pvt_cap_data, sizeof(pvt_capture));
+    _log(&pkt);
+}
+
+
 /* Log Dart Telemetry */
 void log_telem_packet(uint8_t* buff) {
 
@@ -208,16 +222,18 @@ void log_telem_packet(uint8_t* buff) {
     _log(&pkt2);
 }
 
-/* Log a PVT Capture */
-void log_pvt_capture(pvt_capture *pvt_cap_data) {
+
+/* Log Labrador Stats */
+void log_labrador_stats(struct labrador_stats *lab_stats) {
 
     toad_log pkt;
-    pkt.type = MESSAGE_PVT_CAPTURE;
+    pkt.type = MESSAGE_LAB_STATS;
     pkt.id = TOAD_ID;
     memset(pkt.payload, 0, 126);
-    memcpy(pkt.payload, pvt_cap_data, sizeof(pvt_capture));
-    _log(&pkt);
+    memcpy(pkt.payload, lab_stats, sizeof(struct labrador_stats));
+
 }
+
 
 /* Pass a formatted packet to the logging thread */
 static void _log(toad_log *packet) {

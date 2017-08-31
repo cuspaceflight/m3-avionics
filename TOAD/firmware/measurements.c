@@ -10,6 +10,10 @@
 #include "psu.h"
 #include "logging.h"
 
+MUTEX_DECL(range_pkt_mutex);
+BSEMAPHORE_DECL(pps_event_sem, TRUE);
+BSEMAPHORE_DECL(radio_sync_event_sem, TRUE);
+
 /* Timestamps */
 uint32_t time_capture_pps_timestamp;
 uint32_t time_capture_radio_timestamp;
@@ -24,27 +28,41 @@ mutex_t range_pkt_mutex;
 /* Ranging Packet */
 ranging_packet range_pkt;
 
+/* Telemetry Activity Flag */
+bool telem_activity;
 
+
+/* PPS Callback */
 void measurements_handle_pps(void) {
 
+    chSysLockFromISR();
+    
     /* PPS Timestamp */
     time_capture_pps_timestamp = TIM2->CCR1;
     
     /* Signal PPS Semaphore */
-	chSysLockFromISR();
 	chBSemSignalI(&pps_event_sem);
-	chSysUnlockFromISR();    
+	
+	chSysUnlockFromISR();
+	
+	set_status(COMPONENT_GPS, STATUS_ACTIVITY);   
 }
 
 
+/* RADIO-SYNC Callback */
 void measurements_handle_radio(void) {
 
-    /* Radio Timestamp */
+	chSysLockFromISR();
+	
+	/* Radio Timestamp */
     time_capture_radio_timestamp = TIM2->CCR2;
     
     /* Signal SYNC Semaphore */
-	chSysLockFromISR();
 	chBSemSignalI(&radio_sync_event_sem);
+	
+	/* Telemetry Activity */
+	telem_activity = TRUE;
+	
 	chSysUnlockFromISR();
 }
 
@@ -58,13 +76,12 @@ static THD_FUNCTION(MEASUREThread, arg) {
         
     while(TRUE) {   
 
-        /* Loop until PPS Event */
-        if (chBSemWaitTimeout(&pps_event_sem, MS2ST(1000)) == MSG_TIMEOUT) {
-            continue;    
-        }        
-                  
+     
         /* Wait for Radio Sync Event */
         if (chBSemWaitTimeout(&radio_sync_event_sem, MS2ST(1000)) == MSG_TIMEOUT) {
+            
+            /* No Telemetry Detected */
+            telem_activity = FALSE;
             continue;
         }
 
@@ -76,7 +93,7 @@ static THD_FUNCTION(MEASUREThread, arg) {
         /* Populate Ranging Packet */
         range_pkt.type = (PACKET_RANGE | TOAD_ID);
         range_pkt.time_of_week = stamped_pvt.time_of_week;
-        range_pkt.tof = (stamped_pvt.pps_timestamp - time_capture_radio_timestamp);
+        range_pkt.tof = (time_capture_radio_timestamp - stamped_pvt.pps_timestamp);
         range_pkt.bat_volt = (uint8_t)(battery.voltage / 100);
         range_pkt.temp = battery.stm_temp;
         
@@ -92,15 +109,7 @@ static THD_FUNCTION(MEASUREThread, arg) {
 
 /* Init Measurements */
 void measurement_init(void) {
-    
-    /* Init Mutexs */
-    chMtxObjectInit(&pvt_stamp_mutex);
-    chMtxObjectInit(&range_pkt_mutex);
-    
-    /* Create Semaphores */
-    chBSemObjectInit(&pps_event_sem, TRUE);
-    chBSemObjectInit(&radio_sync_event_sem, TRUE);
-    
+      
     /* Create Thread */
     chThdCreateStatic(waMEASUREThread, sizeof(waMEASUREThread), NORMALPRIO, MEASUREThread, NULL);
 }

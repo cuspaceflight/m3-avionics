@@ -6,6 +6,7 @@
 #include "status.h"
 #include "logging.h"
 
+MUTEX_DECL(psu_status_mutex);
 
 /* Prototypes */
 void get_psu_measurements(void);
@@ -110,9 +111,6 @@ static THD_FUNCTION(PSUThread, arg) {
         * taking place.
         */
 
-        /* Lock Mutex */
-        chMtxLock(&psu_status_mutex);
-
         /* Compute Charging Data */
         if (battery.charging == TRUE) { 
             
@@ -139,6 +137,9 @@ static THD_FUNCTION(PSUThread, arg) {
             battery.charge_current = 0;
         }
 
+        /* Lock Mutex */
+        chMtxLock(&psu_status_mutex);
+
         /* Compute Battery Voltage in mV */
         battery.voltage = ((measure[2] * 6600) / 4096);
         
@@ -160,10 +161,7 @@ static THD_FUNCTION(PSUThread, arg) {
 
 /* Init PSU */
 void psu_init(void) {
-    
-    /* Init Mutex */
-    chMtxObjectInit(&psu_status_mutex);
-    
+     
     /* Create Thread */
     chThdCreateStatic(waPSUThread, sizeof(waPSUThread), NORMALPRIO, PSUThread, NULL);
 }

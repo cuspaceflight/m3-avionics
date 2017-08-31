@@ -19,4 +19,10 @@ extern mutex_t range_pkt_mutex;
 /* PPS Timestamp */
 extern uint32_t time_capture_pps_timestamp;
 
+/* PPS Event Semaphore */
+extern binary_semaphore_t pps_event_sem;
+
+/* Telemetry Activity Flag */
+extern bool telem_activity;
+
 #endif

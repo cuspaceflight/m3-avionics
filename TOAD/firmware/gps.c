@@ -5,7 +5,10 @@
 #include "measurements.h"
 #include "packets.h"
 #include "logging.h"
+#include "config.h"
 
+MUTEX_DECL(pvt_stamp_mutex);
+MUTEX_DECL(pos_pkt_mutex);
 
 /* Serial Setup */
 static SerialDriver* gps_seriald;
@@ -27,14 +30,17 @@ static enum ublox_result ublox_state_machine(uint8_t b);
 static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge);
 static bool gps_tx_ack(uint8_t *buf);
 
-/* Position Signalling */
-binary_semaphore_t pvt_ready_sem;
-
 /* Global Timestamped iTOW */
 pvt_capture stamped_pvt;
 
 /* PVT Stamp Mutex */
 mutex_t pvt_stamp_mutex;
+
+/* Global Position Packet */
+position_packet pos_pkt;
+
+/* Position Packet Mutex */
+mutex_t pos_pkt_mutex;
 
 /* UBX Decoding State Machine States */
 typedef enum {
@@ -235,14 +241,35 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         memcpy(&pvt_latest, payload, length);
                         log_pvt(&pvt_latest);
                         
-                        /* Update Timestamped PVT */
+                        /* Timestamp PVT iTOW */
                         chMtxLock(&pvt_stamp_mutex);
+                        
                         stamped_pvt.time_of_week = pvt_latest.i_tow;
                         stamped_pvt.pps_timestamp = time_capture_pps_timestamp;
+                        
                         log_pvt_capture(&stamped_pvt);
+                        
                         chMtxUnlock(&pvt_stamp_mutex);
+                        
+                        /* Generate Position Packet */
+	                    chMtxLock(&pos_pkt_mutex);
+	                    chMtxLock(&psu_status_mutex);
 	                    
-                        set_status(COMPONENT_GPS,STATUS_GOOD);
+	                    pos_pkt.type = (PACKET_POSITION | TOAD_ID);
+	                    pos_pkt.lon = pvt_latest.lon;
+	                    pos_pkt.lat = pvt_latest.lat;
+	                    pos_pkt.height = pvt_latest.height;
+	                    pos_pkt.num_sat = pvt_latest.num_sv;
+                        pos_pkt.bat_volt = (uint8_t)(battery.voltage / 100);
+                        pos_pkt.temp = battery.stm_temp;
+                        
+                        log_position_packet(&pos_pkt);
+        
+	                    chMtxUnlock(&psu_status_mutex);
+	                    chMtxUnlock(&pos_pkt_mutex);
+	                    
+	                    set_status(COMPONENT_GPS, STATUS_GOOD);
+	                      
                         return UBLOX_NAV_PVT;
 
                     } else if(id == UBX_NAV_POSECEF){

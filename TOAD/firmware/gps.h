@@ -3,6 +3,7 @@
 
 #include "ch.h"
 #include "hal.h"
+#include "packets.h"
 
 
 /* NAV-ECEF Payload Data */
@@ -57,6 +58,12 @@ extern pvt_capture stamped_pvt;
 
 /* PVT Stamp Mutex */
 extern mutex_t pvt_stamp_mutex;
+
+/* Global Position Packet */
+extern position_packet pos_pkt;
+
+/* Position Packet Mutex */
+extern mutex_t pos_pkt_mutex;
 
 /* Configure uBlox GPS */
 void gps_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,

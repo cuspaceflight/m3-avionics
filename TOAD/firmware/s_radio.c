@@ -14,7 +14,8 @@
 
 static uint8_t labrador_wa[LDPC_SIZE(FAST, TXCODE, MP, RXCODE)];
 
-static thread_t* sr_labrador_thdp = NULL;
+/* PPS Event Semaphore */
+binary_semaphore_t pps_event_sem;
 
 /* Board configuration.
  * This tells the Si446x driver what our hardware looks like.
@@ -44,7 +45,7 @@ struct si446x_board_config brdcfg = {
  * This specifies our Labrador frequency, baud, codes, encoder/decoder, etc.
  */
 struct labrador_config labcfg = {
-    .freq = 869500000,
+    .freq = 869700000,
     .baud = 2000,
     .tx_code = TXCODE,
     .rx_code = RXCODE,

@@ -8,6 +8,7 @@
 #include "labrador.h"
 #include "measurements.h"
 #include "downlink.h"
+#include "logging.h"
 
 /* Primary Radio Config */
 struct p_radio_config p_radio_cfg = {
@@ -31,7 +32,7 @@ struct p_radio_config p_radio_cfg = {
     .xo_freq = 26000000,
     .freq = 869500000,
     .baud = 2000,
-    .rxlen = 32,
+    .rxlen = 160,
 };
 
 /* Primary Radio Stats */
@@ -51,17 +52,21 @@ static THD_FUNCTION(dwn_thd, arg) {
         chThdSleepMilliseconds(1000);
     }
 
-    uint8_t rxbuf[64] = {0};
+    uint8_t rxbuf[256] = {0};
     
     while(true) {
         
         set_status(COMPONENT_PR, STATUS_GOOD);
         
-        /* Check for RX */
+        /* Check for Telemetry Packet */
         if(p_radio_rx(rxbuf, pr_stats)) {
         
-            /* Packet Detected */
-            set_status(COMPONENT_PR, STATUS_ACTIVITY);                
+            /* Packet Recieved */
+            set_status(COMPONENT_PR, STATUS_ACTIVITY);
+            
+            /* Log Telem Packet */
+            log_telem_packet(rxbuf);
+            log_labrador_stats(pr_stats);              
         }
         
         /* Sleep */
