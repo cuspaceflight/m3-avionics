@@ -476,7 +476,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge)
     tp5_2.version              = 0;
     tp5_2.ant_cable_delay      = 0;
     tp5_2.freq_period          = 1;
-    tp5_2.pulse_len_ratio      = 10000; // us
+    tp5_2.pulse_len_ratio      = 50000; // us
     tp5_2.freq_period_lock     = 1;
     tp5_2.pulse_len_ratio_lock = 10000;
 
