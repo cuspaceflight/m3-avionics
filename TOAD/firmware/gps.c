@@ -268,8 +268,13 @@ static enum ublox_result ublox_state_machine(uint8_t b)
 	                    chMtxUnlock(&psu_status_mutex);
 	                    chMtxUnlock(&pos_pkt_mutex);
 	                    
-	                    set_status(COMPONENT_GPS, STATUS_GOOD);
-	                      
+	                    /* Check for FIX */
+	                    if(pvt_latest.fix_type == 3) {
+	                        set_status(COMPONENT_GPS, STATUS_GOOD);
+	                    } else {
+	                        set_status(COMPONENT_GPS, STATUS_ERROR);
+	                    }
+	                    
                         return UBLOX_NAV_PVT;
 
                     } else if(id == UBX_NAV_POSECEF){
