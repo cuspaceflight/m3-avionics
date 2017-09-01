@@ -69,12 +69,12 @@ struct labrador_radio_config labradcfg;
 struct labrador_stats labstats;
 
 
-/* Thread to Handle Secondary Radio */
-static THD_WORKING_AREA(sr_thd_wa, 1024);
-static THD_FUNCTION(sr_thd, arg) {
+/* SLAVE Thread Function */
+static THD_WORKING_AREA(sr_slave_thd_wa, 1024);
+static THD_FUNCTION(sr_slave_thd, arg) {
 
     (void)arg;
-    chRegSetThreadName("SR");
+    chRegSetThreadName("SR SLAVE");
 
     /* Initialise Labrador systems */
     while(labrador_init(&labcfg, &labradcfg, &labstats, &labrador_radio_si446x)
@@ -157,9 +157,51 @@ static THD_FUNCTION(sr_thd, arg) {
 }
 
 
+/* MASTER Thread Function */
+static THD_WORKING_AREA(sr_master_thd_wa, 1024);
+static THD_FUNCTION(sr_master_thd, arg) {
+
+    (void)arg;
+    chRegSetThreadName("SR MASTER");
+
+    /* Initialise Labrador systems */
+    while(labrador_init(&labcfg, &labradcfg, &labstats, &labrador_radio_si446x)
+          != LABRADOR_OK)
+    {
+        set_status(COMPONENT_SR, STATUS_ERROR);
+        chThdSleepMilliseconds(1000);
+    }
+
+    /* Initialise the Si446x driver */
+    while(!si446x_init(&brdcfg, &labradcfg)) {
+    
+        set_status(COMPONENT_SR, STATUS_ERROR);
+        chThdSleepMilliseconds(1000);
+    }
+
+    /* Reccieve TOAD Network Telemetry */
+    while (true) {
+        
+        // TODO
+        set_status(COMPONENT_SR, STATUS_GOOD);
+        chThdSleepMilliseconds(500);
+        set_status(COMPONENT_SR, STATUS_ERROR);
+        chThdSleepMilliseconds(500);
+        
+    }  
+}
+
 /* Start Secondary Radio Thread */
 void sr_labrador_init(void) {
 
-    chThdCreateStatic(sr_thd_wa, sizeof(sr_thd_wa), NORMALPRIO, sr_thd, NULL);
+    /* Handle Master/Slave Config */
+    if(TOAD_ID == TOAD_MASTER) {
+    
+        chThdCreateStatic(sr_master_thd_wa, sizeof(sr_master_thd_wa), NORMALPRIO, sr_master_thd, NULL);
+        
+    } else {
+    
+        chThdCreateStatic(sr_slave_thd_wa, sizeof(sr_slave_thd_wa), NORMALPRIO, sr_slave_thd, NULL);
+    }
 }
 

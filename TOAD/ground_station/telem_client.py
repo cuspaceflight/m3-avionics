@@ -13,13 +13,7 @@ if len(sys.argv) != 2:
 MESSAGE_PVT         = 1
 MESSAGE_PSU         = 2         
 MESSAGE_RANGING     = 4     
-MESSAGE_POSITION    = 8    
-MESSAGE_TELEM_1     = 16     
-MESSAGE_TELEM_2     = 32     
-MESSAGE_PVT_CAPTURE = 64 
-MESSAGE_LAB_STATS   = 128  
-MESSAGE_BH_RANGE    =  17  
-MESSAGE_BH_POS      = 34    
+MESSAGE_POSITION    = 8   
 
 # Open Serial Port
 ser = serial.Serial(sys.argv[1])

@@ -54,7 +54,6 @@ with open(sys.argv[1], 'rb') as log:
             print("PVT MESSAGE:")
             print("TOAD ID = ", toad_id)
             print("Timestamp = ", systick, " s")
-            print("Log Type = ", log_type)
             print("i_tow = ", pvt[0])
             print("year = ", pvt[1])
             print("month = ", pvt[2])
@@ -92,7 +91,6 @@ with open(sys.argv[1], 'rb') as log:
             print("PSU MESSAGE:")
             print("TOAD ID = ", toad_id)
             print("Timestamp = ", systick, " s")
-            print("Log Type = ", log_type)
             print("battery voltage = ", (psu[1]/1000), "V")
             print("stm32 temp = ", psu[4], "degrees C")
             print("charging = ", psu[3])
@@ -107,7 +105,6 @@ with open(sys.argv[1], 'rb') as log:
             print("RANGING PACKET:")
             print("TOAD ID = ", toad_id)
             print("Timestamp = ", systick, " s")
-            print("Log Type = ", log_type)
             print("time of flight = ", ranging[1])
             print("i_tow = ", ranging[2])
             print ("battery voltage = ", (ranging[3]/10), "V")
@@ -121,7 +118,6 @@ with open(sys.argv[1], 'rb') as log:
             print("POSITION PACKET:")
             print("TOAD ID = ", toad_id)
             print("Timestamp = ", systick, " s")
-            print("Log Type = ", log_type)
             print("lon = ", (pos[1]/10000000), "degrees")
             print("lat = ", (pos[2]/10000000), "degrees")
             print("height = ", (pos[3]/1000), "m")  
@@ -129,6 +125,79 @@ with open(sys.argv[1], 'rb') as log:
             print("battery voltage = ", (pos[5]/10), "V")
             print("stm32 temp = ", pos[6], "degrees C")
             print('\n\n')
+        
+        # Handle a TELEMETRY Packet (1/2)
+        if (log_type == MESSAGE_TELEM_1):
+            payload = log.read(80)
+            print("DART TELEMETRY PACKET: (1/2)")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print(payload)
+            print('\n\n')
+        
+        # Handle a TELEMETRY  Packet (2/2)
+        if (log_type == MESSAGE_TELEM_2):
+            payload = log.read(80)
+            print("DART TELEMETRY PACKET: (2/2)")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print(payload)
+            print('\n\n')
+        
+        # Handle PVT Timestamp Message
+        if (log_type == MESSAGE_PVT_CAPTURE):
+            payload = log.read(8)
+            time_ccr = struct.unpack('<II', payload)
+            print("TIM2->CCR/NAV-PVT:")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print("PPS Timestamp = ", time_ccr[0])
+            print("iTOW = ", time_ccr[1])
+            print('\n\n')
+                       
+        # Handle LABSTATS Log
+        if (log_type == MESSAGE_LAB_STATS):
+            payload = log.read(16)
+            lab_sts = struct.unpack('<IIhhHH', payload)
+            print("LAB STATS:")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print("tx_count = ", lab_sts[0])
+            print("rx_count = ", lab_sts[1])
+            print("rssi = ", lab_sts[2])
+            print("freq_offset = ", lab_sts[3])
+            print("n_bit_errors = ", lab_sts[4])
+            print("lpdc_iters = ", lab_sts[5])
+            print('\n\n')
+            
+        # Handle SR Traffic - Transmitted Range Packet
+        if (log_type == MESSAGE_BH_RANGE):
+            payload = log.read(11)
+            sr_tx_rp = struct.unpack('<BIIBB', payload)
+            print("SR TRAFFIC [TX Range Packet]:")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print("time of flight = ", sr_tx_rp[1])
+            print("i_tow = ", sr_tx_rp[2])
+            print ("battery voltage = ", (sr_tx_rp[3]/10), "V")
+            print("stm32 temp = ", sr_tx_rp[4], "degrees C")
+            print('\n\n')
+            
+        # Handle SR Traffic - Transmitted Position Packet
+        if (log_type == MESSAGE_BH_POS):
+            payload = log.read(16)
+            sr_tx_pos = struct.unpack('<BiiiBBB', payload)
+            print("SR TRAFFIC [TX Position Packet]:")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print("lon = ", (sr_tx_pos[1]/10000000), "degrees")
+            print("lat = ", (sr_tx_pos[2]/10000000), "degrees")
+            print("height = ", (sr_tx_pos[3]/1000), "m")  
+            print("num sat = ", sr_tx_pos[4])
+            print("battery voltage = ", (sr_tx_pos[5]/10), "V")
+            print("stm32 temp = ", sr_tx_pos[6], "degrees C")
+            print('\n\n')
+            
                               
         # Increment file pointer
         i += 128
