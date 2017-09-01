@@ -390,8 +390,8 @@
  * PB7  - PIN7                         (unused).
  * PB8  - CAN_RX                       (af9).
  * PB9  - CAN_TX                       (af9).
- * PB10 - PLL_SCL                      (af4).
- * PB11 - PLL_SDA                      (af4).
+ * PB10 - PLL_SCL                      (af4, pullup, opendrain).
+ * PB11 - PLL_SDA                      (af4, pullup, opendrain).
  * PB12 - PIN12                        (unused).
  * PB13 - RADIO_SCLK                   (af5).
  * PB14 - RADIO_SDO                    (af5).
@@ -423,8 +423,8 @@
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN7) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_CAN_RX) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_CAN_TX) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_PLL_SCL) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_PLL_SDA) | \
+                                        PIN_OTYPE_OPENDRAIN(GPIOB_PLL_SCL) | \
+                                        PIN_OTYPE_OPENDRAIN(GPIOB_PLL_SDA) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN12) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_RADIO_SCLK) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_RADIO_SDO) | \

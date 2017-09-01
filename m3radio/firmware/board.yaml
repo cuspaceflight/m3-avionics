@@ -32,5 +32,5 @@ pins:
     RADIO_SDN: pc6, output, starthigh, pushpull
     RADIO_GATE: pa8, output, pushpull, startlow, pulldown
 
-    PLL_SCL: pb10, af4
-    PLL_SDA: pb11, af4
+    PLL_SCL: pb10, af4, pullup, opendrain
+    PLL_SDA: pb11, af4, pullup, opendrain

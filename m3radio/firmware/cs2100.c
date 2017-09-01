@@ -61,7 +61,7 @@ static bool cs2100_write(uint8_t reg_addr, uint8_t data);
 
 static const I2CConfig i2c_cfg = {
     OPMODE_I2C,
-    10000,
+    5600,
     STD_DUTY_CYCLE,
 };
 

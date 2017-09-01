@@ -23,7 +23,7 @@ struct si446x_board_config brdcfg = {
     .spid = &SPID2,
     .spi_cfg = {
         .end_cb = NULL,
-        .ssport = GPIOB,
+        .ssport = GPIOA,
         .sspad = GPIOA_RADIO_CS,
         .cr1 = SPI_CR1_BR_2,
     },
