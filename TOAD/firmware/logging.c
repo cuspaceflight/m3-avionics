@@ -156,6 +156,7 @@ void log_pvt(ublox_pvt_t *pvt_data) {
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, pvt_data, sizeof(ublox_pvt_t));
     _log(&pkt);
+    _upload_log(&pkt);
 }
 
 
@@ -183,6 +184,7 @@ void log_ranging_packet(ranging_packet *range_data) {
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, range_data, sizeof(ranging_packet));
     _log(&pkt);
+    _upload_log(&pkt);
 }
 
 
@@ -196,6 +198,7 @@ void log_position_packet(position_packet *position_data) {
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, position_data, sizeof(position_packet));
     _log(&pkt);
+    _upload_log(&pkt);
 }
 
 
@@ -267,6 +270,7 @@ void log_labrador_stats(struct labrador_stats *lab_stats) {
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, lab_stats, sizeof(struct labrador_stats));
+    _log(&pkt);
 
 }
 
