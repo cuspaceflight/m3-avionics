@@ -56,5 +56,8 @@ void ublox_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
 /* Init GPS Thread */
 void ublox_thd_init(void);
 
+/* PPS callback */
+void pps_callback(EXTDriver *extp, expchannel_t channel);
+
 
 #endif /* UBLOX_H */

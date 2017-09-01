@@ -12,6 +12,7 @@
 #include "hal.h"
 #include "m3can.h"
 #include "m3radio_status.h"
+#include "si446x.h"
 
 
 /*Serial setup*/
@@ -36,7 +37,7 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge);
 static bool gps_tx_ack(uint8_t *buf);
 
 
-binary_semaphore_t pvt_ready_sem;
+//binary_semaphore_t pvt_ready_sem;
 ublox_pvt_t pvt_latest;
 
 
@@ -258,7 +259,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
                         ublox_can_send_pvt(&pvt_latest);
 
                         /* Signal NAV-PVT Ready Semaphore */
-	                    chBSemSignal(&pvt_ready_sem);
+	                    //chBSemSignal(&pvt_ready_sem);
 
                         m3status_set_ok(M3RADIO_COMPONENT_UBLOX);
                         return UBLOX_NAV_PVT;
@@ -525,7 +526,8 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge)
 
 
     /* Enable NAV POSECEF messages */
-    if (nav_posecef){
+    //if (nav_posecef){
+    if (nav_posecef && 0){
         msg2.sync1 = UBX_SYNC1;
         msg2.sync2 = UBX_SYNC2;
         msg2.class = UBX_CFG;
@@ -589,4 +591,17 @@ void ublox_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
 /* Init GPS Thread */
 void ublox_thd_init(void){
     chThdCreateStatic(ublox_thd_wa, sizeof(ublox_thd_wa), NORMALPRIO, ublox_thd, NULL);
+}
+
+/* PPS callback */
+void pps_callback(EXTDriver *extp, expchannel_t channel){
+    (void)extp;
+	(void)channel;
+
+    chSysLockFromISR();
+
+    /* Signal PPS Semaphore */
+	chBSemSignalI(&deassert_sem);
+
+	chSysUnlockFromISR();
 }
