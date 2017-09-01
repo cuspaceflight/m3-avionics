@@ -9,4 +9,8 @@
 	url = https://github.com/cuspaceflight/gen-board.h.git
 [submodule "m3debug/blackmagic"]
 	path = m3debug/blackmagic
-	url = https://github.com/cuspaceflight/blackmagic.git
+        url = https://github.com/cuspaceflight/blackmagic.git
+[submodule "shared/labrador"]
+        path = shared/labrador
+        url = https://github.com/adamgreig/labrador.git
+        branch = martlet_3
