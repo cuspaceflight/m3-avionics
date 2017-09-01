@@ -15,6 +15,7 @@
 #include "gps.h"
 #include "psu.h"
 #include "config.h"
+#include "usb_serial_link.h"
 
 #define LOG_MEMPOOL_ITEMS 64
 #define LOG_CACHE_SIZE    512
@@ -168,6 +169,7 @@ void log_psu_status(psu_status *bat_data) {
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, bat_data, sizeof(psu_status));
     _log(&pkt);
+    _upload_log(&pkt);
 }
 
 
