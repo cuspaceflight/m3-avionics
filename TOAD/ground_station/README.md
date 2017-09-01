@@ -1,6 +1,6 @@
 # TOAD Ground Station Backend
 
-##Setup (Ubuntu):
+Setup (Ubuntu):
 (Optional) create and activate virtual environment
 ```
 virtualenv -p python3 venv
