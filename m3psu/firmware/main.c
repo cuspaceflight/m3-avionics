@@ -48,7 +48,9 @@ void m3can_recv(uint16_t msg_id, bool rtr, uint8_t *data, uint8_t datalen){
       if(data[0] == 1){
         PowerManager_switch_on(data[1]);
       }else if(data[0] == 0){
-        if(data[1] == 4 || data[1] == 7 || data[1] == 11){
+        if(data[1] == POWER_CHANNEL_3V3_RADIO ||
+            data[1] == POWER_CHANNEL_5V_RADIO ||
+            data[1] == POWER_CHANNEL_5V_CAN){
           // Ignore turning off the radio or CAN!
         }else{
           PowerManager_switch_off(data[1]);
@@ -122,9 +124,9 @@ int main(void) {
   ChargeController_init();
 
   if(lowpower_get_mode_flag()){ // We're supposed to be in low-power mode
-    PowerManager_switch_on(4); // Start the Radio
-    PowerManager_switch_on(7);
-    PowerManager_switch_on(11); // Start the CAN transceivers
+    PowerManager_switch_on(POWER_CHANNEL_3V3_RADIO); // Start the Radio
+    PowerManager_switch_on(POWER_CHANNEL_5V_RADIO);
+    PowerManager_switch_on(POWER_CHANNEL_5V_CAN); // Start the CAN transceivers
 
     lowpower_start_awake_timer();
   }else{
@@ -132,14 +134,15 @@ int main(void) {
 
     PowerManager_enable_pyros();
 
-    //PowerManager_switch_on(0); // Start the IMU
-    PowerManager_switch_on(3);
-    PowerManager_switch_on(2); // Start the Flight Computer
-    PowerManager_switch_on(4); // Start the Radio
-    PowerManager_switch_on(7);
-    PowerManager_switch_on(6); // Start the Pyro
-    PowerManager_switch_on(10); // Start the DL including base board for USB
-    PowerManager_switch_on(11); // Start the CAN transceivers
+    //PowerManager_switch_on(POWER_CHANNEL_5V_IMU); // Start the IMU
+    PowerManager_switch_on(POWER_CHANNEL_3V3_IMU);
+    PowerManager_switch_on(POWER_CHANNEL_3V3_FC); // Start the Flight Computer
+    PowerManager_switch_on(POWER_CHANNEL_3V3_RADIO); // Start the Radio
+    PowerManager_switch_on(POWER_CHANNEL_5V_RADIO);
+    PowerManager_switch_on(POWER_CHANNEL_3V3_PYRO); // Start the Pyro
+    PowerManager_switch_on(POWER_CHANNEL_3V3_DL); // Start the DL
+    PowerManager_switch_on(POWER_CHANNEL_3V3_BASE); // Start the base board for USB
+    PowerManager_switch_on(POWER_CHANNEL_5V_CAN); // Start the CAN transceivers
   }
 
   ChargeController_enable_charger();
