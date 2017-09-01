@@ -8,13 +8,24 @@ if len(sys.argv) != 2:
     print("Usage: {} <logfile.bin>".format(sys.argv[0]))
     sys.exit(1)
 
+# Message Type Definitions
+MESSAGE_PVT         = 1
+MESSAGE_PSU         = 2         
+MESSAGE_RANGING     = 4     
+MESSAGE_POSITION    = 8    
+MESSAGE_TELEM_1     = 16     
+MESSAGE_TELEM_2     = 32     
+MESSAGE_PVT_CAPTURE = 64 
+MESSAGE_LAB_STATS   = 128  
+MESSAGE_BH_RANGE    =  17  
+MESSAGE_BH_POS      = 34    
+
 # Open log file
 with open(sys.argv[1], 'rb') as log:
 
-    # Read in a log file
-    data = log.read()
-    print(data)
-    
+    # Read File
+    log.read();
+
     # File pointer
     i = 0
     num_bytes = log.tell()
@@ -25,79 +36,98 @@ with open(sys.argv[1], 'rb') as log:
         # Seek to next log
         log.seek(i)
         
-        # Read log type
-        type = log.read(1)    
+        # Read Metadata
+        header = log.read(6)    
+        
+        # Get Message Metadata
+        meta_data = struct.unpack('<BBI', header)
+        log_type = meta_data[0]
+        toad_id = meta_data[1]
+        systick = meta_data[2]
+        systick /= 10000.0
         
         # Handle PVT Message
-        if type == b'\x01':
-            data = log.read(93)
-            pvt = struct.unpack('<BIHBBBBBBIiBBBBiiiiIIiiiiiIIHHIiI', data)
-            print(pvt, '\n')
-            print("TOAD ID = ", pvt[0])
-            print("i_tow = ", pvt[1])
-            print("year = ", pvt[2])
-            print("month = ", pvt[3])
-            print("day = ", pvt[4])
-            print("hour = ", pvt[5])
-            print("minute = ", pvt[6])
-            print("second = ", pvt[7])
-            print("valid = ", pvt[8])
-            print("t_acc = ", pvt[9])
-            print("nano = ", pvt[10])
-            print("fix_type = ", pvt[11])
-            print("flags = ", pvt[12])
-            print("num_sv = ", pvt[14])
-            print("lon = ", (pvt[15]/10000000), "degrees")
-            print("lat = ", (pvt[16]/10000000), "degrees")
-            print("height = ", (pvt[17]/1000), "m")
-            print("h_msl = ", (pvt[18]/1000), "m")
-            print("h_acc = ", pvt[19])
-            print("v_acc = ", pvt[20])
-            print("velN = ", pvt[21])
-            print("velE = ", pvt[22])
-            print("velD = ", pvt[23])
-            print("gspeed = ", pvt[24])
-            print("head_mot = ", pvt[25])
-            print("s_acc = ", pvt[26])
-            print("head_acc = ", pvt[27])
-            print("p_dop = ", pvt[28])
-            print("head_veh = ", pvt[31])
+        if (log_type == MESSAGE_PVT):
+                       
+            payload = log.read(92)
+            pvt = struct.unpack('<IHBBBBBBIiBBBBiiiiIIiiiiiIIHHIiI', payload)
+            print("PVT MESSAGE:")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print("Log Type = ", log_type)
+            print("i_tow = ", pvt[0])
+            print("year = ", pvt[1])
+            print("month = ", pvt[2])
+            print("day = ", pvt[3])
+            print("hour = ", pvt[4])
+            print("minute = ", pvt[5])
+            print("second = ", pvt[6])
+            print("valid = ", pvt[7])
+            print("t_acc = ", pvt[8])
+            print("nano = ", pvt[9])
+            print("fix_type = ", pvt[10])
+            print("flags = ", pvt[11])
+            print("num_sv = ", pvt[13])
+            print("lon = ", (pvt[14]/10000000), "degrees")
+            print("lat = ", (pvt[15]/10000000), "degrees")
+            print("height = ", (pvt[16]/1000), "m")
+            print("h_msl = ", (pvt[17]/1000), "m")
+            print("h_acc = ", pvt[18])
+            print("v_acc = ", pvt[19])
+            print("velN = ", pvt[20])
+            print("velE = ", pvt[21])
+            print("velD = ", pvt[22])
+            print("gspeed = ", pvt[23])
+            print("head_mot = ", pvt[24])
+            print("s_acc = ", pvt[25])
+            print("head_acc = ", pvt[26])
+            print("p_dop = ", pvt[27])
+            print("head_veh = ", pvt[30])
             print('\n\n')
-            
+        
         # Handle PSU Message
-        if type == b'\x02':
-            data = log.read(7)
-            psu = struct.unpack('<BHHBB', data)
-            print(psu, '\n')
-            print("TOAD ID = ", psu[0])
-            print("battery voltage = ", (psu[2]/1000), "V")
-            print("charging = ", psu[4])
-            print("charge current = ", psu[1], "mA")
-            print("charge temperature = ", psu[3], "degrees C")
+        if (log_type == MESSAGE_PSU):
+            payload = log.read(7)
+            psu = struct.unpack('<HHBBB', payload)
+            print("PSU MESSAGE:")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print("Log Type = ", log_type)
+            print("battery voltage = ", (psu[1]/1000), "V")
+            print("stm32 temp = ", psu[4], "degrees C")
+            print("charging = ", psu[3])
+            print("charge current = ", psu[0], "mA")
+            print("charge temperature = ", psu[2], "degrees C")
             print('\n\n')
             
         # Handle Ranging Packet
-        if type == b'\x04':
-            data = log.read(12)
-            ranging = struct.unpack('<BBIIH', data)
-            print(ranging, '\n')
-            print("TOAD ID = ", ranging[0])
-            print("time of flight = ", ranging[2])
-            print("i_tow = ", ranging[3])
-            print ("battery voltage = ", (ranging[4]/1000), "V")
+        if (log_type == MESSAGE_RANGING):
+            payload = log.read(11)
+            ranging = struct.unpack('<BIIBB', payload)
+            print("RANGING PACKET:")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print("Log Type = ", log_type)
+            print("time of flight = ", ranging[1])
+            print("i_tow = ", ranging[2])
+            print ("battery voltage = ", (ranging[3]/10), "V")
+            print("stm32 temp = ", ranging[4], "degrees C")
             print('\n\n')
             
         # Handle Position Packet
-        if type == b'\x08':
-            data = log.read(17)
-            pos = struct.unpack('<BBiiiBH', data)
-            print(pos, '\n')
-            print("TOAD ID = ", pos[0])
-            print("lon = ", (pos[2]/10000000), "degrees")
-            print("lat = ", (pos[3]/10000000), "degrees")
-            print("height = ", (pos[4]/1000), "m")  
-            print("num sat = ", pos[5])
-            print("battery voltage = ", (pos[6]/1000), "V")
+        if (log_type == MESSAGE_POSITION):
+            payload = log.read(16)
+            pos = struct.unpack('<BiiiBBB', payload)
+            print("POSITION PACKET:")
+            print("TOAD ID = ", toad_id)
+            print("Timestamp = ", systick, " s")
+            print("Log Type = ", log_type)
+            print("lon = ", (pos[1]/10000000), "degrees")
+            print("lat = ", (pos[2]/10000000), "degrees")
+            print("height = ", (pos[3]/1000), "m")  
+            print("num sat = ", pos[4])
+            print("battery voltage = ", (pos[5]/10), "V")
+            print("stm32 temp = ", pos[6], "degrees C")
             print('\n\n')
                               
         # Increment file pointer

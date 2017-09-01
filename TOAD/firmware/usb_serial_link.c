@@ -64,9 +64,8 @@ static THD_FUNCTION(USBThread, arg) {
         if (mailbox_res != MSG_OK || data_msg == 0) continue;
 
         /* Spit out queued message and free from memory pool */
-        msg_t retval = chnWriteTimeout(&SDU1, (void*)data_msg, packet_size, MS2ST(100));
+        chnWriteTimeout(&SDU1, (void*)data_msg, packet_size, MS2ST(100));
         chPoolFree(&usb_mempool, (void*)data_msg);
-        (void)retval;
     }    
 }
 
