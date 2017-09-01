@@ -268,7 +268,7 @@
  * PA2  - GPS_RESET_N                  (output, pushpull, starthigh, pullup).
  * PA3  - RADIO_CS                     (output, pushpull, starthigh, pullup).
  * PA4  - LED_GRN                      (output, startlow).
- * PA5  - GPS_PPS                      (af1).
+ * PA5  - GPS_PPS                      (input, pushpull).
  * PA6  - LED_RED                      (output, startlow).
  * PA7  - PIN7                         (unused).
  * PA8  - RADIO_GATE                   (output, pushpull, startlow, pulldown).
@@ -285,7 +285,7 @@
                                         PIN_MODE_OUTPUT(GPIOA_GPS_RESET_N) | \
                                         PIN_MODE_OUTPUT(GPIOA_RADIO_CS) | \
                                         PIN_MODE_OUTPUT(GPIOA_LED_GRN) | \
-                                        PIN_MODE_ALTERNATE(GPIOA_GPS_PPS) | \
+                                        PIN_MODE_INPUT(GPIOA_GPS_PPS) | \
                                         PIN_MODE_OUTPUT(GPIOA_LED_RED) | \
                                         PIN_MODE_INPUT(GPIOA_PIN7) | \
                                         PIN_MODE_OUTPUT(GPIOA_RADIO_GATE) | \
@@ -365,7 +365,7 @@
                                         PIN_AFIO_AF(GPIOA_GPS_RESET_N, 0U) | \
                                         PIN_AFIO_AF(GPIOA_RADIO_CS, 0U) | \
                                         PIN_AFIO_AF(GPIOA_LED_GRN, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_GPS_PPS, 1U) | \
+                                        PIN_AFIO_AF(GPIOA_GPS_PPS, 0U) | \
                                         PIN_AFIO_AF(GPIOA_LED_RED, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN7, 0U))
 #define VAL_GPIOA_AFRH                 (PIN_AFIO_AF(GPIOA_RADIO_GATE, 0U) | \

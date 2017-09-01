@@ -19,7 +19,7 @@ static const EXTConfig extcfg = {
     {EXT_CH_MODE_DISABLED, NULL}, /* Px2 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px3 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px4*/
-    {EXT_CH_MODE_DISABLED, NULL}, /* Px5 */
+    {EXT_CH_MODE_RISING_EDGE | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOA, pps_callback}, /* PA5 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px6 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px7 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px8 */

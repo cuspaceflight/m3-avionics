@@ -110,7 +110,13 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
         if(msg_pending) {
             thread_t *tp = chMsgWait();
             uint8_t* txbuf = (uint8_t*)chMsgGet(tp);
+
+            /* Transmit on top of second from now on */
+            si446x_set_wait_sem(true);
+
             labrador_err result = labrador_tx(txbuf);
+
+
             if(result != LABRADOR_OK) {
                 m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
                                    M3RADIO_ERROR_LABRADOR_TX);
