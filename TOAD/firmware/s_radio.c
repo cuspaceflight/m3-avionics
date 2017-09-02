@@ -187,20 +187,20 @@ static THD_FUNCTION(sr_master_thd, arg) {
     /* Reccieve TOAD Network Telemetry */
     while (true) {
                
-        
-        void log_reccieved_packet(uint8_t* buff, size_t rx_len);
-        
+               
         labrador_err result = labrador_rx(&rxbuf);
         if(result == LABRADOR_OK) {
            
             log_reccieved_packet(rxbuf, 16);
-            set_status(COMPONENT_SR, STATUS_GOOD);
+            set_status(COMPONENT_SR, STATUS_ACTIVITY);
              
         } else if(result != LABRADOR_NO_DATA) {
             
             set_status(COMPONENT_SR, STATUS_ERROR);
-        }
+        } else {
         
+            set_status(COMPONENT_SR, STATUS_GOOD);
+        }
     }  
 }
 

@@ -6,10 +6,10 @@
     DEVICE  TYPE    TOAD_ID     BACKHAUL_DELAY    
 
     TOAD_1   S      0x01        150
-    TOAD_2   S      0x02        300
-    TOAD_3   S      0x04        450
-    TOAD_4   S      0x08        600
-    TOAD_5   S      0x10        750
+    TOAD_2   S      0x02        350
+    TOAD_3   S      0x04        550
+    TOAD_4   S      0x08        750
+    TOAD_5   S      0x10        950
     TOAD_6   M      0x20        N/A
 
 */
@@ -19,7 +19,7 @@
 #define TOAD_ID         0x20
 
 /* BOARD Backhaul Delay */
-#define BACKHAUL_DELAY  450
+#define BACKHAUL_DELAY  350
 
 
 /* Global TOAD Constants */
