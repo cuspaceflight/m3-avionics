@@ -19,7 +19,7 @@
 #define TOAD_ID         0x20
 
 /* BOARD Backhaul Delay */
-#define BACKHAUL_DELAY  300
+#define BACKHAUL_DELAY  450
 
 
 /* Global TOAD Constants */

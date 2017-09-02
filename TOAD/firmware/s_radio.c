@@ -163,6 +163,8 @@ static THD_FUNCTION(sr_master_thd, arg) {
 
     (void)arg;
     chRegSetThreadName("SR MASTER");
+    
+    uint8_t* rxbuf;
 
     /* Initialise Labrador systems */
     while(labrador_init(&labcfg, &labradcfg, &labstats, &labrador_radio_si446x)
@@ -179,14 +181,25 @@ static THD_FUNCTION(sr_master_thd, arg) {
         chThdSleepMilliseconds(1000);
     }
 
+    /* Init Complete */
+    set_status(COMPONENT_SR, STATUS_GOOD);
+
     /* Reccieve TOAD Network Telemetry */
     while (true) {
+               
         
-        // TODO
-        set_status(COMPONENT_SR, STATUS_GOOD);
-        chThdSleepMilliseconds(500);
-        set_status(COMPONENT_SR, STATUS_ERROR);
-        chThdSleepMilliseconds(500);
+        void log_reccieved_packet(uint8_t* buff, size_t rx_len);
+        
+        labrador_err result = labrador_rx(&rxbuf);
+        if(result == LABRADOR_OK) {
+           
+            log_reccieved_packet(rxbuf, 16);
+            set_status(COMPONENT_SR, STATUS_GOOD);
+             
+        } else if(result != LABRADOR_NO_DATA) {
+            
+            set_status(COMPONENT_SR, STATUS_ERROR);
+        }
         
     }  
 }

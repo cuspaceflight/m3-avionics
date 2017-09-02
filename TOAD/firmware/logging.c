@@ -215,7 +215,7 @@ void log_pvt_capture(pvt_capture *pvt_cap_data) {
 }
 
 
-/* Log Backhaul Traffic - Range */
+/* Log SR Traffic - Transmitted Range Packet */
 void log_backhaul_ranging_message(ranging_packet *range_data) {
 
     toad_log pkt;
@@ -228,7 +228,7 @@ void log_backhaul_ranging_message(ranging_packet *range_data) {
 }
 
 
-/* Log Backhaul Traffic - Position */
+/* Log SR Traffic - Transmitted Position Packet */
 void log_backhaul_position_message(position_packet *position_data) {
 
     toad_log pkt;
@@ -238,6 +238,20 @@ void log_backhaul_position_message(position_packet *position_data) {
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, position_data, sizeof(position_packet));
     _log(&pkt);
+}
+
+
+/* LOG SR Traffic - Reccieved Packet */
+void log_reccieved_packet(uint8_t* buff, size_t rx_len) {
+
+    toad_log pkt;
+    pkt.type = MESSAGE_RX_PACKET;
+    pkt.id = TOAD_ID;
+    pkt.timestamp = chVTGetSystemTime();
+    memset(pkt.payload, 0, 122);
+    memcpy(pkt.payload, buff, rx_len);
+    _log(&pkt);
+    _upload_log(&pkt);
 }
 
 

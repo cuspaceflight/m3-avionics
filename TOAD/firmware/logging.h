@@ -17,6 +17,8 @@
 #define MESSAGE_LAB_STATS   0x80
 #define MESSAGE_BH_RANGE    0x11
 #define MESSAGE_BH_POS      0x22
+#define MESSAGE_RX_PACKET   0x33
+
 
 /* TOAD Log Message */
 typedef struct __attribute__((packed)) {
@@ -39,6 +41,7 @@ void log_telem_packet(uint8_t* buff);
 void log_labrador_stats(struct labrador_stats *lab_stats);
 void log_backhaul_ranging_message(ranging_packet *range_data);
 void log_backhaul_position_message(position_packet *position_data);
+void log_reccieved_packet(uint8_t* buff, size_t rx_len);
 
 /* Start Logging Thread */
 void logging_init(void);
