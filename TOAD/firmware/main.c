@@ -4,9 +4,11 @@
 #include "cs2100.h"
 #include "gps.h"
 #include "psu.h"
+#include "config.h"
 #include "s_radio.h"
 #include "timer.h"
 #include "status.h"
+#include "microsd.h"
 #include "downlink.h"
 #include "logging.h"
 #include "measurements.h"
@@ -61,7 +63,7 @@ int main(void) {
 
     /* Swap PLLSRC to HSE */
     cs2100_set_pll();
-
+    
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
 

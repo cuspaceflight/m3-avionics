@@ -170,3 +170,26 @@ SDRESULT microsd_write(SDFILE* fp, const char* buf, unsigned int btw) {
 	
     return sderr;
 }
+
+/* Read <btr> Bytes into <buf> from <fp> */
+SDRESULT microsd_read(SDFILE* fp, const char* buf, uint32_t btr) {
+
+    SDRESULT sderr;
+    unsigned int bytes_read;
+    
+    /* Read from SD Card */
+    sderr = f_read (fp, (void*) buf, btr, &bytes_read);	
+    
+    /* Test for success */
+    	if(bytes_read < btr) {
+	    set_status(COMPONENT_SYS, STATUS_ERROR);
+	}
+
+    /* Test for Succesful Write */
+    if(sderr != FR_OK) {
+		set_status(COMPONENT_SYS, STATUS_ERROR);
+	}
+	
+	return sderr;
+}    
+    

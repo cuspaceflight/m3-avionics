@@ -65,4 +65,9 @@ SDRESULT microsd_close_file(SDFILE* fp);
  
 SDRESULT microsd_write(SDFILE* fp, const char* buff, unsigned int btw);
 
+/* Assumes file is open.
+ * Read <btr> Bytes into <buf> from <fp> 
+ */
+SDRESULT microsd_read(SDFILE* fp, const char* buf, uint32_t btr);
+
 #endif
