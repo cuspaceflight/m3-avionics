@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>794</width>
-    <height>821</height>
+    <height>426</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,12 +39,12 @@
              <x>0</x>
              <y>0</y>
              <width>723</width>
-             <height>732</height>
+             <height>337</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
             <item row="0" column="1">
-             <widget class="toad_frame" name="frame_2">
+             <widget class="toad_frame_1" name="frame_2">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -54,30 +54,27 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="toad_frame" name="frame_5">
+             <widget class="toad_frame_3" name="frame_5">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
               <property name="frameShadow">
                <enum>QFrame::Raised</enum>
               </property>
-              <zorder>formLayoutWidget</zorder>
-              <zorder>formLayoutWidget</zorder>
              </widget>
             </item>
             <item row="0" column="0" rowspan="2">
-             <widget class="toad_frame" name="frame">
+             <widget class="toad_frame_master" name="frame">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
               <property name="frameShadow">
                <enum>QFrame::Raised</enum>
               </property>
-              <zorder>frame_dart_location</zorder>
              </widget>
             </item>
             <item row="1" column="2">
-             <widget class="toad_frame" name="frame_6">
+             <widget class="toad_frame_4" name="frame_6">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -87,7 +84,7 @@
              </widget>
             </item>
             <item row="1" column="3">
-             <widget class="toad_frame" name="frame_4">
+             <widget class="toad_frame_5" name="frame_4">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -97,14 +94,13 @@
              </widget>
             </item>
             <item row="0" column="2">
-             <widget class="toad_frame" name="frame_3">
+             <widget class="toad_frame_2" name="frame_3">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
               <property name="frameShadow">
                <enum>QFrame::Raised</enum>
               </property>
-              <zorder>frame_dart_location</zorder>
              </widget>
             </item>
             <item row="0" column="3">
@@ -231,8 +227,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>645</width>
-                    <height>559</height>
+                    <width>619</width>
+                    <height>310</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -471,9 +467,39 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>toad_frame</class>
+   <class>toad_frame_master</class>
    <extends>QFrame</extends>
-   <header>toad_frame</header>
+   <header>toad_frame_master</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_1</class>
+   <extends>QFrame</extends>
+   <header>toad_frame_1</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_2</class>
+   <extends>QFrame</extends>
+   <header>toad_frame_2</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_3</class>
+   <extends>QFrame</extends>
+   <header>toad_frame_3</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_4</class>
+   <extends>QFrame</extends>
+   <header>toad_frame_4</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_5</class>
+   <extends>QFrame</extends>
+   <header>toad_frame_5</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
