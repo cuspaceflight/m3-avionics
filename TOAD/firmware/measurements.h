@@ -2,10 +2,17 @@
 #define MEASURE_H
 
 #include "packets.h"
+#include "gps.h"
 
 /* Measurement Functions */
 void measurements_handle_pps(void);
 void measurements_handle_radio(void);
+
+/* Timestamped SYNC Events */
+typedef struct __attribute__((packed)) {    
+    pvt_capture pps_event;
+    uint32_t sync_event[50];
+} sync_capture;
 
 /* Measurements Init */
 void measurement_init(void);

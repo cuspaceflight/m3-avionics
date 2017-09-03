@@ -72,7 +72,10 @@ THD_FUNCTION(logging_thread, arg) {
 
     /* Initalise Memory */
     mem_init();
-
+    
+    /* Get TOAD ID */
+    configure_toad(&file_system);
+    
     /* Attempt to Open log_xxxxx.bin */
     while (microsd_open_file_inc(&file, "log", "bin", &file_system) != FR_OK);
     
@@ -151,7 +154,7 @@ void log_pvt(ublox_pvt_t *pvt_data) {
 
     toad_log pkt;
     pkt.type = MESSAGE_PVT;
-    pkt.id = TOAD_ID;
+    pkt.id = toad.id;
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, pvt_data, sizeof(ublox_pvt_t));
@@ -165,7 +168,7 @@ void log_psu_status(psu_status *bat_data) {
     
     toad_log pkt;
     pkt.type = MESSAGE_PSU;
-    pkt.id = TOAD_ID;
+    pkt.id = toad.id;
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, bat_data, sizeof(psu_status));
@@ -179,7 +182,7 @@ void log_ranging_packet(ranging_packet *range_data) {
     
     toad_log pkt;
     pkt.type = MESSAGE_RANGING;
-    pkt.id = TOAD_ID;
+    pkt.id = toad.id;
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, range_data, sizeof(ranging_packet));
@@ -193,7 +196,7 @@ void log_position_packet(position_packet *position_data) {
 
     toad_log pkt;
     pkt.type = MESSAGE_POSITION;
-    pkt.id = TOAD_ID;
+    pkt.id = toad.id;
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, position_data, sizeof(position_packet));
@@ -207,7 +210,7 @@ void log_pvt_capture(pvt_capture *pvt_cap_data) {
 
     toad_log pkt;
     pkt.type = MESSAGE_PVT_CAPTURE;
-    pkt.id = TOAD_ID;
+    pkt.id = toad.id;
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, pvt_cap_data, sizeof(pvt_capture));
@@ -220,7 +223,7 @@ void log_backhaul_ranging_message(ranging_packet *range_data) {
 
     toad_log pkt;
     pkt.type = MESSAGE_BH_RANGE;
-    pkt.id = TOAD_ID;
+    pkt.id = toad.id;
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, range_data, sizeof(ranging_packet));
@@ -233,7 +236,7 @@ void log_backhaul_position_message(position_packet *position_data) {
 
     toad_log pkt;
     pkt.type = MESSAGE_BH_POS;
-    pkt.id = TOAD_ID;
+    pkt.id = toad.id;
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, position_data, sizeof(position_packet));
@@ -246,7 +249,7 @@ void log_reccieved_packet(uint8_t* buff, size_t rx_len) {
 
     toad_log pkt;
     pkt.type = MESSAGE_RX_PACKET;
-    pkt.id = TOAD_ID;
+    pkt.id = toad.id;
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, buff, rx_len);
@@ -262,8 +265,8 @@ void log_telem_packet(uint8_t* buff) {
     toad_log pkt2;
     pkt1.type = MESSAGE_TELEM_1;
     pkt2.type = MESSAGE_TELEM_2;
-    pkt1.id = TOAD_ID;
-    pkt2.id = TOAD_ID;
+    pkt1.id = toad.id;
+    pkt2.id = toad.id;
     pkt1.timestamp = chVTGetSystemTime();
     pkt2.timestamp = chVTGetSystemTime();
     memset(pkt1.payload, 0, 122);
@@ -280,7 +283,7 @@ void log_labrador_stats(struct labrador_stats *lab_stats) {
 
     toad_log pkt;
     pkt.type = MESSAGE_LAB_STATS;
-    pkt.id = TOAD_ID;
+    pkt.id = toad.id;
     pkt.timestamp = chVTGetSystemTime();
     memset(pkt.payload, 0, 122);
     memcpy(pkt.payload, lab_stats, sizeof(struct labrador_stats));

@@ -174,7 +174,7 @@ static const uint8_t vcom_string2[] = {
 static const uint8_t vcom_string3[] = {
   USB_DESC_BYTE(8),                     /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
-  '0' + TOAD_ID, 0,
+  '1', 0,
 };
 
 /*

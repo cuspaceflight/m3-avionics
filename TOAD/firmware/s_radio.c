@@ -102,7 +102,7 @@ static THD_FUNCTION(sr_slave_thd, arg) {
         set_status(COMPONENT_SR, STATUS_GOOD);    
     
         /* Sleep until our TX slot */
-        chThdSleepMilliseconds(BACKHAUL_DELAY);       
+        chThdSleepMilliseconds(toad.delay);       
         
         uint8_t txbuf[16] = {0};
         
@@ -186,8 +186,7 @@ static THD_FUNCTION(sr_master_thd, arg) {
 
     /* Reccieve TOAD Network Telemetry */
     while (true) {
-               
-               
+        
         labrador_err result = labrador_rx(&rxbuf);
         if(result == LABRADOR_OK) {
            
@@ -207,8 +206,14 @@ static THD_FUNCTION(sr_master_thd, arg) {
 /* Start Secondary Radio Thread */
 void sr_labrador_init(void) {
 
+    /* Sleep until configured */
+    while(toad.configured == false) {
+    
+        chThdSleepMilliseconds(100);
+    }
+    
     /* Handle Master/Slave Config */
-    if(TOAD_ID == TOAD_MASTER) {
+    if(toad.id == TOAD_MASTER_ID) {
     
         chThdCreateStatic(sr_master_thd_wa, sizeof(sr_master_thd_wa), NORMALPRIO, sr_master_thd, NULL);
         

@@ -255,7 +255,7 @@ static enum ublox_result ublox_state_machine(uint8_t b)
 	                    chMtxLock(&pos_pkt_mutex);
 	                    chMtxLock(&psu_status_mutex);
 	                    
-	                    pos_pkt.type = (PACKET_POSITION | TOAD_ID);
+	                    pos_pkt.type = (PACKET_POSITION | toad.id);
 	                    pos_pkt.lon = pvt_latest.lon;
 	                    pos_pkt.lat = pvt_latest.lat;
 	                    pos_pkt.height = pvt_latest.height;

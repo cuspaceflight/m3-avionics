@@ -82,16 +82,16 @@ static THD_FUNCTION(MEASUREThread, arg) {
             
             /* No Telemetry Detected */
             telem_activity = FALSE;
-            continue;
+            //continue;
         }
-
+        
         /* Lock Mutexs */
         chMtxLock(&range_pkt_mutex);
         chMtxLock(&pvt_stamp_mutex);
         chMtxLock(&psu_status_mutex);
         
         /* Populate Ranging Packet */
-        range_pkt.type = (PACKET_RANGE | TOAD_ID);
+        range_pkt.type = (PACKET_RANGE | toad.id);
         range_pkt.time_of_week = stamped_pvt.time_of_week;
         range_pkt.tof = (time_capture_radio_timestamp - stamped_pvt.pps_timestamp);
         range_pkt.bat_volt = (uint8_t)(battery.voltage / 100);
