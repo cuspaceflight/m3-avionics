@@ -2,6 +2,7 @@
 #define MEASURE_H
 
 #include "packets.h"
+#include "gps.h"
 
 /* Measurement Functions */
 void measurements_handle_pps(void);

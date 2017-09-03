@@ -23,7 +23,7 @@ void configure_toad(SDFS* file_system) {
     
     bool configured = false;
     
-    uint8_t data[1] = {0};
+    uint8_t data[16] = {0};
         
     while(!configured) {    
         
