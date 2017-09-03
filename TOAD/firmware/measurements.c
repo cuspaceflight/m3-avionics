@@ -84,6 +84,8 @@ static THD_FUNCTION(MEASUREThread, arg) {
             telem_activity = FALSE;
             continue;
         }
+        
+        systime_t tim_1 = chVTGetSystemTime();
 
         /* Lock Mutexs */
         chMtxLock(&range_pkt_mutex);
@@ -103,6 +105,10 @@ static THD_FUNCTION(MEASUREThread, arg) {
         chMtxUnlock(&psu_status_mutex);
         chMtxUnlock(&pvt_stamp_mutex);
         chMtxUnlock(&range_pkt_mutex);
+        
+        systime_t tim_2 = chVTGetSystemTime();
+        (void) tim_1;
+        (void) tim_2;
     }
 }
 

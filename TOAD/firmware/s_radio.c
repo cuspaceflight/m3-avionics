@@ -187,6 +187,7 @@ static THD_FUNCTION(sr_master_thd, arg) {
     /* Reccieve TOAD Network Telemetry */
     while (true) {
                
+        systime_t tim_1 = chVTGetSystemTime();
                
         labrador_err result = labrador_rx(&rxbuf);
         if(result == LABRADOR_OK) {
@@ -201,6 +202,10 @@ static THD_FUNCTION(sr_master_thd, arg) {
         
             set_status(COMPONENT_SR, STATUS_GOOD);
         }
+        
+        systime_t tim_2 = chVTGetSystemTime();
+        (void) tim_1;
+        (void) tim_2;
     }  
 }
 
