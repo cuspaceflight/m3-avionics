@@ -1,5 +1,4 @@
-"""
-Log data to hard drive.
+"""Log data to hard drive.
 
 Attributes:
     #filenames? and path to log files

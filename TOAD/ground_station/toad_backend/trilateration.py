@@ -1,8 +1,7 @@
 """Trilateration maths functions.
+Gregory Brooks 2017
 """
 import numpy as np
-
-def ecef_transform():
 
 def speedy_trilat(p_i, r_i, guess = False):
     """Returns position estimate from ground station locations and distances between them and tracked objects.
@@ -125,3 +124,6 @@ def speedy_trilat(p_i, r_i, guess = False):
         raise ValueError("Both position estimates on wrong side of plane (negative z component)")
 
     return pos
+
+def run():
+    

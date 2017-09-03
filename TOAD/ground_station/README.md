@@ -1,4 +1,6 @@
-# TOAD Ground Station Backend
+# TOAD Ground Station
+
+Gregory Brooks, Matt Coates, Simon Crane 2017
 
 Setup (Ubuntu):
 (Optional) create and activate virtual environment

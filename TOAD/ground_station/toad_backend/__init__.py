@@ -2,43 +2,51 @@
 #from pyquaternion import Quaternion
 import multiprocessing
 
-from . import logging
+#from . import logging
 from . import usb
-from . import state_estimator
-from . import command_processor
+#from . import state_estimator
+from . import gui_interface
 
-def run(frontend_pipe):
+def run():
     """Initialise and run the TOAD backend.
-
-    Args:
-        frontend_pipe (multiprocessing.Pipe end): pipe used to communicate with frontend
-                note that this may be replaced depending on technology used for frontend
+    Gregory Brooks 2017
 
     Returns:
 
     Raises:
     """
+    ############################################################################
     # Create communication links between processes:
+    ############################################################################
 
-    # Pipe TOAD data from USB to state estimator
-    estimator_parsed_pipe,usb_parsed_pipe = multiprocessing.Pipe(duplex=False)
+    #Pipe TOAD data from USB to logging process
+    usb_log_pipe,log_usb_pipe = multiprocessing.Pipe(duplex=False)
 
-    # Pipe between state estimator and command processor
-    cm_st_pipe, st_cm_pipe = multiprocessing.Pipe(True)
+    # Pipe position solutions for logging
+    tri_log_pipe,log_tri_pipe = multiprocessing.Pipe(duplex=False)
 
-    # Command pipe between USB process and command processor
-    usb_cm_pipe, cm_usb_pipe = multiprocessing.Pipe(True)
+    # Duplex pipe between usb and gui processes
+    usb_gui_pipe,gui_usb_pipe = multiprocessing.Pipe(True)
 
+    # Duplex pipe between gui and trilateration algorithm
+    gui_tri_pipe,tri_gui_pipe = multiprocessing.Pipe(True)
 
+    ############################################################################
+    # Start processes
+    ############################################################################
+
+    # Start logging process
+    #log_process = multiprocessing.Process(target=logging.run, args=(log_usb_pipe, log_tri_pipe))
+    #log_process.start()
 
     # Start usb parsing process
-    usb_process = multiprocessing.Process(target=usb.run, args=(usb_parsed_pipe,usb_cm_pipe))
+    usb_process = multiprocessing.Process(target=usb.run, args=(usb_gui_pipe, usb_log_pipe))
     usb_process.start()
 
-    # Start state_estimation process
-    state_est_process = multiprocessing.Process(target=state_estimator.run, args=(estimator_parsed_pipe,st_cm_pipe))
-    state_est_process.start()
+    # Start trilateration process
+    #trilat_process = multiprocessing.Process(target=trilateration.run, args=(tri_log_pipe,tri_gui_pipe))
+    #trilat_process.start()
 
-    # Start command processor
-    commands_process = multiprocessing.Process(target=command_processor.run, args=(cm_st_pipe,cm_usb_pipe,frontend_pipe))
-    commands_process.start()
+    # Start gui/main process
+    gui_process = multiprocessing.Process(target=gui_interface.run, args=(gui_tri_pipe,gui_usb_pipe))
+    gui_process.start()

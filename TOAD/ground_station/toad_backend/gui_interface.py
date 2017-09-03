@@ -1,13 +1,12 @@
-"""
-Process commands from frontend.
+"""GUI Process
+Gregory Brooks 2017
 
 Attributes:
 
 Todo:
     Everything
 """
-#Receive commands from frontend
-#and adjust behaviour of each backend process accordingly
+
 from multiprocessing import Pipe
 from .ekf import Stage
 # define command classes here

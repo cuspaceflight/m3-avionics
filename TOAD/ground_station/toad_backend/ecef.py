@@ -1,4 +1,5 @@
 """Conversion between lat/lon and ECEF.
+   Simon Crane 2017
 
 Attributes:
     a (float): equatorial radius of earth
