@@ -1,5 +1,4 @@
-from toad_backend import run
+from toad_gui import run
 import multiprocessing
-com_proc_pipe, frontend_pipe = multiprocessing.Pipe(True)
 
-run(frontend_pipe)
+run()

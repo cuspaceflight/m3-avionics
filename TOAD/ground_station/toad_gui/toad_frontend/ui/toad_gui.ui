@@ -17,13 +17,16 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="cursor">
+       <cursorShape>ArrowCursor</cursorShape>
+      </property>
       <property name="tabPosition">
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="MainTab">
        <attribute name="title">
         <string>Main</string>
        </attribute>
@@ -117,6 +120,8 @@
                  <property name="font">
                   <font>
                    <pointsize>14</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
                   </font>
                  </property>
                  <property name="text">
@@ -131,9 +136,15 @@
                    <widget class="QLabel" name="label_2">
                     <property name="maximumSize">
                      <size>
-                      <width>100</width>
+                      <width>70</width>
                       <height>16777215</height>
                      </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
                     </property>
                     <property name="text">
                      <string>Speed</string>
@@ -144,9 +155,15 @@
                    <widget class="QLabel" name="label">
                     <property name="maximumSize">
                      <size>
-                      <width>100</width>
+                      <width>70</width>
                       <height>16777215</height>
                      </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
                     </property>
                     <property name="text">
                      <string>Max alt</string>
@@ -160,9 +177,15 @@
                    <widget class="QLabel" name="altitudeLabel">
                     <property name="maximumSize">
                      <size>
-                      <width>100</width>
+                      <width>70</width>
                       <height>16777215</height>
                      </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
                     </property>
                     <property name="text">
                      <string>Altitude</string>
@@ -438,9 +461,14 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="MapTab">
        <attribute name="title">
         <string>Map</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="TermTab">
+       <attribute name="title">
+        <string>Terminal</string>
        </attribute>
       </widget>
      </widget>

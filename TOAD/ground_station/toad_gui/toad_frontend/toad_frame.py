@@ -242,7 +242,7 @@ class Ui_toad_frame(object):
         self.label_height_2.setText(_translate("toad_frame", "Height", None))
         self.label_numsat_2.setText(_translate("toad_frame", "No. of sats", None))
         self.label_batt_v_2.setText(_translate("toad_frame", "Battery voltage", None))
-        self.label_cpu_temp_2.setText(_translate("toad_frame", "CPU temperature", None))
+        self.label_cpu_temp_2.setText(_translate("toad_frame", "MCU temperature", None))
 
 
 class toad_frame(QtGui.QFrame, Ui_toad_frame):

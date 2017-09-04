@@ -1,3 +1,0 @@
-import struct
-
-class:

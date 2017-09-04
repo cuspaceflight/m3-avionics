@@ -467,7 +467,7 @@
      <item row="10" column="0">
       <widget class="QLabel" name="label_cpu_temp_2">
        <property name="text">
-        <string>CPU temperature</string>
+        <string>MCU temperature</string>
        </property>
       </widget>
      </item>
