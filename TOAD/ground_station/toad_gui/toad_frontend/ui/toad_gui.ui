@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>toad_main_window</class>
+ <widget class="QMainWindow" name="toad_main_window">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -26,7 +26,7 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="MainTab">
+      <widget class="QWidget" name="main_tab">
        <attribute name="title">
         <string>Main</string>
        </attribute>
@@ -47,7 +47,7 @@
            </property>
            <layout class="QGridLayout" name="gridLayout">
             <item row="0" column="1">
-             <widget class="toad_frame_1" name="frame_2">
+             <widget class="toad_frame_1" name="frame_toad_1">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -57,7 +57,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="toad_frame_3" name="frame_5">
+             <widget class="toad_frame_3" name="frame_toad_3">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -67,7 +67,7 @@
              </widget>
             </item>
             <item row="0" column="0" rowspan="2">
-             <widget class="toad_frame_master" name="frame">
+             <widget class="toad_frame_master" name="frame_toad_master">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -77,7 +77,7 @@
              </widget>
             </item>
             <item row="1" column="2">
-             <widget class="toad_frame_4" name="frame_6">
+             <widget class="toad_frame_4" name="frame_toad_4">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -87,7 +87,7 @@
              </widget>
             </item>
             <item row="1" column="3">
-             <widget class="toad_frame_5" name="frame_4">
+             <widget class="toad_frame_5" name="frame_toad_5">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -97,7 +97,7 @@
              </widget>
             </item>
             <item row="0" column="2">
-             <widget class="toad_frame_2" name="frame_3">
+             <widget class="toad_frame_2" name="frame_toad_2">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -133,7 +133,7 @@
                 <widget class="QWidget" name="formWidget_2" native="true">
                  <layout class="QGridLayout" name="gridLayout_2">
                   <item row="2" column="0">
-                   <widget class="QLabel" name="label_2">
+                   <widget class="QLabel" name="speed_label">
                     <property name="maximumSize">
                      <size>
                       <width>70</width>
@@ -152,7 +152,7 @@
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QLabel" name="label">
+                   <widget class="QLabel" name="max_alt_label">
                     <property name="maximumSize">
                      <size>
                       <width>70</width>
@@ -171,10 +171,10 @@
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QLCDNumber" name="lcdNumber"/>
+                   <widget class="QLCDNumber" name="altimeter"/>
                   </item>
                   <item row="0" column="0">
-                   <widget class="QLabel" name="altitudeLabel">
+                   <widget class="QLabel" name="altitude_label">
                     <property name="maximumSize">
                      <size>
                       <width>70</width>
@@ -193,7 +193,7 @@
                    </widget>
                   </item>
                   <item row="0" column="2">
-                   <widget class="QLabel" name="label_3">
+                   <widget class="QLabel" name="m_unit_label">
                     <property name="maximumSize">
                      <size>
                       <width>30</width>
@@ -206,7 +206,7 @@
                    </widget>
                   </item>
                   <item row="1" column="2">
-                   <widget class="QLabel" name="label_4">
+                   <widget class="QLabel" name="m_unit_label_2">
                     <property name="maximumSize">
                      <size>
                       <width>30</width>
@@ -219,7 +219,7 @@
                    </widget>
                   </item>
                   <item row="2" column="2">
-                   <widget class="QLabel" name="label_5">
+                   <widget class="QLabel" name="m_s_unit_label">
                     <property name="maximumSize">
                      <size>
                       <width>30</width>
@@ -232,10 +232,10 @@
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QLCDNumber" name="lcdNumber_2"/>
+                   <widget class="QLCDNumber" name="max_alt_value"/>
                   </item>
                   <item row="2" column="1">
-                   <widget class="QLCDNumber" name="lcdNumber_3"/>
+                   <widget class="QLCDNumber" name="speedometer"/>
                   </item>
                  </layout>
                 </widget>
@@ -314,7 +314,7 @@
                       </widget>
                      </item>
                      <item row="3" column="0" colspan="2">
-                      <widget class="QLabel" name="label_displacement">
+                      <widget class="QLabel" name="displacementLabel">
                        <property name="font">
                         <font>
                          <weight>75</weight>
@@ -461,12 +461,12 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="MapTab">
+      <widget class="QWidget" name="map_tab">
        <attribute name="title">
         <string>Map</string>
        </attribute>
       </widget>
-      <widget class="QWidget" name="TermTab">
+      <widget class="QWidget" name="term_tab">
        <attribute name="title">
         <string>Terminal</string>
        </attribute>

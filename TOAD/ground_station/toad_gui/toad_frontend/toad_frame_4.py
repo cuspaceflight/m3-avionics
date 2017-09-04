@@ -31,14 +31,14 @@ class Ui_toad_frame_4(object):
         toad_frame_4.setFrameShadow(QtGui.QFrame.Raised)
         self.verticalLayout = QtGui.QVBoxLayout(toad_frame_4)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.label = QtGui.QLabel(toad_frame_4)
+        self.title_label = QtGui.QLabel(toad_frame_4)
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
         font.setWeight(75)
-        self.label.setFont(font)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.verticalLayout.addWidget(self.label)
+        self.title_label.setFont(font)
+        self.title_label.setObjectName(_fromUtf8("title_label"))
+        self.verticalLayout.addWidget(self.title_label)
         self.widget = toad_frame(toad_frame_4)
         self.widget.setAutoFillBackground(False)
         self.widget.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
@@ -50,7 +50,7 @@ class Ui_toad_frame_4(object):
 
     def retranslateUi(self, toad_frame_4):
         toad_frame_4.setWindowTitle(_translate("toad_frame_4", "Frame", None))
-        self.label.setText(_translate("toad_frame_4", "TOAD 4", None))
+        self.title_label.setText(_translate("toad_frame_4", "TOAD 4", None))
 
 from toad_frame import toad_frame
 

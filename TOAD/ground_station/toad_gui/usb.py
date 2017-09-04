@@ -29,10 +29,18 @@ def run(gui_pipe, log_pipe):
     """
     # Open Serial Port
     ser = serial.Serial('/dev/ttyACM0')
+    counter = 1
     while True:
 
         # Read in a Log
-        data = ser.read(128)
+        #data = ser.read(128)
+
+        ########  TESTING!!!  ########
+        data = bytes([counter] * 128)  #
+        counter += 1                 #
+        if counter > 255:            #
+            counter=0                #
+        ########!!!!!!!!!!!!!!########
 
         # Get Message Log Type
         log_type = struct.unpack('<B', data[0])
