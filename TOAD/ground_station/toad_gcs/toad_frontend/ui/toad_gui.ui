@@ -497,37 +497,37 @@
   <customwidget>
    <class>toad_frame_master</class>
    <extends>QFrame</extends>
-   <header>toad_frame_master</header>
+   <header>.toad_frame_master</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>toad_frame_1</class>
    <extends>QFrame</extends>
-   <header>toad_frame_1</header>
+   <header>.toad_frame_1</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>toad_frame_2</class>
    <extends>QFrame</extends>
-   <header>toad_frame_2</header>
+   <header>.toad_frame_2</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>toad_frame_3</class>
    <extends>QFrame</extends>
-   <header>toad_frame_3</header>
+   <header>.toad_frame_3</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>toad_frame_4</class>
    <extends>QFrame</extends>
-   <header>toad_frame_4</header>
+   <header>.toad_frame_4</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>toad_frame_5</class>
    <extends>QFrame</extends>
-   <header>toad_frame_5</header>
+   <header>.toad_frame_5</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -13,7 +13,7 @@
   <property name="minimumSize">
    <size>
     <width>276</width>
-    <height>600</height>
+    <height>550</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -38,7 +38,7 @@
       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
      </property>
      <item row="0" column="0" colspan="2">
-      <widget class="QLabel" name="label_ranging_title_2">
+      <widget class="QLabel" name="label_ranging_title">
        <property name="maximumSize">
         <size>
          <width>640</width>
@@ -52,15 +52,18 @@
          <bold>true</bold>
         </font>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>Ranging</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_timestamp_2">
+      <widget class="QLabel" name="label_timestamp_ranging">
        <property name="text">
-        <string>Timestamp</string>
+        <string>Timestamp/s</string>
        </property>
        <property name="indent">
         <number>-1</number>
@@ -68,7 +71,7 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_timestamp_itow_2">
+      <widget class="QLabel" name="label_timestamp_itow_ranging">
        <property name="inputMethodHints">
         <set>Qt::ImhNone</set>
        </property>
@@ -97,7 +100,7 @@
       </widget>
      </item>
      <item row="3" column="0">
-      <widget class="QLabel" name="label_timestamp_systicks_2">
+      <widget class="QLabel" name="label_timestamp_systicks_ranging">
        <property name="text">
         <string>(systicks)</string>
        </property>
@@ -123,7 +126,7 @@
       </widget>
      </item>
      <item row="4" column="0">
-      <widget class="QLabel" name="label_tof_2">
+      <widget class="QLabel" name="label_tof_ranging">
        <property name="text">
         <string>Time of flight (timer register)</string>
        </property>
@@ -149,7 +152,7 @@
       </widget>
      </item>
      <item row="5" column="0">
-      <widget class="QLabel" name="label_timerfreq_2">
+      <widget class="QLabel" name="label_timerfreq_ranging">
        <property name="font">
         <font>
          <italic>true</italic>
@@ -171,6 +174,9 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::WheelFocus</enum>
+       </property>
        <property name="suffix">
         <string>Hz</string>
        </property>
@@ -186,7 +192,7 @@
       </widget>
      </item>
      <item row="6" column="0">
-      <widget class="QLabel" name="label_distance_2">
+      <widget class="QLabel" name="label_distance_ranging">
        <property name="text">
         <string>Distance/m</string>
        </property>
@@ -212,21 +218,18 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QDateTimeEdit" name="dateTimeEdit_timestamp_ranging">
+      <widget class="QLineEdit" name="lineEdit_timestamp_s_ranging">
        <property name="maximumSize">
         <size>
          <width>500</width>
          <height>16777215</height>
         </size>
        </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhDigitsOnly</set>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
-       </property>
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::NoButtons</enum>
-       </property>
-       <property name="timeSpec">
-        <enum>Qt::UTC</enum>
        </property>
       </widget>
      </item>
@@ -248,7 +251,7 @@
       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
      </property>
      <item row="0" column="0" colspan="2">
-      <widget class="QLabel" name="label_pos_2">
+      <widget class="QLabel" name="label_pos_title">
        <property name="maximumSize">
         <size>
          <width>640</width>
@@ -268,7 +271,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_pos_timestamp_2">
+      <widget class="QLabel" name="label_timestamp_pos">
        <property name="minimumSize">
         <size>
          <width>136</width>
@@ -276,7 +279,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Timestamp</string>
+        <string>Timestamp/s</string>
        </property>
        <property name="indent">
         <number>-1</number>
@@ -284,49 +287,23 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QDateTimeEdit" name="dateTimeEdit_timestamp_pos">
+      <widget class="QLineEdit" name="lineEdit_timestamp_s_pos">
        <property name="maximumSize">
         <size>
          <width>500</width>
          <height>16777215</height>
         </size>
        </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhDigitsOnly</set>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
-       </property>
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::NoButtons</enum>
-       </property>
-       <property name="timeSpec">
-        <enum>Qt::UTC</enum>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_pos_itow_2">
-       <property name="text">
-        <string>(ITOW)</string>
-       </property>
-       <property name="indent">
-        <number>25</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEdit_timestamp_itow_pos">
-       <property name="maximumSize">
-        <size>
-         <width>500</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_pos_systicks_2">
+      <widget class="QLabel" name="label_systicks_pos">
        <property name="text">
         <string>(systicks)</string>
        </property>
@@ -335,7 +312,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="2" column="1">
       <widget class="QLineEdit" name="lineEdit_timestamp_systicks_pos">
        <property name="maximumSize">
         <size>
@@ -348,14 +325,14 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_lat_2">
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_lat_pos">
        <property name="text">
         <string>Latitude</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="3" column="1">
       <widget class="QLineEdit" name="lineEdit_lat">
        <property name="maximumSize">
         <size>
@@ -368,14 +345,14 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_lon_2">
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_lon_pos">
        <property name="text">
         <string>Longitude</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
+     <item row="4" column="1">
       <widget class="QLineEdit" name="lineEdit_lon">
        <property name="maximumSize">
         <size>
@@ -388,14 +365,14 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_height_2">
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_height_pos">
        <property name="text">
         <string>Height</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="5" column="1">
       <widget class="QLineEdit" name="lineEdit_height">
        <property name="maximumSize">
         <size>
@@ -408,14 +385,14 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="label_numsat_2">
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_numsat_pos">
        <property name="text">
         <string>No. of sats</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
+     <item row="6" column="1">
       <widget class="QLineEdit" name="lineEdit_num_sat">
        <property name="maximumSize">
         <size>
@@ -428,7 +405,7 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="1">
+     <item row="7" column="1">
       <widget class="Line" name="line_3">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -447,14 +424,14 @@
        </property>
       </widget>
      </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="label_batt_v_2">
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_batt_v_pos">
        <property name="text">
         <string>Battery voltage</string>
        </property>
       </widget>
      </item>
-     <item row="9" column="1">
+     <item row="8" column="1">
       <widget class="QLineEdit" name="lineEdit_batt_v">
        <property name="maximumSize">
         <size>
@@ -467,14 +444,14 @@
        </property>
       </widget>
      </item>
-     <item row="10" column="0">
-      <widget class="QLabel" name="label_cpu_temp_2">
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_cpu_temp_pos">
        <property name="text">
         <string>MCU temperature</string>
        </property>
       </widget>
      </item>
-     <item row="10" column="1">
+     <item row="9" column="1">
       <widget class="QLineEdit" name="lineEdit_cpu_temp">
        <property name="maximumSize">
         <size>

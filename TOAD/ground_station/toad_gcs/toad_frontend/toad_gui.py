@@ -281,19 +281,9 @@ class Ui_toad_main_window(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.term_tab), _translate("toad_main_window", "Terminal", None))
         self.menu_menu_bar.setTitle(_translate("toad_main_window", "(menu bar)", None))
 
-from toad_frame_1 import toad_frame_1
-from toad_frame_2 import toad_frame_2
-from toad_frame_3 import toad_frame_3
-from toad_frame_4 import toad_frame_4
-from toad_frame_5 import toad_frame_5
-from toad_frame_master import toad_frame_master
-
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    toad_main_window = QtGui.QMainWindow()
-    ui = Ui_toad_main_window()
-    ui.setupUi(toad_main_window)
-    toad_main_window.show()
-    sys.exit(app.exec_())
-
+from .toad_frame_1 import toad_frame_1
+from .toad_frame_2 import toad_frame_2
+from .toad_frame_3 import toad_frame_3
+from .toad_frame_4 import toad_frame_4
+from .toad_frame_5 import toad_frame_5
+from .toad_frame_master import toad_frame_master

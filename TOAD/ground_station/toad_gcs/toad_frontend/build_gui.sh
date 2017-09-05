@@ -19,5 +19,5 @@ pyuic4 -w ui/toad_frame_5.ui -o toad_frame_5.py
 
 # Build main window
 
-# executable for testing
-pyuic4 -x ui/toad_gui.ui -o toad_gui.py
+
+pyuic4 ui/toad_gui.ui -o toad_gui.py

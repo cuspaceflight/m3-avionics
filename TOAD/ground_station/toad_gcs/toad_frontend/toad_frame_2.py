@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/toad_frame_4.ui'
+# Form implementation generated from reading ui file 'ui/toad_frame_2.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -22,16 +22,16 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_toad_frame_4(object):
-    def setupUi(self, toad_frame_4):
-        toad_frame_4.setObjectName(_fromUtf8("toad_frame_4"))
-        toad_frame_4.resize(400, 300)
-        toad_frame_4.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 127);"))
-        toad_frame_4.setFrameShape(QtGui.QFrame.StyledPanel)
-        toad_frame_4.setFrameShadow(QtGui.QFrame.Raised)
-        self.verticalLayout = QtGui.QVBoxLayout(toad_frame_4)
+class Ui_toad_frame_2(object):
+    def setupUi(self, toad_frame_2):
+        toad_frame_2.setObjectName(_fromUtf8("toad_frame_2"))
+        toad_frame_2.resize(400, 300)
+        toad_frame_2.setStyleSheet(_fromUtf8("background-color: rgb(65, 212, 102);"))
+        toad_frame_2.setFrameShape(QtGui.QFrame.StyledPanel)
+        toad_frame_2.setFrameShadow(QtGui.QFrame.Raised)
+        self.verticalLayout = QtGui.QVBoxLayout(toad_frame_2)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.title_label = QtGui.QLabel(toad_frame_4)
+        self.title_label = QtGui.QLabel(toad_frame_2)
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -39,22 +39,22 @@ class Ui_toad_frame_4(object):
         self.title_label.setFont(font)
         self.title_label.setObjectName(_fromUtf8("title_label"))
         self.verticalLayout.addWidget(self.title_label)
-        self.widget = toad_frame(toad_frame_4)
+        self.widget = toad_frame(toad_frame_2)
         self.widget.setAutoFillBackground(False)
         self.widget.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.widget.setObjectName(_fromUtf8("widget"))
         self.verticalLayout.addWidget(self.widget)
 
-        self.retranslateUi(toad_frame_4)
-        QtCore.QMetaObject.connectSlotsByName(toad_frame_4)
+        self.retranslateUi(toad_frame_2)
+        QtCore.QMetaObject.connectSlotsByName(toad_frame_2)
 
-    def retranslateUi(self, toad_frame_4):
-        toad_frame_4.setWindowTitle(_translate("toad_frame_4", "Frame", None))
-        self.title_label.setText(_translate("toad_frame_4", "TOAD 4", None))
+    def retranslateUi(self, toad_frame_2):
+        toad_frame_2.setWindowTitle(_translate("toad_frame_2", "Frame", None))
+        self.title_label.setText(_translate("toad_frame_2", "TOAD 2", None))
 
-from toad_frame import toad_frame
+from .toad_frame import toad_frame
 
-class toad_frame_4(QtGui.QFrame, Ui_toad_frame_4):
+class toad_frame_2(QtGui.QFrame, Ui_toad_frame_2):
     def __init__(self, parent=None, f=QtCore.Qt.WindowFlags()):
         QtGui.QFrame.__init__(self, parent, f)
 

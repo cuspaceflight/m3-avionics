@@ -52,7 +52,7 @@ class Ui_toad_frame_1(object):
         toad_frame_1.setWindowTitle(_translate("toad_frame_1", "Frame", None))
         self.title_label.setText(_translate("toad_frame_1", "TOAD 1", None))
 
-from toad_frame import toad_frame
+from .toad_frame import toad_frame
 
 class toad_frame_1(QtGui.QFrame, Ui_toad_frame_1):
     def __init__(self, parent=None, f=QtCore.Qt.WindowFlags()):

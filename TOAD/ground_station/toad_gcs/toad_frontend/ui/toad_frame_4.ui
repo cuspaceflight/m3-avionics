@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>toad_frame_2</class>
- <widget class="QFrame" name="toad_frame_2">
+ <class>toad_frame_4</class>
+ <widget class="QFrame" name="toad_frame_4">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,7 +14,7 @@
    <string>Frame</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(65, 212, 102);</string>
+   <string notr="true">background-color: rgb(255, 255, 127);</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -33,7 +33,7 @@
       </font>
      </property>
      <property name="text">
-      <string>TOAD 2</string>
+      <string>TOAD 4</string>
      </property>
     </widget>
    </item>
@@ -53,7 +53,7 @@
   <customwidget>
    <class>toad_frame</class>
    <extends>QFrame</extends>
-   <header>toad_frame</header>
+   <header>.toad_frame</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

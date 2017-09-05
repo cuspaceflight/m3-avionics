@@ -1,4 +1,4 @@
-from toad_gui import run
+from toad_gcs import run
 import multiprocessing
 
 run()

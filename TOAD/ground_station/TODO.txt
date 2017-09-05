@@ -2,4 +2,5 @@
 
 ### GUI ###
 - Map
-- 
+- Print units in the lineEdit box
+- Terminal tab
