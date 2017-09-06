@@ -1,6 +1,8 @@
 - Include serial port as argument
 
 ### GUI ###
+- Use spinbox value-change signal
+- Icons
 - Map
 - Print units in the lineEdit box
 - Terminal tab

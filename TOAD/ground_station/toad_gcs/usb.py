@@ -44,40 +44,20 @@ def run(gui_pipe, log_pipe, gui_exit):
     Raises:
     """
     # Open Serial Port
-    #ser = serial.Serial('/dev/ttyACM0')
-    counter = 1
+    ser = serial.Serial('/dev/ttyACM0')
+
     while not gui_exit.is_set():
 
         # Read in a Log
-        #data = ser.read(128)
-
-        ########     TESTING!!!      ########
-        data = b''                          #
-        if counter % 4 == 0:                #
-            data = bytes([MESSAGE_PVT])     #
-        elif counter % 4 == 1:              #
-            data = bytes([MESSAGE_PSU])     #
-        elif counter % 4 == 2:              #
-            data = bytes([MESSAGE_RANGING]) #
-        elif counter % 4 == 3:              #
-            data = bytes([MESSAGE_POSITION])#
-        data += bytes([TOAD_6])             #
-        data += bytes([counter] * 126)      #
-        counter += 1                        #
-        if counter > 255:                   #
-            counter=0                       #
-        time.sleep(1)                     #
-        ########!!!!!!!!!!!!!!!!!!!!!########
+        data = ser.read(128)
 
         # Get Message Log Type
         log_type = struct.unpack('<B', data[0:1])
         log_type = log_type[0]
-        print(log_type)
 
         # Handle PVT Message
         if (log_type == MESSAGE_PVT):
             pvt_message = Pvt_packet(data)
-            pvt_message.printout()  # DEBUG
             gui_pipe.send(pvt_message)
 
         # Handle PSU Message
