@@ -15,7 +15,7 @@ pyuic4 -w ui/toad_frame_2.ui -o toad_frame_2.py
 pyuic4 -w ui/toad_frame_3.ui -o toad_frame_3.py
 pyuic4 -w ui/toad_frame_4.ui -o toad_frame_4.py
 pyuic4 -w ui/toad_frame_5.ui -o toad_frame_5.py
-
+pyuic4 -w ui/toad_frame_6.ui -o toad_frame_6.py
 
 # Build main window
 

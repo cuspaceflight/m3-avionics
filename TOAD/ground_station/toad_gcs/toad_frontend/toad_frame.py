@@ -103,6 +103,8 @@ class Ui_toad_frame(object):
         self.formLayout_ranging.setWidget(6, QtGui.QFormLayout.LabelRole, self.label_distance_ranging)
         self.lineEdit_distance = QtGui.QLineEdit(toad_frame)
         self.lineEdit_distance.setMaximumSize(QtCore.QSize(500, 16777215))
+        self.lineEdit_distance.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.lineEdit_distance.setDragEnabled(False)
         self.lineEdit_distance.setReadOnly(True)
         self.lineEdit_distance.setObjectName(_fromUtf8("lineEdit_distance"))
         self.formLayout_ranging.setWidget(6, QtGui.QFormLayout.FieldRole, self.lineEdit_distance)

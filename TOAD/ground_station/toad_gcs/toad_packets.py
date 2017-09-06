@@ -84,12 +84,12 @@ class Pvt_packet(Packet):
         elif self.valid == 8:
             return 'validMag'
         else:
-            return 'Error! Invalid value'
+            return 'Invalid!'
 
     def fixString(self):
         list = ['no_fix', 'dead_rkn_only', '2D', '3D', 'GNSS+dead_rkn', 'time_only']
         if self.fix_type > 5 or self.fix_type < 0:
-            return('Error! Invalid value')
+            return('Invalid!')
         else:
             return list[self.fix_type]
 

@@ -69,5 +69,3 @@ def run():
     usb_process.join()
     print("USB process ended")
     time.sleep(0.2)
-    sys.exit()
-    #sys.exit(gui_process.exitcode)

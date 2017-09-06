@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>794</width>
-    <height>426</height>
+    <width>1048</width>
+    <height>579</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,73 +41,22 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>723</width>
-             <height>337</height>
+             <width>977</width>
+             <height>490</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
-            <item row="0" column="1">
-             <widget class="toad_frame_1" name="frame_toad_1">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="toad_frame_3" name="frame_toad_3">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" rowspan="2">
-             <widget class="toad_frame_master" name="frame_toad_master">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="toad_frame_4" name="frame_toad_4">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="toad_frame_5" name="frame_toad_5">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="toad_frame_2" name="frame_toad_2">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
+            <item row="0" column="4">
              <widget class="QFrame" name="frame_dart_location">
+              <property name="minimumSize">
+               <size>
+                <width>290</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(255, 255, 255);</string>
+              </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -131,6 +80,9 @@
                </item>
                <item>
                 <widget class="QWidget" name="formWidget_2" native="true">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(255, 255, 255);</string>
+                 </property>
                  <layout class="QGridLayout" name="gridLayout_2">
                   <item row="2" column="0">
                    <widget class="QLabel" name="speed_label">
@@ -242,6 +194,9 @@
                </item>
                <item>
                 <widget class="QScrollArea" name="scrollArea_2">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(255, 255, 255);</string>
+                 </property>
                  <property name="widgetResizable">
                   <bool>true</bool>
                  </property>
@@ -250,7 +205,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>619</width>
+                    <width>873</width>
                     <height>310</height>
                    </rect>
                   </property>
@@ -455,6 +410,76 @@
               </layout>
              </widget>
             </item>
+            <item row="0" column="1">
+             <widget class="toad_frame_1" name="frame_toad_1">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="toad_frame_2" name="frame_toad_2">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="toad_frame_3" name="frame_toad_3">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="toad_frame_4" name="frame_toad_4">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="toad_frame_6" name="frame_toad_6">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="toad_frame_5" name="frame_toad_5">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="toad_frame_master" name="frame_toad_master">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </widget>
@@ -481,7 +506,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>794</width>
+     <width>1048</width>
      <height>25</height>
     </rect>
    </property>
@@ -528,6 +553,12 @@
    <class>toad_frame_5</class>
    <extends>QFrame</extends>
    <header>.toad_frame_5</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_6</class>
+   <extends>QFrame</extends>
+   <header>.toad_frame_6</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
