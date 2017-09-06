@@ -35,11 +35,22 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         self.setupUi(self)
 
         # Add slots and signals manually
+        self.frame_toad_master.pushButton_conn.clicked.connect(self.toggle_con)
 
         # Start update thread
         self.update_thread = MainThd(self.trilat_pipe, self.usb_pipe)
         self.connect(self.update_thread, SIGNAL("new_packet(PyQt_PyObject)"),self.new_packet)
         self.update_thread.start()
+
+    def toggle_con(self):
+        if self.frame_toad_master.pushButton_conn.isChecked():
+            # Connect
+            self.frame_toad_master.pushButton_conn.setText("Disconnect")
+            self.usb_pipe.send(Usb_command(True))
+        else:
+            # Disconnect
+            self.frame_toad_master.pushButton_conn.setText("Connect")
+            self.usb_pipe.send(Usb_command(False))
 
     def set_usb_id(self,frame,packet):
         if packet.toad_id == TOAD_1:

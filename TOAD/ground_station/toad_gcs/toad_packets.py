@@ -197,3 +197,9 @@ class Position_packet(Packet):
         print("battery voltage = ", self.batt_v, "V")
         print("stm32 temp = ", self.mcu_temp, "degrees C")
         print('\n\n')
+
+
+### Internal to ground station ###
+class Usb_command:
+    def __init__(self,conn):
+        self.conn = conn

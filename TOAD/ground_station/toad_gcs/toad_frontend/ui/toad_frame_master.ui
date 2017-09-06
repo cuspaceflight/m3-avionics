@@ -89,8 +89,20 @@
          </item>
          <item row="1" column="1">
           <widget class="QPushButton" name="pushButton_conn">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(203, 203, 203);</string>
+           </property>
            <property name="text">
             <string>Disconnect</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

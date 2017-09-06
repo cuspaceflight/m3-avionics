@@ -48,6 +48,16 @@ def run(gui_pipe, log_pipe, gui_exit):
 
     while not gui_exit.is_set():
 
+        if gui_pipe.poll():
+            cmd = gui_pipe.recv()
+            if isinstance(cmd,Usb_command):
+                if cmd.conn and not ser.is_open():
+                    # Connect
+                    ser.open()
+                elif not cmd.conn and ser.is_open():
+                    # Disconnect
+                    ser.close()
+
         # Read in a Log
         data = ser.read(128)
 
