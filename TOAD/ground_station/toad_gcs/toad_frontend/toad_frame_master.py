@@ -109,6 +109,7 @@ class Ui_toad_frame_master(object):
         self.formLayout_pvt.setWidget(5, QtGui.QFormLayout.LabelRole, self.timeLabel)
         self.DateTimeEdit = QtGui.QDateTimeEdit(self.scrollAreaWidgetContents)
         self.DateTimeEdit.setMaximumSize(QtCore.QSize(500, 16777215))
+        self.DateTimeEdit.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.DateTimeEdit.setReadOnly(True)
         self.DateTimeEdit.setButtonSymbols(QtGui.QAbstractSpinBox.NoButtons)
         self.DateTimeEdit.setTimeSpec(QtCore.Qt.UTC)

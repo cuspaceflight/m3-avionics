@@ -38,7 +38,7 @@
     </widget>
    </item>
    <item>
-    <widget class="toad_frame" name="widget">
+    <widget class="toad_frame" name="frame">
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>

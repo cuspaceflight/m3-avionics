@@ -74,7 +74,7 @@ class Pvt_packet(Packet):
         self.p_dop = pvt[27]
         self.head_veh = pvt[30]
 
-    def validString():
+    def validString(self):
         if self.valid == 1:
             return 'validDate'
         elif self.valid == 2:
@@ -86,9 +86,12 @@ class Pvt_packet(Packet):
         else:
             return 'Error! Invalid value'
 
-    def fixString():
+    def fixString(self):
         list = ['no_fix', 'dead_rkn_only', '2D', '3D', 'GNSS+dead_rkn', 'time_only']
-        return list[self.fix_type]
+        if self.fix_type > 5 or self.fix_type < 0:
+            return('Error! Invalid value')
+        else:
+            return list[self.fix_type]
 
     def printout(self):
         print("PVT MESSAGE:")

@@ -175,7 +175,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::WheelFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="suffix">
         <string>Hz</string>
@@ -452,7 +452,7 @@
       </widget>
      </item>
      <item row="9" column="1">
-      <widget class="QLineEdit" name="lineEdit_cpu_temp">
+      <widget class="QLineEdit" name="lineEdit_mcu_temp">
        <property name="maximumSize">
         <size>
          <width>500</width>

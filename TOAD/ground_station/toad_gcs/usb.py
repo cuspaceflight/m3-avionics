@@ -66,11 +66,13 @@ def run(gui_pipe, log_pipe, gui_exit):
         counter += 1                        #
         if counter > 255:                   #
             counter=0                       #
-        time.sleep(0.5)                     #
+        time.sleep(1)                     #
         ########!!!!!!!!!!!!!!!!!!!!!########
 
         # Get Message Log Type
         log_type = struct.unpack('<B', data[0:1])
+        log_type = log_type[0]
+        print(log_type)
 
         # Handle PVT Message
         if (log_type == MESSAGE_PVT):
