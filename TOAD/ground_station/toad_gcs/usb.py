@@ -44,7 +44,7 @@ def run(gui_pipe, log_pipe, gui_exit):
     Raises:
     """
     # Open Serial Port
-    ser = serial.Serial('/dev/ttyACM0')
+    ser = serial.Serial(sys.argv[1])
 
     while not gui_exit.is_set():
 
@@ -117,8 +117,8 @@ def run(gui_pipe, log_pipe, gui_exit):
                 buf += bytes([get_toad_id_from_type(rx_type)])
                 buf += data[2:6]
 
-                buf += data[7:22]  # payload
+                buf += data[6:22]  # payload
                 sr_pos_message = Position_packet(buf)
-                gui_pipe_send(sr_pos_message)
+                gui_pipe.send(sr_pos_message)
 
         #log raw serial data to file
