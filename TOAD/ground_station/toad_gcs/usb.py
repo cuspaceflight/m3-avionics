@@ -108,7 +108,7 @@ def run(gui_pipe, log_pipe, gui_exit):
                 buf += bytes([get_toad_id_from_type(rx_type)])  # ID of origin
                 buf += data[2:6]   # systicks
 
-                buf += data[7:17]  # payload
+                buf += data[6:17]  # payload
                 sr_ranging_message = Ranging_packet(buf)
                 gui_pipe.send(sr_ranging_message)
 
