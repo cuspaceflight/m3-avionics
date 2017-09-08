@@ -1,7 +1,10 @@
-"""Trilateration maths functions.
+"""Trilateration maths functions and process.
 Gregory Brooks 2017
 """
 import numpy as np
+from .toad_packets import *
+from . import coords
+from . import pckt_bin
 
 def speedy_trilat(p_i, r_i, guess = False):
     """Returns position estimate from ground station locations and distances between them and tracked objects.
@@ -125,5 +128,21 @@ def speedy_trilat(p_i, r_i, guess = False):
 
     return pos
 
-def run():
-    
+def run(logging_pipe,gui_pipe,gui_exit):
+    ### Main loop ###
+    while not gui_exit.is_set():
+        if gui_pipe.poll(0.05):
+            packet = gui_pipe.recv()
+            measurement = pckt_bin.add_packet(packet)
+            if isinstance(measurement,pckt_bin.Position_measurement):
+                # Have tof measurements from all toads at one point in time
+                ###run trilat algorithm on measurement object
+                ###use first N position fixes to determine pad location
+                ###log position fixes
+
+
+def test():
+    return #placeholder
+
+if __name__ == "__main__":
+    test()
