@@ -55,6 +55,7 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         # Add slots and signals manually
         self.frame_toad_master.pushButton_conn.clicked.connect(self.toggle_con)
         self.pushButton_zero.clicked.connect(self.confirm_zero)
+        self.actionSave_Terminal.triggered.connect(self.terminal_save)
 
         # Start update thread
         thread_end,self.gui_end = Pipe(duplex=False)  # So that QThread and gui don't use same pipe end at same time
@@ -233,6 +234,13 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
     def set_text(self,text,lineedit):
         lineedit.setText(str(text))
         lineedit.home(False)  # Return cursor to start so most significant digits displayed
+
+    def terminal_save(self):
+        name = QtGui.QFileDialog.getSaveFileName(self,'Save File')
+        file = open(name,'w')
+        text = self.textBrowser_terminal.toPlainText()
+        file.write(text)
+        file.close()
 
 def run(trilat_pipe, usb_pipe, gui_exit):
     app = QtGui.QApplication(sys.argv)

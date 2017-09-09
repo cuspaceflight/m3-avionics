@@ -207,7 +207,7 @@ class Position_packet(Packet):
         textbox.ensureCursorVisible()
         textbox.insertPlainText("POSITION PACKET:\n")
         textbox.insertPlainText("TOAD ID = {}\n".format(self.toad_id))
-        textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp
+        textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp))
         textbox.insertPlainText("Log Type = {}\n".format(self.log_type))
         textbox.insertPlainText("lat = {} degrees\n".format(self.lat))
         textbox.insertPlainText("lon = {} degrees\n".format(self.lon))

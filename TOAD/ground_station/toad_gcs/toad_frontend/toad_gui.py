@@ -287,10 +287,13 @@ class Ui_toad_main_window(object):
         self.menubar = QtGui.QMenuBar(toad_main_window)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1048, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
-        self.menu_menu_bar = QtGui.QMenu(self.menubar)
-        self.menu_menu_bar.setObjectName(_fromUtf8("menu_menu_bar"))
+        self.menuFile = QtGui.QMenu(self.menubar)
+        self.menuFile.setObjectName(_fromUtf8("menuFile"))
         toad_main_window.setMenuBar(self.menubar)
-        self.menubar.addAction(self.menu_menu_bar.menuAction())
+        self.actionSave_Terminal = QtGui.QAction(toad_main_window)
+        self.actionSave_Terminal.setObjectName(_fromUtf8("actionSave_Terminal"))
+        self.menuFile.addAction(self.actionSave_Terminal)
+        self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(toad_main_window)
         self.tabWidget.setCurrentIndex(2)
@@ -335,7 +338,10 @@ class Ui_toad_main_window(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main_tab), _translate("toad_main_window", "Main", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.map_tab), _translate("toad_main_window", "Map", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.term_tab), _translate("toad_main_window", "Terminal", None))
-        self.menu_menu_bar.setTitle(_translate("toad_main_window", "(menu bar)", None))
+        self.menuFile.setTitle(_translate("toad_main_window", "File", None))
+        self.actionSave_Terminal.setText(_translate("toad_main_window", "&Save \'Terminal\'", None))
+        self.actionSave_Terminal.setIconText(_translate("toad_main_window", "&Save \'Terminal\'", None))
+        self.actionSave_Terminal.setShortcut(_translate("toad_main_window", "Ctrl+S", None))
 
 from .toad_frame_1 import toad_frame_1
 from .toad_frame_2 import toad_frame_2

@@ -589,13 +589,25 @@
      <height>25</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_menu_bar">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>(menu bar)</string>
+     <string>File</string>
     </property>
+    <addaction name="actionSave_Terminal"/>
    </widget>
-   <addaction name="menu_menu_bar"/>
+   <addaction name="menuFile"/>
   </widget>
+  <action name="actionSave_Terminal">
+   <property name="text">
+    <string>&amp;Save 'Terminal'</string>
+   </property>
+   <property name="iconText">
+    <string>&amp;Save 'Terminal'</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
