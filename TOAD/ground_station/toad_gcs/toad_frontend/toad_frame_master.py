@@ -63,6 +63,7 @@ class Ui_toad_frame_master(object):
         self.label_id.setObjectName(_fromUtf8("label_id"))
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.label_id)
         self.lineEdit_id = QtGui.QLineEdit(self.widget)
+        self.lineEdit_id.setReadOnly(True)
         self.lineEdit_id.setObjectName(_fromUtf8("lineEdit_id"))
         self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.lineEdit_id)
         self.pushButton_conn = QtGui.QPushButton(self.widget)
@@ -217,6 +218,18 @@ class Ui_toad_frame_master(object):
 
         self.retranslateUi(toad_frame_master)
         QtCore.QMetaObject.connectSlotsByName(toad_frame_master)
+        toad_frame_master.setTabOrder(self.lineEdit_id, self.lineEdit_timestamp_psu)
+        toad_frame_master.setTabOrder(self.lineEdit_timestamp_psu, self.lineEdit_systicks_psu)
+        toad_frame_master.setTabOrder(self.lineEdit_systicks_psu, self.LineEdit_charging)
+        toad_frame_master.setTabOrder(self.LineEdit_charging, self.LineEdit_charge_current)
+        toad_frame_master.setTabOrder(self.LineEdit_charge_current, self.LineEdit_charge_temp)
+        toad_frame_master.setTabOrder(self.LineEdit_charge_temp, self.lineEdit_timestamp_pvt)
+        toad_frame_master.setTabOrder(self.lineEdit_timestamp_pvt, self.LineEdit_itow_pvt)
+        toad_frame_master.setTabOrder(self.LineEdit_itow_pvt, self.LineEdit_systicks_pvt)
+        toad_frame_master.setTabOrder(self.LineEdit_systicks_pvt, self.LineEdit_fixtype)
+        toad_frame_master.setTabOrder(self.LineEdit_fixtype, self.LineEdit_validity)
+        toad_frame_master.setTabOrder(self.LineEdit_validity, self.DateTimeEdit)
+        toad_frame_master.setTabOrder(self.DateTimeEdit, self.LineEdit_num_sv)
 
     def retranslateUi(self, toad_frame_master):
         toad_frame_master.setWindowTitle(_translate("toad_frame_master", "toad_frame_master_window", None))

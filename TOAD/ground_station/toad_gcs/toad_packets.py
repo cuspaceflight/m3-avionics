@@ -22,6 +22,8 @@ TOAD_4 = 8
 TOAD_5 = 16
 TOAD_6 = 32
 
+NUM_TOADS=6
+
 class Packet(object):
     """Base class"""
     def __init__(self, input_struct=bytes(128)):
@@ -161,6 +163,8 @@ class Ranging_packet(Packet):
         self.i_tow = ranging[2]
         self.batt_v = ranging[3]/10  # V
         self.mcu_temp = ranging[4]  # Celsius
+    def dist(self,freq=84000000):
+        return(299792458*self.tof/freq)  # speed*time
     def printout(self):
         print("RANGING PACKET:")
         print("TOAD ID = ", self.toad_id)
@@ -168,7 +172,7 @@ class Ranging_packet(Packet):
         print("Log Type = ", self.log_type)
         print("time of flight = ", self.tof)
         print("i_tow = ", self.i_tow)
-        print ("battery voltage = ", self.batt_v, "V")
+        print("battery voltage = ", self.batt_v, "V")
         print("stm32 temp = ", self.mcu_temp, "degrees C")
         print('\n\n')
 
@@ -203,3 +207,17 @@ class Position_packet(Packet):
 class Usb_command:
     def __init__(self,conn):
         self.conn = conn
+
+class Position_fix:
+    # Result from trilat algorithm
+    def __init__(self,e,n,u,itow_s):
+        self.e_coord = e
+        self.n_coord = n
+        self.u_coord = u
+        self.itow_s = itow_s
+# class Trilat_point:
+#     def __init__(self,lat,lon,height,tof):
+#         self.lat = lat
+#         self.lon = lon
+#         self.height = height
+#         self.tof = tof

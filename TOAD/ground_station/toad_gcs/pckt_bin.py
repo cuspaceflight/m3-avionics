@@ -1,14 +1,15 @@
 """Place position packets into bins depending on itow value"""
 
-from toad_packets import *
+from .toad_packets import *
 from math import floor
+from . import coords
 
 class Ref_point:
     def __init(self):
-        self.latitude = 0  # degrees
-        self.longitude = 0  # degrees
-        self.height = 0  # height
-        self.distance = 0  # distance
+        self.e_coord = 0   # m
+        self.n_coord = 0   # m
+        self.u_coord = 0   # m
+        self.distance = 0  # m
 
 class Position_measurement:
     def __init__(self,itow_s):
@@ -26,10 +27,10 @@ class Position_measurement:
         self.flags = self.flags | 2**(id)
         self.check_full()
 
-    def set_pos(self,id,lat,lon,h):
-        self.toads[id].latitude = lat
-        self.toads[id].longitude = lon
-        self.toads[id].height = h
+    def set_pos(self,id,e,n,u):
+        self.toads[id].e_coord = e
+        self.toads[id].n_coord = n
+        self.toads[id].u_coord = u
         # Set flags
         self.flags = self.flags | 2**(id+NUM_TOADS)
         self.check_full()
@@ -83,7 +84,8 @@ def add_packet(packet):
 
     if packet.log_type == MESSAGE_POSITION:
         # Put position into found bin
-        measurement_list[found_bin].set_pos(id,packet.lat,packet.lon,packet.height)
+        enu_coords = coords.convert_llh_to_ENU(packet.lat,packet.lon,packet.height)
+        measurement_list[found_bin].set_pos(id,enu_coords[0],enu_coords[1],enu_coords[2])
 
     elif packet.log_type == MESSAGE_RANGING:
         # Put distance into found bin

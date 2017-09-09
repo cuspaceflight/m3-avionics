@@ -129,20 +129,33 @@ def speedy_trilat(p_i, r_i, guess = False):
     return pos
 
 def run(logging_pipe,gui_pipe,gui_exit):
+    coords.set_enu_ref([40.883683,-119.0781,1191])  # From Balls 2017 website(http://www.ballslaunch.com)
+                                                    # Not the same as the origin used in the gui,
+                                                    # so that coordinate axes don't rotate when gui origin is changed
+
     ### Main loop ###
     while not gui_exit.is_set():
         if gui_pipe.poll(0.05):
             packet = gui_pipe.recv()
             measurement = pckt_bin.add_packet(packet)
             if isinstance(measurement,pckt_bin.Position_measurement):
-                # Have tof measurements from all toads at one point in time
-                ###run trilat algorithm on measurement object
-                ###use first N position fixes to determine pad location
+                # We have tof measurements from all toads for the same itow second
+                # Run trilateration algorithm to obtain position fix
+                e_coords = [x.e_coord for x in measurement.toads]
+                n_coords = [x.n_coord for x in measurement.toads]
+                u_coords = [x.u_coord for x in measurement.toads]
+                pos_matrix = np.array([e_coords, n_coords, u_coords])
+                range_vector = np.array([x.distance for x in measurement.toads])
+
+                estimate = speedy_trilat(pos_matrix,range_vector,True)  # estimate in ENU coordinate system
+                return_pos = Position_fix(estimate[0],estimate[1],estimate[2],measurement.itow_s)
+                gui_pipe.send(Position_fix)
+
                 ###log position fixes
 
 
 def test():
-    return #placeholder
+    pass
 
 if __name__ == "__main__":
     test()

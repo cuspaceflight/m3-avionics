@@ -6,8 +6,8 @@ import multiprocessing
 
 #from . import logging
 from . import usb
-#from . import state_estimator
 from . import gui_interface
+from . import trilateration
 import time
 import sys
 
@@ -28,10 +28,10 @@ def run():
     ############################################################################
     print("TOAD Ground Station 2017")
     #Pipe TOAD data from USB to logging process
-    usb_log_pipe,log_usb_pipe = multiprocessing.Pipe(duplex=False)
+    log_usb_pipe, usb_log_pipe = multiprocessing.Pipe(duplex=False)
 
     # Pipe position solutions for logging
-    tri_log_pipe,log_tri_pipe = multiprocessing.Pipe(duplex=False)
+    log_tri_pipe, tri_log_pipe = multiprocessing.Pipe(duplex=False)
 
     # Duplex pipe between usb and gui processes
     usb_gui_pipe,gui_usb_pipe = multiprocessing.Pipe(True)
@@ -59,8 +59,8 @@ def run():
     usb_process.start()
 
     # Start trilateration process
-    #trilat_process = multiprocessing.Process(target=trilateration.run, args=(tri_log_pipe,tri_gui_pipe))
-    #trilat_process.start()
+    trilat_process = multiprocessing.Process(target=trilateration.run, args=(tri_log_pipe,tri_gui_pipe, gui_exit))
+    trilat_process.start()
 
     print("Running...")
     gui_process.join()
@@ -68,4 +68,6 @@ def run():
     print("GUI process ended")
     usb_process.join()
     print("USB process ended")
+    trilat_process.join()
+    print("Trilateration process ended")
     time.sleep(0.2)

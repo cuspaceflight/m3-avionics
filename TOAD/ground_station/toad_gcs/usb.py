@@ -45,7 +45,6 @@ def run(gui_pipe, log_pipe, gui_exit):
     """
     # Open Serial Port
     ser = serial.Serial(sys.argv[1])
-
     while not gui_exit.is_set():
 
         if gui_pipe.poll():
@@ -59,66 +58,69 @@ def run(gui_pipe, log_pipe, gui_exit):
                     ser.close()
 
         # Read in a Log
-        data = ser.read(128)
+        if ser.in_waiting()>=128:
+            data = ser.read(128)
 
-        # Get Message Log Type
-        log_type = struct.unpack('<B', data[0:1])
-        log_type = log_type[0]
+            # Get Message Log Type
+            log_type = struct.unpack('<B', data[0:1])
+            log_type = log_type[0]
 
-        # Handle PVT Message
-        if (log_type == MESSAGE_PVT):
-            pvt_message = Pvt_packet(data)
-            gui_pipe.send(pvt_message)
+            # Handle PVT Message
+            if (log_type == MESSAGE_PVT):
+                pvt_message = Pvt_packet(data)
+                gui_pipe.send(pvt_message)
 
-        # Handle PSU Message
-        if (log_type == MESSAGE_PSU):
-            psu_message = Psu_packet(data)
-            gui_pipe.send(psu_message)
+            # Handle PSU Message
+            if (log_type == MESSAGE_PSU):
+                psu_message = Psu_packet(data)
+                gui_pipe.send(psu_message)
 
-        # Handle Ranging Packet
-        if (log_type == MESSAGE_RANGING):
-            ranging_message = Ranging_packet(data)
-            gui_pipe.send(ranging_message)
+            # Handle Ranging Packet
+            if (log_type == MESSAGE_RANGING):
+                ranging_message = Ranging_packet(data)
+                gui_pipe.send(ranging_message)
 
-        # Handle Position Packet
-        if (log_type == MESSAGE_POSITION):
-            pos_message = Position_packet(data)
-            gui_pipe.send(pos_message)
+            # Handle Position Packet
+            if (log_type == MESSAGE_POSITION):
+                pos_message = Position_packet(data)
+                gui_pipe.send(pos_message)
 
-        # Handle SR Traffic - RX Packet Logged
-        if (log_type == MESSAGE_RX_PACKET):
-            ##### Uncomment to print things  #####
-            # Get Message Metadata
-            # meta_data = struct.unpack('<BI', data[1:6])
-            #toad_id = meta_data[1]
-            # systick = meta_data[2]
-            #systick /= 10000.0
+            # Handle SR Traffic - RX Packet Logged
+            if (log_type == MESSAGE_RX_PACKET):
+                ##### Uncomment to print things  #####
+                # Get Message Metadata
+                # meta_data = struct.unpack('<BI', data[1:6])
+                #toad_id = meta_data[1]
+                # systick = meta_data[2]
+                #systick /= 10000.0
 
-            #print("SR TRAFFIC [RX Packet]:")
-            #print("TOAD ID = ", toad_id)
-            #print("Timestamp = ", systick, " s")
-            #######################################
-            rx_type = data[6]
+                #print("SR TRAFFIC [RX Packet]:")
+                #print("TOAD ID = ", toad_id)
+                #print("Timestamp = ", systick, " s")
+                #######################################
+                rx_type = data[6]
 
-            buf = b''
+                buf = b''
 
-            # Handle Packet Types
-            if ((rx_type & RANGE_PACKET) == RANGE_PACKET):
-                buf += bytes([MESSAGE_RANGING])  # Message type
-                buf += bytes([get_toad_id_from_type(rx_type)])  # ID of origin
-                buf += data[2:6]   # systicks
+                # Handle Packet Types
+                if ((rx_type & RANGE_PACKET) == RANGE_PACKET):
+                    buf += bytes([MESSAGE_RANGING])  # Message type
+                    buf += bytes([get_toad_id_from_type(rx_type)])  # ID of origin
+                    buf += data[2:6]   # systicks
 
-                buf += data[6:17]  # payload
-                sr_ranging_message = Ranging_packet(buf)
-                gui_pipe.send(sr_ranging_message)
+                    buf += data[6:17]  # payload
+                    sr_ranging_message = Ranging_packet(buf)
+                    gui_pipe.send(sr_ranging_message)
 
-            if ((rx_type & POSITION_PACKET) == POSITION_PACKET):
-                buf += bytes([MESSAGE_POSITION])
-                buf += bytes([get_toad_id_from_type(rx_type)])
-                buf += data[2:6]
+                if ((rx_type & POSITION_PACKET) == POSITION_PACKET):
+                    buf += bytes([MESSAGE_POSITION])
+                    buf += bytes([get_toad_id_from_type(rx_type)])
+                    buf += data[2:6]
 
-                buf += data[6:22]  # payload
-                sr_pos_message = Position_packet(buf)
-                gui_pipe.send(sr_pos_message)
+                    buf += data[6:22]  # payload
+                    sr_pos_message = Position_packet(buf)
+                    gui_pipe.send(sr_pos_message)
 
-        #log raw serial data to file
+            #log raw serial data to file
+        else:
+            time.sleep(0.05)

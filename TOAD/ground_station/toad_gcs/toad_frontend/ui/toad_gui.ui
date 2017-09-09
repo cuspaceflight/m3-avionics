@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1048</width>
-    <height>579</height>
+    <height>747</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,7 @@
              <x>0</x>
              <y>0</y>
              <width>977</width>
-             <height>490</height>
+             <height>658</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -84,22 +84,16 @@
                   <string notr="true">background-color: rgb(255, 255, 255);</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_2">
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="speed_label">
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="m_unit_label_2">
                     <property name="maximumSize">
                      <size>
-                      <width>70</width>
+                      <width>30</width>
                       <height>16777215</height>
                      </size>
                     </property>
-                    <property name="font">
-                     <font>
-                      <weight>75</weight>
-                      <bold>true</bold>
-                     </font>
-                    </property>
                     <property name="text">
-                     <string>Speed</string>
+                     <string>m</string>
                     </property>
                    </widget>
                   </item>
@@ -121,9 +115,6 @@
                      <string>Max alt</string>
                     </property>
                    </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QLCDNumber" name="altimeter"/>
                   </item>
                   <item row="0" column="0">
                    <widget class="QLabel" name="altitude_label">
@@ -157,16 +148,35 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="2">
-                   <widget class="QLabel" name="m_unit_label_2">
+                  <item row="0" column="1">
+                   <widget class="QLCDNumber" name="altimeter">
                     <property name="maximumSize">
                      <size>
-                      <width>30</width>
+                      <width>550</width>
                       <height>16777215</height>
                      </size>
                     </property>
+                    <property name="segmentStyle">
+                     <enum>QLCDNumber::Flat</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="speed_label">
+                    <property name="maximumSize">
+                     <size>
+                      <width>70</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="text">
-                     <string>m</string>
+                     <string>Speed</string>
                     </property>
                    </widget>
                   </item>
@@ -184,10 +194,43 @@
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QLCDNumber" name="max_alt_value"/>
+                   <widget class="QLCDNumber" name="max_alt_value">
+                    <property name="maximumSize">
+                     <size>
+                      <width>550</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="segmentStyle">
+                     <enum>QLCDNumber::Flat</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QPushButton" name="pushButton_zero">
+                    <property name="focusPolicy">
+                     <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(203, 203, 203);</string>
+                    </property>
+                    <property name="text">
+                     <string>Set as start point</string>
+                    </property>
+                   </widget>
                   </item>
                   <item row="2" column="1">
-                   <widget class="QLCDNumber" name="speedometer"/>
+                   <widget class="QLineEdit" name="lineEdit_speed">
+                    <property name="maximumSize">
+                     <size>
+                      <width>550</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </widget>
@@ -205,8 +248,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>873</width>
-                    <height>310</height>
+                    <width>889</width>
+                    <height>432</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -284,7 +327,7 @@
                      <item row="4" column="0">
                       <widget class="QLabel" name="dxLabel">
                        <property name="text">
-                        <string>dx</string>
+                        <string>Δx (East)</string>
                        </property>
                       </widget>
                      </item>
@@ -304,7 +347,7 @@
                      <item row="5" column="0">
                       <widget class="QLabel" name="dyLabel">
                        <property name="text">
-                        <string>dy</string>
+                        <string>Δy (North)</string>
                        </property>
                       </widget>
                      </item>
@@ -324,7 +367,7 @@
                      <item row="6" column="0">
                       <widget class="QLabel" name="dzLabel">
                        <property name="text">
-                        <string>dz</string>
+                        <string>Δz (Up)</string>
                        </property>
                       </widget>
                      </item>
@@ -341,35 +384,15 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="7" column="0">
+                     <item row="8" column="0">
                       <widget class="QLabel" name="dxDtLabel">
                        <property name="text">
                         <string>dx/dt</string>
                        </property>
                       </widget>
                      </item>
-                     <item row="7" column="1">
-                      <widget class="QLineEdit" name="dxDtLineEdit">
-                       <property name="maximumSize">
-                        <size>
-                         <width>500</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="readOnly">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="8" column="0">
-                      <widget class="QLabel" name="dyDtLabel">
-                       <property name="text">
-                        <string>dy/dt</string>
-                       </property>
-                      </widget>
-                     </item>
                      <item row="8" column="1">
-                      <widget class="QLineEdit" name="dyDtLineEdit">
+                      <widget class="QLineEdit" name="dxdtLineEdit">
                        <property name="maximumSize">
                         <size>
                          <width>500</width>
@@ -382,14 +405,14 @@
                       </widget>
                      </item>
                      <item row="9" column="0">
-                      <widget class="QLabel" name="dzDtLabel">
+                      <widget class="QLabel" name="dyDtLabel">
                        <property name="text">
-                        <string>dz/dt</string>
+                        <string>dy/dt</string>
                        </property>
                       </widget>
                      </item>
                      <item row="9" column="1">
-                      <widget class="QLineEdit" name="dzDtLineEdit">
+                      <widget class="QLineEdit" name="dydtLineEdit">
                        <property name="maximumSize">
                         <size>
                          <width>500</width>
@@ -398,6 +421,39 @@
                        </property>
                        <property name="readOnly">
                         <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="10" column="0">
+                      <widget class="QLabel" name="dzDtLabel">
+                       <property name="text">
+                        <string>dz/dt</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="10" column="1">
+                      <widget class="QLineEdit" name="dzdtLineEdit">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="7" column="0" colspan="2">
+                      <widget class="QLabel" name="label">
+                       <property name="font">
+                        <font>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Velocity Estimates</string>
                        </property>
                       </widget>
                      </item>
@@ -412,6 +468,9 @@
             </item>
             <item row="0" column="1">
              <widget class="toad_frame_1" name="frame_toad_1">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -422,6 +481,9 @@
             </item>
             <item row="0" column="2">
              <widget class="toad_frame_2" name="frame_toad_2">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -432,6 +494,9 @@
             </item>
             <item row="0" column="3">
              <widget class="toad_frame_3" name="frame_toad_3">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -442,16 +507,9 @@
             </item>
             <item row="1" column="1">
              <widget class="toad_frame_4" name="frame_toad_4">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
               </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="toad_frame_6" name="frame_toad_6">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -462,6 +520,22 @@
             </item>
             <item row="1" column="2">
              <widget class="toad_frame_5" name="frame_toad_5">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="toad_frame_6" name="frame_toad_6">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -562,6 +636,25 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>frame_toad_1</tabstop>
+  <tabstop>frame_toad_2</tabstop>
+  <tabstop>frame_toad_3</tabstop>
+  <tabstop>frame_toad_4</tabstop>
+  <tabstop>frame_toad_5</tabstop>
+  <tabstop>frame_toad_6</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+  <tabstop>latitudeLineEdit</tabstop>
+  <tabstop>longitudeLineEdit</tabstop>
+  <tabstop>dxLineEdit</tabstop>
+  <tabstop>dyLineEdit</tabstop>
+  <tabstop>dzLineEdit</tabstop>
+  <tabstop>dxdtLineEdit</tabstop>
+  <tabstop>dydtLineEdit</tabstop>
+  <tabstop>dzdtLineEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

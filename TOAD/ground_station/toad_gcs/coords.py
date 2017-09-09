@@ -84,6 +84,12 @@ def convert_ENU_to_ECEF( enu_coords ):
     XYZ += np.array([enu_ref_ecef[0],enu_ref_ecef[1],enu_ref_ecef[2]])
     return(XYZ[0],XYZ[1],XYZ[2])
 
+def convert_llh_to_ENU( p_coords ):
+    return convert_ECEF_to_ENU(convert_llh_to_ECEF(p_coords))
+
+def convert_ENU_to_llh( enu_coords ):
+    return convert_ECEF_to_llh(convert_ENU_to_ECEF(enu_coords))
+
 def set_enu_ref(llh):
     global enu_ref_llh
     global enu_ref_ecef
@@ -103,7 +109,7 @@ def set_enu_ref(llh):
 
 
 def test():
-    set_enu_ref([40.9,-119.1,1191])  # Black Rock Desert
+    set_enu_ref([40.883683,-119.0781,1191])  # Black Rock Desert
     llh = (40.9,-119.0,1190)
     print("LLH:     ", llh)
     res = convert_llh_to_ECEF(llh)

@@ -216,6 +216,20 @@ class Ui_toad_frame(object):
 
         self.retranslateUi(toad_frame)
         QtCore.QMetaObject.connectSlotsByName(toad_frame)
+        toad_frame.setTabOrder(self.label_ranging_title, self.lineEdit_timestamp_s_ranging)
+        toad_frame.setTabOrder(self.lineEdit_timestamp_s_ranging, self.lineEdit_timestamp_itow_ranging)
+        toad_frame.setTabOrder(self.lineEdit_timestamp_itow_ranging, self.lineEdit_timestamp_systicks_ranging)
+        toad_frame.setTabOrder(self.lineEdit_timestamp_systicks_ranging, self.lineEdit_tof)
+        toad_frame.setTabOrder(self.lineEdit_tof, self.spinBox_timerfreq)
+        toad_frame.setTabOrder(self.spinBox_timerfreq, self.lineEdit_distance)
+        toad_frame.setTabOrder(self.lineEdit_distance, self.lineEdit_timestamp_s_pos)
+        toad_frame.setTabOrder(self.lineEdit_timestamp_s_pos, self.lineEdit_timestamp_systicks_pos)
+        toad_frame.setTabOrder(self.lineEdit_timestamp_systicks_pos, self.lineEdit_lat)
+        toad_frame.setTabOrder(self.lineEdit_lat, self.lineEdit_lon)
+        toad_frame.setTabOrder(self.lineEdit_lon, self.lineEdit_height)
+        toad_frame.setTabOrder(self.lineEdit_height, self.lineEdit_num_sat)
+        toad_frame.setTabOrder(self.lineEdit_num_sat, self.lineEdit_batt_v)
+        toad_frame.setTabOrder(self.lineEdit_batt_v, self.lineEdit_mcu_temp)
 
     def retranslateUi(self, toad_frame):
         toad_frame.setWindowTitle(_translate("toad_frame", "toad_frame", None))

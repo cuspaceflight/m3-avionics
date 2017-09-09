@@ -85,7 +85,11 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEdit_id"/>
+          <widget class="QLineEdit" name="lineEdit_id">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
          <item row="1" column="1">
           <widget class="QPushButton" name="pushButton_conn">
@@ -449,6 +453,21 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_id</tabstop>
+  <tabstop>lineEdit_timestamp_psu</tabstop>
+  <tabstop>lineEdit_systicks_psu</tabstop>
+  <tabstop>LineEdit_charging</tabstop>
+  <tabstop>LineEdit_charge_current</tabstop>
+  <tabstop>LineEdit_charge_temp</tabstop>
+  <tabstop>lineEdit_timestamp_pvt</tabstop>
+  <tabstop>LineEdit_itow_pvt</tabstop>
+  <tabstop>LineEdit_systicks_pvt</tabstop>
+  <tabstop>LineEdit_fixtype</tabstop>
+  <tabstop>LineEdit_validity</tabstop>
+  <tabstop>DateTimeEdit</tabstop>
+  <tabstop>LineEdit_num_sv</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

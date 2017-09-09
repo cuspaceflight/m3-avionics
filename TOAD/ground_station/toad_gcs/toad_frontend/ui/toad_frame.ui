@@ -474,6 +474,23 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>label_ranging_title</tabstop>
+  <tabstop>lineEdit_timestamp_s_ranging</tabstop>
+  <tabstop>lineEdit_timestamp_itow_ranging</tabstop>
+  <tabstop>lineEdit_timestamp_systicks_ranging</tabstop>
+  <tabstop>lineEdit_tof</tabstop>
+  <tabstop>spinBox_timerfreq</tabstop>
+  <tabstop>lineEdit_distance</tabstop>
+  <tabstop>lineEdit_timestamp_s_pos</tabstop>
+  <tabstop>lineEdit_timestamp_systicks_pos</tabstop>
+  <tabstop>lineEdit_lat</tabstop>
+  <tabstop>lineEdit_lon</tabstop>
+  <tabstop>lineEdit_height</tabstop>
+  <tabstop>lineEdit_num_sat</tabstop>
+  <tabstop>lineEdit_batt_v</tabstop>
+  <tabstop>lineEdit_mcu_temp</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
