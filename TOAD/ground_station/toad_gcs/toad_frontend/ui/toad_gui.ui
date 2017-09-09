@@ -24,7 +24,7 @@
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="main_tab">
        <attribute name="title">
@@ -569,6 +569,11 @@
        <attribute name="title">
         <string>Terminal</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QTextBrowser" name="textBrowser_terminal"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

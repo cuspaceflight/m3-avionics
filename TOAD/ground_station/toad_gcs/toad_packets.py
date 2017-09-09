@@ -2,6 +2,7 @@
 Gregory Brooks, Matt Coates 2017"""
 
 import struct
+from PyQt4 import QtCore,QtGui
 
 # Message Type Definitions
 MESSAGE_PVT         = 1
@@ -37,6 +38,12 @@ class Packet(object):
         self.systick_freq = 10000  # Hz
         self.timestamp = self.systick / self.systick_freq  # s
 
+    def printout(self,textbox):
+        textbox.moveCursor(QtGui.QTextCursor.End)
+        textbox.ensureCursorVisible()
+        textbox.insertPlainText("Log type: {}\n".format(self.log_type))
+        textbox.insertPlainText("Toad ID: {}\n".format(self.toad_id))
+        textbox.insertPlainText("Systicks: {}\n".format(self.systick))
 
 
 
@@ -95,40 +102,42 @@ class Pvt_packet(Packet):
         else:
             return list[self.fix_type]
 
-    def printout(self):
-        print("PVT MESSAGE:")
-        print("TOAD ID = ", self.toad_id)
-        print("Timestamp = ", self.timestamp, " s")
-        print("Log Type = ", self.log_type)
-        print("i_tow = ", self.i_tow)
-        print("year = ", self.year)
-        print("month = ", self.month)
-        print("day = ", self.day)
-        print("hour = ", self.hour)
-        print("minute = ", self.minute)
-        print("second = ", self.second)
-        print("valid = ", self.valid)
-        print("t_acc = ", self.t_acc)
-        print("nano = ", self.nano)
-        print("fix_type = ", self.fix_type)
-        print("flags = ", self.flags)
-        print("num_sv = ", self.num_sv)
-        print("lon = ", self.lon, "degrees")
-        print("lat = ", self.lat, "degrees")
-        print("height = ", self.height, "m")
-        print("h_msl = ", self.h_msl, "m")
-        print("h_acc = ", self.h_acc)
-        print("v_acc = ",self.v_acc)
-        print("velN = ", self.velN)
-        print("velE = ", self.velE)
-        print("velD = ", self.velD)
-        print("gspeed = ", self.gspeed)
-        print("head_mot = ", self.head_mot)
-        print("s_acc = ", self.s_acc)
-        print("head_acc = ", self.head_acc)
-        print("p_dop = ", self.p_dop)
-        print("head_veh = ", self.head_veh)
-        print('\n\n')
+    def printout(self,textbox):
+        textbox.moveCursor(QtGui.QTextCursor.End)
+        textbox.ensureCursorVisible()
+        textbox.insertPlainText("PVT MESSAGE:\n")
+        textbox.insertPlainText("TOAD ID = {}\n".format(self.toad_id))
+        textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp))
+        textbox.insertPlainText("Log type = {}\n".format(self.log_type))
+        textbox.insertPlainText("i_tow = {} ms\n".format(self.i_tow))
+        textbox.insertPlainText("year = {}\n".format(self.year))
+        textbox.insertPlainText("month = {}\n".format(self.month))
+        textbox.insertPlainText("day = {}\n".format(self.day))
+        textbox.insertPlainText("hour = {}\n".format(self.hour))
+        textbox.insertPlainText("minute = {}\n".format(self.minute))
+        textbox.insertPlainText("second = {}\n".format(self.second))
+        textbox.insertPlainText("valid = {}\n".format(self.valid))
+        textbox.insertPlainText("t_acc = {} ns\n".format(self.t_acc))
+        textbox.insertPlainText("nano = {} ns\n".format(self.nano))
+        textbox.insertPlainText("fix_type = {}\n".format(self.fix_type))
+        textbox.insertPlainText("flags = {}\n".format(self.flags))
+        textbox.insertPlainText("num_sv = {}\n".format(self.num_sv))
+        textbox.insertPlainText("lat = {} degrees\n".format(self.lat))
+        textbox.insertPlainText("lon = {} degrees\n".format(self.lon))
+        textbox.insertPlainText("height = {} m\n".format(self.height))
+        textbox.insertPlainText("h_msl = {} m\n".format(self.h_msl))
+        textbox.insertPlainText("h_acc = {} mm\n".format(self.h_acc))
+        textbox.insertPlainText("v_acc = {} mm\n".format(self.v_acc))
+        textbox.insertPlainText("velN = {} mm/s\n".format(self.velN))
+        textbox.insertPlainText("velE = {} mm/s\n".format(self.velE))
+        textbox.insertPlainText("velD = {} mm/s\n".format(self.velD))
+        textbox.insertPlainText("gspeed = {} mm/s\n".format(self.gspeed))
+        textbox.insertPlainText("head_mot = {} degrees\n".format(self.head_mot))
+        textbox.insertPlainText("s_acc = {} mm/s\n".format(self.s_acc))
+        textbox.insertPlainText("head_acc = {} degrees\n".format(self.head_acc))
+        textbox.insertPlainText("p_dop = {}\n".format(self.p_dop))
+        textbox.insertPlainText("head_veh = {} degrees\n".format(self.head_veh))
+        textbox.insertPlainText("\n\n")
 
 class Psu_packet(Packet):
     def __init__(self, input_struct=bytes(128)):
@@ -142,16 +151,18 @@ class Psu_packet(Packet):
         self.charge_temperature = psu[2]  # Celsius
 
     def printout(self):
-        print("PSU MESSAGE:")
-        print("TOAD ID = ", self.toad_id)
-        print("Timestamp = ", self.timestamp, " s")
-        print("Log Type = ", self.log_type)
-        print("battery voltage = ", self.batt_v, "V")
-        print("stm32 temp = ", self.mcu_temp, "degrees C")
-        print("charging = ", self.charging)
-        print("charge current = ", self.charge_current, "mA")
-        print("charge temperature = ", self.charge_temperature, "degrees C")
-        print('\n\n')
+        textbox.moveCursor(QtGui.QTextCursor.End)
+        textbox.ensureCursorVisible()
+        textbox.insertPlainText("PSU MESSAGE:\n")
+        textbox.insertPlainText("TOAD ID = {}\n".format(self.toad_id))
+        textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp))
+        textbox.insertPlainText("Log type = {}\n".format(self.log_type))
+        textbox.insertPlainText("battery voltage = {} V\n".format(self.batt_v))
+        textbox.insertPlainText("stm32 temp = {} °C\n".format(self.mcu_temp))
+        textbox.insertPlainText("charging = {}\n".format(self.charging))
+        textbox.insertPlainText("charge current = {} mA\n".format(self.charge_current))
+        textbox.insertPlainText("charge temperature = {} °C\n".format(self.charge_temperature))
+        textbox.insertPlainText("\n\n")
 
 class Ranging_packet(Packet):
     def __init__(self, input_struct=bytes(128)):
@@ -166,15 +177,17 @@ class Ranging_packet(Packet):
     def dist(self,freq=84000000):
         return(299792458*self.tof/freq)  # speed*time
     def printout(self):
-        print("RANGING PACKET:")
-        print("TOAD ID = ", self.toad_id)
-        print("Timestamp = ", self.timestamp, " s")
-        print("Log Type = ", self.log_type)
-        print("time of flight = ", self.tof)
-        print("i_tow = ", self.i_tow)
-        print("battery voltage = ", self.batt_v, "V")
-        print("stm32 temp = ", self.mcu_temp, "degrees C")
-        print('\n\n')
+        textbox.moveCursor(QtGui.QTextCursor.End)
+        textbox.ensureCursorVisible()
+        textbox.insertPlainText("RANGING PACKET:\n")
+        textbox.insertPlainText("TOAD ID = {}\n".format(self.toad_id))
+        textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp))
+        textbox.insertPlainText("Log Type = {}\n".format(self.log_type))
+        textbox.insertPlainText("time of flight = {} (timer register)\n".format(self.tof))
+        textbox.insertPlainText("i_tow = {} ms\n".format(self.i_tow))
+        textbox.insertPlainText("battery voltage = {} V\n".format(self.batt_v))
+        textbox.insertPlainText("stm32 temp = {} °C\n".format(self.mcu_temp))
+        textbox.insertPlainText("\n\n")
 
 class Position_packet(Packet):
     def __init__(self, input_struct=bytes(128)):
@@ -190,17 +203,19 @@ class Position_packet(Packet):
         self.mcu_temp = pos[6]  # Celsius
 
     def printout(self):
-        print("POSITION PACKET:")
-        print("TOAD ID = ", self.toad_id)
-        print("Timestamp = ", self.timestamp, " s")
-        print("Log Type = ", self.log_type)
-        print("lon = ", self.lon, "degrees")
-        print("lat = ", self.lat, "degrees")
-        print("height = ", self.height, "m")
-        print("num sat = ",self.num_sat)
-        print("battery voltage = ", self.batt_v, "V")
-        print("stm32 temp = ", self.mcu_temp, "degrees C")
-        print('\n\n')
+        textbox.moveCursor(QtGui.QTextCursor.End)
+        textbox.ensureCursorVisible()
+        textbox.insertPlainText("POSITION PACKET:\n")
+        textbox.insertPlainText("TOAD ID = {}\n".format(self.toad_id))
+        textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp
+        textbox.insertPlainText("Log Type = {}\n".format(self.log_type))
+        textbox.insertPlainText("lat = {} degrees\n".format(self.lat))
+        textbox.insertPlainText("lon = {} degrees\n".format(self.lon))
+        textbox.insertPlainText("height = {} m\n".format(self.height))
+        textbox.insertPlainText("num sat = {}\n".format(self.num_sat))
+        textbox.insertPlainText("battery voltage = {} V\n".format(self.batt_v))
+        textbox.insertPlainText("stm32 temp = {} °C\n".format(self.mcu_temp))
+        textbox.insertPlainText("\n\n")
 
 
 ### Internal to ground station ###

@@ -1,8 +1,10 @@
-- Include serial port as argument
+- Test things
+- Logging
 
 ### GUI ###
 - Use spinbox value-change signal
 - Icons
-- Map
+- Map (offline)
 - Print units in the lineEdit box
 - Terminal tab
+- Save contents of Terminal tab to file

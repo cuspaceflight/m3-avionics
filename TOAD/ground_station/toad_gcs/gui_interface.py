@@ -168,6 +168,9 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         self.set_text(packet.mcu_temp, frame.frame.lineEdit_mcu_temp)
 
     def new_packet(self, packet):
+        # Print to terminal tab
+        packet.printout(self.textBrowser_terminal)
+
         if packet.toad_id == TOAD_1:
             toad_frame_x = self.frame_toad_1
         elif packet.toad_id == TOAD_2:
