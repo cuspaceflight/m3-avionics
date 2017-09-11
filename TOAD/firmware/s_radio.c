@@ -45,7 +45,7 @@ struct si446x_board_config brdcfg = {
  * This specifies our Labrador frequency, baud, codes, encoder/decoder, etc.
  */
 struct labrador_config labcfg = {
-    .freq = 869700000,
+    .freq = 915000000,
     .baud = 2000,
     .tx_code = TXCODE,
     .rx_code = RXCODE,
