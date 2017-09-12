@@ -82,7 +82,7 @@ static THD_FUNCTION(MEASUREThread, arg) {
             
             /* No Telemetry Detected */
             telem_activity = FALSE;
-            //continue;
+            continue;
         }
         
         /* Lock Mutexs */
