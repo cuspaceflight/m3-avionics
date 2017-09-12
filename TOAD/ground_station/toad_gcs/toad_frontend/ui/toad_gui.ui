@@ -24,7 +24,7 @@
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="main_tab">
        <attribute name="title">
@@ -560,11 +560,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="map_tab">
-       <attribute name="title">
-        <string>Map</string>
-       </attribute>
-      </widget>
       <widget class="QWidget" name="term_tab">
        <attribute name="title">
         <string>Terminal</string>
@@ -654,7 +649,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
   <tabstop>scrollArea</tabstop>
   <tabstop>frame_toad_1</tabstop>
   <tabstop>frame_toad_2</tabstop>

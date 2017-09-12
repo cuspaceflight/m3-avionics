@@ -5,6 +5,10 @@
 - Use spinbox value-change signal
 - Icons
 - Map (offline)
+    - Refresh button for map
+    - Other textures for tiles?
+    - Map tile licensing
 - Print units in the lineEdit box
-- Terminal tab
-- Save contents of Terminal tab to file
+
+
+

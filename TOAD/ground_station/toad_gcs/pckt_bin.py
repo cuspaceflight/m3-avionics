@@ -1,4 +1,5 @@
-"""Place position packets into bins depending on itow value"""
+"""Place position packets into bins depending on itow value
+Gregory Brooks 2017"""
 
 from .toad_packets import *
 from math import floor

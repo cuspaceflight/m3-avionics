@@ -2,7 +2,7 @@
 Gregory Brooks 2017
 """
 
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore, QtGui, QtWebKit
 from PyQt4.QtCore import QThread, SIGNAL
 from multiprocessing import Pipe, Process
 #from .toad_frontend import *
@@ -10,6 +10,15 @@ from .toad_frontend.toad_gui import Ui_toad_main_window
 from .toad_packets import *
 from .coords import convert_ENU_to_llh
 import sys
+import os
+
+script_dir = os.path.dirname(__file__)
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
 
 class MainThd(QThread):
     def __init__(self, window_pipe, trilat_pipe, usb_pipe):
@@ -52,6 +61,18 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         super().__init__(parent)
         self.setupUi(self)
 
+        # Add map
+        self.map_view = QtWebKit.QWebView()
+        self.map_view.setObjectName(_fromUtf8("map_view"))
+
+        self.map_view.page().mainFrame().addToJavaScriptWindowObject("TOAD Map", self)
+        rel_path = 'leaflet_map/map.html'
+        abs_file_path = os.path.abspath(os.path.join(script_dir,rel_path))
+        print(abs_file_path)
+        self.map_view.load(QtCore.QUrl.fromLocalFile(abs_file_path))
+        self.map_view.loadFinished.connect(self.on_map_load)
+        self.tabWidget.addTab(self.map_view,'Map')
+
         # Add slots and signals manually
         self.frame_toad_master.pushButton_conn.clicked.connect(self.toggle_con)
         self.pushButton_zero.clicked.connect(self.confirm_zero)
@@ -63,6 +84,16 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         self.connect(self.update_thread, SIGNAL("new_packet(PyQt_PyObject)"),self.new_packet)
         self.connect(self.update_thread, SIGNAL("new_fix(PyQt_PyObject)"),self.trilat_rx)
         self.update_thread.start()
+
+    def on_map_load(self):
+        pass
+        # rel_path = 'leaflet_map/map.js'
+        # abs_file_path = os.path.join(script_dir,rel_path)
+        # print(abs_file_path)
+        # frame = self.map_view.page().mainFrame()
+        # with open(abs_file_path,'r') as f:
+        #     frame = self.map_view.page().mainFrame()
+        #     frame.evaluateJavaScript(str(f.read()))
 
     def toggle_con(self):
         if self.frame_toad_master.pushButton_conn.isChecked():
