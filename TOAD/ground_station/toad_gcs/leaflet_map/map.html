@@ -1,0 +1,32 @@
+<html>
+<head>
+  <title>TOAD Map View</title>
+  <link rel="stylesheet" href="leaflet_stylesheet.css"/>  <!--http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css-->
+  <script src="leaflet_script.js"></script> <!--http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js-->
+  <style>
+    #map{ height: 100% }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <script>
+
+  // initialize the map
+  var map = L.map('map').setView([40.883683,-119.0781], 13);
+
+  // load a tile layer
+  //L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
+  L.tileLayer('openstreetmap/{z}/{x}/{y}.png',
+    {
+      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
+      maxZoom: 16,
+      minZoom: 10
+    }).addTo(map);
+
+
+
+  </script>
+</body>
+</html>
