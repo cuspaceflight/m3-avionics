@@ -20,7 +20,7 @@ void PowerManager_init(){
 
   // TODO: register IRQ for ~ALERT line
   int i = 0;
-  for(i=0; i<6; i++){
+  for(i=0; i<NUM_LTC2975s; i++){
     m3status_set_init(M3STATUS_COMPONENT_DCDC1 + i);
   }
   m3status_set_init(M3STATUS_COMPONENT_PYRO_MON);
@@ -165,10 +165,10 @@ THD_FUNCTION(powermanager_thread, arg){
         uint8_t base_id = CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12 >> 5;
         m3can_send(CAN_ID_M3PSU | (CAN_MSG_ID((base_id + idx))), false, can_data, 8);
 
-        m3status_set_ok(M3STATUS_COMPONENT_DCDC1 + idx);
+        m3status_set_ok(M3STATUS_COMPONENT_DCDC1 + (idx/2));
 
       }else{
-        m3status_set_error(M3STATUS_COMPONENT_DCDC1 + idx, M3STATUS_DCDC_ERROR_COMMS);
+        m3status_set_error(M3STATUS_COMPONENT_DCDC1 + (idx/2), M3STATUS_DCDC_ERROR_COMMS);
       }
       chThdSleepMilliseconds(1);
     }
