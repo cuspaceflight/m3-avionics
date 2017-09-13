@@ -20,9 +20,6 @@ var M3PSU = function(gcs){
         0: "DCDC1",
         1: "DCDC2",
         2: "DCDC3",
-        3: "DCDC4",
-        4: "DCDC5",
-        5: "DCDC6",
         6: "Charger",
         7: "Pyro Monitor",
     };
@@ -32,7 +29,9 @@ var M3PSU = function(gcs){
         1: "Init",
         2: "Ch1 Alert",
         3: "Ch2 Alert",
-        4: "Comms",
+        4: "Ch1 Alert",
+        5: "Ch2 Alert",
+        6: "Comms",
     };
 
     var charger_errors = {
