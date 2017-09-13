@@ -293,7 +293,7 @@ class Ui_toad_main_window(object):
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(toad_main_window)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(toad_main_window)
         toad_main_window.setTabOrder(self.scrollArea, self.frame_toad_1)
         toad_main_window.setTabOrder(self.frame_toad_1, self.frame_toad_2)

@@ -13,6 +13,8 @@
 
   <script>
 
+
+
   // initialize the map
   var map = L.map('map').setView([40.883683,-119.0781], 13);
 
@@ -25,8 +27,20 @@
       minZoom: 10
     }).addTo(map);
 
-
-
+  var toad_marker_1 = L.marker([40.883683,-119.0781]).addTo(map);
+  toad_marker_1.bindPopup("TOAD 1").openPopup();
+  var toad_marker_2 = L.marker([40.883683,-119.0781]).addTo(map);
+  toad_marker_2.bindPopup("TOAD 2").openPopup();
+  var toad_marker_3 = L.marker([40.883683,-119.0781]).addTo(map);
+  toad_marker_3.bindPopup("TOAD 3").openPopup();
+  var toad_marker_4 = L.marker([40.883683,-119.0781]).addTo(map);
+  toad_marker_4.bindPopup("TOAD 4").openPopup();
+  var toad_marker_5 = L.marker([40.883683,-119.0781]).addTo(map);
+  toad_marker_5.bindPopup("TOAD 5").openPopup();
+  var toad_marker_6 = L.marker([40.883683,-119.0781]).addTo(map);
+  toad_marker_6.bindPopup("TOAD 6").openPopup();
+  var marker_dart = L.marker([40.883683,-119.0781]).addTo(map);
+  marker_dart.bindPopup("TOAD Dart").openPopup();
   </script>
 </body>
 </html>
