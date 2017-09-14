@@ -44,6 +44,8 @@ measurement_list = [] # newer bins -> higher index
 MAX_BINS = 100  # Delete oldest unfilled bins once measurement_list gets too large
 
 def add_packet(packet):
+    global measurement_list
+    global MAX_BINS
     # Delete any full bins
     no_full_bins = [x for x in measurement_list if not x.full]
     measurement_list = no_full_bins
@@ -69,6 +71,7 @@ def add_packet(packet):
     elif packet.toad_id == TOAD_6:
         id = 5
 
+    found_bin = MAX_BINS
     for index,bin in enumerate(measurement_list):
         if bin.itow_s == itow_s:
             # Place new packet into existing bin
@@ -82,6 +85,7 @@ def add_packet(packet):
         # Create new bin
         new_bin = Position_measurement(itow_s)
         measurement_list.append(new_bin)
+        found_bin = len(measurement_list) - 1
 
     if packet.log_type == MESSAGE_POSITION:
         # Put position into found bin

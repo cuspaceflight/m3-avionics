@@ -68,15 +68,15 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         self.map_view.page().mainFrame().addToJavaScriptWindowObject("TOAD Map", self)
         rel_path = 'leaflet_map/map.html'
         abs_file_path = os.path.abspath(os.path.join(script_dir,rel_path))
-        print(abs_file_path)
         self.map_view.load(QtCore.QUrl.fromLocalFile(abs_file_path))
-        self.map_view.loadFinished.connect(self.on_map_load)
+        #self.map_view.loadFinished.connect(self.on_map_load)
         self.tabWidget.addTab(self.map_view,'Map')
 
         # Add slots and signals manually
         self.frame_toad_master.pushButton_conn.clicked.connect(self.toggle_con)
         self.pushButton_zero.clicked.connect(self.confirm_zero)
         self.actionSave_Terminal.triggered.connect(self.terminal_save)
+        self.actionRefresh.triggered.connect(self.refresh_map)
 
         # Start update thread
         thread_end,self.gui_end = Pipe(duplex=False)  # So that QThread and gui don't use same pipe end at same time
@@ -85,15 +85,8 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         self.connect(self.update_thread, SIGNAL("new_fix(PyQt_PyObject)"),self.trilat_rx)
         self.update_thread.start()
 
-    def on_map_load(self):
-        pass
-        # rel_path = 'leaflet_map/map.js'
-        # abs_file_path = os.path.join(script_dir,rel_path)
-        # print(abs_file_path)
-        # frame = self.map_view.page().mainFrame()
-        # with open(abs_file_path,'r') as f:
-        #     frame = self.map_view.page().mainFrame()
-        #     frame.evaluateJavaScript(str(f.read()))
+    def refresh_map(self):
+        self.map_view.load(QtCore.QUrl.fromLocalFile(os.path.abspath(os.path.join(script_dir,'leaflet_map/map.html'))))
 
     def toggle_con(self):
         if self.frame_toad_master.pushButton_conn.isChecked():
@@ -205,33 +198,42 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
 
         if packet.toad_id == TOAD_1:
             toad_frame_x = self.frame_toad_1
+            id_no = 1
         elif packet.toad_id == TOAD_2:
             toad_frame_x = self.frame_toad_2
+            id_no = 2
         elif packet.toad_id == TOAD_3:
             toad_frame_x = self.frame_toad_3
+            id_no = 3
         elif packet.toad_id == TOAD_4:
             toad_frame_x = self.frame_toad_4
+            id_no = 4
         elif packet.toad_id == TOAD_5:
             toad_frame_x = self.frame_toad_5
+            id_no = 5
         elif packet.toad_id == TOAD_6:
             toad_frame_x = self.frame_toad_6
+            id_no = 6
         else:
             toad_frame_x = self.frame_toad_master
+            id_no = 0
 
         if packet.log_type == MESSAGE_PVT:
             self.fill_fields_pvt(self.frame_toad_master, packet)
         elif packet.log_type == MESSAGE_PSU:
             self.fill_fields_psu(self.frame_toad_master, packet)
-        elif packet.log_type == MESSAGE_RANGING:
+        elif packet.log_type == MESSAGE_RANGING and id_no !=0:
             self.fill_fields_ranging(toad_frame_x, packet)
         elif packet.log_type == MESSAGE_POSITION:
             self.fill_fields_pos(toad_frame_x, packet)
+            # Update map marker
+            self.map_view.page().mainFrame().evaluateJavaScript("toad_marker_{}.setLatLng([{},{}]).update()".format(id_no,packet.lat,packet.lon))
 
     def trilat_rx(self, packet):
         if isinstance(packet,Position_fix):
             e_disp = packet.e_coord - self.origin[0]
             n_disp = packet.n_coord - self.origin[1]
-            u_disp = packet.u_coord - self.origin[2]
+            u_disp = packet.u_coord - self.origin[2]  # Altitude - pad altitude
             alt_disp = int(round(u_disp))
             self.altimeter.display(alt_disp)
 
@@ -261,6 +263,10 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
                 self.max_alt_value.display(int(round(self.apogee - self.origin[2])))
 
             self.trilat_rx_prev_packet = packet
+
+            # Update map marker including u_disp in the bubble
+            self.map_view.page().mainFrame().evaluateJavaScript("marker_dart.setLatLng([{},{}]).update()".format(llh[0],llh[1]))
+            self.map_view.page().mainFrame().evaluateJavaScript("marker_dart.bindPopup(\"TOAD Dart (height above pad: {} m)\").openPopup();".format(u_disp))
 
     def set_text(self,text,lineedit):
         lineedit.setText(str(text))

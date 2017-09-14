@@ -590,7 +590,14 @@
     </property>
     <addaction name="actionSave_Terminal"/>
    </widget>
+   <widget class="QMenu" name="menuMap">
+    <property name="title">
+     <string>Map</string>
+    </property>
+    <addaction name="actionRefresh"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuMap"/>
   </widget>
   <action name="actionSave_Terminal">
    <property name="text">
@@ -601,6 +608,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
  </widget>

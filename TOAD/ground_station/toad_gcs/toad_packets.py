@@ -105,6 +105,7 @@ class Pvt_packet(Packet):
     def printout(self,textbox):
         textbox.moveCursor(QtGui.QTextCursor.End)
         textbox.ensureCursorVisible()
+        textbox.insertPlainText("\n\n")
         textbox.insertPlainText("PVT MESSAGE:\n")
         textbox.insertPlainText("TOAD ID = {}\n".format(self.toad_id))
         textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp))
@@ -137,7 +138,7 @@ class Pvt_packet(Packet):
         textbox.insertPlainText("head_acc = {} degrees\n".format(self.head_acc))
         textbox.insertPlainText("p_dop = {}\n".format(self.p_dop))
         textbox.insertPlainText("head_veh = {} degrees\n".format(self.head_veh))
-        textbox.insertPlainText("\n\n")
+        textbox.moveCursor(QtGui.QTextCursor.End)
 
 class Psu_packet(Packet):
     def __init__(self, input_struct=bytes(128)):
@@ -150,9 +151,10 @@ class Psu_packet(Packet):
         self.charge_current = psu[0]  # mA
         self.charge_temperature = psu[2]  # Celsius
 
-    def printout(self):
+    def printout(self,textbox):
         textbox.moveCursor(QtGui.QTextCursor.End)
         textbox.ensureCursorVisible()
+        textbox.insertPlainText("\n\n")
         textbox.insertPlainText("PSU MESSAGE:\n")
         textbox.insertPlainText("TOAD ID = {}\n".format(self.toad_id))
         textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp))
@@ -162,7 +164,7 @@ class Psu_packet(Packet):
         textbox.insertPlainText("charging = {}\n".format(self.charging))
         textbox.insertPlainText("charge current = {} mA\n".format(self.charge_current))
         textbox.insertPlainText("charge temperature = {} °C\n".format(self.charge_temperature))
-        textbox.insertPlainText("\n\n")
+        textbox.moveCursor(QtGui.QTextCursor.End)
 
 class Ranging_packet(Packet):
     def __init__(self, input_struct=bytes(128)):
@@ -176,9 +178,10 @@ class Ranging_packet(Packet):
         self.mcu_temp = ranging[4]  # Celsius
     def dist(self,freq=84000000):
         return(299792458*self.tof/freq)  # speed*time
-    def printout(self):
+    def printout(self,textbox):
         textbox.moveCursor(QtGui.QTextCursor.End)
         textbox.ensureCursorVisible()
+        textbox.insertPlainText("\n\n")
         textbox.insertPlainText("RANGING PACKET:\n")
         textbox.insertPlainText("TOAD ID = {}\n".format(self.toad_id))
         textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp))
@@ -187,7 +190,7 @@ class Ranging_packet(Packet):
         textbox.insertPlainText("i_tow = {} ms\n".format(self.i_tow))
         textbox.insertPlainText("battery voltage = {} V\n".format(self.batt_v))
         textbox.insertPlainText("stm32 temp = {} °C\n".format(self.mcu_temp))
-        textbox.insertPlainText("\n\n")
+        textbox.moveCursor(QtGui.QTextCursor.End)
 
 class Position_packet(Packet):
     def __init__(self, input_struct=bytes(128)):
@@ -202,9 +205,10 @@ class Position_packet(Packet):
         self.batt_v = pos[5]/10  # V
         self.mcu_temp = pos[6]  # Celsius
 
-    def printout(self):
+    def printout(self,textbox):
         textbox.moveCursor(QtGui.QTextCursor.End)
         textbox.ensureCursorVisible()
+        textbox.insertPlainText("\n\n")
         textbox.insertPlainText("POSITION PACKET:\n")
         textbox.insertPlainText("TOAD ID = {}\n".format(self.toad_id))
         textbox.insertPlainText("Timestamp = {} s\n".format(self.timestamp))
@@ -215,7 +219,7 @@ class Position_packet(Packet):
         textbox.insertPlainText("num sat = {}\n".format(self.num_sat))
         textbox.insertPlainText("battery voltage = {} V\n".format(self.batt_v))
         textbox.insertPlainText("stm32 temp = {} °C\n".format(self.mcu_temp))
-        textbox.insertPlainText("\n\n")
+        textbox.moveCursor(QtGui.QTextCursor.End)
 
 
 ### Internal to ground station ###
