@@ -33,88 +33,118 @@ msg_t i2c_transmit_retry_n(I2CDriver *i2c, uint8_t deviceaddress, uint8_t *txdat
 uint8_t smbus_send_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t command){
   static uint8_t txdat[1] __attribute__((section("DATA_RAM"))); // Can't DMA from Core-Coupled Memory (where the stack resides)
 
-  txdat[0] = command;
+  uint8_t resp = ERR_COMMS;
 
   i2cAcquireBus(i2c);
+
+  txdat[0] = command;
+
   msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, txdat, 1, NULL, 0, MS2ST(20), 1);
-  i2cReleaseBus(i2c);
 
   if(status == MSG_OK){
-    return ERR_OK;
+    resp = ERR_OK;
   }
-  return ERR_COMMS;
+
+  i2cReleaseBus(i2c);
+
+  return resp;
 }
 
 uint8_t smbus_write_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint8_t value){
   static uint8_t txdat[2] __attribute__((section("DATA_RAM")));
 
+  uint8_t resp = ERR_COMMS;
+
+  i2cAcquireBus(i2c);
+
   txdat[0] = byteaddress;
   txdat[1] = value;
 
-  i2cAcquireBus(i2c);
   msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, txdat, 2, NULL, 0, MS2ST(20), 1);
-  i2cReleaseBus(i2c);
 
   if(status == MSG_OK){
-    return ERR_OK;
+    resp = ERR_OK;
   }
-  return ERR_COMMS;
+
+  i2cReleaseBus(i2c);
+
+  return resp;
 }
 
 uint8_t smbus_read_byte(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint8_t *result){
   static uint8_t txdat[1] __attribute__((section("DATA_RAM")));
   static uint8_t rxdat[1] __attribute__((section("DATA_RAM")));
 
-  txdat[0] = byteaddress;
+  uint8_t resp = ERR_COMMS;
 
   i2cAcquireBus(i2c);
+
+  txdat[0] = byteaddress;
+
   msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, txdat, 1, rxdat, 1, MS2ST(20), 1);
-  i2cReleaseBus(i2c);
 
   if(status == MSG_OK){
     *result = rxdat[0];
-    return ERR_OK;
+    resp = ERR_OK;
   }
-  return ERR_COMMS;
+
+  i2cReleaseBus(i2c);
+
+  return resp;
 }
 
 uint8_t smbus_write_word(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint16_t value){
   static uint8_t txdat[3] __attribute__((section("DATA_RAM")));
+
+  uint8_t resp = ERR_COMMS;
+
+  i2cAcquireBus(i2c);
+
   txdat[0] = byteaddress;
   txdat[1] = value & 0xff;
   txdat[2] = (value >> 8) & 0xff;
 
-  i2cAcquireBus(i2c);
   msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, txdat, 3, NULL, 0, MS2ST(20), 1);
-  i2cReleaseBus(i2c);
 
   if(status == MSG_OK){
-    return ERR_OK;
+    resp = ERR_OK;
   }
-  return ERR_COMMS;
+
+  i2cReleaseBus(i2c);
+
+  return resp;
 }
 
 uint8_t smbus_read_word(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint16_t *result){
   static uint8_t rxdat[2] __attribute__((section("DATA_RAM")));
   static uint8_t txdat[1] __attribute__((section("DATA_RAM")));
 
-  txdat[0] = byteaddress;
+  uint8_t resp = ERR_COMMS;
 
   i2cAcquireBus(i2c);
+
+  txdat[0] = byteaddress;
+
   msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, txdat, 1, rxdat, 2, MS2ST(20), 1);
-  i2cReleaseBus(i2c);
 
   if(status == MSG_OK){
     *result = ((rxdat[1] << 8) | rxdat[0]);
-    return ERR_OK;
+    resp = ERR_OK;
   }
-  return ERR_COMMS;
+
+  i2cReleaseBus(i2c);
+
+  return resp;
 }
 
 uint8_t smbus_write_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint8_t *data, uint8_t datalen){
   static uint8_t txdat[64] __attribute__((section("DATA_RAM")));
 
+  uint8_t resp = ERR_COMMS;
+
   chDbgAssert(datalen <= 62, "datalen > 62");
+
+  i2cAcquireBus(i2c);
 
   txdat[0] = byteaddress;
   txdat[1] = datalen;
@@ -122,22 +152,27 @@ uint8_t smbus_write_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteadd
   // copy rest of data
   memcpy(txdat+2, data, datalen);
 
-  i2cAcquireBus(i2c);
   msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, txdat, datalen+2, NULL, 0, MS2ST(20), 1);
-  i2cReleaseBus(i2c);
 
   if (status == MSG_OK) {
-    return ERR_OK;
+    resp = ERR_OK;
   }
-  return ERR_COMMS;
+
+  i2cReleaseBus(i2c);
+
+  return resp;
 }
 
 uint8_t smbus_read_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddress, uint8_t *txdat, uint8_t txdatlen, uint8_t *data, uint8_t datalen){
   static uint8_t cmd[64] __attribute__((section("DATA_RAM")));
   static uint8_t recv[64] __attribute__((section("DATA_RAM")));
 
+  uint8_t resp = ERR_COMMS;
+
   chDbgAssert(txdatlen <= 62, "txdatalen > 62");
   chDbgAssert(datalen <= 63, "datalen > 63");
+
+  i2cAcquireBus(i2c);
 
   cmd[0] = byteaddress;
   cmd[1] = txdatlen;
@@ -151,17 +186,17 @@ uint8_t smbus_read_block(I2CDriver *i2c, uint8_t deviceaddress, uint8_t byteaddr
       txdatlen += 2;
   }
 
-  i2cAcquireBus(i2c);
   msg_t status = i2c_transmit_retry_n(i2c, deviceaddress, cmd, txdatlen, recv, datalen+1, MS2ST(20), 1);
-  i2cReleaseBus(i2c);
 
   if (status == MSG_OK) {
     // First byte read is the length of data being returned by the device.
-    if(datalen != recv[0]){
-        return ERR_COMMS;
+    if(datalen == recv[0]){
+      memcpy(data, recv+1, datalen);
+      resp = ERR_OK;
     }
-    memcpy(data, recv+1, datalen);
-    return ERR_OK;
   }
-  return ERR_COMMS;
+
+  i2cReleaseBus(i2c);
+
+  return resp;
 }
