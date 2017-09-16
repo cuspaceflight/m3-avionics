@@ -1,14 +1,17 @@
 - Test things
-- Logging
-
-### GUI ###
+- Run in USB test mode if no serial port specified
+- Fix slow javascript
+- Map tile licensing
 - Use spinbox value-change signal
-- Icons
-- Map (offline)
-    - Refresh button for map
-    - Other textures for tiles?
-    - Map tile licensing
+- Properly label map pins
+- (other double hash ## comments in the code)
+
+### Optional ###
+- Logging
+- Icons for program
 - Print units in the lineEdit box
+- Other map tile textures
+- Logfile to kml (not urgent)
 
 
 
