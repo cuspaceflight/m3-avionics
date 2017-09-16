@@ -59,9 +59,9 @@
 #define GPIOA_GPS_TX                   1U
 #define GPIOA_GPS_RESET_N              2U
 #define GPIOA_RADIO_CS                 3U
-#define GPIOA_LED_GRN                  4U
+#define GPIOA_LED_RED                  4U
 #define GPIOA_GPS_PPS                  5U
-#define GPIOA_LED_RED                  6U
+#define GPIOA_LED_GRN                  6U
 #define GPIOA_PIN7                     7U
 #define GPIOA_RADIO_GATE               8U
 #define GPIOA_PIN9                     9U
@@ -224,8 +224,8 @@
 #define LINE_JTDI                      PAL_LINE(GPIOA, 15U)
 #define LINE_JTDO                      PAL_LINE(GPIOB, 3U)
 #define LINE_JTMS                      PAL_LINE(GPIOA, 13U)
-#define LINE_LED_GRN                   PAL_LINE(GPIOA, 4U)
-#define LINE_LED_RED                   PAL_LINE(GPIOA, 6U)
+#define LINE_LED_GRN                   PAL_LINE(GPIOA, 6U)
+#define LINE_LED_RED                   PAL_LINE(GPIOA, 4U)
 #define LINE_NJTRST                    PAL_LINE(GPIOB, 4U)
 #define LINE_PLL_SCL                   PAL_LINE(GPIOB, 10U)
 #define LINE_PLL_SDA                   PAL_LINE(GPIOB, 11U)
@@ -267,9 +267,9 @@
  * PA1  - GPS_TX                       (af8).
  * PA2  - GPS_RESET_N                  (output, pushpull, starthigh, pullup).
  * PA3  - RADIO_CS                     (output, pushpull, starthigh, pullup).
- * PA4  - LED_GRN                      (output, startlow).
+ * PA4  - LED_RED                      (output, startlow).
  * PA5  - GPS_PPS                      (input, pushpull).
- * PA6  - LED_RED                      (output, startlow).
+ * PA6  - LED_GRN                      (output, startlow).
  * PA7  - PIN7                         (unused).
  * PA8  - RADIO_GATE                   (output, pushpull, startlow, pulldown).
  * PA9  - PIN9                         (unused).
@@ -284,9 +284,9 @@
                                         PIN_MODE_ALTERNATE(GPIOA_GPS_TX) | \
                                         PIN_MODE_OUTPUT(GPIOA_GPS_RESET_N) | \
                                         PIN_MODE_OUTPUT(GPIOA_RADIO_CS) | \
-                                        PIN_MODE_OUTPUT(GPIOA_LED_GRN) | \
-                                        PIN_MODE_INPUT(GPIOA_GPS_PPS) | \
                                         PIN_MODE_OUTPUT(GPIOA_LED_RED) | \
+                                        PIN_MODE_INPUT(GPIOA_GPS_PPS) | \
+                                        PIN_MODE_OUTPUT(GPIOA_LED_GRN) | \
                                         PIN_MODE_INPUT(GPIOA_PIN7) | \
                                         PIN_MODE_OUTPUT(GPIOA_RADIO_GATE) | \
                                         PIN_MODE_INPUT(GPIOA_PIN9) | \
@@ -300,9 +300,9 @@
                                         PIN_OTYPE_PUSHPULL(GPIOA_GPS_TX) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_GPS_RESET_N) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_RADIO_CS) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_LED_GRN) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_GPS_PPS) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_LED_RED) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_GPS_PPS) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_LED_GRN) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN7) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_RADIO_GATE) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN9) | \
@@ -316,9 +316,9 @@
                                         PIN_OSPEED_HIGH(GPIOA_GPS_TX) | \
                                         PIN_OSPEED_HIGH(GPIOA_GPS_RESET_N) | \
                                         PIN_OSPEED_HIGH(GPIOA_RADIO_CS) | \
-                                        PIN_OSPEED_HIGH(GPIOA_LED_GRN) | \
-                                        PIN_OSPEED_HIGH(GPIOA_GPS_PPS) | \
                                         PIN_OSPEED_HIGH(GPIOA_LED_RED) | \
+                                        PIN_OSPEED_HIGH(GPIOA_GPS_PPS) | \
+                                        PIN_OSPEED_HIGH(GPIOA_LED_GRN) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN7) | \
                                         PIN_OSPEED_HIGH(GPIOA_RADIO_GATE) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN9) | \
@@ -332,9 +332,9 @@
                                         PIN_PUPD_PULLUP(GPIOA_GPS_TX) | \
                                         PIN_PUPD_PULLUP(GPIOA_GPS_RESET_N) | \
                                         PIN_PUPD_PULLUP(GPIOA_RADIO_CS) | \
-                                        PIN_PUPD_PULLUP(GPIOA_LED_GRN) | \
-                                        PIN_PUPD_PULLUP(GPIOA_GPS_PPS) | \
                                         PIN_PUPD_PULLUP(GPIOA_LED_RED) | \
+                                        PIN_PUPD_PULLUP(GPIOA_GPS_PPS) | \
+                                        PIN_PUPD_PULLUP(GPIOA_LED_GRN) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN7) | \
                                         PIN_PUPD_PULLDOWN(GPIOA_RADIO_GATE) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN9) | \
@@ -348,9 +348,9 @@
                                         PIN_OD_HIGH(GPIOA_GPS_TX) | \
                                         PIN_OD_HIGH(GPIOA_GPS_RESET_N) | \
                                         PIN_OD_HIGH(GPIOA_RADIO_CS) | \
-                                        PIN_OD_LOW(GPIOA_LED_GRN) | \
-                                        PIN_OD_HIGH(GPIOA_GPS_PPS) | \
                                         PIN_OD_LOW(GPIOA_LED_RED) | \
+                                        PIN_OD_HIGH(GPIOA_GPS_PPS) | \
+                                        PIN_OD_LOW(GPIOA_LED_GRN) | \
                                         PIN_OD_HIGH(GPIOA_PIN7) | \
                                         PIN_OD_LOW(GPIOA_RADIO_GATE) | \
                                         PIN_OD_HIGH(GPIOA_PIN9) | \
@@ -364,9 +364,9 @@
                                         PIN_AFIO_AF(GPIOA_GPS_TX, 8U) | \
                                         PIN_AFIO_AF(GPIOA_GPS_RESET_N, 0U) | \
                                         PIN_AFIO_AF(GPIOA_RADIO_CS, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_LED_GRN, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_GPS_PPS, 0U) | \
                                         PIN_AFIO_AF(GPIOA_LED_RED, 0U) | \
+                                        PIN_AFIO_AF(GPIOA_GPS_PPS, 0U) | \
+                                        PIN_AFIO_AF(GPIOA_LED_GRN, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN7, 0U))
 #define VAL_GPIOA_AFRH                 (PIN_AFIO_AF(GPIOA_RADIO_GATE, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN9, 0U) | \

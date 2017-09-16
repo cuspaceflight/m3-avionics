@@ -20,8 +20,8 @@ pins:
     ANT_FLAG_N: pc14
     ANT_EN: pc15, output, pushpull, startlow
 
-    LED_RED: pa6, output, startlow
-    LED_GRN: pa4, output, startlow
+    LED_RED: pa4, output, startlow
+    LED_GRN: pa6, output, startlow
 
     RADIO_IRQ_N: pa11, input, pushpull, pullup
     RADIO_GPIO1: pa12, input
