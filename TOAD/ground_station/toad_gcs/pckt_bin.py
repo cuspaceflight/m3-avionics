@@ -14,7 +14,7 @@ class Ref_point:
 
 class Position_measurement:
     def __init__(self,itow_s):
-        self.itow_s = itow_s
+        self.itow_s = itow_s  # GPS itow
         self.flags = 0
         self.full = False
         self.toads = []
@@ -32,32 +32,36 @@ class Position_measurement:
         self.toads[id].e_coord = e
         self.toads[id].n_coord = n
         self.toads[id].u_coord = u
-        # Set flags
-        self.flags = self.flags | 2**(id+NUM_TOADS)
-        self.check_full()
 
     def check_full(self):
-        if self.flags == 0b111111111111:
+        global last_known_e
+        global last_known_n
+        global last_known_u
+        if self.flags == 2**NUM_TOADS - 1:
             self.full = True
+            # Now populate ref point locations with last known position
+            for count in range (0,NUM_TOADS):
+                self.set_pos(count,last_known_e[count],last_known_n[count],last_known_u[count])
 
 measurement_list = [] # newer bins -> higher index
 MAX_BINS = 100  # Delete oldest unfilled bins once measurement_list gets too large
+last_known_e = [0]*NUM_TOADS
+last_known_n = [0]*NUM_TOADS
+last_known_u = [0]*NUM_TOADS
 
 def add_packet(packet):
     global measurement_list
     global MAX_BINS
-    # Delete any full bins
-    no_full_bins = [x for x in measurement_list if not x.full]
-    measurement_list = no_full_bins
+    global last_known_e
+    global last_known_n
+    global last_known_u
 
     # If measurement_list is too large, delete oldest unfilled bin
     end = len(measurement_list)
     if end > MAX_BINS:
-        measurement_list = measurement_list[end-100:end]
+        del measurement_list[0:end-100]
 
     # Process new packet
-    itow_s = floor(packet.i_tow/1000)  # Second of the week the packet is timestamped with
-
     if packet.toad_id == TOAD_1:
         id = 0
     elif packet.toad_id == TOAD_2:
@@ -71,38 +75,47 @@ def add_packet(packet):
     elif packet.toad_id == TOAD_6:
         id = 5
 
-    found_bin = MAX_BINS
-    for index,bin in enumerate(measurement_list):
-        if bin.itow_s == itow_s:
-            # Place new packet into existing bin
-            found_bin = index
-            break
-        else:
-            # Need to create new bin
-            found_bin = MAX_BINS  # i.e. not indexes 0 to NUM_TOADS-1
-
-    if found_bin == MAX_BINS:
-        # Create new bin
-        new_bin = Position_measurement(itow_s)
-        measurement_list.append(new_bin)
-        found_bin = len(measurement_list) - 1
-
     if packet.log_type == MESSAGE_POSITION:
-        # Put position into found bin
-        enu_coords = coords.convert_llh_to_ENU(packet.lat,packet.lon,packet.height)
-        measurement_list[found_bin].set_pos(id,enu_coords[0],enu_coords[1],enu_coords[2])
+        # Update last known position
+        enu_coords = coords.convert_llh_to_ENU([packet.lat,packet.lon,packet.height])
+        last_known_e[id] = enu_coords[0]
+        last_known_n[id] = enu_coords[1]
+        last_known_u[id] = enu_coords[2]
 
     elif packet.log_type == MESSAGE_RANGING:
+        itow_s = floor(packet.i_tow/1000)  # Second of the week the packet is timestamped with
+
+        found_bin = MAX_BINS
+        for index,bin in enumerate(measurement_list):
+            if bin.itow_s == itow_s:
+                # Place new packet into existing bin
+                found_bin = index
+                break
+            else:
+                # Need to create new bin
+                found_bin = MAX_BINS  # i.e. not indexes 0 to NUM_TOADS-1
+
+        if found_bin == MAX_BINS:
+            # Create new bin
+            new_bin = Position_measurement(itow_s)
+            measurement_list.append(new_bin)
+            found_bin = len(measurement_list) - 1
+
         # Put distance into found bin
         measurement_list[found_bin].set_dist(id,packet.dist())
 
-    # Check for full bin to return
-    for index,bin in enumerate(measurement_list):
-        if bin.full:
-            full_bin = index
-            break
-        else:
-            full_bin = 0
+        # Check for full bin to return
+        for index,bin in enumerate(measurement_list):
+            if bin.full:
+                full_bin = index
+                break
+            else:
+                full_bin = len(measurement_list)
 
-    if full_bin != 0:
-        return measurement_list[full_bin]
+        if full_bin != len(measurement_list):
+            ## TODO: Log unfilled bins that are older than returned bin
+
+            # Then delete the older bins
+            rtrn_val = measurement_list[full_bin]
+            del measurement_list[0:full_bin+1]
+            return rtrn_val

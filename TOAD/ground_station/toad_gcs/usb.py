@@ -132,22 +132,44 @@ def run(gui_pipe, log_pipe, gui_exit):
                 #log raw serial data to file
         elif TEST:
             # Test code
+            from .coords import convert_ENU_to_llh
+            from random import randint
+            E = [0, 1000, 1500, 1000, 0, -500]  # enu in m
+            N = [0, 0, -(3**0.5)*500, -(3**0.5)*1000,  -(3**0.5)*1000,  -(3**0.5)*500]  # enu in m
             for id in range(1,7):
                 ranging_msg = Ranging_packet()
                 ranging_msg.log_type = MESSAGE_RANGING
                 ranging_msg.toad_id = 2**(id-1)
-                ranging_msg.systick = 1234*test_counter
+                ranging_msg.systick = ranging_msg.systick_freq*test_counter
+                ranging_msg.timestamp = test_counter
+                ranging_msg.tof = (randint(0,100)+5000) * 84000000 / 299792458
+                ranging_msg.i_tow = test_counter * 1000
+                ranging_msg.batt_v = 4
+                ranging_msg.mcu_temp = 40
 
 
-                pos_msg = Ranging_packet()
+                pos_msg = Position_packet()
+                pos_msg.log_type = MESSAGE_POSITION
+                pos_msg.toad_id = 2**(id-1)
+                pos_msg.systick = pos_msg.systick_freq*test_counter
+                pos_msg.timestamp = test_counter
+
+                latlng = convert_ENU_to_llh([E[id-1],N[id-1],0])
+                pos_msg.lon = latlng[1]
+                pos_msg.lat = latlng[0]
+                pos_msg.height = latlng[2]
+                pos_msg.num_sat = 10
+                pos_msg.batt_v = 4
+                pos_msg.mcu_temp = 40
 
 
                 gui_pipe.send(ranging_msg)
-                #gui_pipe.send(pos_msg)
-                time.sleep(1)
+                gui_pipe.send(pos_msg)
+
 
             test_counter = test_counter + 1
-            if test_counter >= 50:
+            time.sleep(1)
+            if test_counter >= 3600:
                 test_counter = 1
         else:
             time.sleep(0.05)

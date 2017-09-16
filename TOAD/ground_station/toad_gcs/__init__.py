@@ -8,6 +8,7 @@ import multiprocessing
 from . import usb
 from . import gui_interface
 from . import trilateration
+from . import coords
 import time
 import sys
 
@@ -23,6 +24,11 @@ def run():
 
     Raises:
     """
+    ############################################################################
+    # Initialise coordinate transformation module:
+    ############################################################################
+    coords.set_enu_ref()
+
     ############################################################################
     # Create communication links between processes:
     ############################################################################

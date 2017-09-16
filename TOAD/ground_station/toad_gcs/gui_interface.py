@@ -11,6 +11,7 @@ from .toad_packets import *
 from .coords import convert_ENU_to_llh
 import sys
 import os
+import time
 
 script_dir = os.path.dirname(__file__)
 
@@ -32,21 +33,21 @@ class MainThd(QThread):
 
     def run(self):
         while True:
-            if self.usb_pipe.poll(0.02):
+            if self.usb_pipe.poll(0.01):
                 new_packet_usb = self.usb_pipe.recv()
                 if new_packet_usb.log_type == MESSAGE_RANGING or new_packet_usb.log_type == MESSAGE_POSITION:
                     # Send to trilateration thread
                     self.trilat_pipe.send(new_packet_usb)
                 self.emit(SIGNAL('new_packet(PyQt_PyObject)'),new_packet_usb)
 
-            if self.window_pipe.poll(0.02):
+            if self.window_pipe.poll(0.01):
                 new_packet_window = self.window_pipe.recv()
 
                 if isinstance(new_packet_window,Usb_command):
                     self.usb_pipe.send(new_packet_window)
 
 
-            if self.trilat_pipe.poll(0.02):
+            if self.trilat_pipe.poll(0.01):
                 trilat_rx_packet = self.trilat_pipe.recv()
                 self.emit(SIGNAL('new_fix(PyQt_PyObject)'),trilat_rx_packet)
 
@@ -57,6 +58,9 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         # Origin for ENU coordinates displayed on front panel
         self.origin = [0,0,0]  # e,n,u
         self.apogee = 0  # Record of apogee in m
+
+        # Flag for trilat_rx method:
+        self.first_trilat_rx_packet = True
 
         super().__init__(parent)
         self.setupUi(self)
@@ -83,7 +87,7 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         self.update_thread = MainThd(thread_end, trilat_pipe, usb_pipe)
         self.connect(self.update_thread, SIGNAL("new_packet(PyQt_PyObject)"),self.new_packet)
         self.connect(self.update_thread, SIGNAL("new_fix(PyQt_PyObject)"),self.trilat_rx)
-        self.update_thread.start()
+        self.update_thread.start(QThread.LowPriority)
 
     def refresh_map(self):
         self.map_view.load(QtCore.QUrl.fromLocalFile(os.path.abspath(os.path.join(script_dir,'leaflet_map/map.html'))))
@@ -245,17 +249,18 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
             self.set_text(llh[0],self.latitudeLineEdit)
             self.set_text(llh[1],self.longitudeLineEdit)
 
-            dx = packet.e_coord - self.trilat_rx_prev_packet.e_coord  # m
-            dy = packet.n_coord - self.trilat_rx_prev_packet.n_coord  # m
-            dz = packet.u_coord - self.trilat_rx_prev_packet.n_coord  # m
-            dt = packet.itow_s - self.trilat_rx_prev_packet.itow_s    # s
+            if not self.first_trilat_rx_packet:
+                dx = packet.e_coord - self.trilat_rx_prev_packet.e_coord  # m
+                dy = packet.n_coord - self.trilat_rx_prev_packet.n_coord  # m
+                dz = packet.u_coord - self.trilat_rx_prev_packet.u_coord  # m
+                dt = packet.itow_s - self.trilat_rx_prev_packet.itow_s    # s
 
-            self.set_text(dx/dt,self.dxdtLineEdit)
-            self.set_text(dy/dt,self.dydtLineEdit)
-            self.set_text(dz/dt,self.dzdtLineEdit)
+                self.set_text(dx/dt,self.dxdtLineEdit)
+                self.set_text(dy/dt,self.dydtLineEdit)
+                self.set_text(dz/dt,self.dzdtLineEdit)
 
-            speed = ( (dx/dt)**2 + (dy/dt)**2 + (dz/dt)**2 )**0.5
-            self.set_text(speed,self.LineEdit_speed)
+                speed = ( (dx/dt)**2 + (dy/dt)**2 + (dz/dt)**2 )**0.5
+                self.set_text(speed,self.lineEdit_speed)
 
             if packet.u_coord > self.apogee:
                 # New max alt
@@ -263,6 +268,7 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
                 self.max_alt_value.display(int(round(self.apogee - self.origin[2])))
 
             self.trilat_rx_prev_packet = packet
+            self.first_trilat_rx_packet = False
 
             # Update map marker including u_disp in the bubble
             self.map_view.page().mainFrame().evaluateJavaScript("marker_dart.setLatLng([{},{}]).update()".format(llh[0],llh[1]))
