@@ -231,7 +231,7 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
         elif packet.log_type == MESSAGE_POSITION:
             self.fill_fields_pos(toad_frame_x, packet)
             # Update map marker
-            self.map_view.page().mainFrame().evaluateJavaScript("toad_marker_{}.setLatLng([{},{}]).update()".format(id_no,packet.lat,packet.lon))
+            #self.map_view.page().mainFrame().evaluateJavaScript("toad_marker_{}.setLatLng([{},{}]);".format(id_no,packet.lat,packet.lon))
 
     def trilat_rx(self, packet):
         if isinstance(packet,Position_fix):
@@ -270,9 +270,24 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
             self.trilat_rx_prev_packet = packet
             self.first_trilat_rx_packet = False
 
-            # Update map marker including u_disp in the bubble
-            self.map_view.page().mainFrame().evaluateJavaScript("marker_dart.setLatLng([{},{}]).update()".format(llh[0],llh[1]))
-            self.map_view.page().mainFrame().evaluateJavaScript("marker_dart.bindPopup(\"TOAD Dart (height above pad: {} m)\").openPopup();".format(u_disp))
+            # Update map markers including u_disp in the bubble
+            self.map_view.page().mainFrame().evaluateJavaScript("toad_marker_1.setLatLng([{},{}]); \
+                                                                 toad_marker_2.setLatLng([{},{}]); \
+                                                                 toad_marker_3.setLatLng([{},{}]); \
+                                                                 toad_marker_4.setLatLng([{},{}]); \
+                                                                 toad_marker_5.setLatLng([{},{}]); \
+                                                                 toad_marker_6.setLatLng([{},{}]); \
+                                                                 marker_dart.setLatLng([{},{}]);   \
+                                                                 marker_dart.bindPopup(\"TOAD Dart (height above pad: {} m)\").openPopup();"
+                    .format(self.frame_toad_1.frame.lineEdit_lat.text(),self.frame_toad_1.frame.lineEdit_lon.text(),
+                            self.frame_toad_2.frame.lineEdit_lat.text(),self.frame_toad_2.frame.lineEdit_lon.text(),
+                            self.frame_toad_3.frame.lineEdit_lat.text(),self.frame_toad_3.frame.lineEdit_lon.text(),
+                            self.frame_toad_4.frame.lineEdit_lat.text(),self.frame_toad_4.frame.lineEdit_lon.text(),
+                            self.frame_toad_5.frame.lineEdit_lat.text(),self.frame_toad_5.frame.lineEdit_lon.text(),
+                            self.frame_toad_6.frame.lineEdit_lat.text(),self.frame_toad_6.frame.lineEdit_lon.text(),
+                            llh[0],llh[1], u_disp))
+            #self.map_view.page().mainFrame().evaluateJavaScript("marker_dart.setLatLng([{},{}]);".format(llh[0],llh[1]))
+            #self.map_view.page().mainFrame().evaluateJavaScript("marker_dart.bindPopup(\"TOAD Dart (height above pad: {} m)\").openPopup();".format(u_disp))
 
     def set_text(self,text,lineedit):
         lineedit.setText(str(text))

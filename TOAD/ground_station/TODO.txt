@@ -1,7 +1,5 @@
 - Test things
 - Run in USB test mode if no serial port specified
-- Fix slow javascript
-- Map tile licensing
 - Use spinbox value-change signal
 - Properly label map pins
 - (other double hash ## comments in the code)

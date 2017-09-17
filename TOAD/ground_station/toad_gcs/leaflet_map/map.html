@@ -6,6 +6,7 @@
   <style>
     #map{ height: 100% }
   </style>
+  <meta charset="UTF-8">
 </head>
 <body>
 
@@ -22,7 +23,7 @@
   //L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
   L.tileLayer('openstreetmap/{z}/{x}/{y}.png',
     {
-      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
+      attribution: '<a href="http://www.openstreetmap.org/copyright">© OpenStreetMap</a> contributors',
       maxZoom: 16,
       minZoom: 10
     }).addTo(map);
