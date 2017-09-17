@@ -49,15 +49,10 @@ extern binary_semaphore_t pvt_ready_sem;
 
 
 /* Configure uBlox GPS */
-void ublox_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
-                bool rising_edge);
+void ublox_init(SerialDriver* seriald);
 
 
 /* Init GPS Thread */
 void ublox_thd_init(void);
-
-/* PPS callback */
-void pps_callback(EXTDriver *extp, expchannel_t channel);
-
 
 #endif /* UBLOX_H */

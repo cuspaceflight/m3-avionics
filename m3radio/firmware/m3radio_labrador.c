@@ -5,16 +5,13 @@
 #include "m3can.h"
 #include "m3radio_status.h"
 #include "m3radio_labrador.h"
+#include "m3radio_router.h"
 #include "ch.h"
 #include "chprintf.h"
 
-/* Remember to update m3radio_labrador.h:M3RADIO_LABRADOR_TXBUFSIZE */
-#define TXCODE LDPC_CODE_N1280_K1024
-#define RXCODE LDPC_CODE_N256_K128
-
-static uint8_t labrador_wa[LDPC_SIZE(FAST, TXCODE, MP, RXCODE)];
-
-static thread_t* m3radio_labrador_thdp = NULL;
+static uint8_t labrador_wa[LABRADOR_WA_SIZE(TM1280, TC128, MS)];
+static uint8_t txbuf[128];
+BSEMAPHORE_DECL(m3radio_labrador_pps_bsem, true);
 
 /* Board configuration.
  * This tells the Si446x driver what our hardware looks like.
@@ -45,12 +42,9 @@ struct si446x_board_config brdcfg = {
 struct labrador_config labcfg = {
     .freq = 869500000,
     .baud = 2000,
-    .tx_code = TXCODE,
-    .rx_code = RXCODE,
-    .ldpc_none_txlen = 0,
-    .ldpc_none_rxlen = 0,
-    .ldpc_fast_encoder = true,
-    .ldpc_mp_decoder = true,
+    .tx_code = LABRADOR_LDPC_CODE_TM1280,
+    .rx_code = LABRADOR_LDPC_CODE_TC128,
+    .ldpc_ms_decoder = true,
     .rx_enabled = true,
     .workingarea = labrador_wa,
     .workingarea_size = sizeof(labrador_wa),
@@ -70,62 +64,14 @@ static void si446x_cfg_cb(uint8_t g, uint8_t p, uint8_t v)
     m3can_send_u8(CAN_MSG_ID_M3RADIO_SI4460_CFG, g, p, v, 0, 0, 0, 0, 0, 3);
 }
 
-THD_WORKING_AREA(m3radio_labrador_thd_wa, 1024);
-THD_FUNCTION(m3radio_labrador_thd, arg) {
+THD_WORKING_AREA(m3radio_labrador_rx_thd_wa, 1024);
+THD_FUNCTION(m3radio_labrador_rx_thd, arg) {
     (void)arg;
 
     uint8_t* rxbuf;
 
-    m3status_set_init(M3RADIO_COMPONENT_LABRADOR);
-
-    /* Initialise Labrador systems */
-    while(labrador_init(&labcfg, &labradcfg, &labstats, &labrador_radio_si446x)
-          != LABRADOR_OK)
-    {
-        m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
-                           M3RADIO_ERROR_LABRADOR);
-
-        chThdSleepMilliseconds(1000);
-    }
-
-    /* Initialise the Si446x driver */
-    while(!si446x_init(&brdcfg, &labradcfg)) {
-        m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
-                           M3RADIO_ERROR_LABRADOR_SI4460);
-
-        chThdSleepMilliseconds(1000);
-    }
-
-    /* Dump the Si446x configuration to CAN for logging */
-    si446x_dump_params(si446x_cfg_cb);
-
-    /* Loop sending/receiving messages */
+    /* Loop receiving messages */
     while (true) {
-        /* If there's a packet ready to send,
-         * send it and then signal that we've done so.
-         */
-        chSysLock();
-        bool msg_pending = chMsgIsPendingI(m3radio_labrador_thdp);
-        chSysUnlock();
-        if(msg_pending) {
-            thread_t *tp = chMsgWait();
-            uint8_t* txbuf = (uint8_t*)chMsgGet(tp);
-
-            /* Transmit on top of second from now on */
-            si446x_set_wait_sem(true);
-
-            labrador_err result = labrador_tx(txbuf);
-
-
-            if(result != LABRADOR_OK) {
-                m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
-                                   M3RADIO_ERROR_LABRADOR_TX);
-            } else {
-                m3status_set_ok(M3RADIO_COMPONENT_LABRADOR);
-            }
-            chMsgRelease(tp, (msg_t)result);
-        }
-
         /* Try and receive a message, on success, send it over CAN. */
         labrador_err result = labrador_rx(&rxbuf);
         if(result == LABRADOR_OK) {
@@ -150,19 +96,76 @@ THD_FUNCTION(m3radio_labrador_thd, arg) {
             m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
                                M3RADIO_ERROR_LABRADOR_RX);
         }
+
+        chThdSleepMilliseconds(10);
     }
 }
 
-void m3radio_labrador_tx(uint8_t* buf)
-{
-    if(m3radio_labrador_thdp != NULL) {
-        chMsgSend(m3radio_labrador_thdp, (msg_t)buf);
+
+THD_WORKING_AREA(m3radio_labrador_tx_thd_wa, 1024);
+THD_FUNCTION(m3radio_labrador_tx_thd, arg) {
+    (void)arg;
+
+    /* Loop transmitting messages */
+    while(true) {
+        /* GPS PPS will fall low 20ms before top of second, so we wait
+         * for that, which gives us time to prepare before it goes high
+         * and triggers transmission. We timeout after 1s in case the PPS
+         * has stopped, so that we'll still transmit anyway.
+         */
+        chBSemWaitTimeout(&m3radio_labrador_pps_bsem, MS2ST(1000));
+        m3radio_router_fillbuf(txbuf, sizeof(txbuf));
+        labrador_err result = labrador_tx(txbuf);
+        if(result != LABRADOR_OK) {
+            m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
+                               M3RADIO_ERROR_LABRADOR_TX);
+        } else {
+            m3status_set_ok(M3RADIO_COMPONENT_LABRADOR);
+        }
     }
 }
 
 void m3radio_labrador_init()
 {
-    m3radio_labrador_thdp = chThdCreateStatic(
-        m3radio_labrador_thd_wa, sizeof(m3radio_labrador_thd_wa),
-        NORMALPRIO, m3radio_labrador_thd, NULL);
+    m3status_set_init(M3RADIO_COMPONENT_LABRADOR);
+
+    /* Initialise Labrador systems */
+    while(labrador_init(&labcfg, &labradcfg, &labstats, &labrador_radio_si446x)
+          != LABRADOR_OK)
+    {
+        m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
+                           M3RADIO_ERROR_LABRADOR);
+
+        chThdSleepMilliseconds(1000);
+    }
+
+    /* Initialise the Si446x driver */
+    while(!si446x_init(&brdcfg, &labradcfg)) {
+        m3status_set_error(M3RADIO_COMPONENT_LABRADOR,
+                           M3RADIO_ERROR_LABRADOR_SI4460);
+
+        chThdSleepMilliseconds(1000);
+    }
+
+    /* Dump the Si446x configuration to CAN for logging */
+    si446x_dump_params(si446x_cfg_cb);
+
+    /* Start RX thread */
+    chThdCreateStatic(
+        m3radio_labrador_rx_thd_wa, sizeof(m3radio_labrador_rx_thd_wa),
+        NORMALPRIO, m3radio_labrador_rx_thd, NULL);
+
+    /* Start TX thread */
+    chThdCreateStatic(
+        m3radio_labrador_tx_thd_wa, sizeof(m3radio_labrador_tx_thd_wa),
+        NORMALPRIO, m3radio_labrador_tx_thd, NULL);
+}
+
+void m3radio_labrador_pps_falling(EXTDriver *extp, expchannel_t channel)
+{
+    (void)extp;
+    (void)channel;
+    chSysLockFromISR();
+    chBSemSignalI(&m3radio_labrador_pps_bsem);
+    chSysUnlockFromISR();
 }

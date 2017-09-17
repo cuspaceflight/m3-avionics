@@ -30,13 +30,15 @@ MEMORY
     ram7  : org = 0x00000000, len = 0
 }
 
+REGION_ALIAS(".CCM", ram4);
+
 /* RAM region to be used for Main stack. This stack accommodates the processing
    of all exceptions and interrupts*/
 REGION_ALIAS("MAIN_STACK_RAM", ram4);
 
 /* RAM region to be used for the process stack. This is the stack used by
    the main() function.*/
-REGION_ALIAS("PROCESS_STACK_RAM", ram4);
+REGION_ALIAS("PROCESS_STACK_RAM", ram0);
 
 /* RAM region to be used for data segment.*/
 REGION_ALIAS("DATA_RAM", ram0);

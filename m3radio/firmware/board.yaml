@@ -13,7 +13,7 @@ pins:
     CAN_RX: pb8, af9
     CAN_TX: pb9, af9
 
-    GPS_PPS: pa5, input,pushpull
+    GPS_PPS: pa5, input, floating
     GPS_RX: pa0, af8
     GPS_TX: pa1, af8
     GPS_RESET_N: pa2, output, pushpull, starthigh, pullup

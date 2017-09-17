@@ -268,7 +268,7 @@
  * PA2  - GPS_RESET_N                  (output, pushpull, starthigh, pullup).
  * PA3  - RADIO_CS                     (output, pushpull, starthigh, pullup).
  * PA4  - LED_RED                      (output, startlow).
- * PA5  - GPS_PPS                      (input, pushpull).
+ * PA5  - GPS_PPS                      (input, floating).
  * PA6  - LED_GRN                      (output, startlow).
  * PA7  - PIN7                         (unused).
  * PA8  - RADIO_GATE                   (output, pushpull, startlow, pulldown).
@@ -333,7 +333,7 @@
                                         PIN_PUPD_PULLUP(GPIOA_GPS_RESET_N) | \
                                         PIN_PUPD_PULLUP(GPIOA_RADIO_CS) | \
                                         PIN_PUPD_PULLUP(GPIOA_LED_RED) | \
-                                        PIN_PUPD_PULLUP(GPIOA_GPS_PPS) | \
+                                        PIN_PUPD_FLOATING(GPIOA_GPS_PPS) | \
                                         PIN_PUPD_PULLUP(GPIOA_LED_GRN) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN7) | \
                                         PIN_PUPD_PULLDOWN(GPIOA_RADIO_GATE) | \

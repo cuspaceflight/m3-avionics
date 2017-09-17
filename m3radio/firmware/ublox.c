@@ -33,7 +33,7 @@ static uint16_t ublox_fletcher_8(uint16_t chk, uint8_t *buf, uint8_t n);
 static void ublox_checksum(uint8_t *buf);
 static bool ublox_transmit(uint8_t *buf);
 static enum ublox_result ublox_state_machine(uint8_t b);
-static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge);
+static bool gps_configure(void);
 static bool gps_tx_ack(uint8_t *buf);
 
 
@@ -307,12 +307,12 @@ static enum ublox_result ublox_state_machine(uint8_t b)
     return UBLOX_WAIT;
 }
 
-static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge)
+static bool gps_configure()
 {
     ubx_cfg_prt_t prt;
     ubx_cfg_nav5_t nav5;
     ubx_cfg_msg_t msg;
-    ubx_cfg_msg_t msg2;
+    //ubx_cfg_msg_t msg2;
     ubx_cfg_rate_t rate;
     ubx_cfg_sbas_t sbas;
     ubx_cfg_gnss_t gnss;
@@ -473,74 +473,59 @@ static bool gps_configure(bool nav_pvt, bool nav_posecef, bool rising_edge)
     tp5_2.length = sizeof(tp5_2.payload);
 
     tp5_2.tp_idx               = 1;     // Safeboot pin
-    tp5_2.version              = 0;
+    tp5_2.version              = 1;
     tp5_2.ant_cable_delay      = 0;
+    tp5_2.rf_group_delay       = 0;
     tp5_2.freq_period          = 1;
-    tp5_2.pulse_len_ratio      = 50000; // us
+    tp5_2.pulse_len_ratio      = 980000; // us
     tp5_2.freq_period_lock     = 1;
-    tp5_2.pulse_len_ratio_lock = 10000;
+    tp5_2.pulse_len_ratio_lock = 980000;
+    tp5_2.user_config_delay    = 348400;
 
-    if(rising_edge) {
-
-        /* Rising edge on top of second */
-        tp5_2.flags = (
-            UBX_CFG_TP5_FLAGS_ACTIVE                    |
-            UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ            |
-            UBX_CFG_TP5_FLAGS_LOCKED_OTHER_SET          |
-            UBX_CFG_TP5_FLAGS_IS_FREQ                   |
-            UBX_CFG_TP5_FLAGS_IS_LENGTH                 |
-            UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
-            UBX_CFG_TP5_FLAGS_POLARITY                  |
-            UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
-    } else {
-
-        /* Falling edge on top of second */
-        tp5_2.flags = (
-            UBX_CFG_TP5_FLAGS_ACTIVE                    |
-            UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ            |
-            UBX_CFG_TP5_FLAGS_LOCKED_OTHER_SET          |
-            UBX_CFG_TP5_FLAGS_IS_FREQ                   |
-            UBX_CFG_TP5_FLAGS_IS_LENGTH                 |
-            UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
-            UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
-    }
+    /* Rising edge on top of second */
+    tp5_2.flags = (
+        UBX_CFG_TP5_FLAGS_ACTIVE                    |
+        UBX_CFG_TP5_FLAGS_LOCK_GNSS_FREQ            |
+        UBX_CFG_TP5_FLAGS_LOCKED_OTHER_SET          |
+        UBX_CFG_TP5_FLAGS_IS_FREQ                   |
+        UBX_CFG_TP5_FLAGS_IS_LENGTH                 |
+        UBX_CFG_TP5_FLAGS_ALIGN_TO_TOW              |
+        UBX_CFG_TP5_FLAGS_POLARITY                  |
+        UBX_CFG_TP5_FLAGS_GRID_UTC_GNSS_UTC);
 
     gps_configured &= gps_tx_ack((uint8_t*)&tp5_2);
     if(!gps_configured) return false;
 
 
     /* Enable NAV PVT messages */
-    if(nav_pvt){
-        msg.sync1 = UBX_SYNC1;
-        msg.sync2 = UBX_SYNC2;
-        msg.class = UBX_CFG;
-        msg.id = UBX_CFG_MSG;
-        msg.length = sizeof(msg.payload);
+    msg.sync1 = UBX_SYNC1;
+    msg.sync2 = UBX_SYNC2;
+    msg.class = UBX_CFG;
+    msg.id = UBX_CFG_MSG;
+    msg.length = sizeof(msg.payload);
 
-        msg.msg_class = UBX_NAV;
-        msg.msg_id    = UBX_NAV_PVT;
-        msg.rate      = 1;
-        gps_configured &= gps_tx_ack((uint8_t*)&msg);
-        if(!gps_configured) return false;
-    }
+    msg.msg_class = UBX_NAV;
+    msg.msg_id    = UBX_NAV_PVT;
+    msg.rate      = 1;
+    gps_configured &= gps_tx_ack((uint8_t*)&msg);
+    if(!gps_configured) return false;
 
 
+#if 0
     /* Enable NAV POSECEF messages */
-    //if (nav_posecef){
-    if (nav_posecef && 0){
-        msg2.sync1 = UBX_SYNC1;
-        msg2.sync2 = UBX_SYNC2;
-        msg2.class = UBX_CFG;
-        msg2.id = UBX_CFG_MSG;
-        msg2.length = sizeof(msg2.payload);
+    msg2.sync1 = UBX_SYNC1;
+    msg2.sync2 = UBX_SYNC2;
+    msg2.class = UBX_CFG;
+    msg2.id = UBX_CFG_MSG;
+    msg2.length = sizeof(msg2.payload);
 
-        msg2.msg_class = UBX_NAV;
-        msg2.msg_id    = UBX_NAV_POSECEF;
-        msg2.rate      = 1;
+    msg2.msg_class = UBX_NAV;
+    msg2.msg_id    = UBX_NAV_POSECEF;
+    msg2.rate      = 1;
 
-        gps_configured &= gps_tx_ack((uint8_t*)&msg2);
-        if(!gps_configured) return false;
-    }
+    gps_configured &= gps_tx_ack((uint8_t*)&msg2);
+    if(!gps_configured) return false;
+#endif
 
 
     return gps_configured;
@@ -566,8 +551,7 @@ static THD_FUNCTION(ublox_thd, arg) {
     }
 }
 
-void ublox_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
-                bool rising_edge) {
+void ublox_init(SerialDriver* seriald) {
 
     m3status_set_init(M3RADIO_COMPONENT_UBLOX);
     ublox_seriald = seriald;
@@ -580,9 +564,12 @@ void ublox_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
 
     sdStart(ublox_seriald, &serial_cfg);
 
-    while(!gps_configure(nav_pvt, nav_posecef, rising_edge)) {
+    while(!gps_configure()) {
         m3status_set_error(M3RADIO_COMPONENT_UBLOX, M3RADIO_ERROR_UBLOX_CFG);
-        chThdSleepMilliseconds(1000);
+        palClearLine(LINE_GPS_RESET_N);
+        chThdSleepMilliseconds(300);
+        palSetLine(LINE_GPS_RESET_N);
+        chThdSleepMilliseconds(500);
     }
     m3status_set_ok(M3RADIO_COMPONENT_UBLOX);
     return;
@@ -591,17 +578,4 @@ void ublox_init(SerialDriver* seriald, bool nav_pvt, bool nav_posecef,
 /* Init GPS Thread */
 void ublox_thd_init(void){
     chThdCreateStatic(ublox_thd_wa, sizeof(ublox_thd_wa), NORMALPRIO, ublox_thd, NULL);
-}
-
-/* PPS callback */
-void pps_callback(EXTDriver *extp, expchannel_t channel){
-    (void)extp;
-	(void)channel;
-
-    chSysLockFromISR();
-
-    /* Signal PPS Semaphore */
-	chBSemSignalI(&deassert_sem);
-
-	chSysUnlockFromISR();
 }

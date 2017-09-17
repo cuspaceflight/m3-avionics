@@ -19,7 +19,7 @@ static const EXTConfig extcfg = {
     {EXT_CH_MODE_DISABLED, NULL}, /* Px2 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px3 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px4*/
-    {EXT_CH_MODE_RISING_EDGE | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOA, pps_callback}, /* PA5 */
+    {EXT_CH_MODE_FALLING_EDGE | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOA, m3radio_labrador_pps_falling}, /* PA5 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px6 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px7 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px8 */
@@ -47,10 +47,12 @@ int main(void) {
     DBGMCU->CR |= DBGMCU_CR_DBG_SLEEP;
 
     /* Turn on the watchdog timer, stopped in debug halt */
+    /*
     DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_IWDG_STOP;
     IWDG->KR = 0x5555;
     IWDG->PR = 3;
     IWDG->KR = 0xCCCC;
+    */
 
     /* Initialise ChibiOS */
     halInit();
@@ -72,7 +74,7 @@ int main(void) {
     m3radio_router_init();
 
     /* Initialise GPS to produce 1MHz pulse */
-    ublox_init(&SD4, true, false, true);
+    ublox_init(&SD4);
 
     /* Configure CS2100 to Produce HSE */
     cs2100_configure(&I2CD2);
