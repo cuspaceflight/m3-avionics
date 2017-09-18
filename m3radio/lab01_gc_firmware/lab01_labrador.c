@@ -12,12 +12,11 @@
 #define CAN_ID_GROUND (7)
 #define CAN_MSG_ID_GROUND_PACKET_COUNT (CAN_ID_GROUND | CAN_MSG_ID(53))
 #define CAN_MSG_ID_GROUND_PACKET_STATS (CAN_ID_GROUND | CAN_MSG_ID(54))
+#define CAN_MSG_ID_GROUND_PACKET_FRAMES (CAN_ID_GROUND | CAN_MSG_ID(55))
 
-#define TXCODE LDPC_CODE_N256_K128
-#define RXCODE LDPC_CODE_N1280_K1024
-
-static uint8_t labrador_wa[LDPC_SIZE(FAST, TXCODE, BF, RXCODE)];
-static uint8_t txbuf[LDPC_PARAM_K(TXCODE)/8];
+static uint8_t labrador_wa[LABRADOR_WA_SIZE(TC128, TM1280, BF)];
+static uint8_t txbuf[16];
+BSEMAPHORE_DECL(labrador_rx_bsem, true);
 
 static thread_t* labrador_thdp = NULL;
 
@@ -44,10 +43,9 @@ struct si446x_board_config brdcfg = {
 struct labrador_config labcfg = {
     .freq = 869500000,
     .baud = 2000,
-    .tx_code = TXCODE,
-    .rx_code = RXCODE,
-    .ldpc_fast_encoder = true,
-    .ldpc_mp_decoder = false,
+    .tx_code = LABRADOR_LDPC_CODE_TC128,
+    .rx_code = LABRADOR_LDPC_CODE_TM1280,
+    .ldpc_ms_decoder = false,
     .rx_enabled = true,
     .workingarea = labrador_wa,
     .workingarea_size = sizeof(labrador_wa),
@@ -56,10 +54,9 @@ struct labrador_config labcfg = {
 struct labrador_radio_config labradcfg;
 struct labrador_stats labstats;
 
-static THD_WORKING_AREA(lab01_labrador_thd_wa, 1024);
-static THD_FUNCTION(lab01_labrador_thd, arg) {
+static THD_WORKING_AREA(lab01_labrador_tx_thd_wa, 1024);
+static THD_FUNCTION(lab01_labrador_tx_thd, arg) {
     (void)arg;
-    uint8_t* rxbuf;
 
     while(true) {
         /* If there's a packet ready to send,
@@ -69,6 +66,8 @@ static THD_FUNCTION(lab01_labrador_thd, arg) {
         bool msg_pending = chMsgIsPendingI(labrador_thdp);
         chSysUnlock();
         if(msg_pending) {
+            /* Wait for RX packet for up to 1s */
+            chBSemWaitTimeout(&labrador_rx_bsem, MS2ST(1000));
             thread_t *tp = chMsgWait();
             uint8_t* txbuf = (uint8_t*)chMsgGet(tp);
             labrador_err result = labrador_tx(txbuf);
@@ -79,15 +78,24 @@ static THD_FUNCTION(lab01_labrador_thd, arg) {
             }
             chMsgRelease(tp, (msg_t)result);
         }
+        chThdSleepMilliseconds(10);
+    }
+}
 
+static THD_WORKING_AREA(lab01_labrador_rx_thd_wa, 4096);
+static THD_FUNCTION(lab01_labrador_rx_thd, arg) {
+    (void)arg;
+    uint8_t* rxbuf;
+    while(true) {
         /* Try and receive a message, on success, send it over USB. */
         labrador_err result = labrador_rx(&rxbuf);
         if(result == LABRADOR_OK) {
             palClearLine(LINE_PIO0);
             palSetLine(LINE_PIO1);
             uint8_t n_frames = rxbuf[0];
+            uint8_t n_left = rxbuf[1];
             uint8_t i, j;
-            for(i=0, j=1; i<n_frames; i++) {
+            for(i=0, j=2; i<n_frames; i++) {
                 uint16_t sid;
                 uint8_t rtr, dlc;
                 uint8_t data[8];
@@ -95,7 +103,8 @@ static THD_FUNCTION(lab01_labrador_thd, arg) {
                 rtr = rxbuf[j+1] & 0x10;
                 dlc = rxbuf[j+1] & 0x0F;
                 memcpy(data, &rxbuf[j+2], dlc);
-                usbserial_send(sid, rtr, data, dlc);
+                /*usbserial_send(sid, rtr, data, dlc);*/
+                (void)sid; (void)rtr; (void)data; (void)dlc;
                 j += 2 + dlc;
             }
 
@@ -107,12 +116,18 @@ static THD_FUNCTION(lab01_labrador_thd, arg) {
                      d4 = labstats.n_bit_errs, d5 = labstats.ldpc_iters;
             uint8_t stats_data[8] = { d2, d2>>8, d3, d3>>8,
                                       d4, d4>>8, d5, d5>>8 };
-            usbserial_send(CAN_MSG_ID_GROUND_PACKET_COUNT, 0, count_data, 8);
-            usbserial_send(CAN_MSG_ID_GROUND_PACKET_STATS, 0, stats_data, 8);
-            palClearLine(LINE_PIO1);
+            uint8_t frames_data[2] = {n_frames, n_left};
+            /*usbserial_send(CAN_MSG_ID_GROUND_PACKET_COUNT, 0, count_data, 8);*/
+            /*usbserial_send(CAN_MSG_ID_GROUND_PACKET_STATS, 0, stats_data, 8);*/
+            /*usbserial_send(CAN_MSG_ID_GROUND_PACKET_FRAMES, 0, frames_data, 2);*/
+            (void)count_data; (void)stats_data; (void)frames_data;
+            chBSemSignal(&labrador_rx_bsem);
         } else if(result != LABRADOR_NO_DATA) {
             palSetLine(LINE_PIO0);
+        } else {
+            palClearLine(LINE_PIO1);
         }
+
 
         /* Need a short break to stop this thread hogging all the CPU time */
         chThdSleepMilliseconds(10);
@@ -141,8 +156,11 @@ void lab01_labrador_init()
 void lab01_labrador_run()
 {
     labrador_thdp = chThdCreateStatic(
-        lab01_labrador_thd_wa, sizeof(lab01_labrador_thd_wa),
-        NORMALPRIO, lab01_labrador_thd, NULL);
+        lab01_labrador_tx_thd_wa, sizeof(lab01_labrador_tx_thd_wa),
+        NORMALPRIO, lab01_labrador_tx_thd, NULL);
+    chThdCreateStatic(
+        lab01_labrador_rx_thd_wa, sizeof(lab01_labrador_rx_thd_wa),
+        NORMALPRIO, lab01_labrador_rx_thd, NULL);
 }
 
 void lab01_labrador_send(uint16_t msg_id, bool can_rtr,

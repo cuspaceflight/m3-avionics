@@ -18,6 +18,7 @@ CAN_MSG_ID_M3RADIO_PACKET_STATS = CAN_ID_M3RADIO | msg_id(54)
 CAN_MSG_ID_M3RADIO_PACKET_PING = CAN_ID_M3RADIO | msg_id(55)
 CAN_MSG_ID_GROUND_PACKET_COUNT = CAN_ID_GROUND | msg_id(53)
 CAN_MSG_ID_GROUND_PACKET_STATS = CAN_ID_GROUND | msg_id(54)
+CAN_MSG_ID_GROUND_PACKET_FRAMES = CAN_ID_GROUND | msg_id(55)
 
 components = {
     1: "uBlox",
@@ -115,6 +116,11 @@ def packet_stats(data):
     rssi, freqoff, biterrs, iters = struct.unpack("hhHH", bytes(data))
     return "RSSI {}dBm, Freq Offset {}Hz, Bit Errs {}, LDPC Iters {}".format(
         rssi, freqoff, biterrs, iters)
+
+@register_packet("ground", CAN_MSG_ID_GROUND_PACKET_FRAMES, "Packet Frames")
+def packet_frames(data):
+    thispacket, inqueue = struct.unpack("BB", bytes(data))
+    return "{} this packet, {} still in queue".format(thispacket, inqueue)
 
 
 @register_command("ground", "Ping", ["Ping"])
