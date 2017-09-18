@@ -4,6 +4,8 @@
 #include "usbcfg.h"
 #include "lab01_labrador.h"
 
+#define MEMPOOL_SIZE (64)
+
 static volatile bool usb_setup = false;
 
 struct can_msg {
@@ -18,8 +20,15 @@ struct can_msg {
     };
 };
 
-static THD_WORKING_AREA(usbserial_thd_wa, 1024);
-static THD_FUNCTION(usbserial_thd, arg)
+static memory_pool_t mempool;
+static mailbox_t mailbox;
+static volatile uint8_t mempool_buf[MEMPOOL_SIZE * sizeof(struct can_msg)]
+    __attribute__((aligned(sizeof(void *))));
+static volatile msg_t mailbox_buf[MEMPOOL_SIZE];
+
+
+static THD_WORKING_AREA(usbserial_rx_thd_wa, 1024);
+static THD_FUNCTION(usbserial_rx_thd, arg)
 {
     (void)arg;
     sduObjectInit(&SDU1);
@@ -55,35 +64,62 @@ static THD_FUNCTION(usbserial_thd, arg)
     }
 }
 
+static THD_WORKING_AREA(usbserial_tx_thd_wa, 1024);
+static THD_FUNCTION(usbserial_tx_thd, arg)
+{
+    (void)arg;
+    while(!usb_setup) {
+        chThdSleepMilliseconds(100);
+    }
+
+    struct can_msg *frame;
+    uint8_t buf[16];
+    size_t bufidx;
+
+    while(true) {
+        msg_t rv = chMBFetch(&mailbox, (msg_t*)&frame, MS2ST(100));
+        if(rv != MSG_OK || frame == 0) continue;
+        bufidx = 0;
+        buf[bufidx++] = 0x7E;
+        for(size_t i=0; i<12; i++) {
+            uint8_t c = frame->raw[i];
+            if(c == 0x7E) {
+                buf[bufidx++] = 0x7D;
+                buf[bufidx++] = 0x5E;
+            } else if(c == 0x7D) {
+                buf[bufidx++] = 0x7D;
+                buf[bufidx++] = 0x5D;
+            } else {
+                buf[bufidx++] = c;
+            }
+        }
+        chnWrite(&SDU1, buf, bufidx);
+        chPoolFree(&mempool, (void*)frame);
+    }
+}
+
 void usbserial_init(void)
 {
-    chThdCreateStatic(usbserial_thd_wa, sizeof(usbserial_thd_wa),
-                      NORMALPRIO, usbserial_thd, NULL);
+    chMBObjectInit(&mailbox, (msg_t*)mailbox_buf, MEMPOOL_SIZE);
+    chPoolObjectInit(&mempool, sizeof(struct can_msg), NULL);
+    chPoolLoadArray(&mempool, (void*)mempool_buf, MEMPOOL_SIZE);
+
+    chThdCreateStatic(usbserial_rx_thd_wa, sizeof(usbserial_rx_thd_wa),
+                      NORMALPRIO, usbserial_rx_thd, NULL);
+    chThdCreateStatic(usbserial_tx_thd_wa, sizeof(usbserial_tx_thd_wa),
+                      NORMALPRIO, usbserial_tx_thd, NULL);
 }
 
 void usbserial_send(uint16_t sid, uint8_t rtr, uint8_t* data, uint8_t dlc)
 {
-    uint8_t buf[16];
-    struct can_msg msg = { .id = sid, .rtr = rtr, .len = dlc };
-    size_t bufidx = 0;
-    memcpy(msg.data, data, dlc);
-    buf[bufidx++] = 0x7E;
-    for(size_t i=0; i<12; i++) {
-        uint8_t c = msg.raw[i];
-        if(c == 0x7E) {
-            buf[bufidx++] = 0x7D;
-            buf[bufidx++] = 0x5E;
-        } else if(c == 0x7D) {
-            buf[bufidx++] = 0x7D;
-            buf[bufidx++] = 0x5D;
-        } else {
-            buf[bufidx++] = c;
-        }
+    struct can_msg *msg;
+    msg = (struct can_msg*)chPoolAlloc(&mempool);
+    msg->id = sid;
+    msg->rtr = rtr;
+    msg->len = dlc;
+    memcpy(msg->data, data, dlc);
+    msg_t rv = chMBPost(&mailbox, (intptr_t)msg, TIME_IMMEDIATE);
+    if(rv != MSG_OK) {
+        chPoolFree(&mempool, (void*)msg);
     }
-
-    while(usb_setup != true) {
-        chThdSleepMilliseconds(10);
-    }
-
-    chnWrite(&SDU1, buf, bufidx);
 }

@@ -23,6 +23,8 @@ void clk_swap(void)
 
     /* Turn off the PLL */
     RCC->CR &= ~RCC_CR_PLLON;
+    /* Wait for PLL to be off */
+    while(RCC->CFGR & RCC_CR_PLLRDY);
 
     /* Set PLL input to HSE, M to HSE/1=13, default N, P, Q. */
     RCC->PLLCFGR = STM32_PLLQ | STM32_PLLP | STM32_PLLN |

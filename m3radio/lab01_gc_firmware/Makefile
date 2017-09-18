@@ -5,7 +5,7 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16
+  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16
 endif
 
 # C specific options here (added to USE_OPT).
@@ -102,15 +102,15 @@ include $(CHIBIOS)/test/rt/test.mk
 BOARDSRC = board.c
 BOARDINC = .
 
-LABRADORDIR = ../labrador
+LABRADORDIR = ../../../labrador
 LABRADORSRC = $(LABRADORDIR)/labrador/src/labrador.c \
-              $(LABRADORDIR)/radios/src/si446x.c \
-              $(LABRADORDIR)/ldpc/src/ldpc_codes.c \
-              $(LABRADORDIR)/ldpc/src/ldpc_encoder.c \
-              $(LABRADORDIR)/ldpc/src/ldpc_decoder.c
+              $(LABRADORDIR)/radios/src/si446x.c
 LABRADORINC = $(LABRADORDIR)/labrador/include \
-              $(LABRADORDIR)/radios/include \
-              $(LABRADORDIR)/ldpc/include
+              $(LABRADORDIR)/radios/include
+LDPCDIR      = ../../../labrador-ldpc
+LDPCINC      = $(LDPCDIR)/capi/include
+LDPCLIBDIR   = $(LDPCDIR)/capi/target/thumbv7em-none-eabihf/release
+LDPCLIB      = labrador_ldpc
 
 # Define linker script file here
 LDSCRIPT= STM32F401xB.ld
@@ -160,7 +160,7 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/hal/lib/streams \
-         $(LABRADORINC)
+         $(LABRADORINC) $(LDPCINC)
 
 #
 # Project, sources and paths
@@ -219,10 +219,10 @@ UADEFS =
 UINCDIR =
 
 # List the user directory to look for the libraries here
-ULIBDIR =
+ULIBDIR = $(LDPCLIBDIR)
 
 # List all user libraries here
-ULIBS = -lm
+ULIBS = -lm -l$(LDPCLIB)
 
 #
 # End of user defines
@@ -235,7 +235,7 @@ include $(RULESPATH)/rules.mk
 
 # BMP flashing via GDB
 #
-BMP_PORT = $(wildcard /dev/serial/by-id/*Black_Magic_Probe*if00)
+BMP_PORT = $(wildcard /dev/serial/by-id/*Black_Magic_Probe*7AB558B4-if00)
 flash: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb --batch \
 		              -ex 'target extended-remote $(BMP_PORT)' \

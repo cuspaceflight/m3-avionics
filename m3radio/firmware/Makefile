@@ -10,7 +10,7 @@ endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT = 
+  USE_COPT =
 endif
 
 # C++ specific options here (added to USE_OPT).
@@ -25,7 +25,7 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT = 
+  USE_LDOPT =
 endif
 
 # Enable this if you want link time optimizations (LTO)
@@ -100,15 +100,15 @@ include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 include $(CHIBIOS)/test/rt/test.mk
 
 # Pull in Labrador stuff
-LABRADOR_DIR = ../labrador
+LABRADOR_DIR = ../../../labrador
 LABRADOR_SRC = $(LABRADOR_DIR)/labrador/src/labrador.c \
-               $(LABRADOR_DIR)/radios/src/si446x.c \
-               $(LABRADOR_DIR)/ldpc/src/ldpc_codes.c \
-               $(LABRADOR_DIR)/ldpc/src/ldpc_encoder.c \
-               $(LABRADOR_DIR)/ldpc/src/ldpc_decoder.c
+               $(LABRADOR_DIR)/radios/src/si446x_m3.c
 LABRADOR_INC = $(LABRADOR_DIR)/labrador/include \
-               $(LABRADOR_DIR)/radios/include \
-               $(LABRADOR_DIR)/ldpc/include
+               $(LABRADOR_DIR)/radios/include
+LDPCDIR      = ../../../labrador-ldpc
+LDPCINC      = $(LDPCDIR)/capi/include
+LDPCLIBDIR   = $(LDPCDIR)/capi/target/thumbv7em-none-eabihf/release
+LDPCLIB      = labrador_ldpc
 
 BOARDSRC=board.c
 BOARDINC=.
@@ -131,6 +131,7 @@ CSRC = $(STARTUPSRC) \
        ../../shared/m3can/m3can.c \
        ../../shared/m3status/m3status.c \
        ublox.c \
+	   cs2100.c \
        m3radio_status.c m3radio_can.c m3radio_gps_ant.c \
        m3radio_router.c m3radio_router_slots.c \
        m3radio_labrador.c $(LABRADOR_SRC) \
@@ -165,7 +166,7 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(LABRADOR_INC) $(CHIBIOS)/os/various \
+         $(LABRADOR_INC) $(LDPCINC) $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/hal/lib/streams
 
 #
@@ -226,10 +227,10 @@ UADEFS =
 UINCDIR = ../../shared/m3can/ ../../shared/m3status/
 
 # List the user directory to look for the libraries here
-ULIBDIR =
+ULIBDIR = $(LDPCLIBDIR)
 
 # List all user libraries here
-ULIBS = -lm
+ULIBS = -lm -l$(LDPCLIB)
 
 #
 # End of user defines

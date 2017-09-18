@@ -21,12 +21,9 @@ static memory_pool_t mempool;
 static mailbox_t     mailbox;
 static volatile uint8_t mempool_buf[MEMPOOL_SIZE * sizeof(struct pool_frame)]
     __attribute__((aligned(sizeof(void*))))
-    __attribute__((section(".MAIN_STACK_RAM")));
+    __attribute__((section(".ram4")));
 static volatile msg_t mailbox_buf[MEMPOOL_SIZE]
-    __attribute__((section(".MAIN_STACK_RAM")));
-
-/* Storage for a single packet buffer */
-static uint8_t packet_buf[M3RADIO_LABRADOR_TXBUFSIZE];
+    __attribute__((section(".ram4")));
 
 /* Send a frame into the mailbox/mempool */
 static void enqueue(uint16_t sid, bool rtr, uint8_t* data, uint8_t dlc);
@@ -65,6 +62,10 @@ void m3radio_router_handle_can(uint16_t sid, bool rtr,
             enqueue(sid, rtr, data, dlc);
         }
     }
+
+    if(sid != (CAN_ID_M3RADIO|CAN_MSG_ID_STATUS)) {
+        m3status_set_ok(M3RADIO_COMPONENT_ROUTER);
+    }
 }
 
 static void enqueue(uint16_t sid, bool rtr, uint8_t* data, uint8_t dlc)
@@ -81,46 +82,64 @@ static void enqueue(uint16_t sid, bool rtr, uint8_t* data, uint8_t dlc)
     }
 }
 
-static THD_WORKING_AREA(m3radio_router_thd_wa, 512);
-static THD_FUNCTION(m3radio_router_thd, arg) {
-    (void)arg;
-
-    msg_t mailbox_res;
+void m3radio_router_fillbuf(uint8_t* buf, size_t len)
+{
+    msg_t mailbox_rv;
     msg_t msg;
-    struct pool_frame *frame;
-    uint8_t *bufptr = &packet_buf[1];
+    cnt_t messages_remaining;
+    size_t bufidx = 2;
     uint8_t n_frames = 0;
+    struct pool_frame *frame;
 
-    while(true) {
-        /* Block trying to get a message from the mailbox */
-        mailbox_res = chMBFetch(&mailbox, &msg, TIME_INFINITE);
-        if(mailbox_res != MSG_OK || msg == 0) continue;
+    /* Check how many messages are in the mailbox for transmission */
+    chSysLock();
+    messages_remaining = chMBGetUsedCountI(&mailbox);
+    chSysUnlock();
+
+    /* Keep adding to the buffer until we either run out of buffer
+     * or messages.
+     */
+    while(messages_remaining > 0) {
+        /* Try and fetch a message, on error stop adding to the buffer. */
+        mailbox_rv = chMBFetch(&mailbox, &msg, TIME_IMMEDIATE);
+        if(mailbox_rv != MSG_OK || msg == 0) {
+            break;
+        }
         frame = (struct pool_frame*)msg;
 
-        /* If packet buffer is too full to take this frame,
-         * send current packet buffer to radio.
+        /* If packet buffer is too full to take this frame, stop here.
+         * We'll post the messages back into the mailbox so it's first
+         * to be transmitted next time.
          */
         size_t frame_size = 2 + frame->dlc;
-        if(bufptr + frame_size > packet_buf + sizeof(packet_buf)) {
-            packet_buf[0] = n_frames;
-            m3radio_labrador_tx(packet_buf);
-            m3status_set_ok(M3RADIO_COMPONENT_ROUTER);
-            bufptr = &packet_buf[1];
-            n_frames = 0;
+        if(bufidx + frame_size >= len) {
+            chMBPostAhead(&mailbox, msg, TIME_IMMEDIATE);
+            break;
         }
 
-        /* Accumulate frame onto packet buffer */
-        bufptr[0]  = (frame->sid >> 3) & 0x00FF;
-        bufptr[1]  = (frame->sid << 5) & 0x00E0;
-        bufptr[1] |= (frame->rtr << 5) & 0x0010;
-        bufptr[1] |= (frame->dlc     ) & 0x000F;
-        memcpy(&bufptr[2], frame->data, frame->dlc);
-        bufptr += frame_size;
+        /* Otherwise, add this frame to the buffer. */
+        buf[bufidx+0]  = (frame->sid >> 3) & 0x00FF;
+        buf[bufidx+1]  = (frame->sid << 5) & 0x00E0;
+        buf[bufidx+1] |= (frame->rtr << 5) & 0x0010;
+        buf[bufidx+1] |= (frame->dlc     ) & 0x000F;
+        memcpy(&buf[bufidx+2], frame->data, frame->dlc);
+        bufidx += frame_size;
         n_frames++;
 
-        /* Free the frame from the pool */
+        /* Release this frame from the memory pool. */
         chPoolFree(&mempool, (void*)msg);
+
+        /* Update number of messages remaining. */
+        chSysLock();
+        messages_remaining = chMBGetUsedCountI(&mailbox);
+        chSysUnlock();
     }
+
+    /* Set the first two bytes of the buffer to number of frames and
+     * number of remaining enqueued packets.
+     */
+    buf[0] = (uint8_t)n_frames;
+    buf[1] = (uint8_t)messages_remaining;
 }
 
 void m3radio_router_init() {
@@ -129,7 +148,4 @@ void m3radio_router_init() {
     chMBObjectInit(&mailbox, (msg_t*)mailbox_buf, MEMPOOL_SIZE);
     chPoolObjectInit(&mempool, sizeof(struct pool_frame), NULL);
     chPoolLoadArray(&mempool, (void*)mempool_buf, MEMPOOL_SIZE);
-
-    chThdCreateStatic(m3radio_router_thd_wa, sizeof(m3radio_router_thd_wa),
-                      NORMALPRIO, m3radio_router_thd, NULL);
 }

@@ -1,11 +1,12 @@
 #include "m3radio_router_slots.h"
 
 struct m3radio_slot m3radio_slots[2048] = {
-    {.mode=M3RADIO_ROUTER_MODE_NEVER},
+    /* Unless otherwise specified, default is to never transmit. */
+    {.mode=M3RADIO_ROUTER_MODE_NEVER, .skip_count=0},
 
+    /* M3Radio Packets */
     [CAN_ID_M3RADIO | CAN_MSG_ID_VERSION]   = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
     [CAN_ID_M3RADIO | CAN_MSG_ID_STATUS]    = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
-
     [CAN_MSG_ID_M3RADIO_GPS_LATLNG] = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
     [CAN_MSG_ID_M3RADIO_GPS_ALT]    = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
     [CAN_MSG_ID_M3RADIO_GPS_TIME]   = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
@@ -15,9 +16,9 @@ struct m3radio_slot m3radio_slots[2048] = {
     [CAN_MSG_ID_M3RADIO_PACKET_STATS] = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
 
 
+    /* M3PSU Packets */
     [CAN_ID_M3PSU | CAN_MSG_ID_VERSION] = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
     [CAN_ID_M3PSU | CAN_MSG_ID_STATUS]  = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
-
     [CAN_MSG_ID_M3PSU_BATT_VOLTAGES]        = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
     [CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12]    = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
     [CAN_MSG_ID_M3PSU_CHANNEL_STATUS_34]    = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
@@ -30,9 +31,9 @@ struct m3radio_slot m3radio_slots[2048] = {
     [CAN_MSG_ID_M3PSU_CAPACITY]             = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
 
 
+    /* M3FC Packets */
     [CAN_ID_M3FC | CAN_MSG_ID_VERSION]  = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
     [CAN_ID_M3FC | CAN_MSG_ID_STATUS]   = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
-
     [CAN_MSG_ID_M3FC_MISSION_STATE]     = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
     [CAN_MSG_ID_M3FC_ACCEL]             = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
     [CAN_MSG_ID_M3FC_BARO]              = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
@@ -49,9 +50,9 @@ struct m3radio_slot m3radio_slots[2048] = {
     [CAN_MSG_ID_M3FC_CFG_CRC]           = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 4000  },
 
 
+    /* M3DL Packets */
     [CAN_ID_M3DL | CAN_MSG_ID_VERSION]  = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
     [CAN_ID_M3DL | CAN_MSG_ID_STATUS]   = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000},
-
     [CAN_MSG_ID_M3DL_FREE_SPACE]        = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
     [CAN_MSG_ID_M3DL_RATE]              = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
     [CAN_MSG_ID_M3DL_TEMP_1_2]          = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
@@ -62,15 +63,16 @@ struct m3radio_slot m3radio_slots[2048] = {
     [CAN_MSG_ID_M3DL_PRESSURE]          = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
 
 
+    /* M3IMU Packets */
     [CAN_ID_M3IMU | CAN_MSG_ID_VERSION]  = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
     [CAN_ID_M3IMU | CAN_MSG_ID_STATUS]   = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
 
 
+    /* M3Pyro Packets */
     [CAN_ID_M3PYRO | CAN_MSG_ID_VERSION] = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
     [CAN_ID_M3PYRO | CAN_MSG_ID_STATUS]  = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
-
-    [CAN_MSG_ID_M3PYRO_FIRE_STATUS]     = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
-    [CAN_MSG_ID_M3PYRO_ARM_STATUS]      = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
-    [CAN_MSG_ID_M3PYRO_CONTINUITY]      = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
-    [CAN_MSG_ID_M3PYRO_SUPPLY_STATUS]   = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
+    [CAN_MSG_ID_M3PYRO_FIRE_STATUS]      = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
+    [CAN_MSG_ID_M3PYRO_ARM_STATUS]       = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
+    [CAN_MSG_ID_M3PYRO_CONTINUITY]       = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
+    [CAN_MSG_ID_M3PYRO_SUPPLY_STATUS]    = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
 };
