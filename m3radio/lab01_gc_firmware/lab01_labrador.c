@@ -103,8 +103,7 @@ static THD_FUNCTION(lab01_labrador_rx_thd, arg) {
                 rtr = rxbuf[j+1] & 0x10;
                 dlc = rxbuf[j+1] & 0x0F;
                 memcpy(data, &rxbuf[j+2], dlc);
-                /*usbserial_send(sid, rtr, data, dlc);*/
-                (void)sid; (void)rtr; (void)data; (void)dlc;
+                usbserial_send(sid, rtr, data, dlc);
                 j += 2 + dlc;
             }
 
@@ -117,10 +116,9 @@ static THD_FUNCTION(lab01_labrador_rx_thd, arg) {
             uint8_t stats_data[8] = { d2, d2>>8, d3, d3>>8,
                                       d4, d4>>8, d5, d5>>8 };
             uint8_t frames_data[2] = {n_frames, n_left};
-            /*usbserial_send(CAN_MSG_ID_GROUND_PACKET_COUNT, 0, count_data, 8);*/
-            /*usbserial_send(CAN_MSG_ID_GROUND_PACKET_STATS, 0, stats_data, 8);*/
-            /*usbserial_send(CAN_MSG_ID_GROUND_PACKET_FRAMES, 0, frames_data, 2);*/
-            (void)count_data; (void)stats_data; (void)frames_data;
+            usbserial_send(CAN_MSG_ID_GROUND_PACKET_COUNT, 0, count_data, 8);
+            usbserial_send(CAN_MSG_ID_GROUND_PACKET_STATS, 0, stats_data, 8);
+            usbserial_send(CAN_MSG_ID_GROUND_PACKET_FRAMES, 0, frames_data, 2);
             chBSemSignal(&labrador_rx_bsem);
         } else if(result != LABRADOR_NO_DATA) {
             palSetLine(LINE_PIO0);

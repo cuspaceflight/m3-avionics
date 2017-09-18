@@ -102,7 +102,7 @@ include $(CHIBIOS)/test/rt/test.mk
 BOARDSRC = board.c
 BOARDINC = .
 
-LABRADORDIR = ../labrador
+LABRADORDIR = ../../../labrador
 LABRADORSRC = $(LABRADORDIR)/labrador/src/labrador.c \
               $(LABRADORDIR)/radios/src/si446x.c
 LABRADORINC = $(LABRADORDIR)/labrador/include \
