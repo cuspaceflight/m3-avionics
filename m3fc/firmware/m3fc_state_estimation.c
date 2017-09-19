@@ -424,11 +424,9 @@ void m3fc_state_estimation_new_accels(float accels[3], float max, float rms)
         /* Check if overall acceleration is near 1G, and treat as zero if so */
         accel = 0.0f;
         rms = 9.80665f;
-    } else {
-        /* Update RMS if acceleration is above maximum. */
-        if(fabsf(accel) > max) {
-            rms += fabsf(accel) - max;
-        }
+    } else if(fabsf(accel) > max) {
+        /* Do not use for state estimation if reading is above sensor max. */
+        return;
     }
 
     /* Subtract 1G from the "up" acceleration to remove effect of gravity */
