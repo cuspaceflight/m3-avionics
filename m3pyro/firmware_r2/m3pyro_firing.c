@@ -45,6 +45,11 @@ static THD_FUNCTION(firing_thd, arg) {
             continue;
         }
 
+        /* Ignore firing messages while not armed. */
+        if(!m3pyro_armed()) {
+            continue;
+        }
+
         uint8_t channel = msg & 0xFF;
         uint8_t command = (msg >> 8) & 0xFF;
         uint8_t command_type = command & FIRE_TYPE_MASK;

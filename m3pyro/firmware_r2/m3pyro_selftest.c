@@ -60,10 +60,14 @@ void m3pyro_selftest(void) {
     m3pyro_cont_enable();
     chThdSleepMilliseconds(300);
     v = m3pyro_read_bus();
-    if(v < 30) {
+    /* When continuity is energized the bus still has 14K impedance to ground,
+     * probably through the 1A/3A supplies, so it reads 2.6V typically.
+     */
+    if(v < 24) {
         m3pyro_selftest_fail(M3PYRO_ERROR_SELFTEST_CONT);
         return;
     }
+    m3pyro_cont_disable();
     if(!m3pyro_selftest_discharge()) {
         return;
     }

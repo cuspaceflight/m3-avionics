@@ -1,5 +1,6 @@
 #include "ch.h"
 #include "hal.h"
+#include "m3can.h"
 #include "m3pyro_status.h"
 #include "m3pyro_hal.h"
 
@@ -63,7 +64,21 @@ static THD_FUNCTION(armed_led_thd, arg) {
     }
 }
 
+static THD_WORKING_AREA(armed_can_thd_wa, 128);
+static THD_FUNCTION(armed_can_thd, arg) {
+    (void)arg;
+    chRegSetThreadName("armed_can");
+    while(true) {
+        uint8_t armed = m3pyro_armed();
+        m3can_send(CAN_MSG_ID_M3PYRO_ARM_STATUS, false,
+                   (uint8_t*)&armed, 1);
+        chThdSleepMilliseconds(500);
+    }
+}
+
 void m3pyro_status_init() {
+    chThdCreateStatic(armed_can_thd_wa, sizeof(armed_can_thd_wa),
+                      NORMALPRIO, armed_can_thd, NULL);
     chThdCreateStatic(status_leds_thd_wa, sizeof(status_leds_thd_wa),
                       LOWPRIO, status_leds_thd, NULL);
     chThdCreateStatic(armed_led_thd_wa, sizeof(armed_led_thd_wa),
