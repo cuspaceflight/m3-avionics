@@ -1,0 +1,26 @@
+m3fc config for new pyros:
+    need to finish m3fc_config.py, notably __str__ for pyros class
+    be nice to make a gui for this, though low priority
+
+toad:
+    use new labrador etc like m3radio
+    set up nirq as sync valid, then gpio as rxclk
+    record arrival time of rxclk while sync valid
+    log each arrival time
+    transmit average of all arrival times
+    see keep
+
+set up:
+    fc cal for new fcs
+    fc cfg for new fcs
+    radio freqs for new radios
+    program latest fw on ALL units from clean commit
+
+test:
+    imus working
+    fc work with new pyro stuff
+    radio/ground link working reliably with new usbserial stuff
+
+check:
+    fc mission profile stuff, just to be sure...
+    procedures correct -- especially wrt battle shorts rebooting everything
