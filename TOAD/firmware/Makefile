@@ -101,17 +101,17 @@ include $(CHIBIOS)/test/rt/test.mk
 include ../../shared/fatfs/fatfs.mk
 
 # Pull in Labrador stuff
-LABRADOR_DIR = labrador
+LABRADOR_DIR = ../../../labrador
 LABRADOR_SRC = $(LABRADOR_DIR)/labrador/src/labrador.c \
                $(LABRADOR_DIR)/radios/src/si446x.c \
-               $(LABRADOR_DIR)/radios/src/p_radio.c \
-               $(LABRADOR_DIR)/ldpc/src/ldpc_codes.c \
-               $(LABRADOR_DIR)/ldpc/src/ldpc_encoder.c \
-               $(LABRADOR_DIR)/ldpc/src/ldpc_decoder.c
+               $(LABRADOR_DIR)/radios/src/si446x_toad_pr.c
 LABRADOR_INC = $(LABRADOR_DIR)/labrador/include \
-               $(LABRADOR_DIR)/radios/include \
-               $(LABRADOR_DIR)/ldpc/include
-               
+               $(LABRADOR_DIR)/radios/include
+LDPCDIR      = ../../../labrador-ldpc
+LDPCINC      = $(LDPCDIR)/capi/include
+LDPCLIBDIR   = $(LDPCDIR)/capi/target/thumbv7em-none-eabihf/release
+LDPCLIB      = labrador_ldpc
+
 BOARDSRC=board.c
 BOARDINC=.
 
@@ -165,7 +165,7 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(LABRADOR_INC) $(CHIBIOS)/os/various \
+         $(LABRADOR_INC) $(LDPCINC) $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/various/fatfs_bindings \
          $(CHIBIOS)/os/hal/lib/streams \
          $(FATFSINC)
@@ -228,10 +228,10 @@ UADEFS =
 UINCDIR = 
 
 # List the user directory to look for the libraries here
-ULIBDIR =
+ULIBDIR = $(LDPCLIBDIR)
 
 # List all user libraries here
-ULIBS = -lm
+ULIBS = -lm -l$(LDPCLIB)
 
 #
 # End of user defines

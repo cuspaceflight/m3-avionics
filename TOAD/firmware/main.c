@@ -14,6 +14,14 @@
 #include "measurements.h"
 #include "usb_serial_link.h"
 
+/* nIRQ is configured to rise when sync is detected,
+ * so then enable responding to rxclk events.
+ */
+void pr_nirq_isr(EXTDriver *extp, expchannel_t channel)
+{
+    (void)extp; (void)channel;
+    gpt2_enable_ccr2();
+}
 
 
 /* Interrupt Configuration */
@@ -30,7 +38,7 @@ static const EXTConfig extcfg = {
     {EXT_CH_MODE_DISABLED, NULL}, /* Px8 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px9 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px10 */
-    {EXT_CH_MODE_FALLING_EDGE | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOB, NULL}, /* PB11 */
+    {EXT_CH_MODE_RISING_EDGE | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOB, pr_nirq_isr}, /* PB11 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px12 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px13 */
     {EXT_CH_MODE_DISABLED, NULL}, /* Px14 */
@@ -63,34 +71,34 @@ int main(void) {
 
     /* Swap PLLSRC to HSE */
     cs2100_set_pll();
-    
+
     /* Interrupt Init */
     extStart(&EXTD1, &extcfg);
 
     /* Start Logging Thread */
     logging_init();
-    
+
     /* Start PSU */
     psu_init();
 
     /* Start Measurement Handler */
     measurement_init();
-    
+
     /* Start Timer */
     gpt2_init();
 
     /* Start GPS State Machine */
     gps_thd_init();
-    
+
     /* Start Secondary Radio */
     sr_labrador_init();
-    
+
     /* Start Primary Radio */
     downlink_init();
-    
+
     /* Start USB System */
     usb_serial_init();
-    
+
     /* Update System Status */
     set_status(COMPONENT_SYS, STATUS_GOOD);
 

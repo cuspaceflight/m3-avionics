@@ -7,6 +7,7 @@
 /* Measurement Functions */
 void measurements_handle_pps(void);
 void measurements_handle_radio(void);
+void measurements_start_rxclk(void);
 
 /* Timestamped SYNC Events */
 typedef struct __attribute__((packed)) {    

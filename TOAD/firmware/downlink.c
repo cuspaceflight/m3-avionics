@@ -3,7 +3,7 @@
 
 #include <string.h>
 #include "si446x.h"
-#include "p_radio.h"
+#include "si446x_toad_pr.h"
 #include "status.h"
 #include "labrador.h"
 #include "measurements.h"
@@ -11,8 +11,7 @@
 #include "logging.h"
 
 /* Primary Radio Config */
-struct p_radio_config p_radio_cfg = {
-   
+static struct si446x_board_config brdcfg = {
     .spid = &SPID1,
     .spi_cfg = {
         .end_cb = NULL,
@@ -22,7 +21,7 @@ struct p_radio_config p_radio_cfg = {
     },
     .sdn = LINE_PR_SDN,
     .nirq = LINE_PR_NIRQ,
-    .gpio0 = si446x_gpio_mode_sync_word_detect,
+    .gpio0 = si446x_gpio_mode_rx_data_clk,
     .gpio1 = si446x_gpio_mode_tristate,
     .gpio2 = si446x_gpio_mode_tristate,
     .gpio3 = si446x_gpio_mode_tx_state,
@@ -30,13 +29,18 @@ struct p_radio_config p_radio_cfg = {
     .clk_out_div = si446x_clk_out_div_1,
     .tcxo = true,
     .xo_freq = 26000000,
+};
+
+static struct labrador_radio_config labcfg = {
     .freq = 869500000,
     .baud = 2000,
     .rxlen = 160,
+    .txlen = 160,
+    .rx_enabled = true,
 };
 
 /* Primary Radio Stats */
-struct labrador_stats* pr_stats;
+static struct labrador_stats* pr_stats;
 
 /* Thread to Handle Rocket Downlink */
 static THD_WORKING_AREA(dwn_thd_wa, 1024);
@@ -46,31 +50,31 @@ static THD_FUNCTION(dwn_thd, arg) {
     chRegSetThreadName("PR");
 
     /* Initialise Primary Radio */
-    while(!p_radio_init(&p_radio_cfg))
+    while(!si446x_toad_pr_init(&brdcfg, &labcfg))
     {
         set_status(COMPONENT_PR, STATUS_ERROR);
         chThdSleepMilliseconds(1000);
     }
 
-    uint8_t rxbuf[256] = {0};
-    
+    uint8_t rxbuf[160] = {0};
+
     while(true) {
-        
+
         set_status(COMPONENT_PR, STATUS_GOOD);
-        
+
         /* Check for Telemetry Packet */
-        if(p_radio_rx(rxbuf, pr_stats)) {
-        
+        if(si446x_toad_pr_rx(rxbuf, pr_stats)) {
+
             /* Packet Recieved */
             set_status(COMPONENT_PR, STATUS_ACTIVITY);
-            
+
             /* Log Telem Packet */
             log_telem_packet(rxbuf);
-            log_labrador_stats(pr_stats);              
+            log_labrador_stats(pr_stats);
         }
-        
+
         /* Sleep */
-        chThdSleepMilliseconds(50);        
+        chThdSleepMilliseconds(10);
     }
 }
 
