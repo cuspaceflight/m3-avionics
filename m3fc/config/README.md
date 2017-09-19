@@ -19,9 +19,11 @@ Profile contains the following keys:
 * land_timeout: landing detection timeout in seconds since launch, 0 to 2550
 
 Pyros contains the following keys:
-* pyro_1_use: one of unused, drogue, main, dartsep, boostersep
-* pyro_1_type: one of none, ematch, talon, metron
-* etc for pyro_2, pyro_3, and pyro_4
+pyro1, pyro2, ..., pyro8
+each is either "none" or a dict of usage,type,curent
+usage is either unused or dartsep or main or drogue
+type is either none or metron or talon or ematch
+current is either none or 1A or 3A
 
 Each accel_cal contains the following keys:
 * scale, the axis scale in g/LSB

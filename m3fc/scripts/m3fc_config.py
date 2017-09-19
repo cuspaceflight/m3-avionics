@@ -34,23 +34,26 @@ m3fc_msg_save_cfg = m3fc_id | msg_id(4)
 
 
 class M3FCConfigPyros:
-    use_map = {0: "Unused", 1: "Drogue", 2: "Main", 3: "Dart Separation",
-               4: "Booster Separation"}
-    use_invmap = {"unused": 0, "drogue": 1, "main": 2,
-                  "dartsep": 3, "boostersep": 4}
+    use_map = {0x00: "Unused",
+               0x10: "Drogue", 0x20: "Main", 0x30: "Dart Separation"}
+    use_invmap = {"unused": 0, "drogue": 0x10, "main": 0x20, "dartsep": 0x30}
+    use_mask = 0xf0
     type_map = {0: "None", 1: "EMatch", 2: "Talon", 3: "Metron"}
     type_invmap = {"none": 0, "ematch": 1, "talon": 2, "metron": 3}
+    type_mask = 0x03
+    current_map = {0: "None", 0x04: "1A", 0x08: "3A"}
+    current_invmap = {"none": 0, "1A": 0x04, "3A": 0x08}
+    current_mask = 0x0c
 
-    def __init__(self, p1use, p2use, p3use, p4use,
-                 p1type, p2type, p3type, p4type):
-        self.p1use = p1use
-        self.p2use = p2use
-        self.p3use = p3use
-        self.p4use = p4use
-        self.p1type = p1type
-        self.p2type = p2type
-        self.p3type = p3type
-        self.p4type = p4type
+    def __init__(self, p1, p2, p3, p4, p5, p6, p7, p8):
+        self.p1 = p1
+        self.p2 = p2
+        self.p3 = p3
+        self.p4 = p4
+        self.p5 = p5
+        self.p6 = p6
+        self.p7 = p7
+        self.p8 = p8
 
     @classmethod
     def from_can(cls, packet):
@@ -59,26 +62,30 @@ class M3FCConfigPyros:
 
     def to_can(self):
         return CANFrame(sid=m3fc_msg_set_cfg_pyros, rtr=False, dlc=8,
-                        data=[self.p1use, self.p2use,
-                              self.p3use, self.p4use,
-                              self.p1type, self.p2type,
-                              self.p3type, self.p4type])
+                        data=[self.p1, self.p2, self.p3, self.p4,
+                              self.p5, self.p6, self.p7, self.p8])
 
     @classmethod
     def from_dict(cls, d):
-        assert set(d.keys()) == {"pyro_1_usage", "pyro_2_usage",
-                                 "pyro_3_usage", "pyro_4_usage",
-                                 "pyro_1_type", "pyro_2_type",
-                                 "pyro_3_type", "pyro_4_type"}
-        return cls(
-            cls.use_invmap.get(d['pyro_1_usage'].lower(), 0),
-            cls.use_invmap.get(d['pyro_2_usage'].lower(), 0),
-            cls.use_invmap.get(d['pyro_3_usage'].lower(), 0),
-            cls.use_invmap.get(d['pyro_4_usage'].lower(), 0),
-            cls.type_invmap.get(d['pyro_1_type'].lower(), 0),
-            cls.type_invmap.get(d['pyro_2_type'].lower(), 0),
-            cls.type_invmap.get(d['pyro_3_type'].lower(), 0),
-            cls.type_invmap.get(d['pyro_4_type'].lower(), 0))
+        def from_pyro_dict(d):
+            if d == "none":
+                return 0
+            assert set(d.keys()) == {"type", "usage", "current"}
+            return (
+                cls.use_invmap.get(d['usage'], 0) |
+                cls.type_invmap.get(d['type'], 0) |
+                cls.current_invmap.get(d['current'], 0))
+
+        assert set(d.keys()) == {"pyro1", "pyro2", "pyro3", "pyro4",
+                                 "pyro5", "pyro6", "pyro7", "pyro8"}
+        return cls(from_pyro_dict(d['pyro1']),
+                   from_pyro_dict(d['pyro2']),
+                   from_pyro_dict(d['pyro3']),
+                   from_pyro_dict(d['pyro4']),
+                   from_pyro_dict(d['pyro5']),
+                   from_pyro_dict(d['pyro6']),
+                   from_pyro_dict(d['pyro7']),
+                   from_pyro_dict(d['pyro8']))
 
     def __str__(self):
         out = []

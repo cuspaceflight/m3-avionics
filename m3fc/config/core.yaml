@@ -9,14 +9,23 @@ profile:
   land_timeout: 600
 
 pyros:
-  pyro_1_usage: dartsep
-  pyro_1_type: metron
-  pyro_2_usage: drogue
-  pyro_2_type: metron
-  pyro_3_usage: main
-  pyro_3_type: metron
-  pyro_4_usage: unused
-  pyro_4_type: none
+  pyro1: none
+  pyro2: none
+  pyro3: none
+  pyro4: none
+  pyro5:
+    usage: dartsep
+    type: metron
+    current: 1A
+  pyro6:
+    usage: drogue
+    type: metron
+    current: 3A
+  pyro7:
+    usage: main
+    type: metron
+    current: 1A
+  pyro8: none
 
 accel_cal_x:
   scale: 0.0039
