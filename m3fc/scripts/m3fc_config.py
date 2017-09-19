@@ -46,14 +46,14 @@ class M3FCConfigPyros:
     current_mask = 0x0c
 
     def __init__(self, p1, p2, p3, p4, p5, p6, p7, p8):
-        self.p1 = p1
-        self.p2 = p2
-        self.p3 = p3
-        self.p4 = p4
-        self.p5 = p5
-        self.p6 = p6
-        self.p7 = p7
-        self.p8 = p8
+        self.pyro1 = p1
+        self.pyro2 = p2
+        self.pyro3 = p3
+        self.pyro4 = p4
+        self.pyro5 = p5
+        self.pyro6 = p6
+        self.pyro7 = p7
+        self.pyro8 = p8
 
     @classmethod
     def from_can(cls, packet):
@@ -62,8 +62,8 @@ class M3FCConfigPyros:
 
     def to_can(self):
         return CANFrame(sid=m3fc_msg_set_cfg_pyros, rtr=False, dlc=8,
-                        data=[self.p1, self.p2, self.p3, self.p4,
-                              self.p5, self.p6, self.p7, self.p8])
+                        data=[self.pyro1, self.pyro2, self.pyro3, self.pyro4,
+                              self.pyro5, self.pyro6, self.pyro7, self.pyro8])
 
     @classmethod
     def from_dict(cls, d):
@@ -88,16 +88,21 @@ class M3FCConfigPyros:
                    from_pyro_dict(d['pyro8']))
 
     def __str__(self):
+        def pyro2str(pyro):
+            usage = self.use_map.get(pyro & 0xf0, "?")
+            current = self.current_map.get(pyro & 0x0c, "?")
+            type_ = self.type_map.get(pyro & 0x03, "?")
+            return "{}/{}/{}".format(usage, type_, current)
         out = []
         out.append("M3FC Config Pyros:")
-        out.append("Pyro 1: {}/{}".format(self.use_map.get(self.p1use, "?"),
-                                          self.type_map.get(self.p1type, "?")))
-        out.append("Pyro 2: {}/{}".format(self.use_map.get(self.p2use, "?"),
-                                          self.type_map.get(self.p2type, "?")))
-        out.append("Pyro 3: {}/{}".format(self.use_map.get(self.p3use, "?"),
-                                          self.type_map.get(self.p3type, "?")))
-        out.append("Pyro 4: {}/{}".format(self.use_map.get(self.p4use, "?"),
-                                          self.type_map.get(self.p4type, "?")))
+        out.append("Pyro 1: " + pyro2str(self.pyro1))
+        out.append("Pyro 2: " + pyro2str(self.pyro2))
+        out.append("Pyro 3: " + pyro2str(self.pyro3))
+        out.append("Pyro 4: " + pyro2str(self.pyro4))
+        out.append("Pyro 5: " + pyro2str(self.pyro5))
+        out.append("Pyro 6: " + pyro2str(self.pyro6))
+        out.append("Pyro 7: " + pyro2str(self.pyro7))
+        out.append("Pyro 8: " + pyro2str(self.pyro8))
         out.append("")
         return "\n".join(out)
 
@@ -319,10 +324,11 @@ class M3FCConfig:
             profile.m3fc_position, profile.accel_axis, profile.ignition_accel,
             profile.burnout_timeout, profile.apogee_timeout,
             profile.main_altitude, profile.main_timeout, profile.land_timeout,
-            pyros.p1use, pyros.p2use, pyros.p3use, pyros.p4use, pyros.p1type,
-            pyros.p2type, pyros.p3type, pyros.p4type, accel_cal_x.scale,
-            accel_cal_x.offset, accel_cal_y.scale, accel_cal_y.offset,
-            accel_cal_z.scale, accel_cal_z.offset, radio_freq.freq)
+            pyros.pyro1, pyros.pyro2, pyros.pyro3, pyros.pyro4,
+            pyros.pyro5, pyros.pyro6, pyros.pyro7, pyros.pyro8,
+            accel_cal_x.scale, accel_cal_x.offset, accel_cal_y.scale,
+            accel_cal_y.offset, accel_cal_z.scale, accel_cal_z.offset,
+            radio_freq.freq)
         # convert to 32 bit words and then reverse the byte ordering
         u32 = struct.unpack(">11I", raw)
         raw = struct.pack("<11I", *u32)
