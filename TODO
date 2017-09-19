@@ -1,0 +1,38 @@
+toad:
+    use new labrador etc like m3radio
+    set up nirq as sync valid, then gpio as rxclk
+    record arrival time of rxclk while sync valid
+    log each arrival time
+    transmit average of all arrival times
+
+m3pyro:
+    resistance measurement code:
+        * charge bus with cont r for fixed time, should reach 2.6V
+        * measure bus voltage
+        * enable a channel for fixed time (10ms?), then disable again
+        * measure bus voltage
+        * compute difference in bus voltage
+        * report resistance responsible
+    this has been prototyped but needs testing, since the pfet on resistance
+    is probably very low initially and causes a rapid discharge before the
+    bus voltage drops low enough to increase the pfet resistance.
+    might need to just go back to previous plan.
+
+m3radio:
+    add new commands to router
+
+set up:
+    fc find cal for new fcs
+    fc save cfg for new fcs
+    program radio freqs for new radios
+    program latest fw on ALL units from clean commit
+
+test:
+    imus working
+    fc new configuration script
+    fc work with new pyro stuff
+    radio/ground link working reliably with new usbserial stuff
+
+check:
+    fc mission profile stuff, just to be sure...
+    procedures correct -- especially wrt battle shorts rebooting everything
