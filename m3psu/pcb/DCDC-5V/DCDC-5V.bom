@@ -2,7 +2,7 @@ Bill Of Materials
 =================
 
 Source file: DCDC-5V.xml
-Date: 2017-07-26T00:49:06.180123
+Date: 2017-07-27T01:04:51.017710
 
 Parts Missing Footprints
 ------------------------
@@ -10,43 +10,10 @@ Parts Missing Footprints
 
 Parts Missing Order Codes
 -------------------------
-C4     100n            agg:0402
-R5     10k             agg:0402
-R3     10k             agg:0402
-R6     10k             agg:0402
-R4     10k             agg:0402
-R8     10k             agg:0402
-R2     10k             agg:0402
-R7     10k             agg:0402
-C2     10n             agg:0402
-C3     100n            agg:0402
-C1     100n            agg:0402
-R13    33k             agg:0402
-R17    10m             agg:0603
-R14    33k             agg:0402
-R18    10m             agg:0603
-R15    33k             agg:0402
-R19    10m             agg:0603
-R16    33k             agg:0402
-R20    10m             agg:0603
-Q5     PFET_GDS        agg:SON2x2
-Q6     PFET_GDS        agg:SON2x2
-Q7     PFET_GDS        agg:SON2x2
-Q8     PFET_GDS        agg:SON2x2
-C7     3n3             agg:0402
-C6     100n            agg:0402
-C5     10u             agg:0805
-C8     22u             agg:0805
-R1     5k49            agg:0402
-R21    1M              agg:0402
-R22    1M              agg:0402
-R23    1M              agg:0402
-R24    1M              agg:0402
 TP1    TESTPAD         agg:TESTPAD
 TP2    TESTPAD         agg:TESTPAD
 TP3    TESTPAD         agg:TESTPAD
 TP4    TESTPAD         agg:TESTPAD
-C13    22u             agg:0805
 
 Inconsistent Order Codes
 ------------------------
@@ -78,13 +45,21 @@ NOFIT,4,4x R9 R10 R11 R12 0402
   ~~~~~~~
 2455373,1,1x 3u3 VLS201610HBX-1
 2289216,1,1x 2u2 XFL4020
+1758924,1,1x 10n 0402
 2364070,4,4x NFET_GDS PowerPAK-SC-75-6L-
-2492469,1,1x TPS62133 QFN-16-EP-TI
-1758918,1,1x 3n3 0402
+2496771,5,5x 100n 0402
+2320856,1,1x 10u 0805
+1758918,2,2x 3n3 0402
+1907510,4,4x 22u 0805
 2382918,1,1x TPS62152 QFN-16-EP-TI
-1907510,2,2x 22u 0805
-2496771,1,1x 100n 0402
+2447096,7,7x 10k 0402
+2501102,4,4x PFET_GDS SON2x2
+2670533,1,1x 5k49 0402
+2447160,4,4x 33k 0402
+2492469,1,1x TPS62133 QFN-16-EP-TI
+2447127,4,4x 1M 0402
 2461150,1,1x LTC2975 QFN-64-EP-LTC-UP
+RE05965,4,4x 10m 0603
 
 
 Assembly BOM
@@ -96,11 +71,19 @@ TFML-105-02-L-D      1   NORTH TOP       TFML-105-02-L-D J3
 NOFIT                4   33k             0402            R10 R11 R12 R9
 2455373              1   3u3             VLS201610HBX-1  L2
 2289216              1   2u2             XFL4020         L1
+1758924              1   10n             0402            C2
 2364070              4   NFET_GDS        PowerPAK-SC-75-6L-Single Q1 Q2 Q3 Q4
-2492469              1   TPS62133        QFN-16-EP-TI    IC2
-1758918              1   3n3             0402            C11
+2496771              5   100n            0402            C1 C10 C3 C4 C6
+2320856              1   10u             0805            C5
+1758918              2   3n3             0402            C11 C7
+1907510              4   22u             0805            C12 C13 C8 C9
 2382918              1   TPS62152        QFN-16-EP-TI    IC3
-1907510              2   22u             0805            C12 C9
-2496771              1   100n            0402            C10
+2447096              7   10k             0402            R2 R3 R4 R5 R6 R7 R8
+2501102              4   PFET_GDS        SON2x2          Q5 Q6 Q7 Q8
+2670533              1   5k49            0402            R1
+2447160              4   33k             0402            R13 R14 R15 R16
+2492469              1   TPS62133        QFN-16-EP-TI    IC2
+2447127              4   1M              0402            R21 R22 R23 R24
 2461150              1   LTC2975         QFN-64-EP-LTC-UP IC1
+RE05965              4   10m             0603            R17 R18 R19 R20
 

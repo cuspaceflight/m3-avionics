@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>I:/GitHub/m3-avionics/m3psu/pcb/DCDC-3V/DCDC-3V.sch</source>
-    <date>26/07/2017 01:04:01</date>
+    <date>27/07/2017 01:16:50</date>
     <tool>Eeschema (2016-12-10 revision 9c758c4)-makepkg</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -62,6 +62,9 @@
     <comp ref="J3">
       <value>NORTH TOP</value>
       <footprint>agg:TFML-105-02-L-D</footprint>
+      <fields>
+        <field name="Samtec">TFML-105-02-L-D</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_02x05"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56E23C48</tstamp>
@@ -69,6 +72,9 @@
     <comp ref="J6">
       <value>NORTH BOT</value>
       <footprint>agg:SFML-105-02-L-D-LC</footprint>
+      <fields>
+        <field name="Samtec">SFML-105-02-L-D-LC</field>
+      </fields>
       <libsource lib="agg-kicad" part="CONN_02x05"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>56E23C63</tstamp>
@@ -87,6 +93,9 @@
     <comp ref="C4">
       <value>100n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B3D205</tstamp>
@@ -94,6 +103,9 @@
     <comp ref="R5">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B404DA</tstamp>
@@ -101,6 +113,9 @@
     <comp ref="R3">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B42255</tstamp>
@@ -108,6 +123,9 @@
     <comp ref="R6">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B4228D</tstamp>
@@ -115,6 +133,9 @@
     <comp ref="R4">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B422C8</tstamp>
@@ -122,6 +143,9 @@
     <comp ref="R8">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B42C07</tstamp>
@@ -129,6 +153,9 @@
     <comp ref="R2">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B42D37</tstamp>
@@ -136,6 +163,9 @@
     <comp ref="R7">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B42E76</tstamp>
@@ -143,6 +173,9 @@
     <comp ref="C2">
       <value>10n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1758924</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B44748</tstamp>
@@ -150,6 +183,9 @@
     <comp ref="C3">
       <value>100n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B44BD7</tstamp>
@@ -157,6 +193,9 @@
     <comp ref="C1">
       <value>100n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B45133</tstamp>
@@ -164,6 +203,9 @@
     <comp ref="R13">
       <value>33k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447160</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B56F44</tstamp>
@@ -171,6 +213,9 @@
     <comp ref="R17">
       <value>10m</value>
       <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">RE05965</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B58CB5</tstamp>
@@ -188,6 +233,9 @@
     <comp ref="R14">
       <value>33k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447160</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B698F4</tstamp>
@@ -195,6 +243,9 @@
     <comp ref="R18">
       <value>10m</value>
       <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">RE05965</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B698FB</tstamp>
@@ -202,6 +253,9 @@
     <comp ref="R15">
       <value>33k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447160</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B6C19F</tstamp>
@@ -209,6 +263,9 @@
     <comp ref="R19">
       <value>10m</value>
       <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">RE05965</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B6C1A6</tstamp>
@@ -216,6 +273,9 @@
     <comp ref="R16">
       <value>33k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447160</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B6E620</tstamp>
@@ -223,6 +283,9 @@
     <comp ref="R20">
       <value>10m</value>
       <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">RE05965</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B6E627</tstamp>
@@ -241,6 +304,9 @@
     <comp ref="C7">
       <value>3n3</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1758918</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B4D5FF</tstamp>
@@ -248,6 +314,9 @@
     <comp ref="C6">
       <value>100n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B5969D</tstamp>
@@ -255,6 +324,9 @@
     <comp ref="C5">
       <value>10u</value>
       <footprint>agg:0805</footprint>
+      <fields>
+        <field name="Farnell">2320856</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B5B67B</tstamp>
@@ -272,6 +344,9 @@
     <comp ref="C8">
       <value>22u</value>
       <footprint>agg:0805</footprint>
+      <fields>
+        <field name="Farnell">1907510</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B608A9</tstamp>
@@ -279,6 +354,9 @@
     <comp ref="R1">
       <value>5k49</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2670533</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58B5E3F7</tstamp>
@@ -297,6 +375,9 @@
     <comp ref="R30">
       <value>33k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447160</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BBC184</tstamp>
@@ -304,6 +385,9 @@
     <comp ref="R31">
       <value>10m</value>
       <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">RE05965</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BBC18B</tstamp>
@@ -311,6 +395,9 @@
     <comp ref="R33">
       <value>33k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447160</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BBC95F</tstamp>
@@ -318,6 +405,9 @@
     <comp ref="R34">
       <value>10m</value>
       <footprint>agg:0603</footprint>
+      <fields>
+        <field name="Farnell">RE05965</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BBC966</tstamp>
@@ -336,6 +426,9 @@
     <comp ref="C12">
       <value>100n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7A8D</tstamp>
@@ -343,6 +436,9 @@
     <comp ref="R24">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7AB3</tstamp>
@@ -350,6 +446,9 @@
     <comp ref="R22">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7ABA</tstamp>
@@ -357,6 +456,9 @@
     <comp ref="R25">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7AC1</tstamp>
@@ -364,6 +466,9 @@
     <comp ref="R23">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7AC8</tstamp>
@@ -371,6 +476,9 @@
     <comp ref="R28">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7AD5</tstamp>
@@ -378,6 +486,9 @@
     <comp ref="R21">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7ADC</tstamp>
@@ -385,6 +496,9 @@
     <comp ref="R27">
       <value>10k</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447096</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7AE3</tstamp>
@@ -392,6 +506,9 @@
     <comp ref="C10">
       <value>10n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">1758924</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7AF0</tstamp>
@@ -399,6 +516,9 @@
     <comp ref="C11">
       <value>100n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7AF7</tstamp>
@@ -406,6 +526,9 @@
     <comp ref="C9">
       <value>100n</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2496771</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7B04</tstamp>
@@ -413,6 +536,9 @@
     <comp ref="R26">
       <value>5k49</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2670533</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>58BC7B29</tstamp>
@@ -541,6 +667,9 @@
     <comp ref="R35">
       <value>1M</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447127</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5926C999</tstamp>
@@ -548,6 +677,9 @@
     <comp ref="R36">
       <value>1M</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447127</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5926E00C</tstamp>
@@ -555,6 +687,9 @@
     <comp ref="R37">
       <value>1M</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447127</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5926E358</tstamp>
@@ -562,6 +697,9 @@
     <comp ref="R38">
       <value>1M</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447127</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5926E650</tstamp>
@@ -569,6 +707,9 @@
     <comp ref="R39">
       <value>1M</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447127</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5926E94A</tstamp>
@@ -576,6 +717,9 @@
     <comp ref="R40">
       <value>1M</value>
       <footprint>agg:0402</footprint>
+      <fields>
+        <field name="Farnell">2447127</field>
+      </fields>
       <libsource lib="agg-kicad" part="R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5926ED7A</tstamp>
@@ -661,6 +805,9 @@
     <comp ref="C13">
       <value>22u</value>
       <footprint>agg:0805</footprint>
+      <fields>
+        <field name="Farnell">1907510</field>
+      </fields>
       <libsource lib="agg-kicad" part="C"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>597A2B12</tstamp>

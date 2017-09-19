@@ -61,9 +61,7 @@ uint16_t float_to_L11 (float input) {
 }
 
 float L16_to_float(int8_t exp, uint16_t input_val){
-  int16_t mantissa = input_val;
-
-  return mantissa * pow(2, exp);
+  return input_val * pow(2, exp);
 }
 
 uint16_t float_to_L16(int8_t exp, float input_val){
