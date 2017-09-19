@@ -37,6 +37,7 @@ typedef struct instance_data instance_data_t;
 typedef state_t state_func_t(instance_data_t *data);
 
 static void m3fc_mission_send_state(state_t state, instance_data_t *data);
+static uint8_t m3fc_mission_make_pyro_channel(int usage, uint8_t pyro);
 static void m3fc_mission_fire_pyro(int pyro_usage);
 static void m3fc_mission_fire_drogue_pyro(void);
 static void m3fc_mission_fire_main_pyro(void);
@@ -308,21 +309,36 @@ static void m3fc_mission_send_state(state_t state, instance_data_t *data) {
     m3can_send(CAN_MSG_ID_M3FC_MISSION_STATE, false, buf, 5);
 }
 
+static uint8_t m3fc_mission_make_pyro_channel(int usage, uint8_t pyro) {
+    uint8_t channel = 0;
+    if((pyro & M3FC_CONFIG_PYRO_USAGE_MASK) == usage) {
+        uint8_t current = pyro & M3FC_CONFIG_PYRO_CURRENT_MASK;
+        uint8_t type = pyro & M3FC_CONFIG_PYRO_TYPE_MASK;
+
+        /* Set the 3A bit if appropriate. 1A is default. */
+        if(current == M3FC_CONFIG_PYRO_CURRENT_3A) {
+            channel |= 0x10;
+        }
+
+        /* M3FC types are the same numbers as M3Pyro types. */
+        channel |= type;
+    }
+
+    return channel;
+}
+
 static void m3fc_mission_fire_pyro(int usage) {
-    uint8_t channels[4] = {0};
-    if(m3fc_config.pyros.pyro_1_usage == usage) {
-        channels[0] = m3fc_config.pyros.pyro_1_type;
-    }
-    if(m3fc_config.pyros.pyro_2_usage == usage) {
-        channels[1] = m3fc_config.pyros.pyro_2_type;
-    }
-    if(m3fc_config.pyros.pyro_3_usage == usage) {
-        channels[2] = m3fc_config.pyros.pyro_3_type;
-    }
-    if(m3fc_config.pyros.pyro_4_usage == usage) {
-        channels[3] = m3fc_config.pyros.pyro_4_type;
-    }
-    m3can_send(CAN_MSG_ID_M3PYRO_FIRE_COMMAND, false, channels, 4);
+    uint8_t channels[8] = {
+        m3fc_mission_make_pyro_channel(usage, m3fc_config.pyros.pyro1),
+        m3fc_mission_make_pyro_channel(usage, m3fc_config.pyros.pyro2),
+        m3fc_mission_make_pyro_channel(usage, m3fc_config.pyros.pyro3),
+        m3fc_mission_make_pyro_channel(usage, m3fc_config.pyros.pyro4),
+        m3fc_mission_make_pyro_channel(usage, m3fc_config.pyros.pyro5),
+        m3fc_mission_make_pyro_channel(usage, m3fc_config.pyros.pyro6),
+        m3fc_mission_make_pyro_channel(usage, m3fc_config.pyros.pyro7),
+        m3fc_mission_make_pyro_channel(usage, m3fc_config.pyros.pyro8),
+    };
+    m3can_send(CAN_MSG_ID_M3PYRO_FIRE_COMMAND, false, channels, 8);
 }
 
 static void m3fc_mission_fire_drogue_pyro() {
@@ -334,7 +350,7 @@ static void m3fc_mission_fire_main_pyro() {
 }
 
 static void m3fc_mission_fire_dart_pyro() {
-    m3fc_mission_fire_pyro(M3FC_CONFIG_PYRO_USAGE_DART);
+    m3fc_mission_fire_pyro(M3FC_CONFIG_PYRO_USAGE_DARTSEP);
 }
 
 static void m3fc_mission_enable_low_power_mode() {
@@ -453,11 +469,24 @@ void m3fc_mission_handle_pyro_continuity(uint8_t* data, uint8_t datalen){
         return;
     }
 
+    uint8_t usage1 = m3fc_config.pyros.pyro1 & M3FC_CONFIG_PYRO_USAGE_MASK;
+    uint8_t usage2 = m3fc_config.pyros.pyro1 & M3FC_CONFIG_PYRO_USAGE_MASK;
+    uint8_t usage3 = m3fc_config.pyros.pyro1 & M3FC_CONFIG_PYRO_USAGE_MASK;
+    uint8_t usage4 = m3fc_config.pyros.pyro1 & M3FC_CONFIG_PYRO_USAGE_MASK;
+    uint8_t usage5 = m3fc_config.pyros.pyro1 & M3FC_CONFIG_PYRO_USAGE_MASK;
+    uint8_t usage6 = m3fc_config.pyros.pyro1 & M3FC_CONFIG_PYRO_USAGE_MASK;
+    uint8_t usage7 = m3fc_config.pyros.pyro1 & M3FC_CONFIG_PYRO_USAGE_MASK;
+    uint8_t usage8 = m3fc_config.pyros.pyro1 & M3FC_CONFIG_PYRO_USAGE_MASK;
+
     if(
-        (m3fc_config.pyros.pyro_1_usage && data[0] > PYRO_CONT_THRESHOLD) ||
-        (m3fc_config.pyros.pyro_2_usage && data[1] > PYRO_CONT_THRESHOLD) ||
-        (m3fc_config.pyros.pyro_3_usage && data[2] > PYRO_CONT_THRESHOLD) ||
-        (m3fc_config.pyros.pyro_4_usage && data[3] > PYRO_CONT_THRESHOLD))
+        (usage1 != M3FC_CONFIG_PYRO_USAGE_NONE && data[0] > PYRO_CONT_THRESHOLD) ||
+        (usage2 != M3FC_CONFIG_PYRO_USAGE_NONE && data[0] > PYRO_CONT_THRESHOLD) ||
+        (usage3 != M3FC_CONFIG_PYRO_USAGE_NONE && data[0] > PYRO_CONT_THRESHOLD) ||
+        (usage4 != M3FC_CONFIG_PYRO_USAGE_NONE && data[0] > PYRO_CONT_THRESHOLD) ||
+        (usage5 != M3FC_CONFIG_PYRO_USAGE_NONE && data[0] > PYRO_CONT_THRESHOLD) ||
+        (usage6 != M3FC_CONFIG_PYRO_USAGE_NONE && data[0] > PYRO_CONT_THRESHOLD) ||
+        (usage7 != M3FC_CONFIG_PYRO_USAGE_NONE && data[0] > PYRO_CONT_THRESHOLD) ||
+        (usage8 != M3FC_CONFIG_PYRO_USAGE_NONE && data[0] > PYRO_CONT_THRESHOLD))
     {
         m3fc_mission_pyro_cont_ok = false;
     } else {
@@ -485,7 +514,7 @@ void m3fc_mission_handle_fire(uint8_t* data, uint8_t datalen)
         m3fc_mission_fire_drogue_pyro();
     } else if(data[0] == M3FC_CONFIG_PYRO_USAGE_MAIN) {
         m3fc_mission_fire_main_pyro();
-    } else if(data[0] == M3FC_CONFIG_PYRO_USAGE_DART) {
+    } else if(data[0] == M3FC_CONFIG_PYRO_USAGE_DARTSEP) {
         m3fc_mission_fire_dart_pyro();
     }
 }

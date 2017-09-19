@@ -14,16 +14,20 @@
 #define M3FC_CONFIG_ACCEL_AXIS_Z  (5)
 #define M3FC_CONFIG_ACCEL_AXIS_NZ (6)
 
-#define M3FC_CONFIG_PYRO_USAGE_NONE   (0)
-#define M3FC_CONFIG_PYRO_USAGE_DROGUE (1)
-#define M3FC_CONFIG_PYRO_USAGE_MAIN   (2)
-#define M3FC_CONFIG_PYRO_USAGE_DART   (3)
-
-#define M3FC_CONFIG_PYRO_TYPE_NONE   (0)
-#define M3FC_CONFIG_PYRO_TYPE_EMATCH (1)
-#define M3FC_CONFIG_PYRO_TYPE_TALON  (2)
-#define M3FC_CONFIG_PYRO_TYPE_METRON (3)
-
+#define M3FC_CONFIG_PYRO_USAGE_MASK         (0xF0)
+#define M3FC_CONFIG_PYRO_CURRENT_MASK       (0x0C)
+#define M3FC_CONFIG_PYRO_TYPE_MASK          (0x03)
+#define M3FC_CONFIG_PYRO_USAGE_NONE         (0x00)
+#define M3FC_CONFIG_PYRO_USAGE_DROGUE       (0x10)
+#define M3FC_CONFIG_PYRO_USAGE_MAIN         (0x20)
+#define M3FC_CONFIG_PYRO_USAGE_DARTSEP      (0x30)
+#define M3FC_CONFIG_PYRO_CURRENT_NONE       (0x00)
+#define M3FC_CONFIG_PYRO_CURRENT_1A         (0x04)
+#define M3FC_CONFIG_PYRO_CURRENT_3A         (0x08)
+#define M3FC_CONFIG_PYRO_TYPE_NONE          (0x00)
+#define M3FC_CONFIG_PYRO_TYPE_EMATCH        (0x01)
+#define M3FC_CONFIG_PYRO_TYPE_TALON         (0x02)
+#define M3FC_CONFIG_PYRO_TYPE_METRON        (0x03)
 
 struct m3fc_config {
 
@@ -54,11 +58,12 @@ struct m3fc_config {
     } __attribute__((packed)) profile;
 
     struct {
-        /* Pyro channel usage. 0=NONE 1=DROGUE 2=MAIN 3=DART_SEP */
-        uint8_t pyro_1_usage, pyro_2_usage, pyro_3_usage, pyro_4_usage;
-
-        /* Pyro channel type, 0=NONE 1=EMATCH 2=TALON 3=METRON */
-        uint8_t pyro_1_type, pyro_2_type, pyro_3_type, pyro_4_type;
+        /* Pyro channels configuration.
+         * Top four bits usage: 0000=NONE, 0001=DROGUE, 0010=MAIN, 0011=DARTSEP
+         * Next two bits current: 00=NONE, 01=1A, 10=3A
+         * Bottom two bits type: 00=NONE, 01=EMATCH, 10=TALON, 11=METRON
+         */
+        uint8_t pyro1, pyro2, pyro3, pyro4, pyro5, pyro6, pyro7, pyro8;
     } __attribute__((packed)) pyros;
 
     struct {

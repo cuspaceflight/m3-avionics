@@ -9,6 +9,7 @@ struct m3fc_config m3fc_config;
 
 static bool m3fc_config_check_profile(void);
 static bool m3fc_config_check_pyros(void);
+static bool m3fc_config_check_pyro(uint8_t pyro);
 static bool m3fc_config_check_accel_cal(void);
 static bool m3fc_config_check_radio_freq(void);
 static bool m3fc_config_check_crc(void);
@@ -29,14 +30,14 @@ static THD_FUNCTION(m3fc_config_reporter_thd, arg) {
                       m3fc_config.profile.main_timeout,
                       m3fc_config.profile.land_timeout, 8);
         m3can_send_u8(CAN_MSG_ID_M3FC_CFG_PYROS,
-                      m3fc_config.pyros.pyro_1_usage,
-                      m3fc_config.pyros.pyro_2_usage,
-                      m3fc_config.pyros.pyro_3_usage,
-                      m3fc_config.pyros.pyro_4_usage,
-                      m3fc_config.pyros.pyro_1_type,
-                      m3fc_config.pyros.pyro_2_type,
-                      m3fc_config.pyros.pyro_3_type,
-                      m3fc_config.pyros.pyro_4_type, 8);
+                      m3fc_config.pyros.pyro1,
+                      m3fc_config.pyros.pyro2,
+                      m3fc_config.pyros.pyro3,
+                      m3fc_config.pyros.pyro4,
+                      m3fc_config.pyros.pyro5,
+                      m3fc_config.pyros.pyro6,
+                      m3fc_config.pyros.pyro7,
+                      m3fc_config.pyros.pyro8, 8);
         m3can_send_f32(CAN_MSG_ID_M3FC_CFG_ACCEL_X,
                        m3fc_config.accel_cal.x_scale,
                        m3fc_config.accel_cal.x_offset, 2);
@@ -107,41 +108,65 @@ static bool m3fc_config_check_profile() {
     return ok;
 }
 
+static bool m3fc_config_check_pyro(uint8_t pyro) {
+    uint8_t usage = pyro & M3FC_CONFIG_PYRO_USAGE_MASK;
+    uint8_t current = pyro & M3FC_CONFIG_PYRO_CURRENT_MASK;
+    uint8_t type = pyro & M3FC_CONFIG_PYRO_TYPE_MASK;
+
+    /* Check usage is one of the valid options. */
+    if(usage != M3FC_CONFIG_PYRO_USAGE_NONE     &&
+       usage != M3FC_CONFIG_PYRO_USAGE_DROGUE   &&
+       usage != M3FC_CONFIG_PYRO_USAGE_MAIN     &&
+       usage != M3FC_CONFIG_PYRO_USAGE_DARTSEP)
+    {
+        return false;
+    }
+
+    /* Check current is one of the valid options. */
+    if(current != M3FC_CONFIG_PYRO_CURRENT_NONE &&
+       current != M3FC_CONFIG_PYRO_CURRENT_1A   &&
+       current != M3FC_CONFIG_PYRO_CURRENT_3A)
+    {
+        return false;
+    }
+
+    /* All possible bit patterns are valid options for type. */
+
+    /* If usage is not NONE, check current and type are not either. */
+    if(usage != M3FC_CONFIG_PYRO_USAGE_NONE &&
+       (current == M3FC_CONFIG_PYRO_CURRENT_NONE ||
+        type == M3FC_CONFIG_PYRO_TYPE_NONE))
+    {
+        return false;
+    }
+
+    /* If usage is NONE, check current and type are too. */
+    if(usage == M3FC_CONFIG_PYRO_USAGE_NONE &&
+       (current != M3FC_CONFIG_PYRO_CURRENT_NONE ||
+        type != M3FC_CONFIG_PYRO_TYPE_NONE))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 
 static bool m3fc_config_check_pyros() {
-    bool ok = true;
-    ok &= m3fc_config.pyros.pyro_1_usage <= 3;
-    ok &= m3fc_config.pyros.pyro_2_usage <= 3;
-    ok &= m3fc_config.pyros.pyro_3_usage <= 3;
-    ok &= m3fc_config.pyros.pyro_4_usage <= 3;
-    if(m3fc_config.pyros.pyro_1_usage > 0) {
-        ok &= m3fc_config.pyros.pyro_1_type >= 1;
-        ok &= m3fc_config.pyros.pyro_1_type <= 3;
+    if(m3fc_config_check_pyro(m3fc_config.pyros.pyro1) &&
+       m3fc_config_check_pyro(m3fc_config.pyros.pyro2) &&
+       m3fc_config_check_pyro(m3fc_config.pyros.pyro3) &&
+       m3fc_config_check_pyro(m3fc_config.pyros.pyro4) &&
+       m3fc_config_check_pyro(m3fc_config.pyros.pyro5) &&
+       m3fc_config_check_pyro(m3fc_config.pyros.pyro6) &&
+       m3fc_config_check_pyro(m3fc_config.pyros.pyro7) &&
+       m3fc_config_check_pyro(m3fc_config.pyros.pyro8))
+    {
+        return true;
     } else {
-        ok &= m3fc_config.pyros.pyro_1_type == 0;
-    }
-    if(m3fc_config.pyros.pyro_2_usage > 0) {
-        ok &= m3fc_config.pyros.pyro_2_type >= 1;
-        ok &= m3fc_config.pyros.pyro_2_type <= 3;
-    } else {
-        ok &= m3fc_config.pyros.pyro_2_type == 0;
-    }
-    if(m3fc_config.pyros.pyro_3_usage > 0) {
-        ok &= m3fc_config.pyros.pyro_3_type >= 1;
-        ok &= m3fc_config.pyros.pyro_3_type <= 3;
-    } else {
-        ok &= m3fc_config.pyros.pyro_3_type == 0;
-    }
-    if(m3fc_config.pyros.pyro_4_usage > 0) {
-        ok &= m3fc_config.pyros.pyro_4_type >= 1;
-        ok &= m3fc_config.pyros.pyro_4_type <= 3;
-    } else {
-        ok &= m3fc_config.pyros.pyro_4_type == 0;
-    }
-    if(!ok) {
         m3status_set_error(M3FC_COMPONENT_CFG, M3FC_ERROR_CFG_CHK_PYROS);
+        return false;
     }
-    return ok;
 }
 
 static bool m3fc_config_check_accel_cal(void)
@@ -234,14 +259,14 @@ void m3fc_config_handle_set_pyros(uint8_t* data, uint8_t datalen) {
         return;
     }
 
-    m3fc_config.pyros.pyro_1_usage      = data[0];
-    m3fc_config.pyros.pyro_2_usage      = data[1];
-    m3fc_config.pyros.pyro_3_usage      = data[2];
-    m3fc_config.pyros.pyro_4_usage      = data[3];
-    m3fc_config.pyros.pyro_1_type       = data[4];
-    m3fc_config.pyros.pyro_2_type       = data[5];
-    m3fc_config.pyros.pyro_3_type       = data[6];
-    m3fc_config.pyros.pyro_4_type       = data[7];
+    m3fc_config.pyros.pyro1     = data[0];
+    m3fc_config.pyros.pyro2     = data[1];
+    m3fc_config.pyros.pyro3     = data[2];
+    m3fc_config.pyros.pyro4     = data[3];
+    m3fc_config.pyros.pyro5     = data[4];
+    m3fc_config.pyros.pyro6     = data[5];
+    m3fc_config.pyros.pyro7     = data[6];
+    m3fc_config.pyros.pyro8     = data[7];
     m3fc_config_check();
 }
 
