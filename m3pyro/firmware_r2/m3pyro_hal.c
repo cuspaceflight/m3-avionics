@@ -45,27 +45,6 @@ static const ADCConversionGroup adc_grp_bus = {
     .sqr3 = ADC_SQR3_SQ1_N(ADC_CHANNEL_IN5),
 };
 
-/* Convert the 12bit ADC reading into a resistance 2R/LSB. */
-static uint8_t adc_to_resistance(adcsample_t reading) {
-    if(reading < 900) {
-        return 0;
-    } else {
-        return 255;
-    }
-/* Continuity resistance measurements to be investigated,
- * readings 0.54V for a 0R load which means we can't even
- * resolved 100R vs 0R.
- */
-#if 0
-    float r = 0.5 * (3300.0f * (float)reading) / (4096.0f - (float)reading);
-    if(r >= 255.0f) {
-        return 255;
-    } else {
-        return (uint8_t)r;
-    }
-#endif
-}
-
 /* Convert the 12bit ADC reading into a 100mV/LSB voltage. */
 static uint8_t adc_to_voltage(adcsample_t reading) {
     float v = (13300.0f * 3.3f)/(3300.0f * 4096.0f) * (float)reading;
@@ -126,8 +105,8 @@ uint8_t m3pyro_read_supply(void) {
     return adc_to_voltage(samp);
 }
 
-/* Read continuity. Returns a calculated resistance in ohms, or 255 for hi. */
-uint8_t m3pyro_read_cont(void) {
+/* Read continuity. Returns high resolution raw ADC reading. */
+adcsample_t m3pyro_read_cont(void) {
     static adcsample_t samp;
 
     adcAcquireBus(&ADCD1);
@@ -136,11 +115,11 @@ uint8_t m3pyro_read_cont(void) {
 
     if(result != MSG_OK) {
         m3status_set_error(M3PYRO_COMPONENT_HAL, M3PYRO_ERROR_ADC);
-        return 0xFF;
+        return 0xFFFF;
     } else {
         m3status_set_ok(M3PYRO_COMPONENT_HAL);
     }
-    return adc_to_resistance(samp);
+    return samp;
 }
 
 /* Enable the continuity measurement current. */

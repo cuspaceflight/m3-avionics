@@ -13,7 +13,6 @@
  * upper 4 bits: 0000 for 1A, 0001 for 3A.
  * lower 4 bits: pyrotechnic type:
  *      0 for none, 1 for ematch, 2 for talon, 3 for metron
- * Firing channel 0 is 'do not fire'.
  */
 #define FIRE_TYPE_MASK          (0x0F)
 #define FIRE_TYPE_OFF           (0x00)
@@ -50,8 +49,8 @@ static THD_FUNCTION(firing_thd, arg) {
             continue;
         }
 
-        uint8_t channel = msg & 0xFF;
-        uint8_t command = (msg >> 8) & 0xFF;
+        uint8_t channel = (msg & 0x00FF);
+        uint8_t command = (msg & 0xFF00) >> 8;
         uint8_t command_type = command & FIRE_TYPE_MASK;
         uint8_t command_supply = command & FIRE_SUPPLY_MASK;
 

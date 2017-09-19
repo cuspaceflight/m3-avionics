@@ -1,0 +1,35 @@
+bus has 10k+3k3=13.3k to gnd from monitoring
+continuity supply is 3v3 via 3k3 resistor
+
+3.3V -- 3k3 R -- BUS -- 13.3k -- GND
+Vbus = 3.3 * (13300 / 16600) = 2.64V
+
+when channel asserted, additional 10k to gnd from pfet pullup
+effective total resistance to gnd is 5708
+Vbus = 3.3 * (5708/(5708+3300)) = 2.09V
+
+the channel PFET has around 600R when "on", although this
+depends on the voltage at the bus (of course).
+should have scoped it....
+as soon as the pfet turns on, Vgs is -2.6V, which is probably
+enough to get usefully on. as the bus capacitor starts to drain,
+Vgs will drop, and so the PFET Rds will shoot up, to around 600R.
+this might happen so quickly that we can't measure anything at all?
+
+channel provides Rch of resistance to gnd, so total is now
+Reff = (Rch * 5708)/(Rch + 5708)
+
+Bus capacitance is 22uF which is initially charged to 2.64V
+we discharge it through Reff for t seconds
+what is the new voltage?
+
+something like...
+I = C dV/dT
+I = V/Reff
+V/Reff = C dV/dT
+
+consider: V(t) = V0 * exp(-t/(RC))
+then V(10ms) = V0 * exp(-0.01/(R*22e-6))
+ln(V(10ms)/V0) = -0.01/(R*22e-6)
+
+R = -t / (C * ln(V(t)/V(0)))

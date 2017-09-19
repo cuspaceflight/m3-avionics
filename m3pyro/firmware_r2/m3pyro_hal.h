@@ -8,8 +8,8 @@ void m3pyro_hal_init(void);
 uint8_t m3pyro_read_bus(void);
 /* Read supply voltage. Returns in units of 0.1V, e.g. 74 for 7.4V. */
 uint8_t m3pyro_read_supply(void);
-/* Read continuity. Returns a calculated resistance in 2ohms, or 255 for hi. */
-uint8_t m3pyro_read_cont(void);
+/* Read continuity. Returns high resolution raw ADC reading. */
+adcsample_t m3pyro_read_cont(void);
 
 /* Enable the continuity measurement current. */
 void m3pyro_cont_enable(void);

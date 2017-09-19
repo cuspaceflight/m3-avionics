@@ -1,3 +1,4 @@
+#include <math.h>
 #include "ch.h"
 #include "hal.h"
 #include "m3can.h"
@@ -33,9 +34,6 @@ bool cont_wait(uint8_t ms) {
         /* Wait for restart. */
         chBSemWait(&restart_bsem);
 
-        /* Re-enable continuity. */
-        m3pyro_cont_enable();
-
         /* Let the caller know we were interrupted while waiting. */
         return false;
     }
@@ -46,39 +44,66 @@ static THD_FUNCTION(cont_thd, arg) {
     (void)arg;
     chRegSetThreadName("cont");
 
-    m3pyro_cont_enable();
-
-    while(!estop) {
+    while(true) {
         uint8_t readings[8];
 
-        for(uint8_t ch=1; ch<=8 && !estop; ch++) {
+        for(uint8_t ch=1; ch<=8; ch++) {
+            /* Charge bus up to around 2.6V with continuity supply. */
+            m3pyro_cont_enable();
+
+            /* Wait for bus to charge. */
+            /* TODO: confirm if this delay is long enough */
+            if(!cont_wait(150)) {
+                ch--;
+                continue;
+            }
+
+            /* Measure the charged bus voltage */
+            adcsample_t charged_voltage = m3pyro_read_cont();
+
+            /* Turn off continuity supply */
+            m3pyro_cont_disable();
+
             /* Connect this channel to continuity measurement */
             if(!estop) {
                 m3pyro_1a_disable();
                 m3pyro_3a_disable();
                 m3pyro_assert_ch(ch);
+            } else {
+                return;
             }
 
-            /* Try to wait 125ms for the reading to stabilise.
-             * The 22uF capacitor on the bus takes 175ms to charge to 3V.
-             * If we're interrupted while waiting, re-do this measurement.
-             */
-            if(!cont_wait(125)) {
+            /* Wait for any connected load to discharge the bus somewhat. */
+            /* TODO: confirm this delay */
+            const uint8_t discharge_ms = 10;
+            if(!cont_wait(discharge_ms)) {
                 ch--;
                 continue;
             }
 
-            /* Take the ADC reading and move to the next channel. */
+            /* Disconnect the channel */
             if(!estop) {
-                readings[ch-1] = m3pyro_read_cont();
                 m3pyro_deassert_ch();
+            } else {
+                return;
             }
+
+            /* Find the resistance corresponding to this discharge */
+            adcsample_t discharged_voltage = m3pyro_read_cont();
+            const float capacitance = 22e-6;
+            const float time = (float)discharge_ms/1000.0f;
+            const float logdiff = logf( (float)discharged_voltage
+                                       /(float)charged_voltage);
+            float resistance = -time / (capacitance * logdiff);
+            readings[ch-1] = (uint8_t)(resistance - 300.0f);
         }
 
         /* Send these readings out over CAN. */
         if(!estop) {
             m3can_send(CAN_MSG_ID_M3PYRO_CONTINUITY, false, readings, 8);
             m3status_set_ok(M3PYRO_COMPONENT_CONTINUITY);
+        } else {
+            return;
         }
     }
 }
