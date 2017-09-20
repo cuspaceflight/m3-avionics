@@ -98,11 +98,14 @@ static THD_FUNCTION(usbserial_tx_thd, arg)
     }
 }
 
+static volatile bool usbserial_setup = false;
+
 void usbserial_init(void)
 {
     chMBObjectInit(&mailbox, (msg_t*)mailbox_buf, MEMPOOL_SIZE);
     chPoolObjectInit(&mempool, sizeof(struct can_msg), NULL);
     chPoolLoadArray(&mempool, (void*)mempool_buf, MEMPOOL_SIZE);
+    usbserial_setup = true;
 
     chThdCreateStatic(usbserial_rx_thd_wa, sizeof(usbserial_rx_thd_wa),
                       NORMALPRIO, usbserial_rx_thd, NULL);
@@ -113,7 +116,9 @@ void usbserial_init(void)
 void usbserial_send(uint16_t sid, uint8_t rtr, uint8_t* data, uint8_t dlc)
 {
     struct can_msg *msg;
+    if(!usbserial_setup) return;
     msg = (struct can_msg*)chPoolAlloc(&mempool);
+    if(msg == 0) return;
     msg->id = sid;
     msg->rtr = rtr;
     msg->len = dlc;
