@@ -1,7 +1,7 @@
 profile:
   m3fc_position: dart
   accel_axis: z
-  ignition_accel: 25
+  ignition_accel: 20
   burnout_timeout: 1.8
   apogee_timeout: 30
   main_altitude: 250
@@ -33,7 +33,7 @@ accel_cal_y:
   offset: 2
 
 accel_cal_z:
-  scale: 0.003984
-  offset: -23.7
+  scale: 0.00395442
+  offset: -26.4338
 
 radio_freq: 869500000
