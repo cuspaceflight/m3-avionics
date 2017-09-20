@@ -178,7 +178,7 @@ static THD_FUNCTION(ms5611_thd, arg) {
 
         /* Submit new reading if it's within range.
          * Error band is +-2.5mbar = 250Pa */
-        if(pressure > 10 && pressure < 1200) {
+        if(pressure > 1000 && pressure < 120000) {
             m3fc_state_estimation_new_pressure((float)pressure, 250.0f);
         }
 

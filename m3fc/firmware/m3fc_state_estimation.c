@@ -427,10 +427,10 @@ void m3fc_state_estimation_new_accels(float accels[3], float max, float rms)
     } else if(fabsf(accel) > max) {
         /* Do not use for state estimation if reading is above sensor max. */
         return;
+    } else {
+        /* Subtract 1G from the up acceleration to remove effect of gravity */
+        accel -= 9.80665f;
     }
-
-    /* Subtract 1G from the "up" acceleration to remove effect of gravity */
-    accel -= 9.80665f;
 
     m3fc_state_estimation_update_accel(accel, rms*rms);
 }
