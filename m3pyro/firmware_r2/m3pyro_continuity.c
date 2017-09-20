@@ -94,8 +94,10 @@ static THD_FUNCTION(cont_thd, arg) {
             const float time = (float)discharge_ms/1000.0f;
             const float logdiff = logf( (float)discharged_voltage
                                        /(float)charged_voltage);
-            float resistance = -time / (capacitance * logdiff);
-            readings[ch-1] = (uint8_t)(resistance - 300.0f);
+            float resistance = -time / (capacitance * logdiff) - 300.0f;
+            if(resistance < 0.0f) resistance = 0.0f;
+            if(resistance > 255.0f) resistance = 255.0f;
+            readings[ch-1] = (uint8_t)resistance;
         }
 
         /* Send these readings out over CAN. */
