@@ -174,18 +174,26 @@ def cfg_profile(data):
 @register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_PYROS, "Pyros config")
 @register_packet("m3fc", CAN_MSG_ID_M3FC_SET_CFG_PYROS, "Set pyro config")
 def cfg_pyros(data):
-    usages = {0: "None", 1: "Drogue", 2: "Main", 3: "Dart Separation"}
-    types = {0: "None", 1: "E-match", 2: "Talon", 3: "Metron"}
-    pyro_1_usage, pyro_2_usage, pyro_3_usage, pyro_4_usage = [
-        usages.get(x, "Unset") for x in data[:4]]
-    pyro_1_type, pyro_2_type, pyro_3_type, pyro_4_type = [
-        types.get(x, "Unset") for x in data[4:]]
+    use_map = {0x00: "Unused",
+               0x10: "Drogue", 0x20: "Main", 0x30: "Dart Separation"}
+    use_mask = 0xf0
+    type_map = {0: "None", 1: "EMatch", 2: "Talon", 3: "Metron"}
+    type_mask = 0x03
+    current_map = {0: "None", 0x04: "1A", 0x08: "3A"}
+    current_mask = 0x0c
+    p1u, p2u, p3u, p4u, p5u, p6u, p7u, p8u = [
+        use_map.get(x & use_mask, "Unset") for x in data]
+    p1t, p2t, p3t, p4t, p5t, p6t, p7t, p8t = [
+        type_map.get(x & type_mask, "Unset") for x in data]
+    p1c, p2c, p3c, p4c, p5c, p6c, p7c, p8c = [
+        current_map.get(x & current_mask, "Unset") for x in data]
 
-    return ("(usage/type) Pyro1: {}/{}, Pyro2: {}/{}, Pyro3: {}/{}, "
-            "Pyro4: {}/{}".format(pyro_1_usage, pyro_1_type,
-                                  pyro_2_usage, pyro_2_type,
-                                  pyro_3_usage, pyro_3_type,
-                                  pyro_4_usage, pyro_4_type))
+    return ("Pyro1: {}/{}/{}<br>Pyro2: {}/{}/{}<br>Pyro3: {}/{}/{}<br>"
+            "Pyro4: {}/{}/{}<br>Pyro5: {}/{}/{}<br>Pyro6: {}/{}/{}<br>"
+            "Pyro7: {}/{}/{}<br>Pyro8: {}/{}/{}"
+            .format(p1u, p1t, p1c, p2u, p2t, p2c, p3u, p3t, p3c,
+                    p4u, p4t, p4c, p5u, p5t, p5c, p6u, p6t, p6c,
+                    p7u, p7t, p7c, p8u, p8t, p8c))
 
 
 @register_packet("m3fc", CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_X, "Accel Cal X")

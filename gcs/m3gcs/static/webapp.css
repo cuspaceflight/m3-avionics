@@ -5,3 +5,7 @@
 #log-window{
     height: 200px;
 }
+
+.panel-heading {
+    height: 50px;
+}
