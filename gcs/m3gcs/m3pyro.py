@@ -1,5 +1,6 @@
 from .packets import register_packet, register_command
 import struct
+import datetime
 
 
 def msg_id(x):
@@ -80,20 +81,19 @@ def arm_status(data):
 def continuity(data):
     resistances = ["{:.1f}Ω".format(float(d)*2) if d != 255 else "HI"
                    for d in data[:8]]
-    #return "Ch1: {}, Ch2: {}, Ch3: {}, Ch4: {}<br>Ch5: {}, Ch6: {}, Ch7: {}, Ch8: {}".format(*resistances)
     return """
-    <table>
+    <table style='font-family: mono;'>
         <tr>
-            <td style="padding: 3px"><strong>Ch1:</strong> {}</td>
-            <td style="padding: 3px"><strong>Ch2:</strong> {}</td>
-            <td style="padding: 3px"><strong>Ch3:</strong> {}</td>
-            <td style="padding: 3px"><strong>Ch4:</strong> {}</td>
+            <td style="padding: 3px"><strong>Ch1:</strong><br>{}</td>
+            <td style="padding: 3px"><strong>Ch2:</strong><br>{}</td>
+            <td style="padding: 3px"><strong>Ch3:</strong><br>{}</td>
+            <td style="padding: 3px"><strong>Ch4:</strong><br>{}</td>
         </tr>
         <tr>
-            <td style="padding: 3px"><strong>Ch5:</strong> {}</td>
-            <td style="padding: 3px"><strong>Ch6:</strong> {}</td>
-            <td style="padding: 3px"><strong>Ch7:</strong> {}</td>
-            <td style="padding: 3px"><strong>Ch8:</strong> {}</td>
+            <td style="padding: 3px"><strong>Ch5:</strong><br>{}</td>
+            <td style="padding: 3px"><strong>Ch6:</strong><br>{}</td>
+            <td style="padding: 3px"><strong>Ch7:</strong><br>{}</td>
+            <td style="padding: 3px"><strong>Ch8:</strong><br>{}</td>
         </tr>
     </table>""".format(*resistances).replace("\n","")
 
