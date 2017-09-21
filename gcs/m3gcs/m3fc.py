@@ -67,8 +67,11 @@ def status(data):
     # The string must start with 'OK:' 'INIT:' or 'ERROR:' as the web
     # interface watches for these and applies special treatment (colours)
     statuses = {0: "OK", 1: "INIT", 2: "ERROR"}
-    overall, comp, comp_state, comp_error = struct.unpack(
-        "BBBB", bytes(data[:4]))
+    overall, comp, comp_state = data[:3]
+    if len(data) == 4:
+        comp_error = data[3]
+    else:
+        comp_error = 0
 
     # Display the state (and error) of the component that sent the message
     string = "{}: ({} {}".format(statuses.get(overall, "Unknown"),
