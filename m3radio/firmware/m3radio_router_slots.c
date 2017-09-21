@@ -5,7 +5,7 @@ struct m3radio_slot m3radio_slots[2048] = {
     {.mode=M3RADIO_ROUTER_MODE_NEVER, .skip_count=0},
 
     /* M3Radio Packets */
-    [CAN_ID_M3RADIO | CAN_MSG_ID_VERSION]   = { .mode = M3RADIO_ROUTER_MODE_ALWAYS },
+    [CAN_ID_M3RADIO | CAN_MSG_ID_VERSION]   = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 30000 },
     [CAN_ID_M3RADIO | CAN_MSG_ID_STATUS]    = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
     [CAN_MSG_ID_M3RADIO_GPS_LATLNG] = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
     [CAN_MSG_ID_M3RADIO_GPS_ALT]    = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 1000 },
