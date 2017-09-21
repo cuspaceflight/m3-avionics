@@ -70,14 +70,25 @@ void m3radio_router_handle_can(uint16_t sid, bool rtr,
 
 static void enqueue(uint16_t sid, bool rtr, uint8_t* data, uint8_t dlc)
 {
+    msg_t msg;
     void* mem = chPoolAlloc(&mempool);
+    if(mem == NULL) {
+        /* if allocating failed the queue is full,
+         * so we'll take something out and use it instead.
+         */
+        msg_t rv = chMBFetch(&mailbox, &msg, TIME_IMMEDIATE);
+        if(rv != MSG_OK || msg == 0) {
+            return;
+        }
+        mem = (void*)msg;
+    }
     struct pool_frame* frame = (struct pool_frame*)mem;
     frame->sid = sid;
     frame->rtr = (uint8_t)rtr;
     frame->dlc = dlc;
     memcpy(frame->data, data, dlc);
     msg_t rv = chMBPost(&mailbox, (intptr_t)mem, TIME_IMMEDIATE);
-    if(rv != MSG_OK) {
+    if(rv != MSG_OK && mem != NULL) {
         chPoolFree(&mempool, (void*)mem);
     }
 }
