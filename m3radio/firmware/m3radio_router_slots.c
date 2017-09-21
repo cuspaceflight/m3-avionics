@@ -29,6 +29,7 @@ struct m3radio_slot m3radio_slots[2048] = {
     [CAN_MSG_ID_M3PSU_PYRO_STATUS]          = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
     [CAN_MSG_ID_M3PSU_CHARGER_STATUS]       = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
     [CAN_MSG_ID_M3PSU_CAPACITY]             = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
+    [CAN_MSG_ID_M3PSU_AWAKE_TIME]           = { .mode = M3RADIO_ROUTER_MODE_TIMED, .period = 5000 },
 
 
     /* M3FC Packets */
