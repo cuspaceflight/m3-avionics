@@ -1,0 +1,85 @@
+body{
+  background-color: #444;
+}
+
+.App {
+  text-align: center;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+
+/* Custom Bootstrap cards */
+
+.card-header {
+  color: black;
+  font-size: larger;
+  padding: 0px;	
+  background: gray;
+}
+
+.card-block {
+  background: dimgray;
+}
+
+
+/* Data labels */
+.data-container {
+  height: 50px;
+  background: blue;
+  border: 1px solid black;
+  display: inline-block;
+  overflow: auto;
+}
+
+.data-title {
+  font-size: smaller;
+  text-align: center;
+}
+
+.data-body {
+  width: 100%;
+  bottom: 0;
+  height: auto;
+}
+
+.label-text {
+  font-weight: normal;
+}
+
+.smalltext {
+  font-size: smaller;
+}
+
+
+/* Timer */
+.timer-text {
+  font-weight: bold;
+}
+
+
+/* Status labels */
+.status-label {
+  display: inline;
+  font-size: smaller;
+  padding: 0 2px 0 2px;
+}
+
+.status-container {
+  display: inline;
+}
+
+.good {
+  background: green !important;
+}
+
+.init {
+  background: orange !important;
+}
+
+.error {
+  background: red !important;
+}
