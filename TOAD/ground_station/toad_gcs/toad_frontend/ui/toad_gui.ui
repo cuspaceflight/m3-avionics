@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>toad_main_window</class>
+ <widget class="QMainWindow" name="toad_main_window">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1048</width>
+    <height>747</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TOAD GCS</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="cursor">
+       <cursorShape>ArrowCursor</cursorShape>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::West</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="main_tab">
+       <attribute name="title">
+        <string>Main</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>977</width>
+             <height>658</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="4">
+             <widget class="QFrame" name="frame_dart_location">
+              <property name="minimumSize">
+               <size>
+                <width>290</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(255, 255, 255);</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <item>
+                <widget class="QLabel" name="label_dart_position">
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Dart Position</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QWidget" name="formWidget_2" native="true">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(255, 255, 255);</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_2">
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="m_unit_label_2">
+                    <property name="maximumSize">
+                     <size>
+                      <width>30</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>m</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="max_alt_label">
+                    <property name="maximumSize">
+                     <size>
+                      <width>70</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Max alt</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="altitude_label">
+                    <property name="maximumSize">
+                     <size>
+                      <width>70</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Altitude</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="m_unit_label">
+                    <property name="maximumSize">
+                     <size>
+                      <width>30</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>m</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLCDNumber" name="altimeter">
+                    <property name="maximumSize">
+                     <size>
+                      <width>550</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="segmentStyle">
+                     <enum>QLCDNumber::Flat</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="speed_label">
+                    <property name="maximumSize">
+                     <size>
+                      <width>70</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Speed</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="2">
+                   <widget class="QLabel" name="m_s_unit_label">
+                    <property name="maximumSize">
+                     <size>
+                      <width>30</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>m/s</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLCDNumber" name="max_alt_value">
+                    <property name="maximumSize">
+                     <size>
+                      <width>550</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="segmentStyle">
+                     <enum>QLCDNumber::Flat</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QPushButton" name="pushButton_zero">
+                    <property name="focusPolicy">
+                     <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(203, 203, 203);</string>
+                    </property>
+                    <property name="text">
+                     <string>Set as start point</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QLineEdit" name="lineEdit_speed">
+                    <property name="maximumSize">
+                     <size>
+                      <width>550</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QScrollArea" name="scrollArea_2">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(255, 255, 255);</string>
+                 </property>
+                 <property name="widgetResizable">
+                  <bool>true</bool>
+                 </property>
+                 <widget class="QWidget" name="scrollAreaWidgetContents_2">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>889</width>
+                    <height>432</height>
+                   </rect>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_4">
+                   <item>
+                    <layout class="QFormLayout" name="formLayout">
+                     <property name="fieldGrowthPolicy">
+                      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                     </property>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="latitudeLabel">
+                       <property name="text">
+                        <string>Latitude</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QLineEdit" name="latitudeLineEdit">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="longitudeLabel">
+                       <property name="text">
+                        <string>Longitude</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QLineEdit" name="longitudeLineEdit">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="Line" name="line">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0" colspan="2">
+                      <widget class="QLabel" name="displacementLabel">
+                       <property name="font">
+                        <font>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Displacement from pad</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="0">
+                      <widget class="QLabel" name="dxLabel">
+                       <property name="text">
+                        <string>Δx (East)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="1">
+                      <widget class="QLineEdit" name="dxLineEdit">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="dyLabel">
+                       <property name="text">
+                        <string>Δy (North)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QLineEdit" name="dyLineEdit">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="6" column="0">
+                      <widget class="QLabel" name="dzLabel">
+                       <property name="text">
+                        <string>Δz (Up)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="6" column="1">
+                      <widget class="QLineEdit" name="dzLineEdit">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="8" column="0">
+                      <widget class="QLabel" name="dxDtLabel">
+                       <property name="text">
+                        <string>dx/dt</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="8" column="1">
+                      <widget class="QLineEdit" name="dxdtLineEdit">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="9" column="0">
+                      <widget class="QLabel" name="dyDtLabel">
+                       <property name="text">
+                        <string>dy/dt</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="9" column="1">
+                      <widget class="QLineEdit" name="dydtLineEdit">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="10" column="0">
+                      <widget class="QLabel" name="dzDtLabel">
+                       <property name="text">
+                        <string>dz/dt</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="10" column="1">
+                      <widget class="QLineEdit" name="dzdtLineEdit">
+                       <property name="maximumSize">
+                        <size>
+                         <width>500</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="7" column="0" colspan="2">
+                      <widget class="QLabel" name="label">
+                       <property name="font">
+                        <font>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Velocity Estimates</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="toad_frame_1" name="frame_toad_1">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="toad_frame_2" name="frame_toad_2">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="toad_frame_3" name="frame_toad_3">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="toad_frame_4" name="frame_toad_4">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="toad_frame_5" name="frame_toad_5">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="toad_frame_6" name="frame_toad_6">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="toad_frame_master" name="frame_toad_master">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="term_tab">
+       <attribute name="title">
+        <string>Terminal</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QTextBrowser" name="textBrowser_terminal"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1048</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionSave_Terminal"/>
+   </widget>
+   <widget class="QMenu" name="menuMap">
+    <property name="title">
+     <string>Map</string>
+    </property>
+    <addaction name="actionRefresh"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuMap"/>
+  </widget>
+  <action name="actionSave_Terminal">
+   <property name="text">
+    <string>&amp;Save 'Terminal'</string>
+   </property>
+   <property name="iconText">
+    <string>&amp;Save 'Terminal'</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>toad_frame_master</class>
+   <extends>QFrame</extends>
+   <header>.toad_frame_master</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_1</class>
+   <extends>QFrame</extends>
+   <header>.toad_frame_1</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_2</class>
+   <extends>QFrame</extends>
+   <header>.toad_frame_2</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_3</class>
+   <extends>QFrame</extends>
+   <header>.toad_frame_3</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_4</class>
+   <extends>QFrame</extends>
+   <header>.toad_frame_4</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_5</class>
+   <extends>QFrame</extends>
+   <header>.toad_frame_5</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>toad_frame_6</class>
+   <extends>QFrame</extends>
+   <header>.toad_frame_6</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>frame_toad_1</tabstop>
+  <tabstop>frame_toad_2</tabstop>
+  <tabstop>frame_toad_3</tabstop>
+  <tabstop>frame_toad_4</tabstop>
+  <tabstop>frame_toad_5</tabstop>
+  <tabstop>frame_toad_6</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+  <tabstop>latitudeLineEdit</tabstop>
+  <tabstop>longitudeLineEdit</tabstop>
+  <tabstop>dxLineEdit</tabstop>
+  <tabstop>dyLineEdit</tabstop>
+  <tabstop>dzLineEdit</tabstop>
+  <tabstop>dxdtLineEdit</tabstop>
+  <tabstop>dydtLineEdit</tabstop>
+  <tabstop>dzdtLineEdit</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

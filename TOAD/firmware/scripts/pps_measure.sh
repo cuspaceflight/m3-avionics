@@ -1,0 +1,13 @@
+arm-none-eabi-gdb -ex 'target extended-remote /dev/ttyACM0' \
+                  -ex 'monitor swdp_scan' \
+		          -ex 'attach 1' \
+		          -ex "file build/toad.elf" \
+                  -ex 'break measurements.c:13' \
+                  -ex 'run' \
+                  -ex 'n' \
+                  -ex 'printf "\n\nFirst = "' \
+                  -ex 'p/d time_capture_pps_timestamp' \
+                  -ex 'c' \
+                  -ex 'n' \
+                  -ex 'printf "\n\nSecond = "' \
+                  -ex 'p/d time_capture_pps_timestamp' \

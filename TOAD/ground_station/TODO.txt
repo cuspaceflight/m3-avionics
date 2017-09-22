@@ -1,0 +1,15 @@
+- Test things
+- Run in USB test mode if no serial port specified
+- Use spinbox value-change signal
+- Properly label map pins
+- (other double hash ## comments in the code)
+
+### Optional ###
+- Logging
+- Icons for program
+- Print units in the lineEdit box
+- Other map tile textures
+- Logfile to kml (not urgent)
+
+
+

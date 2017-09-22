@@ -39,12 +39,12 @@
 #define STM32_NO_INIT                       FALSE
 #define STM32_HSI_ENABLED                   TRUE
 #define STM32_LSI_ENABLED                   TRUE
-#define STM32_HSE_ENABLED                   TRUE
+#define STM32_HSE_ENABLED                   FALSE
 #define STM32_LSE_ENABLED                   FALSE
 #define STM32_CLOCK48_REQUIRED              TRUE
 #define STM32_SW                            STM32_SW_PLL
-#define STM32_PLLSRC                        STM32_PLLSRC_HSE
-#define STM32_PLLM_VALUE                    13
+#define STM32_PLLSRC                        STM32_PLLSRC_HSI
+#define STM32_PLLM_VALUE                    8
 #define STM32_PLLN_VALUE                    168
 #define STM32_PLLP_VALUE                    2
 #define STM32_PLLQ_VALUE                    7
@@ -247,7 +247,7 @@
 /*
  * SERIAL driver system settings.
  */
-#define STM32_SERIAL_USE_USART1             FALSE
+#define STM32_SERIAL_USE_USART1             TRUE
 #define STM32_SERIAL_USE_USART2             FALSE
 #define STM32_SERIAL_USE_USART3             FALSE
 #define STM32_SERIAL_USE_UART4              FALSE
@@ -289,7 +289,7 @@
 /*
  * UART driver system settings.
  */
-#define STM32_UART_USE_USART1               TRUE
+#define STM32_UART_USE_USART1               FALSE
 #define STM32_UART_USE_USART2               FALSE
 #define STM32_UART_USE_USART3               FALSE
 #define STM32_UART_USE_UART4                FALSE
@@ -325,7 +325,7 @@
  * USB driver system settings.
  */
 #define STM32_USB_USE_OTG1                  FALSE
-#define STM32_USB_USE_OTG2                  FALSE
+#define STM32_USB_USE_OTG2                  TRUE
 #define STM32_USB_OTG1_IRQ_PRIORITY         14
 #define STM32_USB_OTG2_IRQ_PRIORITY         14
 #define STM32_USB_OTG1_RX_FIFO_SIZE         512

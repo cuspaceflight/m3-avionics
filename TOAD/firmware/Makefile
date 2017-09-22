@@ -98,6 +98,19 @@ include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # Other files (optional).
 include $(CHIBIOS)/test/rt/test.mk
+include ../../shared/fatfs/fatfs.mk
+
+# Pull in Labrador stuff
+LABRADOR_DIR = ../../../labrador
+LABRADOR_SRC = $(LABRADOR_DIR)/labrador/src/labrador.c \
+               $(LABRADOR_DIR)/radios/src/si446x.c \
+               $(LABRADOR_DIR)/radios/src/si446x_toad_pr.c
+LABRADOR_INC = $(LABRADOR_DIR)/labrador/include \
+               $(LABRADOR_DIR)/radios/include
+LDPCDIR      = ../../../labrador-ldpc
+LDPCINC      = $(LDPCDIR)/capi/include
+LDPCLIBDIR   = $(LDPCDIR)/capi/target/thumbv7em-none-eabihf/release
+LDPCLIB      = labrador_ldpc
 
 BOARDSRC=board.c
 BOARDINC=.
@@ -115,8 +128,14 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
-       main.c psu.c
-
+       $(LABRADOR_SRC) \
+       $(FATFSSRC) \
+       $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+       $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+       main.c psu.c cs2100.c gps.c status.c timer.c \
+       measurements.c s_radio.c downlink.c logging.c \
+       microsd.c usbcfg.c usb_serial_link.c config.c
+       
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC =
@@ -146,7 +165,10 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(TESTINC) \
-         $(CHIBIOS)/os/various
+         $(LABRADOR_INC) $(LDPCINC) $(CHIBIOS)/os/various \
+         $(CHIBIOS)/os/various/fatfs_bindings \
+         $(CHIBIOS)/os/hal/lib/streams \
+         $(FATFSINC)
 
 #
 # Project, sources and paths
@@ -206,10 +228,10 @@ UADEFS =
 UINCDIR = 
 
 # List the user directory to look for the libraries here
-ULIBDIR =
+ULIBDIR = $(LDPCLIBDIR)
 
 # List all user libraries here
-ULIBS =
+ULIBS = -lm -l$(LDPCLIB)
 
 #
 # End of user defines
@@ -236,6 +258,16 @@ debug: build/$(PROJECT).elf
 		              -ex 'monitor swdp_scan' \
 					  -ex 'attach 1' \
 					  -ex "file build/$(PROJECT).elf"
+					  
+power:
+	arm-none-eabi-gdb --batch \
+	                  -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'monitor tpwr enable'
+
+unpower:
+	arm-none-eabi-gdb --batch \
+		              -ex 'target extended-remote /dev/ttyACM0' \
+		              -ex 'monitor tpwr disable'					  
 
 #
 # End BlackMagic flashing
