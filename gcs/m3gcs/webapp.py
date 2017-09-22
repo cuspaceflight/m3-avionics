@@ -1,7 +1,6 @@
 import asyncio
 from aiohttp import web
 from aiohttp.errors import ClientDisconnectedError
-from jinja2 import Environment, PackageLoader, select_autoescape
 import os.path
 from threading import Thread
 from time import sleep
@@ -14,13 +13,6 @@ app = web.Application()
 app["sockets"] = []
 basepath = os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir))
 webpath = os.path.join(basepath, "static")
-
-# Setup Jinja2 templating environment
-env = Environment(
-    loader=PackageLoader('m3gcs', 'templates'),
-    autoescape=select_autoescape(['html', 'xml'])
-)
-index_template = env.get_template("gcs.html")
 
 wa_queue = None
 
@@ -48,9 +40,7 @@ def wshandler(req):
 
 @asyncio.coroutine
 def index(req):
-    names = set(registered_packets.keys())
-    names = names.union(set(registered_commands.keys()))
-    page = index_template.render(names=names, commands=registered_commands, packets=registered_packets)
+    page = "Placeholder"
     return web.Response(body=page.encode(), content_type="text/html")
 
 @asyncio.coroutine
