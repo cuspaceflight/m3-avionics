@@ -18,12 +18,19 @@ body{
 .card-header {
   color: black;
   font-size: larger;
-  padding: 0px;	
+  padding: 0px;
   background: gray;
 }
 
 .card-block {
   padding: 0px;
+}
+
+.card-footer {
+  color: black;
+  font-size: smaller;
+  padding: 0px;
+  background: gray;
 }
 
 
@@ -47,10 +54,6 @@ body{
   width: 100%;
   bottom: 0;
   height: auto;
-}
-
-.label-text {
-  font-weight: normal;
 }
 
 .smalltext {

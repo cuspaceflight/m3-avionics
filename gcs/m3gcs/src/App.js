@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
+import GCS from './m3gcs.js';
+
 function padLeft(num, wid, char, base=10) {
   return num.toString(base).padStart(wid, char);
 }
@@ -69,6 +71,7 @@ class StatusLabels extends Component {
 class Subsystem extends Component {
   render() {
     var label = this.props.label || "";
+    var version = this.props.version || "";
     return (
       <div className="card">
         <div className="card-header">
@@ -78,6 +81,9 @@ class Subsystem extends Component {
           <div className="subsystem-container container-fluid">
           	{this.props.children}
           </div>
+        </div>
+        <div className="card-footer">
+          {version}
         </div>
       </div>
     );
@@ -173,6 +179,7 @@ class M3PSU extends Component {
     };
     var awake_time = data.awake_time || 0;
     var power_mode = data.power_mode || "UKN";
+    var version = data.version || "UNKNOWN";
 
     var channels = [];
     const cnames = ["CAN 5V", "CAMERAS", "IMU 5V", "RADIO 5V", "IMU 3V", "RADIO 3V", "FC", "PYRO", "DL", "BASE", "SPARE1", "SPARE2"];
@@ -185,7 +192,7 @@ class M3PSU extends Component {
     }
     const statusmap = {"OK": "green", "INIT": "orange", "ERROR": "red"};
     return (
-      <Subsystem label="M3PSU">
+      <Subsystem label="M3PSU" version={version}>
         <Row>
           <Data width={8} label="Status" color={statusmap[status.overall]}>
             <StatusLabels status={status} />
@@ -240,11 +247,21 @@ class M3PSU extends Component {
 }
 
 class App extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
+    const _this = this;
+
+    this.gcs = new GCS();
+
     this.state = {
-      m3psu: JSON.parse('{"status":{"overall":"ERROR","components":{"DCDC1":{"state":0,"reason":"No Error"},"DCDC2":{"state":0,"reason":"No Error"},"DCDC3":{"state":2,"reason":"Ch1 Alert"},"Charger":{"state":2,"reason":"Read"},"Pyro Monitor":{"state":0,"reason":"No Error"}}},"channels":[{"v":0.15,"i":0,"p":0},{"v":5.0,"i":0.333,"p":1.555},{"v":3.27,"i":0.0084,"p":0.028},{"v":3.27,"i":0.0087,"p":0.028},{"v":4.9799999999999995,"i":0,"p":0},{"v":1.2,"i":0,"p":0},{"v":3.27,"i":0.0029999999999999996,"p":0.01},{"v":3.27,"i":0.0162,"p":0.052000000000000005},{"v":0.15,"i":0,"p":0},{"v":0.15,"i":0,"p":0},{"v":3.27,"i":0.017099999999999997,"p":0.056},{"v":4.9799999999999995,"i":0.006599999999999999,"p":0.03}],"charger":{"enabled":true,"charging":false,"inhibit":false,"battleshort":false,"acfet":false,"voltage_mode":"Med","temperature":22.69999999999999,"current":-484},"runtime":521,"percent":97,"cells":[3.64,3.64],"batt_voltage":7.28,"pyro":{"v":7.325,"i":0.002,"p":0.014,"enabled":true},"awake_time":180,"power_mode":"high"}'),
+      "m3psu": this.gcs.m3psu,
     };
+
+    this.timer = setInterval(() => {
+      _this.setState({
+        "m3psu": _this.gcs.m3psu,
+      });
+    }, 100);
   }
 
   render() {

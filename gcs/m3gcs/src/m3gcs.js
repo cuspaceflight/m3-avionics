@@ -9,6 +9,8 @@ import JSPack from './jspack.js';
 
 class GCS {
     constructor() {
+        const _this = this;
+
         this.handlers = {};
         this.m3psu = new M3PSU(this);
         this.m3dl = new M3DL(this);
@@ -20,8 +22,6 @@ class GCS {
 
         // e.g. gcs.struct.Unpack( .. )
         this.struct = new JSPack();
-
-        var _this = this;
 
         this.ws = new WebSocket("ws://" + window.location.hostname + ":5000" + "/ws")
         this.ws.onmessage = function(event){
@@ -39,7 +39,9 @@ class GCS {
         if(handler){
             handler(packet.data);
         }else{
-            console.log("No Handler found for SID: " + packet.sid);
+            var id = packet.sid & 0x1f;
+            var mid = packet.sid >> 5;
+            console.log("No Handler found for SID " + packet.sid + " (id: " + id + ", msg: " + mid + ")");
         }
     };
 }
