@@ -152,7 +152,7 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
                                          packet.hour,packet.minute,packet.second)
         frame.DateTimeEdit.setDateTime(date_time_obj)
 
-        self.set_Text(packet.num_sv,frame.LineEdit_num_sv)
+        self.set_text(packet.num_sv,frame.LineEdit_num_sv)
 
     def fill_fields_psu(self,frame,packet):
         self.set_usb_id(frame,packet)
@@ -272,20 +272,20 @@ class gcs_main_window(QtGui.QMainWindow, Ui_toad_main_window):
 
             # Update map markers including u_disp in the bubble
             self.map_view.page().mainFrame().evaluateJavaScript("toad_marker_1.setLatLng([{},{}]); \
-                                                                 toad_marker_2.setLatLng([{},{}]); \
-                                                                 toad_marker_3.setLatLng([{},{}]); \
-                                                                 toad_marker_4.setLatLng([{},{}]); \
-                                                                 toad_marker_5.setLatLng([{},{}]); \
-                                                                 toad_marker_6.setLatLng([{},{}]); \
-                                                                 marker_dart.setLatLng([{},{}]);   \
-                                                                 marker_dart.bindPopup(\"TOAD Dart (height above pad: {} m)\").openPopup();"
-                    .format(self.frame_toad_1.frame.lineEdit_lat.text(),self.frame_toad_1.frame.lineEdit_lon.text(),
-                            self.frame_toad_2.frame.lineEdit_lat.text(),self.frame_toad_2.frame.lineEdit_lon.text(),
-                            self.frame_toad_3.frame.lineEdit_lat.text(),self.frame_toad_3.frame.lineEdit_lon.text(),
-                            self.frame_toad_4.frame.lineEdit_lat.text(),self.frame_toad_4.frame.lineEdit_lon.text(),
-                            self.frame_toad_5.frame.lineEdit_lat.text(),self.frame_toad_5.frame.lineEdit_lon.text(),
-                            self.frame_toad_6.frame.lineEdit_lat.text(),self.frame_toad_6.frame.lineEdit_lon.text(),
-                            llh[0],llh[1], u_disp))
+toad_marker_2.setLatLng([{},{}]); \
+toad_marker_3.setLatLng([{},{}]); \
+toad_marker_4.setLatLng([{},{}]); \
+toad_marker_5.setLatLng([{},{}]); \
+toad_marker_6.setLatLng([{},{}]); \
+marker_dart.setLatLng([{},{}]);   \
+marker_dart.bindPopup(\"TOAD Dart (height above pad: {} m)\").openPopup();"
+            .format(self.frame_toad_1.frame.lineEdit_lat.text(),self.frame_toad_1.frame.lineEdit_lon.text(),
+                    self.frame_toad_2.frame.lineEdit_lat.text(),self.frame_toad_2.frame.lineEdit_lon.text(),
+                    self.frame_toad_3.frame.lineEdit_lat.text(),self.frame_toad_3.frame.lineEdit_lon.text(),
+                    self.frame_toad_4.frame.lineEdit_lat.text(),self.frame_toad_4.frame.lineEdit_lon.text(),
+                    self.frame_toad_5.frame.lineEdit_lat.text(),self.frame_toad_5.frame.lineEdit_lon.text(),
+                    self.frame_toad_6.frame.lineEdit_lat.text(),self.frame_toad_6.frame.lineEdit_lon.text(),
+                    llh[0],llh[1], u_disp))
             #self.map_view.page().mainFrame().evaluateJavaScript("marker_dart.setLatLng([{},{}]);".format(llh[0],llh[1]))
             #self.map_view.page().mainFrame().evaluateJavaScript("marker_dart.bindPopup(\"TOAD Dart (height above pad: {} m)\").openPopup();".format(u_disp))
 

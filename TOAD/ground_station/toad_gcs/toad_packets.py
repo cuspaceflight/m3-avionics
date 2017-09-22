@@ -3,6 +3,8 @@ Gregory Brooks, Matt Coates 2017"""
 
 import struct
 from PyQt4 import QtCore,QtGui
+from .coords import convert_ENU_to_llh
+import json
 
 # Message Type Definitions
 MESSAGE_PVT         = 1
@@ -234,6 +236,27 @@ class Position_fix:
         self.n_coord = n
         self.u_coord = u
         self.itow_s = itow_s
+
+        llh = convert_ENU_to_llh([e,n,u])
+        self.lat = llh[0]
+        self.lon = llh[1]
+        self.h = llh[2]
+    def print_to_file(self,file):
+        file.write("######################\n\
+Position ITOW_s: {}\n\
+    Latitude:  {}\n\
+    Longitude: {}\n\
+    Height:    {}\n\n\
+    E coord:   {}\n\
+    N coord:   {}\n\
+    U coord:   {}\n\
+        \n\n".format(self.itow_s,self.lat,self.lon,self.h,self.e_coord,
+        self.n_coord, self.u_coord))
+    def print_to_js(self,file):
+        {'jack': 4098, 'sape': 4139}
+        dict = {'ITOW_s': self.itow_s, 'Latitude': self.lat, 'Longitude': self.lon, 'Height': self.h,
+        'E coord': self.e_coord, 'N coord': self.n_coord, 'U coord': self.u_coord}
+        json.dump(dict,file)
 # class Trilat_point:
 #     def __init__(self,lat,lon,height,tof):
 #         self.lat = lat

@@ -9,6 +9,7 @@ from . import usb
 from . import gui_interface
 from . import trilateration
 from . import coords
+from . import toad_logging
 import time
 import sys
 
@@ -57,8 +58,8 @@ def run():
     gui_process.start()
 
     # Start logging process
-    #log_process = multiprocessing.Process(target=logging.run, args=(log_usb_pipe, log_tri_pipe))
-    #log_process.start()
+    log_process = multiprocessing.Process(target=toad_logging.run, args=(log_usb_pipe, log_tri_pipe, gui_exit, "../logs"))
+    log_process.start()
 
     # Start usb parsing process
     usb_process = multiprocessing.Process(target=usb.run, args=(usb_gui_pipe, usb_log_pipe, gui_exit))
@@ -76,4 +77,6 @@ def run():
     print("USB process ended")
     trilat_process.join()
     print("Trilateration process ended")
+    log_process.join()
+    print("Logging process ended")
     time.sleep(0.2)

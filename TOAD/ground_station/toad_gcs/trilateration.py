@@ -151,7 +151,8 @@ def run(logging_pipe,gui_pipe,gui_exit):
                 return_pos = Position_fix(estimate[0],estimate[1],estimate[2],measurement.itow_s)
                 gui_pipe.send(return_pos)
 
-                ###log position fixes
+                # Log position fixes
+                logging_pipe.send(return_pos)
 
 
 def test():

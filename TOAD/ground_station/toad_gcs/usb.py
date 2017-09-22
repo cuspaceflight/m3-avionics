@@ -8,7 +8,7 @@ import struct
 from .toad_packets import *
 import time
 
-TEST = True
+TEST = False
 test_counter = 1
 
 # Get TOAD ID from range/position packet
@@ -66,7 +66,7 @@ def run(gui_pipe, log_pipe, gui_exit):
 
         if not TEST:
             # Read in a Log
-            if ser.in_waiting()>=128:
+            if ser.in_waiting>=128:
                 data = ser.read(128)
 
                 # Get Message Log Type
