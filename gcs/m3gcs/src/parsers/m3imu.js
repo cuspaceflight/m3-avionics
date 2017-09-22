@@ -1,7 +1,8 @@
-import { msg_id, bool } from './utils.js';
+import { msg_id, bool, versionParser } from './utils.js';
 
 const CAN_ID_M3IMU = 5;
 const CAN_MSG_ID_M3IMU_STATUS = CAN_ID_M3IMU | msg_id(0);
+const CAN_MSG_ID_M3IMU_VERSION = CAN_ID_M3IMU | msg_id(63);
 
 class M3IMU {
     constructor(gcs) {
@@ -127,6 +128,8 @@ class M3IMU {
             longitude: 0,
             altitude: 0,
         };
+
+        this.version = "UNKNOWN";
 
         var _this = this;
 
@@ -272,6 +275,8 @@ class M3IMU {
                 });
             })(packet_ids[i]);
         }
+
+        gcs.registerPacket(CAN_MSG_ID_M3IMU_VERSION, versionParser(this));
     };
 };
 

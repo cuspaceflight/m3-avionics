@@ -1,4 +1,4 @@
-import { msg_id, bool } from './utils.js';
+import { msg_id, bool, versionParser } from './utils.js';
 
 const CAN_ID_M3FC = 1
 const CAN_MSG_ID_M3FC_STATUS = CAN_ID_M3FC | msg_id(0);
@@ -25,6 +25,7 @@ const CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Y = CAN_ID_M3FC | msg_id(57);
 const CAN_MSG_ID_M3FC_CFG_ACCEL_CAL_Z = CAN_ID_M3FC | msg_id(58);
 const CAN_MSG_ID_M3FC_CFG_RADIO_FREQ = CAN_ID_M3FC | msg_id(59);
 const CAN_MSG_ID_M3FC_CFG_CRC = CAN_ID_M3FC | msg_id(60);
+const CAN_MSG_ID_M3FC_VERSION = CAN_ID_M3FC | msg_id(63);
 
 class M3FC {
     constructor(gcs) {
@@ -102,6 +103,8 @@ class M3FC {
             sdev_v: 0,
             sdev_a: 0,
         };
+
+        this.version = "UNKNOWN";
 
         var _this = this;
 
@@ -238,6 +241,8 @@ class M3FC {
             crc = (crc) >>> 0; // convert internally to unsigned
             _this.config.crc = crc.toString(16);
         });
+
+        gcs.registerPacket(CAN_MSG_ID_M3FC_VERSION, versionParser(this));
     };
 };
 

@@ -1,4 +1,4 @@
-import { msg_id, bool } from './utils.js';
+import { msg_id, bool, versionParser } from './utils.js';
 
 const CAN_ID_M3DL = 6;
 const CAN_MSG_ID_M3DL_STATUS = CAN_ID_M3DL | msg_id(0);
@@ -10,6 +10,7 @@ const CAN_MSG_ID_M3DL_TEMP_5_6 = CAN_ID_M3DL | msg_id(50);
 const CAN_MSG_ID_M3DL_TEMP_7_8 = CAN_ID_M3DL | msg_id(51);
 const CAN_MSG_ID_M3DL_TEMP_9 = CAN_ID_M3DL | msg_id(52);
 const CAN_MSG_ID_M3DL_PRESSURE = CAN_ID_M3DL | msg_id(53);
+const CAN_MSG_ID_M3DL_VERSION = CAN_ID_M3DL | msg_id(63);
 
 class M3DL {
     constructor(gcs) {
@@ -45,6 +46,8 @@ class M3DL {
         this.pressures = [0,0,0,0];
 
         this.temperatures = [0,0,0,0,0,0,0,0];
+
+        this.version = "UNKNOWN";
 
         var _this = this;
 
@@ -102,6 +105,8 @@ class M3DL {
         gcs.registerPacket(CAN_MSG_ID_M3DL_TEMP_7_8, function(data){
             handleTemp(3, data);
         });
+
+        gcs.registerPacket(CAN_MSG_ID_M3DL_VERSION, versionParser(this));
     };
 };
 

@@ -1,4 +1,4 @@
-import { msg_id, bool } from './utils.js';
+import { msg_id, bool, versionParser } from './utils.js';
 
 const CAN_ID_M3PYRO = 3;
 const CAN_MSG_ID_M3PYRO_STATUS = (CAN_ID_M3PYRO | msg_id(0));
@@ -8,6 +8,7 @@ const CAN_MSG_ID_M3PYRO_FIRE_STATUS = (CAN_ID_M3PYRO | msg_id(16));
 const CAN_MSG_ID_M3PYRO_ARM_STATUS = (CAN_ID_M3PYRO | msg_id(17));
 const CAN_MSG_ID_M3PYRO_CONTINUITY = (CAN_ID_M3PYRO | msg_id(48));
 const CAN_MSG_ID_M3PYRO_SUPPLY_STATUS = (CAN_ID_M3PYRO | msg_id(49));
+const CAN_MSG_ID_M3PYRO_VERSION = CAN_ID_M3PYRO | msg_id(63);
 
 class M3Pyro {
     constructor(gcs) {
@@ -36,6 +37,8 @@ class M3Pyro {
 
         this.armed = false;
         this.supply_voltage = 0.0;
+
+        this.version = "UNKNOWN";
 
         var _this = this;
 
@@ -75,6 +78,8 @@ class M3Pyro {
         gcs.registerPacket(CAN_MSG_ID_M3PYRO_SUPPLY_STATUS, function(data){
             _this.supply_voltage = data[0] / 10.0;
         });
+
+        gcs.registerPacket(CAN_MSG_ID_M3PYRO_VERSION, versionParser(this));
     };
 };
 

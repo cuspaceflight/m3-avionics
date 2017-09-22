@@ -1,8 +1,9 @@
-import { msg_id, bool } from './utils.js';
+import { msg_id, bool, versionParser } from './utils.js';
 
 const CAN_ID_GROUND = 7;
 const CAN_MSG_ID_GROUND_PACKET_COUNT = CAN_ID_GROUND | msg_id(53);
 const CAN_MSG_ID_GROUND_PACKET_STATS = CAN_ID_GROUND | msg_id(54);
+const CAN_MSG_ID_GROUND_VERSION = CAN_ID_GROUND | msg_id(63);
 
 class M3Ground {
     constructor(gcs) {
@@ -15,6 +16,8 @@ class M3Ground {
             bit_errors: 0,
             ldpc_iters: 0,
         };
+
+        this.version = "UNKNOWN";
 
         var _this = this;
 
@@ -32,6 +35,8 @@ class M3Ground {
             _this.stats.bit_errors = biterrs;
             _this.stats.ldpc_iters = iters;
         });
+
+        gcs.registerPacket(CAN_MSG_ID_GROUND_VERSION, versionParser(this));
     };
 };
 

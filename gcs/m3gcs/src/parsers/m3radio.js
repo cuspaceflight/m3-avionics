@@ -1,4 +1,4 @@
-import { msg_id, bool } from './utils.js';
+import { msg_id, bool, versionParser } from './utils.js';
 
 const CAN_ID_M3RADIO = 4;
 const CAN_MSG_ID_M3RADIO_STATUS = CAN_ID_M3RADIO | msg_id(0);
@@ -9,6 +9,7 @@ const CAN_MSG_ID_M3RADIO_GPS_STATUS = CAN_ID_M3RADIO | msg_id(51);
 const CAN_MSG_ID_M3RADIO_PACKET_COUNT = CAN_ID_M3RADIO | msg_id(53);
 const CAN_MSG_ID_M3RADIO_PACKET_STATS = CAN_ID_M3RADIO | msg_id(54);
 const CAN_MSG_ID_M3RADIO_PACKET_PING = CAN_ID_M3RADIO | msg_id(55);
+const CAN_MSG_ID_M3RADIO_VERSION = CAN_ID_M3RADIO | msg_id(63);
 
 class M3Radio {
     constructor(gcs) {
@@ -54,6 +55,8 @@ class M3Radio {
             bit_errors: 0,
             ldpc_iters: 0,
         };
+
+        this.version = "UNKNOWN";
 
         var _this = this;
 
@@ -110,6 +113,8 @@ class M3Radio {
         });
 
         gcs.registerPacket(CAN_MSG_ID_M3RADIO_PACKET_PING, function(data){ });
+
+        gcs.registerPacket(CAN_MSG_ID_M3RADIO_VERSION, versionParser(this));
     };
 };
 
