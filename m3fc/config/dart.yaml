@@ -2,9 +2,9 @@ profile:
   m3fc_position: dart
   accel_axis: z
   ignition_accel: 20
-  burnout_timeout: 1.8
+  burnout_timeout: 7
   apogee_timeout: 30
-  main_altitude: 250
+  main_altitude: 300
   main_timeout: 60
   land_timeout: 600
 
