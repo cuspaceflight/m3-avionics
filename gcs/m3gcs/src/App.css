@@ -1,5 +1,6 @@
 body{
   background-color: #444;
+  line-height: 1;
 }
 
 .App {
@@ -22,13 +23,14 @@ body{
 }
 
 .card-block {
-  background: dimgray;
+  padding: 0px;
 }
 
 
 /* Data labels */
 .data-container {
-  height: 50px;
+  height: 100%;
+  padding: 0px;
   background: blue;
   border: 1px solid black;
   display: inline-block;
@@ -37,6 +39,7 @@ body{
 
 .data-title {
   font-size: smaller;
+  font-weight: bold;
   text-align: center;
 }
 
@@ -55,12 +58,6 @@ body{
 }
 
 
-/* Timer */
-.timer-text {
-  font-weight: bold;
-}
-
-
 /* Status labels */
 .status-label {
   display: inline;
@@ -72,14 +69,3 @@ body{
   display: inline;
 }
 
-.good {
-  background: green !important;
-}
-
-.init {
-  background: orange !important;
-}
-
-.error {
-  background: red !important;
-}

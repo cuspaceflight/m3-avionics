@@ -6,16 +6,6 @@ function padLeft(num, wid, char, base=10) {
   return num.toString(base).padStart(wid, char);
 }
 
-class TimeText extends Component {
-  render() {
-    return (
-      <span className="timer-text">
-        {this.props.value}
-      </span>
-    );
-  }
-}
-
 class Timer extends Component {
   render() {
     var seconds = this.props.seconds % 60;
@@ -23,25 +13,18 @@ class Timer extends Component {
     var hours = Math.floor(this.props.seconds / 3600);
     function pad(x) { return padLeft(x, 2, '0'); }
 
+    var hourselem = [];
     if (hours > 0) {
-      return (
-        <span className="timer-container">
-          <TimeText value={pad(hours)} />
-          <TimeText value=":" />
-          <TimeText value={pad(minutes)} />
-          <TimeText value=":" />
-          <TimeText value={pad(seconds)} />
-        </span>
-      );
-    }else{
-      return (
-        <span className="timer-container">
-          <TimeText value={pad(minutes)} />
-          <TimeText value=":" />
-          <TimeText value={pad(seconds)} />
-        </span>
-      );
+      hourselem = hours + ":";
     }
+    return (
+      <span className="timer-container">
+        {hourselem}
+        {pad(minutes)}
+        {":"}
+        {pad(seconds)}
+      </span>
+    );
   }
 }
 
@@ -57,13 +40,10 @@ class Label extends Component {
 }
 
 class StatusLabel extends Component {
-  constructor(){
-    super();
-    this.statusmap = {0: "good", 1: "init", 2: "error"};
-  }
   render() {
+    const statusmap = {0: "green", 1: "orange", 2: "red"};
     return (
-      <div className={"status-label " + this.statusmap[this.props.state]}>
+      <div className={"status-label"} style={{"backgroundColor": statusmap[this.props.state]}}>
         {this.props.text}
       </div>
     );
@@ -72,7 +52,7 @@ class StatusLabel extends Component {
 
 class StatusLabels extends Component {
   render() {
-    //TODO reasons, overall status
+    //TODO reasons
     var labels = [];
     for(var component in this.props.status.components){
       var c = this.props.status.components[component];
@@ -106,7 +86,7 @@ class Subsystem extends Component {
 
 class Row extends Component {
   render() {
-    var height = this.props.height || 1;
+    var height = +this.props.height || 1;
     return (
       <div className="row" style={{"height": (50*height)+"px"}}>
         {this.props.children}
@@ -119,11 +99,9 @@ class Data extends Component {
   render() {
     var width = +this.props.width || 4;
     var extraclasses = this.props.className || "";
-    if (this.props.state) {
-      extraclasses += " " + this.props.state;
-    }
+    var backcolor = this.props.color || "";
     return (
-      <div className={"data-container col-md-" + width + " " + extraclasses}>
+      <div className={"data-container col-md-" + width + " " + extraclasses} style={{"backgroundColor": backcolor}}>
         <div className="data-title">
           {this.props.label}
         </div>
@@ -177,9 +155,9 @@ class M3PSU extends Component {
     var c = [];
     for(var i=0; i<12; i++){
       c[i] = {
-        v: data.channels[i] ? data.channels[i].v.toFixed(2) : 0.0,
-        i: data.channels[i] ? data.channels[i].i.toFixed(3) : 0.0,
-        p: data.channels[i] ? data.channels[i].p.toFixed(3) : 0.0,
+        v: data.channels[i] ? data.channels[i].v.toFixed(1) : 0.0,
+        i: data.channels[i] ? Math.floor(1000 * data.channels[i].i) : 0.0,
+        p: data.channels[i] ? data.channels[i].p.toFixed(1) : 0.0,
       };
     }
     var charger = data.charger || {};
@@ -188,9 +166,9 @@ class M3PSU extends Component {
     var cells = data.cells || [0.0, 0.0];
     var batt_voltage = data.batt_voltage || 0.0;
     var pyro = {
-      v: data.pyro ? data.pyro.v.toFixed(2) : 0.0,
-      i: data.pyro ? data.pyro.i.toFixed(3) : 0.0,
-      p: data.pyro ? data.pyro.p.toFixed(3) : 0.0,
+      v: data.pyro ? data.pyro.v.toFixed(1) : 0.0,
+      i: data.pyro ? data.pyro.i.toFixed(1) : 0.0,
+      p: data.pyro ? data.pyro.p.toFixed(1) : 0.0,
       enabled: data.pyro ? !!data.pyro.enabled : false,
     };
     var awake_time = data.awake_time || 0;
@@ -200,15 +178,16 @@ class M3PSU extends Component {
     const cnames = ["CAN 5V", "CAMERAS", "IMU 5V", "RADIO 5V", "IMU 3V", "RADIO 3V", "FC", "PYRO", "DL", "BASE", "SPARE1", "SPARE2"];
     for(i=0; i<c.length; i++){
       channels.push(
-        <Data key={i} label={cnames[i]} state={c[i].v < 3.2 ? "error" : "good"}>
-          <Label className="smalltext" text={c[i].v.toString() + "V " + c[i].i.toString() + "A " + c[i].p.toString() + "W"} />
+        <Data key={i} label={cnames[i]} color={c[i].v < 3.2 ? "red" : "green"}>
+          <Label className="smalltext" text={c[i].v.toString() + "V " + c[i].i.toString() + "mA " + c[i].p.toString() + "W"} />
         </Data>
       );
     }
+    const statusmap = {"OK": "green", "INIT": "orange", "ERROR": "red"};
     return (
       <Subsystem label="M3PSU">
         <Row>
-          <Data width={8} label="Status">
+          <Data width={8} label="Status" color={statusmap[status.overall]}>
             <StatusLabels status={status} />
           </Data>
           <Data label="Runtime">
@@ -233,11 +212,11 @@ class M3PSU extends Component {
           </Data>
         </Row>
         <Row>
-          <Data label="Pyro" state={!pyro.enabled ? "init" : (pyro.v < 6 ? "error" : "good")}>
+          <Data label="Pyro" color={!pyro.enabled ? "orange" : (pyro.v < 6 ? "red" : "green")}>
             <Label className="smalltext" text={pyro.v.toString() + "V " + pyro.i.toString() + "A " + pyro.p.toString() + "W"} />
           </Data>
-          <Data state={power_mode==="high" ? "init" : "good"} label="Mode">
-            <Label text={power_mode==="high" ? "HIGH" : "LOW"} />
+          <Data color={power_mode==="high" ? "green" : "orange"} label="Power Mode">
+            <Label text={power_mode==="high" ? "NORMAL" : "LOW POWER"} />
           </Data>
           <Data label="Percent">
             <Label text={percent + "%"} />
@@ -264,7 +243,7 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-      m3psu: JSON.parse('{"status":{"overall":"ERROR","components":{"DCDC1":{"state":0,"reason":"No Error"},"DCDC2":{"state":0,"reason":"No Error"},"DCDC3":{"state":2,"reason":"Ch1 Alert"},"Charger":{"state":2,"reason":"Read"},"Pyro Monitor":{"state":0,"reason":"No Error"}}},"channels":[{"v":0.15,"i":0,"p":0},{"v":0.15,"i":0,"p":0},{"v":3.27,"i":0.0084,"p":0.028},{"v":3.27,"i":0.0087,"p":0.028},{"v":4.9799999999999995,"i":0,"p":0},{"v":1.2,"i":0,"p":0},{"v":3.27,"i":0.0029999999999999996,"p":0.01},{"v":3.27,"i":0.0162,"p":0.052000000000000005},{"v":0.15,"i":0,"p":0},{"v":0.15,"i":0,"p":0},{"v":3.27,"i":0.017099999999999997,"p":0.056},{"v":4.9799999999999995,"i":0.006599999999999999,"p":0.03}],"charger":{"enabled":true,"charging":false,"inhibit":false,"battleshort":false,"acfet":false,"voltage_mode":"Med","temperature":22.69999999999999,"current":-484},"runtime":0,"percent":0,"cells":[3.64,3.64],"batt_voltage":7.28,"pyro":{"v":7.325,"i":0.002,"p":0.014,"enabled":true},"awake_time":180,"power_mode":"high"}'),
+      m3psu: JSON.parse('{"status":{"overall":"ERROR","components":{"DCDC1":{"state":0,"reason":"No Error"},"DCDC2":{"state":0,"reason":"No Error"},"DCDC3":{"state":2,"reason":"Ch1 Alert"},"Charger":{"state":2,"reason":"Read"},"Pyro Monitor":{"state":0,"reason":"No Error"}}},"channels":[{"v":0.15,"i":0,"p":0},{"v":5.0,"i":0.333,"p":1.555},{"v":3.27,"i":0.0084,"p":0.028},{"v":3.27,"i":0.0087,"p":0.028},{"v":4.9799999999999995,"i":0,"p":0},{"v":1.2,"i":0,"p":0},{"v":3.27,"i":0.0029999999999999996,"p":0.01},{"v":3.27,"i":0.0162,"p":0.052000000000000005},{"v":0.15,"i":0,"p":0},{"v":0.15,"i":0,"p":0},{"v":3.27,"i":0.017099999999999997,"p":0.056},{"v":4.9799999999999995,"i":0.006599999999999999,"p":0.03}],"charger":{"enabled":true,"charging":false,"inhibit":false,"battleshort":false,"acfet":false,"voltage_mode":"Med","temperature":22.69999999999999,"current":-484},"runtime":521,"percent":97,"cells":[3.64,3.64],"batt_voltage":7.28,"pyro":{"v":7.325,"i":0.002,"p":0.014,"enabled":true},"awake_time":180,"power_mode":"high"}'),
     };
   }
 
