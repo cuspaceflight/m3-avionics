@@ -84,7 +84,7 @@ void measurements_handle_radio(void) {
     rxclk_cnt++;
 
     /* don't do further processing until ew have 1200 clocks */
-    if(rxclk_cnt++ < 1200) return;
+    if(rxclk_cnt < 1200) return;
 
     /* disable rxclk until we next get a sync word */
     gpt2_disable_ccr2();
@@ -130,7 +130,7 @@ static THD_FUNCTION(MEASUREThread, arg) {
         /* Populate Ranging Packet */
         range_pkt.type = (PACKET_RANGE | toad.id);
         range_pkt.time_of_week = stamped_pvt.time_of_week;
-        range_pkt.tof = (time_capture_radio_timestamp - stamped_pvt.pps_timestamp);
+        range_pkt.tof = time_capture_radio_timestamp;
         range_pkt.bat_volt = (uint8_t)(battery.voltage / 100);
         range_pkt.temp = battery.stm_temp;
 

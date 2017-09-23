@@ -20,6 +20,7 @@
 void pr_nirq_isr(EXTDriver *extp, expchannel_t channel)
 {
     (void)extp; (void)channel;
+    measurements_start_rxclk();
     gpt2_enable_ccr2();
 }
 
