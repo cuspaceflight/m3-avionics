@@ -56,9 +56,10 @@ class StatusLabels extends Component {
   render() {
     //TODO reasons
     var labels = [];
-    for(var component in this.props.status.components){
-      var c = this.props.status.components[component];
-      labels.push(<StatusLabel key={component} state={c.state} text={component} />);
+    var components = this.props.status.components.get();
+    for(var cname in components){
+      var c = components[cname].get();
+      labels.push(<StatusLabel key={cname} state={c.state.get()} text={cname} />);
     }
     return (
       <div className="status-container">
@@ -106,8 +107,17 @@ class Data extends Component {
     var width = +this.props.width || 4;
     var extraclasses = this.props.className || "";
     var backcolor = this.props.color || "";
+    var lastupdated = this.props.updateTime || 0;
+    var updatetext = ((new Date() - lastupdated)/1000).toFixed(1) + "s";
+    if (lastupdated === 0){
+      backcolor = "gray";
+      updatetext = "-";
+    }
     return (
       <div className={"data-container col-md-" + width + " " + extraclasses} style={{"backgroundColor": backcolor}}>
+        <div className="data-lastupdate">
+          {updatetext}
+        </div>
         <div className="data-title">
           {this.props.label}
         </div>
@@ -121,15 +131,15 @@ class Data extends Component {
 
 class ChargerStatus extends Component {
   render() {
-    var data = this.props.data;
-    var enabled = !!data.enabled;
-    var charging = !!data.charging;
-    var inhibit = !!data.inhibit;
-    var battleshort = !!data.battleshort;
-    var acfet = !!data.acfet;
-    var voltage_mode = data.voltage_mode || "UKN";
-    var temperature = data.temperature ? data.temperature.toFixed(1) : 0.0;
-    var current = data.current || 0;
+    var data = this.props.data.get();
+    var enabled = data.enabled.get();
+    var charging = data.charging.get();
+    var inhibit = data.inhibit.get();
+    var battleshort = data.battleshort.get();
+    var acfet = data.acfet.get();
+    var voltage_mode = data.voltage_mode.get();
+    var temperature = data.temperature.get().toFixed(1);
+    var current = data.current.get();
 
     var state_label = <StatusLabel state={inhibit ? 1 : 0} text={charging ? "C" : (inhibit ? "I" : "D")} />;
     var bs_label = <StatusLabel state={battleshort ? 0 : 2} text={battleshort ? "WAR" : "PEACE"} />;
@@ -137,7 +147,7 @@ class ChargerStatus extends Component {
     var temp_label = <StatusLabel state={temperature > 60 ? 2 : (temperature < 40 ? 0 : 1)} text={temperature + "°C"} />;
     if (enabled) {
       return (
-        <Data width={8} label="Charger">
+        <Data width={8} label="Charger" updateTime={this.props.data.updateTime()}>
           {state_label}
           {bs_label}
           {current_label}
@@ -146,7 +156,7 @@ class ChargerStatus extends Component {
       );
     } else {
       return (
-        <Data width={8} label="Charger">
+        <Data width={8} label="Charger" updateTime={this.props.data.updateTime()}>
           <Label text="Disabled" />
         </Data>
       );
@@ -157,76 +167,63 @@ class ChargerStatus extends Component {
 class M3PSU extends Component {
   render() {
     var data = this.props.state;
-    var status = data.status || {};
-    var c = [];
-    for(var i=0; i<12; i++){
-      c[i] = {
-        v: data.channels[i] ? data.channels[i].v.toFixed(1) : 0.0,
-        i: data.channels[i] ? Math.floor(1000 * data.channels[i].i) : 0.0,
-        p: data.channels[i] ? data.channels[i].p.toFixed(1) : 0.0,
-      };
-    }
-    var charger = data.charger || {};
-    var runtime = data.runtime || 0;
-    var percent = data.percent || 0;
-    var cells = data.cells || [0.0, 0.0];
-    var batt_voltage = data.batt_voltage || 0.0;
-    var pyro = {
-      v: data.pyro ? data.pyro.v.toFixed(1) : 0.0,
-      i: data.pyro ? data.pyro.i.toFixed(1) : 0.0,
-      p: data.pyro ? data.pyro.p.toFixed(1) : 0.0,
-      enabled: data.pyro ? !!data.pyro.enabled : false,
-    };
-    var awake_time = data.awake_time || 0;
-    var power_mode = data.power_mode || "UKN";
-    var version = data.version || "UNKNOWN";
 
     var channels = [];
     const cnames = ["CAN 5V", "CAMERAS", "IMU 5V", "RADIO 5V", "IMU 3V", "RADIO 3V", "FC", "PYRO", "DL", "BASE", "SPARE1", "SPARE2"];
-    for(i=0; i<c.length; i++){
+    for(var idx=0; idx<12; idx++){
+      var chan = data.channels.get()[idx].get();
+      var v = chan.v.get();
+      var i = chan.i.get();
+      var p = chan.p.get();
+      var labeltext = v.toFixed(1) + "V " + Math.floor(1000 * i) + "mA " + p.toFixed(1) + "W";
       channels.push(
-        <Data key={i} label={cnames[i]} color={c[i].v < 3.2 ? "red" : "green"}>
-          <Label className="smalltext" text={c[i].v.toString() + "V " + c[i].i.toString() + "mA " + c[i].p.toString() + "W"} />
+        <Data key={idx} label={cnames[idx]} color={v < 3.2 ? "red" : "green"} updateTime={data.channels.get()[idx].updateTime()}>
+          <Label className="smalltext" text={labeltext} />
         </Data>
       );
     }
+    var pyro = data.pyro.get();
+    var pyro_v = pyro.v.get();
+    var pyro_i = pyro.i.get();
+    var pyro_p = pyro.p.get();
+    var pyro_enabled = pyro.enabled.get();
     const statusmap = {"OK": "green", "INIT": "orange", "ERROR": "red"};
     return (
-      <Subsystem label="M3PSU" version={version}>
+      <Subsystem label="M3PSU" version={data.version.get()}>
         <Row>
-          <Data width={8} label="Status" color={statusmap[status.overall]}>
-            <StatusLabels status={status} />
+          <Data width={8} label="Status" color={statusmap[data.status.get().overall.get()]} updateTime={data.status.updateTime()}>
+            <StatusLabels status={data.status.get()} />
           </Data>
-          <Data label="Runtime">
-            <Timer seconds={runtime*60} />
+          <Data label="Runtime" updateTime={data.runtime.updateTime()}>
+            <Timer seconds={data.runtime.get()*60} />
           </Data>
         </Row>
         <Row>
-          <ChargerStatus data={charger} />
-          <Data label="Awake Time">
-            <Timer seconds={awake_time} />
+          <ChargerStatus data={data.charger} />
+          <Data label="Awake Time" updateTime={data.awake_time.updateTime()}>
+            <Timer seconds={data.awake_time.get()} />
           </Data>
         </Row>
         <Row>
-          <Data label="Cell 1">
-            <Label text={cells[0].toFixed(2) + "V"} />
+          <Data label="Cell 1" updateTime={data.cells.get()[0].updateTime()}>
+            <Label text={data.cells.get()[0].get().toFixed(2) + "V"} />
           </Data>
-          <Data label="Cell 2">
-            <Label text={cells[1].toFixed(2) + "V"} />
+          <Data label="Cell 2" updateTime={data.cells.get()[1].updateTime()}>
+            <Label text={data.cells.get()[1].get().toFixed(2) + "V"} />
           </Data>
-          <Data label="Batt">
-            <Label text={batt_voltage.toFixed(2) + "V"} />
+          <Data label="Batt" updateTime={data.batt_voltage.updateTime()}>
+            <Label text={data.batt_voltage.get().toFixed(2) + "V"} />
           </Data>
         </Row>
         <Row>
-          <Data label="Pyro" color={!pyro.enabled ? "orange" : (pyro.v < 6 ? "red" : "green")}>
-            <Label className="smalltext" text={pyro.v.toString() + "V " + pyro.i.toString() + "A " + pyro.p.toString() + "W"} />
+          <Data label="Pyro" color={!pyro_enabled ? "orange" : (pyro_v < 6 ? "red" : "green")} updateTime={data.pyro.updateTime()}>
+            <Label className="smalltext" text={pyro_v.toFixed(1) + "V " + pyro_i.toFixed(1) + "A " + pyro_p.toFixed(1) + "W"} />
           </Data>
-          <Data color={power_mode==="high" ? "green" : "orange"} label="Power Mode">
-            <Label text={power_mode==="high" ? "NORMAL" : "LOW POWER"} />
+          <Data label="Power Mode" color={data.power_mode.get()==="high" ? "green" : "orange"} updateTime={data.power_mode.updateTime()}>
+            <Label text={data.power_mode.get()==="high" ? "NORMAL" : "LOW POWER"} />
           </Data>
-          <Data label="Percent">
-            <Label text={percent + "%"} />
+          <Data label="Percent" updateTime={data.percent.updateTime()}>
+            <Label text={data.percent.get() + "%"} />
           </Data>
         </Row>
         <Row>

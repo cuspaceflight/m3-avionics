@@ -56,6 +56,11 @@ body{
   height: auto;
 }
 
+.data-lastupdate {
+  float: right;
+  font-size: smaller;
+}
+
 .smalltext {
   font-size: smaller;
 }
