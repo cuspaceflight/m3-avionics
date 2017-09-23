@@ -2,10 +2,10 @@ profile:
   m3fc_position: core
   accel_axis: z
   ignition_accel: 25
-  burnout_timeout: 7
-  apogee_timeout: 30
+  burnout_timeout: 7.5
+  apogee_timeout: 35
   main_altitude: 300
-  main_timeout: 60
+  main_timeout: 265
   land_timeout: 600
 
 pyros:
