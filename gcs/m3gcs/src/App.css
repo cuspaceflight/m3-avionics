@@ -66,6 +66,37 @@ body{
 }
 
 
+/* Buttons */
+.button-container {
+  height: 100%;
+  padding: 0px;
+  background: white;
+  border: 1px solid black;
+  border-radius: 2px;
+  display: inline-block;
+  overflow: auto;
+}
+
+.dropdown-container {
+  height: 100%;
+  padding: 0px;
+  background: white;
+  border: 1px solid black;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.dropdown-container .dropdown {
+  height: 100%;
+  width: 100%;
+}
+
+.command-button {
+  height: 100%;
+  width: 100%;
+}
+
+
 /* Status labels */
 .status-label {
   display: inline;
