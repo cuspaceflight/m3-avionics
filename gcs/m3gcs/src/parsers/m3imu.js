@@ -1,4 +1,4 @@
-import { msg_id, bool, versionParser } from './utils.js';
+import { msg_id, versionParser } from './utils.js';
 
 const CAN_ID_M3IMU = 5;
 const CAN_MSG_ID_M3IMU_STATUS = CAN_ID_M3IMU | msg_id(0);
@@ -89,13 +89,13 @@ class M3IMU {
             }
 
             // Data buffer
-            for(var i=0; i<size; i++){
+            for(i=0; i<size; i++){
                 packet.buffer.push(0);
             }
             multipackets.push(packet);
 
             // Enumerate all the possible packet ids
-            for(var i=0; i<size_in_packets; i++){
+            for(i=0; i<size_in_packets; i++){
                 var pid = base_id;
                 pid |= i << suffix_length; // sequence number
 
@@ -164,7 +164,7 @@ class M3IMU {
         var getMultipacketIndex = function(id){
             for(var i=0; i<multipacket_message_definitions.length; i++){
                 var mask = ~(multipacket_message_definitions[i].seqno_mask);
-                if((id & mask) == multipacket_message_definitions[i].base_id){
+                if((id & mask) === multipacket_message_definitions[i].base_id){
                     return i;
                 }
             }
@@ -268,7 +268,7 @@ class M3IMU {
         registerMultipacket("ts_state_estimate_data", 44, handleStateEstimate);
 
         // Register all generated multipacket ids
-        for(var i=0; i<packet_ids.length; i++){
+        for(i=0; i<packet_ids.length; i++){
             (function(id){
                 gcs.registerPacket(id, function(data){
                     handleMultipacket(id, data);

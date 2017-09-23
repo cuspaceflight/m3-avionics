@@ -1,4 +1,4 @@
-import { msg_id, bool, versionParser } from './utils.js';
+import { msg_id, versionParser } from './utils.js';
 
 const CAN_ID_M3PYRO = 3;
 const CAN_MSG_ID_M3PYRO_STATUS = (CAN_ID_M3PYRO | msg_id(0));
@@ -31,7 +31,7 @@ class M3Pyro {
         }
 
         this.channels = [];
-        for(var i=0; i<4; i++){
+        for(i=0; i<4; i++){
             this.channels[i] = {continuity: Infinity, fire_status: "INVAL"};
         }
 
@@ -65,7 +65,7 @@ class M3Pyro {
         });
 
         gcs.registerPacket(CAN_MSG_ID_M3PYRO_ARM_STATUS, function(data){
-            _this.armed = data[0] == 1;
+            _this.armed = data[0] === 1;
         });
 
         gcs.registerPacket(CAN_MSG_ID_M3PYRO_CONTINUITY, function(data){

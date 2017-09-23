@@ -1,4 +1,4 @@
-import { msg_id, bool, versionParser } from './utils.js';
+import { msg_id, versionParser } from './utils.js';
 
 const CAN_ID_GROUND = 7;
 const CAN_MSG_ID_GROUND_PACKET_COUNT = CAN_ID_GROUND | msg_id(53);

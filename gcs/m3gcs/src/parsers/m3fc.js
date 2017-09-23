@@ -1,4 +1,4 @@
-import { msg_id, bool, versionParser } from './utils.js';
+import { msg_id, versionParser } from './utils.js';
 
 const CAN_ID_M3FC = 1
 const CAN_MSG_ID_M3FC_STATUS = CAN_ID_M3FC | msg_id(0);
@@ -65,6 +65,7 @@ class M3FC {
             profile: {
                 position: "",
                 accel_axis: "",
+                ignition_accel: 0,
                 burnout_timeout: 0,
                 apogee_timeout: 0,
                 main_altitude: 0,
@@ -76,10 +77,10 @@ class M3FC {
             radio_freq: 0,
             crc: "",
         };
-        for(var i=0; i<4; i++){
+        for(i=0; i<4; i++){
             this.config.pyros[i] = {usage: "UNSET", type: "UNSET"};
         }
-        for(var i=0; i<3; i++){
+        for(i=0; i<3; i++){
             var axes = ["x", "y", "z"];
             this.config.accel[axes[i]] = {scale: 0, offset: 0};
         }
@@ -125,6 +126,7 @@ class M3FC {
             var p = _this.config.profile;
             p.position = ["INVAL", "dart", "core"][position];
             p.accel_axis = ["INVAL", "X", "-X", "Y", "-Y", "Z", "-Z"][accel_axis];
+            p.ignition_accel = ignition_acc;
             p.burnout_timeout = burnout_timeout / 10.0;
             p.apogee_timeout = apogee_timeout;
             p.main_altitude = main_altitude * 10;

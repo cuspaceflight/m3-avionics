@@ -1,4 +1,4 @@
-import { msg_id, bool, versionParser } from './utils.js';
+import { msg_id, versionParser } from './utils.js';
 
 const CAN_ID_M3DL = 6;
 const CAN_MSG_ID_M3DL_STATUS = CAN_ID_M3DL | msg_id(0);

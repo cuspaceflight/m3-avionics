@@ -61,10 +61,8 @@ class M3PSU {
         }
         this.status = new DataPoint(status);
 
-        console.log(this.status);
-
         var channels = [];
-        for(var i=0; i<12; i++){
+        for(i=0; i<12; i++){
             channels[i] = {v:0, i:0, p:0};
         }
         this.channels = new DataPoint(channels);
@@ -108,12 +106,13 @@ class M3PSU {
         // Packet parsers
         gcs.registerPacket(CAN_MSG_ID_M3PSU_STATUS, function(data){
             var [overall, comp, comp_state, comp_error] = gcs.struct.Unpack("BBBB", data);
+            var reason = "";
             if(comp >= 0 && comp <= 5){
-                var reason = dcdc_errors[comp_error];
-            }else if(comp == 6){
-                var reason = charger_errors[comp_error];
-            }else if(comp == 7){
-                var reason = pyro_mon_errors[comp_error];
+                reason = dcdc_errors[comp_error];
+            }else if(comp === 6){
+                reason = charger_errors[comp_error];
+            }else if(comp === 7){
+                reason = pyro_mon_errors[comp_error];
             }
             var stateupdate = {};
             stateupdate[components[comp]] = {state: comp_state, reason: reason};
@@ -193,7 +192,7 @@ class M3PSU {
         gcs.registerPacket(CAN_MSG_ID_M3PSU_CAPACITY, function(data){
             var [mins, percent] = gcs.struct.Unpack("<HB", data);
 
-            if(mins == 65535){ // Charging, so runtime is infinite
+            if(mins === 65535){ // Charging, so runtime is infinite
                 mins = Infinity;
             }
 

@@ -87,7 +87,7 @@ class M3Radio {
             var [year, month, day, hour, minute, second, valid] =
                 gcs.struct.Unpack("<HBBBBBB", data);
             _this.gps.date = new Date(year, month, day, hour, minute, second);
-            _this.gps.date_valid = bool(valid & 0b111 == 0b111);
+            _this.gps.date_valid = bool((valid & 0b111) === 0b111);
         });
 
         gcs.registerPacket(CAN_MSG_ID_M3RADIO_GPS_STATUS, function(data){
