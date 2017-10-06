@@ -6,11 +6,16 @@ from math import floor
 from . import coords
 
 class Ref_point:
-    def __init(self):
+    def __init__(self):
         self.e_coord = None   # m
         self.n_coord = None   # m
         self.u_coord = None   # m
         self.distance = None  # m
+    def printout(self):
+        print("e_coord: {}".format(self.e_coord))
+        print("n_coord: {}".format(self.n_coord))
+        print("u_coord: {}".format(self.u_coord))
+        print("distance: {}".format(self.distance))
 
 class Position_measurement:
     def __init__(self,itow_s):
@@ -53,6 +58,13 @@ last_known_e = [None]*NUM_TOADS
 last_known_n = [None]*NUM_TOADS
 last_known_u = [None]*NUM_TOADS
 
+def rtrn_bins():
+    for entry in measurement_list:
+        # Populate ref point locations with last known position
+        for count in range (0,NUM_TOADS):
+            entry.set_pos(count,last_known_e[count],last_known_n[count],last_known_u[count])
+    return measurement_list
+
 def add_packet(packet):
     global measurement_list
     global MAX_BINS
@@ -85,8 +97,8 @@ def add_packet(packet):
         itow_s = floor(packet.i_tow/1000)  # Second of the week the packet is timestamped with
 
         found_bin = MAX_BINS
-        for index,bin in enumerate(measurement_list):
-            if bin.itow_s == itow_s:
+        for index,Bin in enumerate(measurement_list):
+            if Bin.itow_s == itow_s:
                 # Place new packet into existing bin
                 found_bin = index
                 break
@@ -104,8 +116,8 @@ def add_packet(packet):
         measurement_list[found_bin].set_dist(id,packet.dist())
 
         # Check for full bin to return
-        for index,bin in enumerate(measurement_list):
-            if bin.full:
+        for index,Bin in enumerate(measurement_list):
+            if Bin.full:
                 full_bin = index
                 break
             else:
