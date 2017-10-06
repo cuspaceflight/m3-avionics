@@ -123,8 +123,12 @@ def speedy_trilat(p_i, r_i, guess = False):
         pos = p0[:,0]
     elif p0[2,1] >= 0:
         pos = p0[:,1]
+    # else:
+    #     raise ValueError("Both position estimates on wrong side of plane (negative z component)")
+    elif p0[2,0] > p0[2,1]:
+        pos = p0[:,0]
     else:
-        raise ValueError("Both position estimates on wrong side of plane (negative z component)")
+        pos = p0[:,1]
 
     return pos
 

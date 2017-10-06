@@ -29,7 +29,7 @@ def run():
     # Initialise coordinate transformation module:
     ############################################################################
     coords.set_enu_ref()
-
+    pckt_bin.LIVE_MODE = True
     ############################################################################
     # Create communication links between processes:
     ############################################################################

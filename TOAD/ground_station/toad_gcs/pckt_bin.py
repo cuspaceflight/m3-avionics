@@ -7,10 +7,10 @@ from . import coords
 
 class Ref_point:
     def __init(self):
-        self.e_coord = 0   # m
-        self.n_coord = 0   # m
-        self.u_coord = 0   # m
-        self.distance = 0  # m
+        self.e_coord = None   # m
+        self.n_coord = None   # m
+        self.u_coord = None   # m
+        self.distance = None  # m
 
 class Position_measurement:
     def __init__(self,itow_s):
@@ -43,11 +43,15 @@ class Position_measurement:
             for count in range (0,NUM_TOADS):
                 self.set_pos(count,last_known_e[count],last_known_n[count],last_known_u[count])
 
+LIVE_MODE = False;  # Process packets in real time vs from a logfile
 measurement_list = [] # newer bins -> higher index
-MAX_BINS = 100  # Delete oldest unfilled bins once measurement_list gets too large
-last_known_e = [0]*NUM_TOADS
-last_known_n = [0]*NUM_TOADS
-last_known_u = [0]*NUM_TOADS
+if LIVE_MODE:
+    MAX_BINS = 3  # Delete oldest unfilled bins once measurement_list gets too large
+else:
+    MAX_BINS = 1300  # Delete oldest unfilled bins once measurement_list gets too large
+last_known_e = [None]*NUM_TOADS
+last_known_n = [None]*NUM_TOADS
+last_known_u = [None]*NUM_TOADS
 
 def add_packet(packet):
     global measurement_list
@@ -55,11 +59,6 @@ def add_packet(packet):
     global last_known_e
     global last_known_n
     global last_known_u
-
-    # If measurement_list is too large, delete oldest unfilled bin
-    end = len(measurement_list)
-    if end > MAX_BINS:
-        del measurement_list[0:end-100]
 
     # Process new packet
     if packet.toad_id == TOAD_1:
@@ -113,9 +112,23 @@ def add_packet(packet):
                 full_bin = len(measurement_list)
 
         if full_bin != len(measurement_list):
-            ## TODO: Log unfilled bins that are older than returned bin
 
-            # Then delete the older bins
             rtrn_val = measurement_list[full_bin]
-            del measurement_list[0:full_bin+1]
+            if LIVE_MODE:
+                ## TODO: Log unfilled bins that are older than returned bin
+
+                # Then delete the older bins
+                del measurement_list[0:full_bin+1]
+            else:
+                del measurement_list[full_bin:full_bin+1]
             return rtrn_val
+        else:
+            # If measurement_list is too large, delete oldest unfilled bin
+            end = len(measurement_list)
+            if end > MAX_BINS:
+                # Return the bin if it has at least 3 range measurements
+                rtrn_val = None
+                if bin(measurement_list[0].flags).count("1") >= 3:
+                    rtrn_val = measurement_list[0]
+                del measurement_list[0:end-MAX_BINS]
+                return rtrn_val
