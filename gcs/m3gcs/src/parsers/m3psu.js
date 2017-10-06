@@ -5,6 +5,8 @@ const CAN_MSG_ID_M3PSU_STATUS = CAN_ID_M3PSU | msg_id(0);
 const CAN_MSG_ID_M3PSU_TOGGLE_PYROS = CAN_ID_M3PSU | msg_id(16);
 const CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL = CAN_ID_M3PSU | msg_id(17);
 const CAN_MSG_ID_M3PSU_TOGGLE_CHARGER = CAN_ID_M3PSU | msg_id(18);
+const CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER = CAN_ID_M3PSU | msg_id(19)
+const CAN_MSG_ID_M3PSU_TOGGLE_BATTLESHORT = CAN_ID_M3PSU | msg_id(20)
 const CAN_MSG_ID_M3PSU_PYRO_STATUS = CAN_ID_M3PSU | msg_id(48);
 const CAN_MSG_ID_M3PSU_CHANNEL_STATUS_12 = CAN_ID_M3PSU | msg_id(49);
 const CAN_MSG_ID_M3PSU_CHANNEL_STATUS_34 = CAN_ID_M3PSU | msg_id(50);
@@ -20,6 +22,8 @@ const CAN_MSG_ID_M3PSU_VERSION = CAN_ID_M3PSU | msg_id(63);
 
 class M3PSU {
     constructor(gcs) {
+        this.gcs = gcs;
+
         const components = {
             0: "DCDC1",
             1: "DCDC2",
@@ -95,13 +99,6 @@ class M3PSU {
         this.version = new DataPoint("UNKNOWN");
 
         var _this = this;
-
-        //TODO handle registering commands?
-        gcs.registerPacket(CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL, function(data){} );
-
-        gcs.registerPacket(CAN_MSG_ID_M3PSU_TOGGLE_PYROS, function(data){} );
-
-        gcs.registerPacket(CAN_MSG_ID_M3PSU_TOGGLE_CHARGER, function(data){} );
 
         // Packet parsers
         gcs.registerPacket(CAN_MSG_ID_M3PSU_STATUS, function(data){
@@ -209,6 +206,30 @@ class M3PSU {
 
         gcs.registerPacket(CAN_MSG_ID_M3PSU_VERSION, versionParser(this));
     };
+
+    channelOn(idx) {
+        this.gcs.sendPacket(CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL, [1, idx]);
+    }
+
+    channelOff(idx) {
+        this.gcs.sendPacket(CAN_MSG_ID_M3PSU_TOGGLE_CHANNEL, [0, idx]);
+    }
+
+    pyroEnable(enabled){
+        this.gcs.sendPacket(CAN_MSG_ID_M3PSU_TOGGLE_PYROS, [enabled ? 1 : 0]);
+    }
+
+    chargerEnable(enabled){
+        this.gcs.sendPacket(CAN_MSG_ID_M3PSU_TOGGLE_CHARGER, [enabled ? 1 : 0]);
+    }
+
+    lowpowerEnable(enabled){
+        this.gcs.sendPacket(CAN_MSG_ID_M3PSU_TOGGLE_LOWPOWER, [enabled ? 1 : 0]);
+    }
+
+    battleshortEnable(enabled){
+        this.gcs.sendPacket(CAN_MSG_ID_M3PSU_TOGGLE_BATTLESHORT, [enabled ? 1 : 0]);
+    }
 };
 
 export default M3PSU;

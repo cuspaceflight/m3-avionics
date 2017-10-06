@@ -94,6 +94,8 @@ body{
 .command-button {
   height: 100%;
   width: 100%;
+  font-size: smaller;
+  padding: 0px;
 }
 
 

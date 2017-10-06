@@ -39,64 +39,76 @@ class ChargerStatus extends Component {
 
 class M3PSU extends Component {
   render() {
-    var data = this.props.state;
+    var m3psu = this.props.m3psu;
+    const sendCommand = this.props.sendCommand;
 
     var channels = [];
     const cnames = ["CAN 5V", "CAMERAS", "IMU 5V", "RADIO 5V", "IMU 3V", "RADIO 3V", "FC", "PYRO", "DL", "BASE", "SPARE1", "SPARE2"];
     for(var idx=0; idx<12; idx++){
-      var chan = data.channels.get()[idx].get();
+      var chan = m3psu.channels.get()[idx].get();
       var v = chan.v.get();
       var i = chan.i.get();
       var p = chan.p.get();
       var labeltext = v.toFixed(1) + "V " + Math.floor(1000 * i) + "mA " + p.toFixed(1) + "W";
       channels.push(
-        <Data key={idx} label={cnames[idx]} color={v < 3.2 ? "red" : "green"} updateTime={data.channels.get()[idx].updateTime()}>
+        <Data key={idx} label={cnames[idx]} color={v < 3.2 ? "red" : "green"} updateTime={m3psu.channels.get()[idx].updateTime()}>
           <Label className="smalltext" text={labeltext} />
         </Data>
       );
     }
-    var pyro = data.pyro.get();
+    var pyro = m3psu.pyro.get();
     var pyro_v = pyro.v.get();
     var pyro_i = pyro.i.get();
     var pyro_p = pyro.p.get();
     var pyro_enabled = pyro.enabled.get();
     const statusmap = {"OK": "green", "INIT": "orange", "ERROR": "red"};
+
+    var buttons = [];
+    for(idx=0; idx<12; idx++){
+      ((channel) => {
+        buttons.push(<DropdownButton text={cnames[channel]} options={[
+          {text: "On", onClick: () => { m3psu.channelOn(channel) }},
+          {text: "Off", onClick: () => { m3psu.channelOff(channel) }},
+        ]} />);
+      })(idx);
+    }
+
     return (
-      <Subsystem label="M3PSU" version={data.version.get()}>
+      <Subsystem label="M3PSU" version={m3psu.version.get()}>
         <Row>
-          <Data width={8} label="Status" color={statusmap[data.status.get().overall.get()]} updateTime={data.status.updateTime()}>
-            <StatusLabels status={data.status.get()} />
+          <Data width={8} label="Status" color={statusmap[m3psu.status.get().overall.get()]} updateTime={m3psu.status.updateTime()}>
+            <StatusLabels status={m3psu.status.get()} />
           </Data>
-          <Data label="Runtime" updateTime={data.runtime.updateTime()}>
-            <Timer seconds={data.runtime.get()*60} />
+          <Data label="Runtime" updateTime={m3psu.runtime.updateTime()}>
+            <Timer seconds={m3psu.runtime.get()*60} />
           </Data>
         </Row>
         <Row>
-          <ChargerStatus data={data.charger} />
-          <Data label="Awake Time" updateTime={data.awake_time.updateTime()}>
-            <Timer seconds={data.awake_time.get()} />
+          <ChargerStatus data={m3psu.charger} />
+          <Data label="Awake Time" updateTime={m3psu.awake_time.updateTime()}>
+            <Timer seconds={m3psu.awake_time.get()} />
           </Data>
         </Row>
         <Row>
-          <Data label="Cell 1" updateTime={data.cells.get()[0].updateTime()}>
-            <Label text={data.cells.get()[0].get().toFixed(2) + "V"} />
+          <Data label="Cell 1" updateTime={m3psu.cells.get()[0].updateTime()}>
+            <Label text={m3psu.cells.get()[0].get().toFixed(2) + "V"} />
           </Data>
-          <Data label="Cell 2" updateTime={data.cells.get()[1].updateTime()}>
-            <Label text={data.cells.get()[1].get().toFixed(2) + "V"} />
+          <Data label="Cell 2" updateTime={m3psu.cells.get()[1].updateTime()}>
+            <Label text={m3psu.cells.get()[1].get().toFixed(2) + "V"} />
           </Data>
-          <Data label="Batt" updateTime={data.batt_voltage.updateTime()}>
-            <Label text={data.batt_voltage.get().toFixed(2) + "V"} />
+          <Data label="Batt" updateTime={m3psu.batt_voltage.updateTime()}>
+            <Label text={m3psu.batt_voltage.get().toFixed(2) + "V"} />
           </Data>
         </Row>
         <Row>
-          <Data label="Pyro" color={!pyro_enabled ? "orange" : (pyro_v < 6 ? "red" : "green")} updateTime={data.pyro.updateTime()}>
+          <Data label="Pyro" color={!pyro_enabled ? "orange" : (pyro_v < 6 ? "red" : "green")} updateTime={m3psu.pyro.updateTime()}>
             <Label className="smalltext" text={pyro_v.toFixed(1) + "V " + pyro_i.toFixed(1) + "A " + pyro_p.toFixed(1) + "W"} />
           </Data>
-          <Data label="Power Mode" color={data.power_mode.get()==="high" ? "green" : "orange"} updateTime={data.power_mode.updateTime()}>
-            <Label text={data.power_mode.get()==="high" ? "NORMAL" : "LOW POWER"} />
+          <Data label="Power Mode" color={m3psu.power_mode.get()==="high" ? "green" : "orange"} updateTime={m3psu.power_mode.updateTime()}>
+            <Label text={m3psu.power_mode.get()==="high" ? "NORMAL" : "LOW POWER"} />
           </Data>
-          <Data label="Percent" updateTime={data.percent.updateTime()}>
-            <Label text={data.percent.get() + "%"} />
+          <Data label="Percent" updateTime={m3psu.percent.updateTime()}>
+            <Label text={m3psu.percent.get() + "%"} />
           </Data>
         </Row>
         <Row>
@@ -112,11 +124,28 @@ class M3PSU extends Component {
           {channels.slice(9,12)}
         </Row>
         <Row>
-          <Button text="Test" onClick={() => { alert("hello world!") }} />
-          <DropdownButton text="CH 1" options={[
-            {text: "on", onClick: () => { alert("ch1 on") }},
-            {text: "off", onClick: () => { alert("ch1 off") }},
+          <DropdownButton text="Pyro Supply" options={[
+            {text: "On", onClick: () => { m3psu.pyroEnable(true) }},
+            {text: "Off", onClick: () => { m3psu.pyroEnable(false) }},
           ]} />
+          <DropdownButton text="Charger" options={[
+            {text: "On", onClick: () => { m3psu.chargerEnable(true) }},
+            {text: "Off", onClick: () => { m3psu.chargerEnable(false) }},
+          ]} />
+          <DropdownButton text="Lowpower" options={[
+            {text: "On", onClick: () => { m3psu.lowpowerEnable(true) }},
+            {text: "Off", onClick: () => { m3psu.lowpowerEnable(false) }},
+          ]} />
+          <DropdownButton text="Battleshort" options={[
+            {text: "Peace", onClick: () => { m3psu.battleshortEnable(false) }},
+            {text: "WAR", onClick: () => { m3psu.battleshortEnable(true) }},
+          ]} />
+        </Row>
+        <Row>
+          {buttons.slice(0,6)}
+        </Row>
+        <Row>
+          {buttons.slice(6,12)}
         </Row>
       </Subsystem>
     );

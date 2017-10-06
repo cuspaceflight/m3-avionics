@@ -33,7 +33,7 @@ class App extends Component {
         <div className="container-fluid">
           <div className="row">
             <div className="col-lg-4">
-              <M3PSU state={this.state.m3psu} />
+              <M3PSU m3psu={this.state.m3psu}/>
             </div>
           </div>
         </div>

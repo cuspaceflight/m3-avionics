@@ -15,6 +15,9 @@ def find_processor(sid):
 
 def process(parent, name, arg):
     can_id, data = registered_commands[parent][name][0](arg)
+    queue(can_id, data)
+
+def queue(can_id, data):
     txq.put(usbcan.CANFrame(can_id, False, len(data), data))
 
 errors = []

@@ -7,6 +7,10 @@ import M3Ground from './parsers/m3ground.js';
 import M3IMU from './parsers/m3imu.js';
 import JSPack from './jspack.js';
 
+import jQuery from 'jquery';
+
+const $ = jQuery;
+
 class GCS {
     constructor() {
         const _this = this;
@@ -23,11 +27,15 @@ class GCS {
         // e.g. gcs.struct.Unpack( .. )
         this.struct = new JSPack();
 
-        this.ws = new WebSocket("ws://" + window.location.hostname + ":5000" + "/ws")
+        this.ws = new WebSocket("ws://" + window.location.hostname + ":5000/ws")
         this.ws.onmessage = function(event){
             var packet = JSON.parse(event.data);
             _this.handlePacket(packet);
         };
+    };
+
+    sendPacket(can_id, data){
+        $.post("http://" + window.location.hostname + ":5000/command", {command: JSON.stringify({id: can_id, data: data})});
     };
 
     registerPacket(canID, handler){

@@ -5,6 +5,7 @@ import os.path
 from threading import Thread
 from time import sleep
 from queue import Empty
+import json
 
 from . import command_processor
 from .packets import registered_packets, registered_commands
@@ -12,7 +13,7 @@ from .packets import registered_packets, registered_commands
 app = web.Application()
 app["sockets"] = []
 basepath = os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir))
-webpath = os.path.join(basepath, "static")
+webpath = os.path.join(basepath, "build")
 
 wa_queue = None
 
@@ -40,16 +41,13 @@ def wshandler(req):
 
 @asyncio.coroutine
 def index(req):
-    page = "Placeholder"
-    return web.Response(body=page.encode(), content_type="text/html")
+    return app.router.url_for("/index.html")
 
 @asyncio.coroutine
 def sendcommand(req):
     yield from req.post()
-    parent = req.POST.get("parent")
-    name = req.POST.get("name")
-    arg = req.POST.get("arg")
-    command_processor.process(parent, name, arg)
+    command = json.loads(req.POST.get("command"))
+    command_processor.queue(command["id"], command["data"])
     return web.Response(text="")
 
 @asyncio.coroutine
@@ -80,7 +78,7 @@ def setup_server(queue):
     app.router.add_route("GET", "/ws", wshandler)
     app.router.add_route("GET", "/", index)
     app.router.add_route("POST", "/command", sendcommand)
-    app.router.add_static("/static", webpath)
+    app.router.add_static("/", webpath)
 
     app.on_shutdown.append(on_shutdown)
 
