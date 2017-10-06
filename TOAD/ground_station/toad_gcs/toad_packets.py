@@ -253,7 +253,6 @@ Position ITOW_s: {}\n\
         \n\n".format(self.itow_s,self.lat,self.lon,self.h,self.e_coord,
         self.n_coord, self.u_coord))
     def print_to_js(self,file):
-        {'jack': 4098, 'sape': 4139}
         dict = {'ITOW_s': self.itow_s, 'Latitude': self.lat, 'Longitude': self.lon, 'Height': self.h,
         'E coord': self.e_coord, 'N coord': self.n_coord, 'U coord': self.u_coord}
         json.dump(dict,file)
