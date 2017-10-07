@@ -75,14 +75,14 @@ def trilat(measurement):
         estimate = trilateration.speedy_trilat(pos_matrix,range_vector,True)  # estimate in ENU coordinate system
         if estimate.all() != None:
             return_pos = toad_packets.Position_fix(estimate[0],estimate[1],estimate[2],measurement.itow_s)
-            print('\n\n')
-            print("ITOW_s: {}".format(return_pos.itow_s))
-            print("Latitude: {}".format(return_pos.lat))
-            print("Longitude: {}".format(return_pos.lon))
-            print("Height: {}".format(return_pos.h))
-            print("e: {}".format(return_pos.e_coord))
-            print("n: {}".format(return_pos.n_coord))
-            print("u: {}".format(return_pos.u_coord))
+            # print('\n\n')
+            # print("ITOW_s: {}".format(return_pos.itow_s))
+            # print("Latitude: {}".format(return_pos.lat))
+            # print("Longitude: {}".format(return_pos.lon))
+            # print("Height: {}".format(return_pos.h))
+            # print("e: {}".format(return_pos.e_coord))
+            # print("n: {}".format(return_pos.n_coord))
+            # print("u: {}".format(return_pos.u_coord))
 
 def bin_packet(packet):
     measurement = pckt_bin.add_packet(packet)
@@ -326,9 +326,9 @@ for root,dirs,files in os.walk(directory):
 
 for entry in pckt_bin.rtrn_bins():
     if bin(entry.flags).count("1") >= 3:
-        # print("\n")
-        # print("ITOW_s: {}".format(entry.itow_s))
-        # for x in entry.toads:
-        #     x.printout()
-        #     print("")
+        print("\n")
+        print("ITOW_s: {}".format(entry.itow_s))
+        for x in entry.toads:
+            x.printout()
+            print("")
         trilat(entry)
