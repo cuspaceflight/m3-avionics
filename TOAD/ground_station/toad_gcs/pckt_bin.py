@@ -59,7 +59,8 @@ last_known_n = [None]*NUM_TOADS
 last_known_u = [None]*NUM_TOADS
 
 def rtrn_bins():
-    for entry in measurement_list:
+    sorted_list = sorted(measurement_list, key=lambda Position_measurement: Position_measurement.itow_s)
+    for entry in sorted_list:
         if not LIVE_MODE:
             # Quick hack to use hardcoded location for each toad
             enu_coords = []
@@ -78,7 +79,7 @@ def rtrn_bins():
         for count in range (0,NUM_TOADS):
             entry.set_pos(count,last_known_e[count],last_known_n[count],last_known_u[count])
 
-    return measurement_list
+    return sorted_list
 
 def add_packet(packet):
     global measurement_list
