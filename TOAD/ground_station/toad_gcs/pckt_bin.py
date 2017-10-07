@@ -53,7 +53,7 @@ measurement_list = [] # newer bins -> higher index
 if LIVE_MODE:
     MAX_BINS = 3  # Delete oldest unfilled bins once measurement_list gets too large
 else:
-    MAX_BINS = 1300  # Delete oldest unfilled bins once measurement_list gets too large
+    MAX_BINS = 1300  # Keep all bins, this must be large enough to fit all ranging packets
 last_known_e = [None]*NUM_TOADS
 last_known_n = [None]*NUM_TOADS
 last_known_u = [None]*NUM_TOADS
@@ -115,32 +115,30 @@ def add_packet(packet):
         # Put distance into found bin
         measurement_list[found_bin].set_dist(id,packet.dist())
 
-        # Check for full bin to return
-        for index,Bin in enumerate(measurement_list):
-            if Bin.full:
-                full_bin = index
-                break
-            else:
-                full_bin = len(measurement_list)
+        if LIVE_MODE:
+            # Check for full bin to return
+            for index,Bin in enumerate(measurement_list):
+                if Bin.full:
+                    full_bin = index
+                    break
+                else:
+                    full_bin = len(measurement_list)
 
-        if full_bin != len(measurement_list):
+            if full_bin != len(measurement_list):
 
-            rtrn_val = measurement_list[full_bin]
-            if LIVE_MODE:
+                rtrn_val = measurement_list[full_bin]
                 ## TODO: Log unfilled bins that are older than returned bin
 
                 # Then delete the older bins
                 del measurement_list[0:full_bin+1]
-            else:
-                del measurement_list[full_bin:full_bin+1]
-            return rtrn_val
-        else:
-            # If measurement_list is too large, delete oldest unfilled bin
-            end = len(measurement_list)
-            if end > MAX_BINS:
-                # Return the bin if it has at least 3 range measurements
-                rtrn_val = None
-                if bin(measurement_list[0].flags).count("1") >= 3:
-                    rtrn_val = measurement_list[0]
-                del measurement_list[0:end-MAX_BINS]
                 return rtrn_val
+            else:
+                # If measurement_list is too large, delete oldest unfilled bin
+                end = len(measurement_list)
+                if end > MAX_BINS:
+                    # Return the bin if it has at least 3 range measurements
+                    rtrn_val = None
+                    if bin(measurement_list[0].flags).count("1") >= 3:
+                        rtrn_val = measurement_list[0]
+                    del measurement_list[0:end-MAX_BINS]
+                    return rtrn_val

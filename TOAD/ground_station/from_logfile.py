@@ -74,13 +74,14 @@ def trilat(measurement):
 
         estimate = trilateration.speedy_trilat(pos_matrix,range_vector,True)  # estimate in ENU coordinate system
         return_pos = toad_packets.Position_fix(estimate[0],estimate[1],estimate[2],measurement.itow_s)
-        print('\n\n')
-        print("Latitude: {}".format(return_pos.lat))
-        print("Longitude: {}".format(return_pos.lon))
-        print("Height: {}".format(return_pos.h))
-        print("e: {}".format(return_pos.e_coord))
-        print("n: {}".format(return_pos.n_coord))
-        print("u: {}".format(return_pos.u_coord))
+        # print('\n\n')
+        # print("ITOW_s: {}".format(return_pos.itow_s))
+        # print("Latitude: {}".format(return_pos.lat))
+        # print("Longitude: {}".format(return_pos.lon))
+        # print("Height: {}".format(return_pos.h))
+        # print("e: {}".format(return_pos.e_coord))
+        # print("n: {}".format(return_pos.n_coord))
+        # print("u: {}".format(return_pos.u_coord))
 
 def bin_packet(packet):
     measurement = pckt_bin.add_packet(packet)
@@ -169,14 +170,15 @@ def read_logfile(file):
 
             # Handle Ranging Packet
             if (log_type == MESSAGE_RANGING):
-                ERROR = 0
+                ERROR = 4000
                 payload = log.read(11)
                 ranging = struct.unpack('<BIIBB', payload)
                 # print("RANGING PACKET:")
                 # print("TOAD ID = ", toad_id)
                 # print("Timestamp = ", systick, " s")
                 # get_toad_id_from_type(ranging[0])
-                print("time of flight = ", ranging[1] - ERROR)
+                # print("time of flight = ", ranging[1] - ERROR)
+                # print("distance/m = {}".format(299792458*(ranging[1] - ERROR)/84000000))
                 # print("i_tow = ", ranging[2])
                 # print ("battery voltage = ", (ranging[3]/10), "V")
                 # print("stm32 temp = ", ranging[4], "degrees C")
@@ -321,6 +323,9 @@ for root,dirs,files in os.walk(directory):
 
 for entry in pckt_bin.rtrn_bins():
     if bin(entry.flags).count("1") >= 3:
+        # print("\n")
+        # print("ITOW_s: {}".format(entry.itow_s))
         # for x in entry.toads:
         #     x.printout()
+        #     print("")
         trilat(entry)
