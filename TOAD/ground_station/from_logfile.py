@@ -73,15 +73,16 @@ def trilat(measurement):
         range_vector = np.array([x.distance for x in measurement.toads])
 
         estimate = trilateration.speedy_trilat(pos_matrix,range_vector,True)  # estimate in ENU coordinate system
-        return_pos = toad_packets.Position_fix(estimate[0],estimate[1],estimate[2],measurement.itow_s)
-        # print('\n\n')
-        # print("ITOW_s: {}".format(return_pos.itow_s))
-        # print("Latitude: {}".format(return_pos.lat))
-        # print("Longitude: {}".format(return_pos.lon))
-        # print("Height: {}".format(return_pos.h))
-        # print("e: {}".format(return_pos.e_coord))
-        # print("n: {}".format(return_pos.n_coord))
-        # print("u: {}".format(return_pos.u_coord))
+        if estimate.all() != None:
+            return_pos = toad_packets.Position_fix(estimate[0],estimate[1],estimate[2],measurement.itow_s)
+            print('\n\n')
+            print("ITOW_s: {}".format(return_pos.itow_s))
+            print("Latitude: {}".format(return_pos.lat))
+            print("Longitude: {}".format(return_pos.lon))
+            print("Height: {}".format(return_pos.h))
+            print("e: {}".format(return_pos.e_coord))
+            print("n: {}".format(return_pos.n_coord))
+            print("u: {}".format(return_pos.u_coord))
 
 def bin_packet(packet):
     measurement = pckt_bin.add_packet(packet)
@@ -187,7 +188,8 @@ def read_logfile(file):
                 pckt.tof -= ERROR  # Empirically measured delay
                 if pckt.tof < 0:
                     pckt.tof = 0
-                bin_packet(pckt)
+                if pckt.tof < (30000 * 84000000/299792458):
+                    bin_packet(pckt)
 
             # Handle Position Packet
             if (log_type == MESSAGE_POSITION):
@@ -200,6 +202,7 @@ def read_logfile(file):
                 # print("lon = ", (pos[1]/10000000), "degrees")
                 # print("lat = ", (pos[2]/10000000), "degrees")
                 # print("height = ", (pos[3]/1000), "m")
+                # print("")
                 # print("num sat = ", pos[4])
                 # print("battery voltage = ", (pos[5]/10), "V")
                 # print("stm32 temp = ", pos[6], "degrees C")

@@ -60,9 +60,24 @@ last_known_u = [None]*NUM_TOADS
 
 def rtrn_bins():
     for entry in measurement_list:
+        if not LIVE_MODE:
+            # Quick hack to use hardcoded location for each toad
+            enu_coords = []
+            enu_coords.append(coords.convert_llh_to_ENU([40.8964654,-119.0718826,1167.119]))  # TOAD 1
+            enu_coords.append(coords.convert_llh_to_ENU([40.8962634,-119.0821014,1164.45]))  # TOAD 2
+            enu_coords.append(coords.convert_llh_to_ENU([40.8906223,-119.0878229,1167.833]))  # TOAD 3
+            enu_coords.append(coords.convert_llh_to_ENU([40.872279,-119.0883343,1164.906]))  # TOAD 4
+            enu_coords.append(coords.convert_llh_to_ENU([40.8756779,-119.075512,1167.008]))  # TOAD 5
+            enu_coords.append(coords.convert_llh_to_ENU([40.8849028,-119.0798858,1164.795]))  # TOAD 6
+            for id in range(0,NUM_TOADS):
+                last_known_e[id] = enu_coords[id][0]
+                last_known_n[id] = enu_coords[id][1]
+                last_known_u[id] = enu_coords[id][2]
+
         # Populate ref point locations with last known position
         for count in range (0,NUM_TOADS):
             entry.set_pos(count,last_known_e[count],last_known_n[count],last_known_u[count])
+
     return measurement_list
 
 def add_packet(packet):

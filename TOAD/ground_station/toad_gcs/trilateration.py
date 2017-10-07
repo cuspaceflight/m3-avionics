@@ -20,12 +20,14 @@ def speedy_trilat(p_i, r_i, guess = False):
 
     Returns:
         Position of tracked object as an n element column vector (numpy array)
+        None if no real solution to equation in step 3 exists
 
     Raises:
         Asserts n (number of dimensions) is 2 or 3
-        ValueError if no real solution to quadratic equation in step 3 exists(circles/spheres do not intersect)
-            (and guess is set to false)
-    """
+        """
+    #     ValueError if no real solution to quadratic equation in step 3 exists(circles/spheres do not intersect)
+    #        (and guess is set to false)
+    # """
 
     n = np.shape(p_i)[0]
     N = np.shape(p_i)[1]
@@ -123,12 +125,20 @@ def speedy_trilat(p_i, r_i, guess = False):
         pos = p0[:,0]
     elif p0[2,1] >= 0:
         pos = p0[:,1]
-    # else:
-    #     raise ValueError("Both position estimates on wrong side of plane (negative z component)")
-    elif p0[2,0] > p0[2,1]:
-        pos = p0[:,0]
     else:
-        pos = p0[:,1]
+        # print(p0[0,0])
+        # print(p0[1,0])
+        # print(p0[2,0],"\n")
+        # print(p0[0,1])
+        # print(p0[1,1])
+        # print(p0[2,1])
+        # raise ValueError("Both position estimates on wrong side of plane (negative z component)")
+        return np.array([None,None,None])
+
+    # elif p0[2,0] > p0[2,1]:
+    #     pos = p0[:,0]
+    # else:
+    #     pos = p0[:,1]
 
     return pos
 
