@@ -13,6 +13,7 @@ SID_M3FC_SE_VAR_H = (52 << 5) | 1
 SID_M3FC_SE_VAR_V_A = (53 << 5) | 1
 SID_M3PYRO_SUPPLY = (49 << 5) | 3
 SID_M3RADIO_GPS_ALT = (49 << 5) | 4
+SID_M3DL_PRESSURE = (53 << 5) | 6
 
 accel_times = []
 accel_vals = []
@@ -38,6 +39,8 @@ supply_times = []
 supply_vals = []
 gps_alt_times = []
 gps_alt_vals = []
+dl_pressure_times = []
+dl_pressure_vals = []
 
 states = ["init", "pad", "ignition", "powered ascent", "burnout",
           "free ascent", "apogee", "drogue descent", "release main",
@@ -81,6 +84,8 @@ def p2a_nzl(p, b):
 
 prev_state = 0
 with open(sys.argv[1], "rb") as f:
+    f.seek(62561392)  # dart
+    #f.seek(64273600)  # booster
     packet = f.read(16)
     while packet:
         sid, rtr, dlc, data, ts = struct.unpack("<HBB8sI", packet)
@@ -94,16 +99,14 @@ with open(sys.argv[1], "rb") as f:
         elif sid == SID_M3FC_ACCEL:
             _, _, z = struct.unpack("<hhh", data[:6])
             accel_times.append(ts)
-            if ts < 385:
-                accel_vals.append(z*3.9e-3*9.81 - 9.81)
-            else:
-                accel_vals.append(z*3.9e-3*9.81 + 9.81)
+            accel_vals.append(z*3.9e-3*9.81)
         elif sid == SID_M3FC_BARO:
             _, pressure = struct.unpack("<ii", data)
-            pressure_times.append(ts)
-            pressure_vals.append(pressure)
-            baro_alt_times.append(ts)
-            baro_alt_vals.append(p2a(pressure))
+            if pressure < 1e8:
+                pressure_times.append(ts)
+                pressure_vals.append(pressure)
+                baro_alt_times.append(ts)
+                baro_alt_vals.append(p2a(pressure))
         elif sid == SID_M3FC_SE_V_A:
             se_v, se_a = struct.unpack("<ff", data)
             se_a_times.append(ts)
@@ -132,6 +135,10 @@ with open(sys.argv[1], "rb") as f:
             _, gps_alt = struct.unpack("<ii", data)
             gps_alt_times.append(ts)
             gps_alt_vals.append(gps_alt/1e3)
+        elif sid == SID_M3DL_PRESSURE:
+            p1, p2, p3, p4 = struct.unpack("<HHHH", data)
+            dl_pressure_times.append(ts)
+            dl_pressure_vals.append((p1+p2+p3+p4)/4)
         packet = f.read(16)
 
 n_accels = len(accel_vals)
@@ -144,30 +151,32 @@ print("{} accels over {}s, rate={}/s".format(
 print("{} baros over {}s, rate={}/s".format(
     n_baros, t_baros, n_baros/t_baros))
 
+baro_vel = np.diff(baro_alt_vals) / np.diff(baro_alt_times)
+
 se_h = np.array(se_h_vals)
 se_var_h = np.array(se_var_h_vals)
 se_std_h = np.sqrt(se_var_h)
-se_range_h_top = se_h + se_std_h
-se_range_h_btm = se_h - se_std_h
+#se_range_h_top = se_h + se_std_h
+#se_range_h_btm = se_h - se_std_h
 
 se_a = np.array(se_a_vals)
 se_var_a = np.array(se_var_a_vals)
 se_std_a = np.sqrt(se_var_a)
-se_range_a_top = se_a + se_std_a
-se_range_a_btm = se_a - se_std_a
+#se_range_a_top = se_a + se_std_a
+#se_range_a_btm = se_a - se_std_a
 
 plt.grid()
 ax1 = plt.gca()
 #ax2.step(supply_times, supply_vals, 'g-')
 ax1.step(accel_times, accel_vals, 'b-', label="Accelerometer")
-ax1.fill_between(se_var_a_times, se_range_a_top, se_range_a_btm, color='c', alpha=0.3)
+#ax1.fill_between(se_var_a_times, se_range_a_top, se_range_a_btm, color='c', alpha=0.3)
 ax1.step(se_a_times, se_a_vals, 'c-', label="SE Acceleration")
-plt.ylim(-25, 55)
+plt.ylim(-200, 200)
 plt.ylabel("Acceleration (m/s/s)")
 plt.legend(loc='upper left')
 ax2 = plt.twinx()
 #ax2.step(se_v_times, se_v_vals, 'b-', label="Vel")
-ax2.fill_between(se_var_h_times, se_range_h_top, se_range_h_btm, color='r', alpha=0.3)
+#ax2.fill_between(se_var_h_times, se_range_h_top, se_range_h_btm, color='r', alpha=0.3)
 #ax2.step(se_var_h_times, se_range_h_top, (1, .8, .8))
 #ax2.step(se_var_h_times, se_range_h_btm, (1, .8, .8))
 ax2.step(se_h_times, se_h_vals, 'r-', label="SE Altitude")
@@ -176,12 +185,20 @@ ax2.step(gps_alt_times, gps_alt_vals, 'm-', label="GPS Alt")
 plt.xlabel("Time (s)")
 plt.ylabel("Altitude (m)")
 plt.legend(loc='upper right')
-plt.xlim(366, 416)
+plt.ylim(-1000, 10000)
+
+ax3 = plt.twinx()
+ax3.step(se_v_times, se_v_vals, label="SE Vel (m/s)", color='k', lw=3)
+plt.ylabel("Velocity (m/s)")
 
 for t, s in zip(state_times, state_vals):
     plt.axvline(t, color='k')
     ydisp = plt.gca().transAxes.transform((0, 1-s/len(states)))[1]
     ydata = plt.gca().transData.inverted().transform((0, ydisp))[1]
-    plt.text(t, ydata, states[s])
+    if s >= len(states):
+        s = "Unknown {}".format(s)
+    else:
+        s = states[s]
+    plt.text(t, ydata, s, bbox=dict(facecolor='white'))
 
 plt.show()
